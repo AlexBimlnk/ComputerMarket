@@ -14,5 +14,5 @@ public class ImportController : ControllerBase
     }
 
     [HttpGet]
-    public IEnumerable<WeatherForecast> Get() => throw new NotImplementedException();
+    public IEnumerable<string> Get() => throw new NotImplementedException();
 }
