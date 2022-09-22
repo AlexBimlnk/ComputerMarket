@@ -8,7 +8,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Market", "Market\Market.csproj", "{5E623093-67E3-4E3C-B66F-399C42803ECD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Market", "Market\Market.csproj", "{5E623093-67E3-4E3C-B66F-399C42803ECD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Import", "Import\Import.csproj", "{0C713648-C0C9-41DA-927E-1A41B91B4815}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Import.Logic", "Import.Logic\Import.Logic.csproj", "{FCF0F04C-FD67-4030-9941-EAB7EC7D8953}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,6 +24,14 @@ Global
 		{5E623093-67E3-4E3C-B66F-399C42803ECD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5E623093-67E3-4E3C-B66F-399C42803ECD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5E623093-67E3-4E3C-B66F-399C42803ECD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C713648-C0C9-41DA-927E-1A41B91B4815}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C713648-C0C9-41DA-927E-1A41B91B4815}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C713648-C0C9-41DA-927E-1A41B91B4815}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C713648-C0C9-41DA-927E-1A41B91B4815}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCF0F04C-FD67-4030-9941-EAB7EC7D8953}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCF0F04C-FD67-4030-9941-EAB7EC7D8953}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCF0F04C-FD67-4030-9941-EAB7EC7D8953}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCF0F04C-FD67-4030-9941-EAB7EC7D8953}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
