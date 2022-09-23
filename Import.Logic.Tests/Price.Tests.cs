@@ -30,7 +30,7 @@ public class PriceTests
 
     [Theory(DisplayName = $"The {nameof(Price)} cannot be created when price less 1.")]
     [Trait("Category", "Unit")]
-    [InlineData(0.999)]
+    [InlineData(-0.00000001)]
     [InlineData(0)]
     [InlineData(-5)]
     public void CanNotCreateWhenPriceLessOne(decimal price)
