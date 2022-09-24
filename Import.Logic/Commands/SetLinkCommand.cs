@@ -11,8 +11,7 @@ public sealed class SetLinkCommand : Command
 
     public SetLinkCommand(
         CommandID id,
-        SetLinkCommandParameters parameters)
-        : base(id)
+        SetLinkCommandParameters parameters) : base(id)
     {
         _parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
     }
