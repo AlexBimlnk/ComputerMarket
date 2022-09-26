@@ -28,7 +28,7 @@ public class PriceTests
         exception.Should().BeOfType<NotSupportedException>();
     }
 
-    [Theory(DisplayName = $"The {nameof(Price)} cannot be created when price less 1.")]
+    [Theory(DisplayName = $"The {nameof(Price)} cannot be created when price less than or equal to zero.")]
     [Trait("Category", "Unit")]
     [InlineData(-0.00000001)]
     [InlineData(0)]

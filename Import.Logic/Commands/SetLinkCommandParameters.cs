@@ -9,4 +9,4 @@
 /// <param name="ExternalID" xml:lang = "ru">
 /// Внеший идентификатор, который нужно привязать ко внутреннему.
 /// </param>
-public record class SetLinkCommandParameters(InternalID InternalID, ExternalID ExternalID);
+public sealed record class SetLinkCommandParameters(InternalID InternalID, ExternalID ExternalID);

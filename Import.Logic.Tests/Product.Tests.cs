@@ -77,7 +77,7 @@ public class ProductTests
         product.IsMapped.Should().Be(true);
     }
 
-    [Fact(DisplayName = $"The {nameof(Product)} can be mapped when already mapped.")]
+    [Fact(DisplayName = $"The {nameof(Product)} can't be mapped when already mapped.")]
     [Trait("Category", "Unit")]
     public void CanNotBeMappedWhenAlreadyMapped()
     {
