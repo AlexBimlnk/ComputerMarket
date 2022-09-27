@@ -8,10 +8,10 @@ DROP TABLE IF EXISTS item_properties;
 DROP TABLE IF EXISTS property_group;
 
 
-CREATE TABLE property_group(Id int primary key, Name varchar(20));
+CREATE TABLE property_group(Id BIGSERIAL primary key, Name varchar(20));
 
 CREATE TABLE item_properties(
-    Id int primary key,
+    Id BIGSERIAL primary key,
     Name varchar(20) not null,
     Group_id int null default null,
         foreign key (Group_id) references property_group(Id),
@@ -20,12 +20,12 @@ CREATE TABLE item_properties(
     );
 
 CREATE TABLE item_type(
-    Id int primary key,
+    Id BIGSERIAL primary key,
     Name varchar(20)
 );
 
 CREATE TABLE items(
-    Id int primary key,
+    Id BIGSERIAL primary key,
     Name varchar(40),
     Type_id int not null ,
         foreign key (Type_id) references item_type(Id)
@@ -46,7 +46,5 @@ CREATE TABLE item_description(
         foreign key (Property_Id) references item_properties(Id),
     Property_value varchar(40) null default null
 );
-
-
 
 commit;
