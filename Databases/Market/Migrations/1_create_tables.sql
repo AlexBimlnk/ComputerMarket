@@ -1,6 +1,8 @@
 begin;
 
 DROP TABLE IF EXISTS item_description;
+DROP TABLE IF EXISTS product;
+DROP TABLE IF EXISTS providers;
 DROP TABLE IF EXISTS items;
 DROP TABLE IF EXISTS type_description;
 DROP TABLE IF EXISTS item_type;
@@ -45,6 +47,24 @@ CREATE TABLE item_description(
     Property_Id int not null,
         foreign key (Property_Id) references item_properties(Id),
     Property_value varchar(40) null default null
+);
+
+CREATE TABLE providers(
+    Id bigserial primary key,
+    Name varchar(30) not null,
+    Margin decimal(5,4) not null default 1.0000,
+    Bank_account varchar(20) not null
+);
+
+
+CREATE TABLE product(
+    Item_id int not null,
+        foreign key (Item_id) references items(Id),
+    Base_cost decimal(20,2) not null,
+    Final_cost decimal(20,2) not null,
+    Quantity int not null default 0,
+    Provider_id int not null,
+        foreign key (Provider_id) references providers(Id)
 );
 
 commit;
