@@ -13,6 +13,5 @@ public enum CommandType
     /// <summary xml:lang = "ru">
     /// Установка связи.
     /// </summary>
-    [JsonProperty("set_link")]
     SetLink
 }
