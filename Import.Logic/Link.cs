@@ -3,10 +3,21 @@
 /// <summary xml:lang = "ru">
 /// Представляет связь внутреннего и внешнего продукта.
 /// </summary>
-/// <param name="InternalID" xml:lang = "ru">
-/// Внутренний идентификатор.
-/// </param>
-/// <param name="ExternalID" xml:lang = "ru">
-/// Внешний идентификатор.
-/// </param>
-public sealed record class Link(InternalID InternalID, ExternalID ExternalID);
+public sealed class Link : IEquatable<Link>
+{
+    public Link(InternalID internalID, ExternalID externalID)
+    {
+        InternalID = internalID;
+        ExternalID = externalID;
+    }
+
+    public InternalID InternalID { get; }
+    public ExternalID ExternalID { get; }
+
+    public override bool Equals(object? obj) => obj is Link link && Equals(link);
+
+    public bool Equals(Link? other) => 
+        other is not null && other.InternalID == InternalID && other.ExternalID == ExternalID;
+
+    public override int GetHashCode() => HashCode.Combine(InternalID, ExternalID);
+}

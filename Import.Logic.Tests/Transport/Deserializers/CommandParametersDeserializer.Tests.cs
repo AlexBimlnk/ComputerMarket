@@ -1,0 +1,134 @@
+﻿using Import.Logic.Abstractions.Commands;
+using Import.Logic.Commands;
+using Import.Logic.Transport.Deserializers;
+
+using Newtonsoft.Json;
+
+namespace Import.Logic.Tests.Transport.Deserializers;
+public class CommandParametersDeserializerTests
+{
+    [Fact(DisplayName = $"The {nameof(CommandParametersDeserializer)} can create.")]
+    [Trait("Category", "Unit")]
+    public void CanBeCreated()
+    {
+        // Act
+        var exception = Record.Exception(() =>
+            _ = new CommandParametersDeserializer());
+
+        // Assert
+        exception.Should().BeNull();
+    }
+
+    [Theory(DisplayName = $"The {nameof(CommandParametersDeserializer)} can deserialize.")]
+    [Trait("Category", "Unit")]
+    [MemberData(nameof(DeserializeParameters))]
+    public void CanDeserialize(string rawSource, CommandParameters expectedParameters)
+    {
+        // Arrange
+        var deserializer = new CommandParametersDeserializer();
+
+        // Act
+        var result = deserializer.Deserialize(rawSource);
+
+        // Assert
+        result.Should().BeEquivalentTo(expectedParameters,
+            options => options.RespectingRuntimeTypes());
+    }
+
+    [Theory(DisplayName = $"The {nameof(CommandParametersDeserializer)} can't deserialize bad string.")]
+    [Trait("Category", "Unit")]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("  ")]
+    [InlineData("\r\n   \t ")]
+    public void CanNotDeserializeBadString(string source)
+    {
+        // Arrange
+        var deserializer = new CommandParametersDeserializer();
+
+        // Act
+        var exception = Record.Exception(() =>
+            _ = deserializer.Deserialize(source));
+
+        // Assert
+        exception.Should().BeOfType<ArgumentException>();
+    }
+
+    [Fact(DisplayName = $"The {nameof(CommandParametersDeserializer)} can't deserialize unknown command type.")]
+    [Trait("Category", "Unit")]
+    public void CanNotDeserializeUnknownCommandType()
+    {
+        // Arrange
+        var deserializer = new CommandParametersDeserializer();
+        var rawSource = /*lang=json,strict*/ @"
+        {
+            ""type"": ""unknown_command"",
+            ""id"": ""some id"",
+            ""internal_id"": 1,
+            ""external_id"": 1,
+            ""provider"": ""horns_and_hooves""
+        }";
+
+        // Act
+        var exception = Record.Exception(() =>
+            _ = deserializer.Deserialize(rawSource));
+
+        // Assert
+        exception.Should().BeOfType<ArgumentException>();
+    }
+
+    [Fact(DisplayName = $"The {nameof(CommandParametersDeserializer)} can't deserialize unknown provider.")]
+    [Trait("Category", "Unit")]
+    public void CanNotDeserializeUnknownProvider()
+    {
+        // Arrange
+        var deserializer = new CommandParametersDeserializer();
+        var rawSource = /*lang=json,strict*/ @"
+        {
+            ""type"": ""set_link"",
+            ""id"": ""some id"",
+            ""internal_id"": 1,
+            ""external_id"": 1,
+            ""provider"": ""unknown_provider""
+        }";
+
+        // Act
+        var exception = Record.Exception(() =>
+            _ = deserializer.Deserialize(rawSource));
+
+        // Assert
+        exception.Should().BeOfType<JsonSerializationException>();
+    }
+
+    public readonly static TheoryData<string, CommandParameters> DeserializeParameters = new()
+    {
+        {
+            /*lang=json,strict*/ @"
+            {
+                ""type"": ""set_link"",
+                ""id"": ""some id"",
+                ""internal_id"": 1,
+                ""external_id"": 1,
+                ""provider"": ""horns_and_hooves""
+            }",
+            new SetLinkCommandParameters(
+                new("some id"),
+                new(1),
+                new(1, Provider.HornsAndHooves))
+        },
+        {
+            /*lang=json,strict*/ @"
+            {
+            ""type"": ""set_link"",
+            ""id"": ""some id"",
+            ""internal_id"": 2,
+            ""external_id"": 2,
+            ""provider"": ""ivanov""
+            }",
+            new SetLinkCommandParameters(
+                new("some id"),
+                new(2),
+                new(2, Provider.Ivanov))
+        }
+    };
+}

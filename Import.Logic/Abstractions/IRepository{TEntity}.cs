@@ -17,7 +17,7 @@ public interface IRepository<TEntity>
     /// <returns xml:lang = "ru">
     /// Объект типа <typeparamref name="TEntity"/>.
     /// </returns>
-    public Task<TEntity> GetById(int id);
+    public Task<TEntity> GetByIdAsync(int id);
 
     /// <summary xml:lang = "ru">
     /// Возвращает коллекцию сущностей, находящихся в репозитории.
@@ -25,7 +25,7 @@ public interface IRepository<TEntity>
     /// <returns xml:lang = "ru">
     /// Коллекция типа <see cref="IEnumerable{T}"/>.
     /// </returns>
-    public Task<IEnumerable<TEntity>> GetEntities();
+    public Task<IEnumerable<TEntity>> GetEntitiesAsync();
 
     /// <summary xml:lang = "ru">
     /// Определяет, находится ли данная сущность в репозитории.
@@ -36,7 +36,7 @@ public interface IRepository<TEntity>
     /// <returns xml:lang = "ru">
     /// <see langword="true"/>, если сущность есть в репозитории, иначе - <see langword="false"/>.
     /// </returns>
-    public Task<bool> Contains(TEntity entity);
+    public Task<bool> ContainsAsync(TEntity entity);
 
     /// <summary xml:lang = "ru">
     /// Добавляет сущность в репозиторий.
@@ -47,7 +47,7 @@ public interface IRepository<TEntity>
     /// <returns xml:lang = "ru">
     /// <see cref="Task"/>.
     /// </returns>
-    public Task Add(TEntity entity);
+    public Task AddAsync(TEntity entity);
 
     /// <summary xml:lang = "ru">
     /// Удаляет сущность из репозитория.
@@ -58,7 +58,7 @@ public interface IRepository<TEntity>
     /// <returns xml:lang = "ru">
     /// <see cref="Task"/>.
     /// </returns>
-    public Task Delete(TEntity entity);
+    public Task DeleteAsync(TEntity entity);
 
     /// <summary xml:lang = "ru">
     /// Сохраняет все накопленные команды.
@@ -66,5 +66,5 @@ public interface IRepository<TEntity>
     /// <returns xml:lang = "ru">
     /// <see cref="Task"/>.
     /// </returns>
-    public Task Save();
+    public Task SaveAsync();
 }
