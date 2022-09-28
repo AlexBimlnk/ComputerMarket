@@ -1,4 +1,7 @@
-﻿using Import.Logic.Commands;
+﻿using Import.Logic.Abstractions;
+using Import.Logic.Commands;
+
+using Moq;
 
 namespace Import.Logic.Tests.Commands;
 
@@ -10,31 +13,21 @@ public class SetLinkCommandTests
     {
         // Arrange
         SetLinkCommand command = null!;
-        var parameters = new SetLinkCommandParameters(new(1), new(1, Provider.Ivanov));
         var id = new CommandID("some id");
+        var parameters = new SetLinkCommandParameters(
+            id,
+            new(1), 
+            new(1, Provider.Ivanov));
+        var cache = Mock.Of<ICache<Link>>();
+        var repository = Mock.Of<IRepository<Link>>();
 
         // Act
         var exception = Record.Exception(() =>
-            command = new SetLinkCommand(id, parameters));
+            command = new SetLinkCommand(parameters, cache, repository));
 
         // Assert
         exception.Should().BeNull();
         command.Id.Should().Be(id);
-    }
-
-    [Fact(DisplayName = $"The {nameof(SetLinkCommand)} can't create without id.")]
-    [Trait("Category", "Unit")]
-    public void CanNotBeCreatedWithoutId()
-    {
-        // Arrange
-        var parameters = new SetLinkCommandParameters(new(1), new(1, Provider.Ivanov));
-
-        // Act
-        var exception = Record.Exception(() =>
-            _ = new SetLinkCommand(id: null!, parameters));
-
-        // Assert
-        exception.Should().NotBeNull().And.BeOfType<ArgumentNullException>();
     }
 
     [Fact(DisplayName = $"The {nameof(SetLinkCommand)} can't create without parameters.")]
@@ -42,11 +35,52 @@ public class SetLinkCommandTests
     public void CanNotBeCreatedWithoutParameters()
     {
         // Arrange
-        var id = new CommandID("some id");
+        var cache = Mock.Of<ICache<Link>>();
+        var repository = Mock.Of<IRepository<Link>>();
 
         // Act
         var exception = Record.Exception(() =>
-            _ = new SetLinkCommand(id, parameters: null!));
+            _ = new SetLinkCommand(parameters: null!, cache, repository));
+
+        // Assert
+        exception.Should().NotBeNull().And.BeOfType<ArgumentNullException>();
+    }
+
+    [Fact(DisplayName = $"The {nameof(SetLinkCommand)} can't create without cache.")]
+    [Trait("Category", "Unit")]
+    public void CanNotBeCreatedWithoutCache()
+    {
+        // Arrange
+        var id = new CommandID("some id");
+        var parameters = new SetLinkCommandParameters(
+            id,
+            new(1),
+            new(1, Provider.Ivanov));
+        var repository = Mock.Of<IRepository<Link>>();
+
+        // Act
+        var exception = Record.Exception(() =>
+            _ = new SetLinkCommand(parameters, cacheLinks: null!, repository));
+
+        // Assert
+        exception.Should().NotBeNull().And.BeOfType<ArgumentNullException>();
+    }
+
+    [Fact(DisplayName = $"The {nameof(SetLinkCommand)} can't create without repository.")]
+    [Trait("Category", "Unit")]
+    public void CanNotBeCreatedWithoutRepository()
+    {
+        // Arrange
+        var id = new CommandID("some id");
+        var parameters = new SetLinkCommandParameters(
+            id,
+            new(1),
+            new(1, Provider.Ivanov));
+        var cache = Mock.Of<ICache<Link>>();
+
+        // Act
+        var exception = Record.Exception(() =>
+            _ = new SetLinkCommand(parameters, cache, linkRepository: null!));
 
         // Assert
         exception.Should().NotBeNull().And.BeOfType<ArgumentNullException>();
@@ -57,9 +91,26 @@ public class SetLinkCommandTests
     public async void CanExecuteAsync()
     {
         // Arrange
-        var parameters = new SetLinkCommandParameters(new(1), new(1, Provider.Ivanov));
         var id = new CommandID("some id");
-        var command = new SetLinkCommand(id, parameters);
+        var parameters = new SetLinkCommandParameters(
+            id,
+            new(1),
+            new(1, Provider.Ivanov));
+        var link = new Link(parameters.InternalID, parameters.ExternalID);
+
+        var cache = new Mock<ICache<Link>>();
+        var cacheInvokeCount = 0;
+        cache.Setup(x => x.Contains(link))
+            .Returns(false)
+            .Callback(() => cacheInvokeCount++);
+
+        var repository = new Mock<IRepository<Link>>();
+
+        var command = new SetLinkCommand(
+            parameters, 
+            cache.Object, 
+            repository.Object);
+
         var expectedResult = CommandResult.Success(id);
 
         // Act
@@ -67,5 +118,47 @@ public class SetLinkCommandTests
 
         // Assert
         expectedResult.Should().BeEquivalentTo(result);
+        cacheInvokeCount.Should().Be(1);
+
+        cache.Verify(x => x.Add(link), Times.Once);
+
+        repository.Verify(x => x.AddAsync(link), Times.Once);
+        repository.Verify(x => x.SaveAsync(), Times.Once);
+    }
+
+    [Fact(DisplayName = $"The {nameof(SetLinkCommand)} can execute when link already exists.")]
+    [Trait("Category", "Unit")]
+    public async void CanExecuteWhenLinkAlreadyExistsAsync()
+    {
+        // Arrange
+        var id = new CommandID("some id");
+        var parameters = new SetLinkCommandParameters(
+            id,
+            new(1),
+            new(1, Provider.Ivanov));
+        var link = new Link(parameters.InternalID, parameters.ExternalID);
+
+        var repository = new Mock<IRepository<Link>>(MockBehavior.Strict);
+
+        var cache = new Mock<ICache<Link>>();
+        var cacheInvokeCount = 0;
+        cache.Setup(x => x.Contains(link))
+            .Returns(true)
+            .Callback(() => cacheInvokeCount++);
+
+        var command = new SetLinkCommand(
+            parameters,
+            cache.Object,
+            repository.Object);
+
+        var expectedResult = CommandResult.Fail(id, "some error message");
+
+        // Act
+        var result = await command.ExecuteAsync();
+
+        // Assert
+        expectedResult.Should().BeEquivalentTo(result, 
+            opt => opt.Excluding(x => x.ErrorMessage));
+        cacheInvokeCount.Should().Be(1);
     }
 }

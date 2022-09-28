@@ -1,21 +1,17 @@
 ﻿using Import.Logic.Commands;
 
-namespace Import.Logic.Abstractions;
+namespace Import.Logic.Abstractions.Commands;
 
 /// <summary xml:lang = "ru">
 /// Абстрактная команда создания связей.
 /// </summary>
-public abstract class Command : ICommand
+public abstract class CommandBase : ICommand
 {
-    protected Command(CommandID id)
-    {
-        Id = id ?? throw new ArgumentNullException(nameof(id));
-    }
 
     /// <summary xml:lang = "ru">
     /// Идентификатор команды.
     /// </summary>
-    public CommandID Id { get; }
+    public abstract CommandID Id { get; }
 
     protected abstract Task ExecuteCoreAsync();
 

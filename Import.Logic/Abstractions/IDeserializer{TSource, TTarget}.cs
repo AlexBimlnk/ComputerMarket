@@ -11,5 +11,15 @@
 /// </typeparam>
 public interface IDeserializer<TSource, TTarget>
 {
+    /// <summary xml:lang = "ru">
+    /// Десериализует исходный объект <paramref name="source"/> 
+    /// в объект типа <typeparamref name="TTarget"/>.
+    /// </summary>
+    /// <param name="source" xml:lang = "ru">
+    /// Сериализированный ресурс.
+    /// </param>
+    /// <returns xml:lang = "ru">
+    /// Результат десериализации типа <typeparamref name="TTarget"/>.
+    /// </returns>
     public TTarget Deserialize(TSource source);
 }
