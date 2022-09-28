@@ -1,4 +1,5 @@
 ﻿using Import.Logic.Abstractions;
+using Import.Logic.Models;
 
 using Microsoft.Extensions.Logging;
 

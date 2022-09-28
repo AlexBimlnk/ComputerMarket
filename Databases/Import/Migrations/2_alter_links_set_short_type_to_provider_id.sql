@@ -1,0 +1,2 @@
+ALTER TABLE links
+ALTER COLUMN provider_id TYPE SMALLINT;

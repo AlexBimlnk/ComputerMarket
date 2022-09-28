@@ -1,4 +1,5 @@
 ﻿using Import.Logic.Commands;
+using Import.Logic.Models;
 
 namespace Import.Logic.Tests.Commands;
 

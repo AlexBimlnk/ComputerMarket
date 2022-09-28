@@ -1,4 +1,6 @@
-﻿namespace Import.Logic.Commands;
+﻿using Import.Logic.Models;
+
+namespace Import.Logic.Commands;
 
 /// <summary xml:lang = "ru">
 /// Параметры для команды на установку связи.

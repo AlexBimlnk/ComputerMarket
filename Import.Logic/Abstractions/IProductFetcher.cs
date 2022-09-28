@@ -1,4 +1,6 @@
-﻿namespace Import.Logic.Abstractions;
+﻿using Import.Logic.Models;
+
+namespace Import.Logic.Abstractions;
 
 /// <summary xml:lang = "ru">
 /// Описывает получателя продуктов.

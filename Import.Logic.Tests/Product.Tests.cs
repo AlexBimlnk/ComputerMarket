@@ -1,3 +1,5 @@
+using Import.Logic.Models;
+
 namespace Import.Logic.Tests;
 
 public class ProductTests
