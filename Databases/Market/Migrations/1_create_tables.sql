@@ -10,11 +10,11 @@ DROP TABLE IF EXISTS item_properties;
 DROP TABLE IF EXISTS property_group;
 
 
-CREATE TABLE property_group(Id BIGSERIAL primary key, Name varchar(20));
+CREATE TABLE property_group(Id BIGSERIAL primary key, Name varchar(40));
 
 CREATE TABLE item_properties(
     Id BIGSERIAL primary key,
-    Name varchar(20) not null,
+    Name varchar(40) not null,
     Group_id int null default null,
         foreign key (Group_id) references property_group(Id),
     Is_filterable bool not null default false,
@@ -23,7 +23,7 @@ CREATE TABLE item_properties(
 
 CREATE TABLE item_type(
     Id BIGSERIAL primary key,
-    Name varchar(20)
+    Name varchar(40)
 );
 
 CREATE TABLE items(
