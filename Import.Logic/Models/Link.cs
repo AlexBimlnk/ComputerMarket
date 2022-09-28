@@ -1,4 +1,4 @@
-﻿namespace Import.Logic;
+﻿namespace Import.Logic.Models;
 
 /// <summary xml:lang = "ru">
 /// Представляет связь внутреннего и внешнего продукта.

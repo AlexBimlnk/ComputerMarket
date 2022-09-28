@@ -1,4 +1,4 @@
-﻿namespace Import.Logic;
+﻿namespace Import.Logic.Models;
 
 /// <summary xml:lang = "ru">
 /// Продукт.
@@ -26,8 +26,8 @@ public sealed class Product
     /// Когда <paramref name="quantity"/> меньше нуля.
     /// </exception>
     public Product(
-        ExternalID externalID, 
-        Price price, 
+        ExternalID externalID,
+        Price price,
         int quantity)
     {
         ExternalID = externalID;

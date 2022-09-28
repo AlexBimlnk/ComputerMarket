@@ -1,5 +1,6 @@
 ﻿using Import.Logic.Abstractions;
 using Import.Logic.Abstractions.Commands;
+using Import.Logic.Models;
 
 namespace Import.Logic.Commands;
 

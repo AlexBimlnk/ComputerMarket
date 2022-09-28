@@ -2,7 +2,7 @@
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 
-namespace Import.Logic;
+namespace Import.Logic.Models;
 
 /// <summary xml:lang = "ru">
 /// Внешние поставщики продуктов.
@@ -11,11 +11,12 @@ namespace Import.Logic;
 public enum Provider
 {
     /// <summary xml:lang = "ru">
+    /// Иванов.
+    /// </summary>
+    Ivanov = 1,
+
+    /// <summary xml:lang = "ru">
     /// Рога и копыта.
     /// </summary>
     HornsAndHooves,
-    /// <summary xml:lang = "ru">
-    /// Иванов.
-    /// </summary>
-    Ivanov
 }

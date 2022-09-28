@@ -1,5 +1,6 @@
 ﻿using Import.Logic.Abstractions;
 using Import.Logic.Commands;
+using Import.Logic.Models;
 
 using Moq;
 

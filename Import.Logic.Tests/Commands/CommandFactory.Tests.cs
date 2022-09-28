@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using Import.Logic.Abstractions.Commands;
 using Import.Logic.Commands;
+using Import.Logic.Models;
 
 using Moq;
 
