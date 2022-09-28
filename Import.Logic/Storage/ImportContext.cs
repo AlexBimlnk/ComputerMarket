@@ -3,6 +3,10 @@
 using Microsoft.EntityFrameworkCore;
 
 namespace Import.Logic.Storage;
+
+/// <summary xml:lang = "ru">
+/// Констекс базы данных сервиса "Импорта".
+/// </summary>
 public class ImportContext : DbContext
 {
     public ImportContext(DbContextOptions<ImportContext> options)
@@ -10,9 +14,9 @@ public class ImportContext : DbContext
     {
     }
 
-    public DbSet<History> Histories { get; set; }
-    public DbSet<Link> Links { get; set; }
-    public DbSet<Provider> Providers { get; set; }
+    public DbSet<History> Histories { get; set; } = default!;
+    public DbSet<Link> Links { get; set; } = default!;
+    public DbSet<Provider> Providers { get; set; } = default!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
