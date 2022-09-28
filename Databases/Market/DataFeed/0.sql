@@ -25,15 +25,9 @@ insert into item_properties(id,name, group_id, is_filterable, property_data_type
         (5,'Интерфейс',2,false,'varchar'),
         (6,'Форм фактор',2,true,'varchar'),
         (7,'Видеочипсет',2,false,'varchar'),
-        --(8,'Разъемы',2,false,'varchar'),
-        --(9,'Особености',2,false,'varchar'),
-
-        -- TODO разъемы + слоты и т.п.
-
         (10,'Частота',2, true,'varchar'),
         (11,'Тип памяти',2,true,'varchar'),
         (12,'Потребляемая мощность',1,false,'varchar'),
-        --(13,'Слоты',2,false,'varchar');
         (14,'Тепловыделение',2,false,'varchar');
 
 INSERT INTO item_type_properties(type_id, property_id)
@@ -42,9 +36,9 @@ INSERT INTO item_type_properties(type_id, property_id)
            
            (2,1), (2,4), (2,5), (2,6),
            
-           (3,1), (3,7), (3,4), (3,5), -- (3,8),
+           (3,1), (3,7), (3,4), (3,5),
            
-           (4,1), (4,2), (4,6), -- (4,13), -- (4,8),
+           (4,1), (4,2), (4,6), 
            
            (5,1), (5,2),
            
@@ -52,4 +46,4 @@ INSERT INTO item_type_properties(type_id, property_id)
            
            (7,1), (7,6), (7,12),
            
-           (8,1), (8,6); -- (8,8);
+           (8,1), (8,6);
