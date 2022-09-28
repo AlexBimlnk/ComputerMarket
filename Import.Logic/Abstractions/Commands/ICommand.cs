@@ -1,6 +1,6 @@
 ﻿using Import.Logic.Commands;
 
-namespace Import.Logic.Abstractions;
+namespace Import.Logic.Abstractions.Commands;
 
 /// <summary xml:lang = "ru">
 /// Описывает команду для создания связей.

@@ -6,7 +6,7 @@
 /// <typeparam name="TEntity" xml:lang = "ru">
 /// Тип сущности, находящийся в кэше.
 /// </typeparam>
-internal interface ICache<TEntity>
+public interface ICache<TEntity>
 {
     /// <summary xml:lang = "ru">
     /// Добавляет сущность в кэш.
