@@ -4,7 +4,7 @@ DROP TABLE IF EXISTS item_description;
 DROP TABLE IF EXISTS product;
 DROP TABLE IF EXISTS providers;
 DROP TABLE IF EXISTS items;
-DROP TABLE IF EXISTS type_description;
+DROP TABLE IF EXISTS item_type_properties;
 DROP TABLE IF EXISTS item_type;
 DROP TABLE IF EXISTS item_properties;
 DROP TABLE IF EXISTS property_group;
@@ -34,7 +34,7 @@ CREATE TABLE items(
 
 );
 
-CREATE TABLE type_description(
+CREATE TABLE item_type_properties(
     Type_id INT NOT NULL,
         FOREIGN KEY (Type_id) REFERENCES item_type(Id) ON DELETE RESTRICT,
     Property_id INT NOT NULL ,
@@ -45,7 +45,7 @@ CREATE TABLE item_description(
     Item_id INT NOT NULL ,
         FOREIGN KEY (Item_id) REFERENCES items(Id) ON DELETE RESTRICT,
     Property_Id INT NOT NULL ,
-        FOREIGN KEY (Property_Id) REFERENCES item_properties(Id) ON DELETE CASCADE,
+        FOREIGN KEY (Property_Id) REFERENCES item_properties(Id)ON DELETE CASCADE,
     Property_value VARCHAR(40) NULL DEFAULT NULL
 );
 
