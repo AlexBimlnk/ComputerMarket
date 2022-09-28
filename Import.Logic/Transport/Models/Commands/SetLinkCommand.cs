@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using Import.Logic.Models;
+
+using Newtonsoft.Json;
 
 namespace Import.Logic.Transport.Models.Commands;
 
