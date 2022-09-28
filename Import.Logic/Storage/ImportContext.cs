@@ -10,7 +10,7 @@ public class ImportContext : DbContext
     {
     }
 
-    public DbSet<History> ExternalProducts { get; set; }
+    public DbSet<History> Histories { get; set; }
     public DbSet<Link> Links { get; set; }
     public DbSet<Provider> Providers { get; set; }
 
