@@ -1,8 +1,8 @@
-insert into property_group(id, name)
-    values (1,'Общие'),(2,'Характеристики');
+INSERT INTO property_group(id, name)
+    VALUES (1,'Общие'),(2,'Характеристики');
 
-insert into item_type(id,name)
-    values
+INSERT INTO item_type(id,name)
+    VALUES
         (1,'Процессор'),
         (2,'HDD и SSD'),
         (3,'Видеокарта'),
@@ -13,7 +13,7 @@ insert into item_type(id,name)
         (8,'Корпус');
 
 insert into item_properties(id,name, group_id, is_filterable, property_data_type)
-    values
+    VALUES
         (1,'Брэнд',1,true,'varchar'),
         (2,'Соккет',2,false,'varchar'),
         (3,'Число ядер',2,false,'int'),
@@ -31,8 +31,8 @@ insert into item_properties(id,name, group_id, is_filterable, property_data_type
         (12,'Мощность',1,false,'varchar'),
         (13,'Слоты',2,false,'varchar');
 
-insert into type_description(type_id, property_id)
-    values
+INSERT INTO type_description(type_id, property_id)
+    VALUES
            (1,1),
            (1,2),
            (1,3),

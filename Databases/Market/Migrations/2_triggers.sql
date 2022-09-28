@@ -1,6 +1,6 @@
-begin;
+BEGIN;
 
-CREATE or REPLACE FUNCTION update_provider_product_price()
+CREATE OR REPLACE FUNCTION update_provider_product_price()
 RETURNS TRIGGER
 AS
 $trg$
@@ -17,4 +17,4 @@ CREATE TRIGGER trg_update_provider_product_price AFTER UPDATE OF margin ON provi
     FOR EACH ROW
     EXECUTE PROCEDURE update_provider_product_price(margin, id);
 
-commit;
+COMMIT;
