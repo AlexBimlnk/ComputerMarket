@@ -6,13 +6,13 @@ namespace Import.Logic.Transport.Models.Commands;
 /// <summary xml:lang = "ru">
 /// Конвертер команд.
 /// </summary>
-public sealed class CommandConverter : JsonConverter<Command>
+public sealed class CommandConverter : JsonConverter<CommandBase>
 {
     /// <inheritdoc/>
-    public override Command? ReadJson(
+    public override CommandBase? ReadJson(
         JsonReader reader,
         Type objectType,
-        Command? existingValue,
+        CommandBase? existingValue,
         bool hasExistingValue,
         JsonSerializer serializer)
     {
@@ -27,6 +27,6 @@ public sealed class CommandConverter : JsonConverter<Command>
     }
 
     /// <inheritdoc/>
-    public override void WriteJson(JsonWriter writer, Command? value, JsonSerializer serializer) =>
+    public override void WriteJson(JsonWriter writer, CommandBase? value, JsonSerializer serializer) =>
         throw new NotSupportedException();
 }

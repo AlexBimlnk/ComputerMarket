@@ -22,7 +22,7 @@ public class CommandParametersDeserializerTests
     [Theory(DisplayName = $"The {nameof(CommandParametersDeserializer)} can deserialize.")]
     [Trait("Category", "Unit")]
     [MemberData(nameof(DeserializeParameters))]
-    public void CanDeserialize(string rawSource, CommandParameters expectedParameters)
+    public void CanDeserialize(string rawSource, CommandParametersBase expectedParameters)
     {
         // Arrange
         var deserializer = new CommandParametersDeserializer();
@@ -100,7 +100,7 @@ public class CommandParametersDeserializerTests
         exception.Should().BeOfType<JsonSerializationException>();
     }
 
-    public readonly static TheoryData<string, CommandParameters> DeserializeParameters = new()
+    public readonly static TheoryData<string, CommandParametersBase> DeserializeParameters = new()
     {
         {
             /*lang=json,strict*/ @"

@@ -60,7 +60,7 @@ public class CommandFactoryTests
 
     [Fact(DisplayName = $"The {nameof(CommandFactory)} can't create without parameters.")]
     [Trait("Category", "Unit")]
-    public void CanNotCreateWithoutPatameters()
+    public void CanNotCreateWithoutParameters()
     {
         // Arrange
         var setLink = Mock.Of<Func<SetLinkCommandParameters, ICommand>>(MockBehavior.Strict);
@@ -77,7 +77,7 @@ public class CommandFactoryTests
 
     [Fact(DisplayName = $"The {nameof(CommandFactory)} can't create with unknown parameters.")]
     [Trait("Category", "Unit")]
-    public void CanNotCreateWithUnknownPatameters()
+    public void CanNotCreateWithUnknownParameters()
     {
         // Arrange
         var setLink = Mock.Of<Func<SetLinkCommandParameters, ICommand>>(MockBehavior.Strict);
@@ -93,7 +93,7 @@ public class CommandFactoryTests
         exception.Should().BeOfType<ArgumentException>();
     }
 
-    private class UnknownParameters : CommandParameters
+    private class UnknownParameters : CommandParametersBase
     {
         public UnknownParameters(CommandID id) : base(id)
         {

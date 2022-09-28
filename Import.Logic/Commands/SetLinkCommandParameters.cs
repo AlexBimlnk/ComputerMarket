@@ -11,11 +11,14 @@ namespace Import.Logic.Commands;
 /// <param name="ExternalID" xml:lang = "ru">
 /// Внеший идентификатор, который нужно привязать ко внутреннему.
 /// </param>
-public sealed class SetLinkCommandParameters : CommandParameters
+public sealed class SetLinkCommandParameters : CommandParametersBase
 {
     /// <summary xml:lang = "ru">
     /// Создает новый экземпляр типа <see cref="SetLinkCommandParameters"/>.
     /// </summary>
+    /// <param name="id" xml:lang = "ru">
+    /// Идентификатор команды.
+    /// </param>
     /// <param name="internalID" xml:lang = "ru">
     /// Внутренний идентификатор.
     /// </param>

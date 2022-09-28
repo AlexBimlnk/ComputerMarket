@@ -5,7 +5,7 @@ namespace Import.Logic.Transport.Models.Commands;
 /// <summary xml:lang = "ru">
 /// Транспортная модель команды для установки связи.
 /// </summary>
-public sealed class SetLinkCommand : Command
+public sealed class SetLinkCommand : CommandBase
 {
     /// <summary xml:lang = "ru">
     /// Создает новый экземпляр типа <see cref="SetLinkCommand"/>.

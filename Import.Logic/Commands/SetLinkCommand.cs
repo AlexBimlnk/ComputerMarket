@@ -6,7 +6,7 @@ namespace Import.Logic.Commands;
 /// <summary xml:lang = "ru">
 /// Команда на установку связи.
 /// </summary>
-public sealed class SetLinkCommand : Command
+public sealed class SetLinkCommand : CommandBase
 {
     private readonly SetLinkCommandParameters _parameters;
     private readonly ICache<Link> _cacheLinks;
@@ -15,9 +15,6 @@ public sealed class SetLinkCommand : Command
     /// <summary xml:lang = "ru">
     /// Создает новый экземпляр типа <see cref="SetLinkCommand"/>.
     /// </summary>
-    /// <param name="id" xml:lang = "ru">
-    /// Идентификатор команды.
-    /// </param>
     /// <param name="parameters" xml:lang = "ru">
     /// Параметры команды.
     /// </param>

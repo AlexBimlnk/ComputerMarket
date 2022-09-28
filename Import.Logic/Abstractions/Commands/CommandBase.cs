@@ -5,7 +5,7 @@ namespace Import.Logic.Abstractions.Commands;
 /// <summary xml:lang = "ru">
 /// Абстрактная команда создания связей.
 /// </summary>
-public abstract class Command : ICommand
+public abstract class CommandBase : ICommand
 {
 
     /// <summary xml:lang = "ru">

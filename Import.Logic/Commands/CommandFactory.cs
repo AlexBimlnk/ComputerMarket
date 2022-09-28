@@ -21,25 +21,8 @@ public sealed class CommandFactory : ICommandFactory
         _setLinkCommandFactory = setLinkCommandFactory;
     }
 
-    /// <summary xml:lang = "ru">
-    /// Создаёт на основе параметров команду типа <see cref="ICommand"/>. 
-    /// </summary>
-    /// <param name="id" xml:lang = "ru">
-    /// Идентификатор команды.
-    /// </param>
-    /// <param name="parameters" xml:lang = "ru">
-    /// Параметры команды.
-    /// </param>
-    /// <returns xml:lang = "ru">
-    /// Команду типа <see cref="ICommand"/>.
-    /// </returns>
-    /// <exception cref="ArgumentNullException" xml:lang = "ru">
-    /// Если любой из параметров равен <see langword="null"/>.
-    /// </exception>
-    /// <exception cref="ArgumentException" xml:lang = "ru">
-    /// Если параметры команды имеют неизвестный тип.
-    /// </exception>
-    public ICommand Create(CommandParameters parameters)
+    /// <inheritdoc/>
+    public ICommand Create(CommandParametersBase parameters)
     {
         ArgumentNullException.ThrowIfNull(parameters);
 

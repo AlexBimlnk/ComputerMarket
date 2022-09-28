@@ -5,15 +5,15 @@ namespace Import.Logic.Transport.Models.Commands;
 /// <summary xml:lang = "ru">
 /// Представляет базовую транспортную модель команды.
 /// </summary>
-public abstract class Command
+public abstract class CommandBase
 {
     /// <summary xml:lang = "ru">
-    /// Создает объект типа <see cref="Command"/>.
+    /// Создает объект типа <see cref="CommandBase"/>.
     /// </summary>
     /// <param name="type" xml:lang = "ru">
     /// Тип команды.
     /// </param>
-    protected Command(CommandType type, string id)
+    protected CommandBase(CommandType type, string id)
     {
         Id = id;
         Type = type;

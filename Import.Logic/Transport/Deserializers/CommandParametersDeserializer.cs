@@ -7,13 +7,13 @@ using Newtonsoft.Json;
 
 namespace Import.Logic.Transport.Deserializers;
 
-using TCommand = Models.Commands.Command;
+using TCommand = Models.Commands.CommandBase;
 using TSetLinkCommand = Models.Commands.SetLinkCommand;
 
 /// <summary xml:lang = "ru">
-/// Дессериализатор из <see cref="string"/> в <see cref="CommandParameters"/>.
+/// Дессериализатор из <see cref="string"/> в <see cref="CommandParametersBase"/>.
 /// </summary>
-public sealed class CommandParametersDeserializer : IDeserializer<string, CommandParameters>
+public sealed class CommandParametersDeserializer : IDeserializer<string, CommandParametersBase>
 {
     private readonly JsonSerializer _serializer = JsonSerializer.CreateDefault(new JsonSerializerSettings
     {
@@ -24,7 +24,7 @@ public sealed class CommandParametersDeserializer : IDeserializer<string, Comman
     });
 
     /// <inheritdoc/>
-    public CommandParameters Deserialize(string source)
+    public CommandParametersBase Deserialize(string source)
     {
         if (string.IsNullOrWhiteSpace(source))
             throw new ArgumentException(
