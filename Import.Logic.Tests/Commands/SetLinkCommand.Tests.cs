@@ -123,8 +123,8 @@ public class SetLinkCommandTests
 
         cache.Verify(x => x.Add(link), Times.Once);
 
-        repository.Verify(x => x.AddAsync(link), Times.Once);
-        repository.Verify(x => x.SaveAsync(), Times.Once);
+        repository.Verify(x => x.AddAsync(link, It.IsAny<CancellationToken>()), Times.Once);
+        repository.Verify(x => x.Save(), Times.Once);
     }
 
     [Fact(DisplayName = $"The {nameof(SetLinkCommand)} can execute when link already exists.")]

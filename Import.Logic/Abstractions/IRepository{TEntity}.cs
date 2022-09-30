@@ -7,25 +7,15 @@
 /// Тип сущности находящейся в репозитории.
 /// </typeparam>
 public interface IRepository<TEntity>
+    where TEntity : class
 {
-    /// <summary xml:lang = "ru">
-    /// Возвращает сущность по её идентификатору.
-    /// </summary>
-    /// <param name="id" xml:lang = "ru">
-    /// Идентификатор сущности.
-    /// </param>
-    /// <returns xml:lang = "ru">
-    /// Объект типа <typeparamref name="TEntity"/>.
-    /// </returns>
-    public Task<TEntity> GetByIdAsync(int id);
-
     /// <summary xml:lang = "ru">
     /// Возвращает коллекцию сущностей, находящихся в репозитории.
     /// </summary>
     /// <returns xml:lang = "ru">
-    /// Коллекция типа <see cref="IEnumerable{T}"/>.
+    /// Коллекция типа <see cref="IQueryable{T}"/>.
     /// </returns>
-    public Task<IEnumerable<TEntity>> GetEntitiesAsync();
+    public IQueryable<TEntity> GetEntities();
 
     /// <summary xml:lang = "ru">
     /// Определяет, находится ли данная сущность в репозитории.
@@ -33,10 +23,13 @@ public interface IRepository<TEntity>
     /// <param name="entity" xml:lang = "ru">
     /// Сущность.
     /// </param>
+    /// <param name="token" xml:lang = "ru">
+    /// Токен отмены.
+    /// </param>
     /// <returns xml:lang = "ru">
     /// <see langword="true"/>, если сущность есть в репозитории, иначе - <see langword="false"/>.
     /// </returns>
-    public Task<bool> ContainsAsync(TEntity entity);
+    public Task<bool> ContainsAsync(TEntity entity, CancellationToken token = default);
 
     /// <summary xml:lang = "ru">
     /// Добавляет сущность в репозиторий.
@@ -44,10 +37,13 @@ public interface IRepository<TEntity>
     /// <param name="entity" xml:lang = "ru">
     /// Сущность.
     /// </param>
+    /// <param name="token" xml:lang = "ru">
+    /// Токен отмены.
+    /// </param>
     /// <returns xml:lang = "ru">
     /// <see cref="Task"/>.
     /// </returns>
-    public Task AddAsync(TEntity entity);
+    public Task AddAsync(TEntity entity, CancellationToken token = default);
 
     /// <summary xml:lang = "ru">
     /// Удаляет сущность из репозитория.
@@ -55,10 +51,7 @@ public interface IRepository<TEntity>
     /// <param name="entity" xml:lang = "ru">
     /// Сущность.
     /// </param>
-    /// <returns xml:lang = "ru">
-    /// <see cref="Task"/>.
-    /// </returns>
-    public Task DeleteAsync(TEntity entity);
+    public void Delete(TEntity entity);
 
     /// <summary xml:lang = "ru">
     /// Сохраняет все накопленные команды.
@@ -66,5 +59,5 @@ public interface IRepository<TEntity>
     /// <returns xml:lang = "ru">
     /// <see cref="Task"/>.
     /// </returns>
-    public Task SaveAsync();
+    public void Save();
 }

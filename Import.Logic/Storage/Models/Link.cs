@@ -8,12 +8,12 @@ public sealed class Link
     /// <summary xml:lang = "ru">
     /// Внутренний идентификатор продукта.
     /// </summary>
-    public int InternalId { get; set; }
+    public long InternalId { get; set; }
 
     /// <summary xml:lang = "ru">
     /// Внешний идентификатор продукта.
     /// </summary>
-    public int ExternalId { get; set; }
+    public long ExternalId { get; set; }
 
     /// <summary xml:lang = "ru">
     /// Идентификатор поставщика.
