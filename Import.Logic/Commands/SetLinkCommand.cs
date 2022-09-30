@@ -10,7 +10,7 @@ namespace Import.Logic.Commands;
 public sealed class SetLinkCommand : CommandBase
 {
     private readonly SetLinkCommandParameters _parameters;
-    private readonly ICache<Link> _cacheLinks;
+    private readonly ICache<ExternalID ,Link> _cacheLinks;
     private readonly IRepository<Link> _linkRepository;
 
     /// <summary xml:lang = "ru">
@@ -30,7 +30,7 @@ public sealed class SetLinkCommand : CommandBase
     /// </exception>
     public SetLinkCommand(
         SetLinkCommandParameters parameters,
-        ICache<Link> cacheLinks,
+        ICache<ExternalID ,Link> cacheLinks,
         IRepository<Link> linkRepository)
     {
         _parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
@@ -45,12 +45,12 @@ public sealed class SetLinkCommand : CommandBase
     {
         var link = new Link(_parameters.InternalID, _parameters.ExternalID);
 
-        if (_cacheLinks.Contains(link))
+        if (_cacheLinks.Contains(link.ExternalID))
             throw new InvalidOperationException("Such a link already exists.");
 
         await _linkRepository.AddAsync(link);
         await _linkRepository.SaveAsync();
 
-        _cacheLinks.Add(link);
+        _cacheLinks.Add(link.ExternalID, link);
     }
 }

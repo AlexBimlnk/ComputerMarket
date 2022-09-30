@@ -19,7 +19,7 @@ public class SetLinkCommandTests
             id,
             new(1), 
             new(1, Provider.Ivanov));
-        var cache = Mock.Of<ICache<Link>>();
+        var cache = Mock.Of<ICache<ExternalID ,Link>>();
         var repository = Mock.Of<IRepository<Link>>();
 
         // Act
@@ -36,7 +36,7 @@ public class SetLinkCommandTests
     public void CanNotBeCreatedWithoutParameters()
     {
         // Arrange
-        var cache = Mock.Of<ICache<Link>>();
+        var cache = Mock.Of<ICache<ExternalID ,Link>>();
         var repository = Mock.Of<IRepository<Link>>();
 
         // Act
@@ -77,7 +77,7 @@ public class SetLinkCommandTests
             id,
             new(1),
             new(1, Provider.Ivanov));
-        var cache = Mock.Of<ICache<Link>>();
+        var cache = Mock.Of<ICache<ExternalID, Link>>();
 
         // Act
         var exception = Record.Exception(() =>
@@ -99,9 +99,9 @@ public class SetLinkCommandTests
             new(1, Provider.Ivanov));
         var link = new Link(parameters.InternalID, parameters.ExternalID);
 
-        var cache = new Mock<ICache<Link>>();
+        var cache = new Mock<ICache<ExternalID, Link>>();
         var cacheInvokeCount = 0;
-        cache.Setup(x => x.Contains(link))
+        cache.Setup(x => x.Contains(link.ExternalID))
             .Returns(false)
             .Callback(() => cacheInvokeCount++);
 
@@ -121,7 +121,7 @@ public class SetLinkCommandTests
         expectedResult.Should().BeEquivalentTo(result);
         cacheInvokeCount.Should().Be(1);
 
-        cache.Verify(x => x.Add(link), Times.Once);
+        cache.Verify(x => x.Add(link.ExternalID ,link), Times.Once);
 
         repository.Verify(x => x.AddAsync(link), Times.Once);
         repository.Verify(x => x.SaveAsync(), Times.Once);
@@ -141,9 +141,9 @@ public class SetLinkCommandTests
 
         var repository = new Mock<IRepository<Link>>(MockBehavior.Strict);
 
-        var cache = new Mock<ICache<Link>>();
+        var cache = new Mock<ICache<ExternalID, Link>>();
         var cacheInvokeCount = 0;
-        cache.Setup(x => x.Contains(link))
+        cache.Setup(x => x.Contains(link.ExternalID))
             .Returns(true)
             .Callback(() => cacheInvokeCount++);
 
