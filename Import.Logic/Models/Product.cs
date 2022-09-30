@@ -1,9 +1,11 @@
-﻿namespace Import.Logic.Models;
+﻿using Import.Logic.Abstractions;
+
+namespace Import.Logic.Models;
 
 /// <summary xml:lang = "ru">
 /// Продукт.
 /// </summary>
-public sealed class Product
+public sealed class Product: IMappableEntity<InternalID, ExternalID>
 {
     private InternalID? _internalID;
 
@@ -60,10 +62,9 @@ public sealed class Product
     /// </summary>
     public int Quantity { get; }
 
-    /// <summary xml:lang = "ru">
-    /// Указывает на наличие связи с внутренним продуктом.
-    /// </summary>
+    ///<inheritdoc/>
     public bool IsMapped { get; private set; }
+
 
     /// <summary xml:lang = "ru">
     /// Устанавливает связь с внутренним продуктом.
