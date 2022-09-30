@@ -9,17 +9,6 @@
 public interface IRepository<TEntity>
 {
     /// <summary xml:lang = "ru">
-    /// Возвращает сущность по её идентификатору.
-    /// </summary>
-    /// <param name="id" xml:lang = "ru">
-    /// Идентификатор сущности.
-    /// </param>
-    /// <returns xml:lang = "ru">
-    /// Объект типа <typeparamref name="TEntity"/>.
-    /// </returns>
-    public Task<TEntity> GetByIdAsync(int id);
-
-    /// <summary xml:lang = "ru">
     /// Возвращает коллекцию сущностей, находящихся в репозитории.
     /// </summary>
     /// <returns xml:lang = "ru">
