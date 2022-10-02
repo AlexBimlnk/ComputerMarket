@@ -34,7 +34,7 @@ public sealed class APIProductFetcher<TExternalProductModel> : IAPIProductFetche
         if (string.IsNullOrWhiteSpace(request))
             throw new ArgumentException(nameof(request));
 
-        _logger.LogDebug("Fetch external products {Type}", typeof(TExternalProductModel));
+        _logger.LogDebug("Fetch external products '{Type}'", typeof(TExternalProductModel));
 
         var externalProducts = _deserializer.Deserialize(request);
 
@@ -43,7 +43,7 @@ public sealed class APIProductFetcher<TExternalProductModel> : IAPIProductFetche
             .ToList();
 
         _logger.LogDebug(
-            "External products {Type} succesfull fetch and converted", 
+            "External products '{Type}' succesfull fetch and converted", 
             typeof(TExternalProductModel));
 
         return products;
