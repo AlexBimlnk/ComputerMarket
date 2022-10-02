@@ -49,7 +49,8 @@ public sealed class SetLinkCommand : CommandBase
             throw new InvalidOperationException("Such a link already exists.");
 
         await _linkRepository.AddAsync(link);
-        await _linkRepository.SaveAsync();
+        
+        _linkRepository.Save();
 
         _cacheLinks.Add(link);
     }
