@@ -8,7 +8,7 @@ namespace Import.Logic.Abstractions;
 /// <typeparam name="TEntity" xml:lang = "ru">
 /// Тип сущности, находящийся в кэше.
 /// </typeparam>
-public interface ICache<TKey ,TEntity>
+public interface ICache<TEntity>
 {
     /// <summary xml:lang = "ru">
     /// Добавляет сущность в кэш.
@@ -16,7 +16,7 @@ public interface ICache<TKey ,TEntity>
     /// <param name="entity" xml:lang = "ru">
     /// Сущность.
     /// </param>
-    public void Add(TKey key ,TEntity entity);
+    public void Add(TEntity entity);
 
     /// <summary xml:lang = "ru">
     /// Добавляет сущности в кэш.
@@ -24,7 +24,7 @@ public interface ICache<TKey ,TEntity>
     /// <param name="entities" xml:lang = "ru">
     /// Коллекция сущностей.
     /// </param>
-    public void AddRange(IEnumerable<KeyValuePair<TKey, TEntity>> entities);
+    public void AddRange(IEnumerable<TEntity> entities);
 
     /// <summary xml:lang = "ru">
     /// Определяет, находится ли данная сущность в кэше.
@@ -35,7 +35,7 @@ public interface ICache<TKey ,TEntity>
     /// <returns xml:lang = "ru">
     /// <see langword="true"/>, если сущность есть в кэше, иначе - <see langword="false"/>.
     /// </returns>
-    public bool Contains(TKey key);
+    public bool Contains(TEntity key);
 
     /// <summary xml:lang = "ru">
     /// Удаляет сущность из кэша.
@@ -43,7 +43,7 @@ public interface ICache<TKey ,TEntity>
     /// <param name="entity" xml:lang = "ru">
     /// Сущность.
     /// </param>
-    public void Delete(TKey key);
+    public void Delete(TEntity key);
 
-    public TEntity GetByKey(TKey key);
+    //public TEntity GetByKey(TEntity key);
 }

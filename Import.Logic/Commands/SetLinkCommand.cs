@@ -10,7 +10,7 @@ namespace Import.Logic.Commands;
 public sealed class SetLinkCommand : CommandBase
 {
     private readonly SetLinkCommandParameters _parameters;
-    private readonly ICache<ExternalID ,Link> _cacheLinks;
+    private readonly IKeyableCache<Link, ExternalID> _cacheLinks;
     private readonly IRepository<Link> _linkRepository;
 
     /// <summary xml:lang = "ru">
@@ -30,7 +30,7 @@ public sealed class SetLinkCommand : CommandBase
     /// </exception>
     public SetLinkCommand(
         SetLinkCommandParameters parameters,
-        ICache<ExternalID ,Link> cacheLinks,
+        IKeyableCache<Link, ExternalID> cacheLinks,
         IRepository<Link> linkRepository)
     {
         _parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
@@ -51,6 +51,6 @@ public sealed class SetLinkCommand : CommandBase
         await _linkRepository.AddAsync(link);
         await _linkRepository.SaveAsync();
 
-        _cacheLinks.Add(link.ExternalID, link);
+        _cacheLinks.Add(link);
     }
 }

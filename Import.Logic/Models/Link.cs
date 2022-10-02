@@ -1,9 +1,11 @@
-﻿namespace Import.Logic.Models;
+﻿using Import.Logic.Abstractions;
+
+namespace Import.Logic.Models;
 
 /// <summary xml:lang = "ru">
 /// Представляет связь внутреннего и внешнего продукта.
 /// </summary>
-public sealed class Link : IEquatable<Link>
+public sealed class Link : IEquatable<Link>, IKeyable<ExternalID>
 {
     public Link(InternalID internalID, ExternalID externalID)
     {
@@ -13,6 +15,8 @@ public sealed class Link : IEquatable<Link>
 
     public InternalID InternalID { get; }
     public ExternalID ExternalID { get; }
+
+    public ExternalID Key => ExternalID;
 
     public override bool Equals(object? obj) => obj is Link link && Equals(link);
 
