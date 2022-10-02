@@ -28,7 +28,7 @@ public sealed class History
         ExternalId = externalId;
 
         if (string.IsNullOrWhiteSpace(productName))
-            throw new ArgumentNullException(nameof(productName));
+            throw new ArgumentException(nameof(productName));
 
         ProductName = productName ?? throw new ArgumentException(nameof(productName));
         ProductDescription = productDescription;
@@ -48,4 +48,8 @@ public sealed class History
     /// Описание продукта.
     /// </summary>
     public string? ProductDescription { get; }
+
+
+    public override string ToString() =>
+        $"External id: {ExternalId}, Product name: {ProductName}, Description: {ProductDescription}";
 }
