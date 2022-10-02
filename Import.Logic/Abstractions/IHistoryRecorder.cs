@@ -19,5 +19,5 @@ public interface IHistoryRecorder
     /// <returns xml:lang = "ru">
     /// <see cref="Task"/>.
     /// </returns>
-    public Task RecordHistoryAsync(IReadOnlyCollection<History> histories, CancellationToken token);
+    public Task RecordHistoryAsync(IReadOnlyCollection<History> histories, CancellationToken token = default);
 }

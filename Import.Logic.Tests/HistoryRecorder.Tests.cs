@@ -56,7 +56,7 @@ public class HistoryRecorderTests
 
     [Fact(DisplayName = $"The instance can record history async.")]
     [Trait("Category", "Unit")]
-    public async void CanRecordAsync()
+    public async Task CanRecordAsync()
     {
         // Arrange
         var logger = Mock.Of<ILogger<HistoryRecorder>>();
@@ -84,7 +84,7 @@ public class HistoryRecorderTests
 
     [Fact(DisplayName = $"The instance can't record without history async.")]
     [Trait("Category", "Unit")]
-    public async void CanNotRecordWithoutHistoryAsync()
+    public async Task CanNotRecordWithoutHistoryAsync()
     {
         // Arrange
         var logger = Mock.Of<ILogger<HistoryRecorder>>();
@@ -102,7 +102,7 @@ public class HistoryRecorderTests
 
     [Fact(DisplayName = $"The instance can cancel recordasync.")]
     [Trait("Category", "Unit")]
-    public async void CanCancelRecordAsync()
+    public async Task CanCancelRecordAsync()
     {
         // Arrange
         var logger = Mock.Of<ILogger<HistoryRecorder>>();
