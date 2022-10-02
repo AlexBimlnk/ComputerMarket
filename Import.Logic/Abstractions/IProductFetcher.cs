@@ -3,18 +3,18 @@
 namespace Import.Logic.Abstractions;
 
 /// <summary xml:lang = "ru">
-/// Описывает получателя продуктов.
+/// Описывает получателя продуктов по API.
 /// </summary>
-/// <typeparam name="TExternalProductModel" xml:lang = "ru">
-/// Тип модели продукта поставщика.
-/// </typeparam>
-public interface IProductFetcher
+public interface IAPIProductFetcher
 {
     /// <summary xml:lang = "ru">
     /// Получает список продуктов поставщика.
     /// </summary>
+    /// <param name="request" xml:lang = "ru">
+    /// Запрос.
+    /// </param>
     /// <returns xml:lang = "ru">
-    /// Коллекцию типа <see cref="IReadOnlyCollection{T}"/>.
+    /// Коллекцию внутренних продуктов типа <see cref="Product"/>.
     /// </returns>
-    public IReadOnlyCollection<Product> FetchProducts();
+    public IReadOnlyCollection<Product> FetchProducts(string request);
 }
