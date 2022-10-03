@@ -1,10 +1,14 @@
-﻿using Castle.Core.Logging;
+﻿using System.Drawing;
+using System.Reflection;
+
+using Castle.Core.Logging;
 
 using Import.Logic.Abstractions;
 using Import.Logic.Commands;
 using Import.Logic.Models;
 
 using Microsoft.Extensions.Logging;
+using Microsoft.VisualBasic;
 
 using Moq;
 
@@ -17,58 +21,146 @@ public class MapperTests
     public void CanBeCreated()
     {
         // Arrange
-        var cache = new Mock<ICache<ExternalID, Link>>();
+        var cache = Mock.Of<IKeyableCache<Link, ExternalID>>();
+        var logger = Mock.Of<ILogger<Mapper>>();
 
         // Act
         var exception = Record.Exception(() => 
-            _ = new Mapper(cache.Object));
+            _ = new Mapper(cache, logger));
 
         // Assert
         exception.Should().BeNull();
+    }
+
+    [Fact(DisplayName = $"The {nameof(Mapper)} can't create without logger.")]
+    [Trait("Category", "Unit")]
+    public void CanNotBeCreatedWithoutLogger()
+    {
+        // Arrange
+        var cache = Mock.Of<IKeyableCache<Link, ExternalID>>();
+
+        // Act
+        var exception = Record.Exception(() =>
+            _ = new Mapper(cache, logger: null!));
+
+        // Assert
+        exception.Should().NotBeNull().And.BeOfType<ArgumentNullException>();
     }
 
     [Fact(DisplayName = $"The {nameof(Mapper)} can't create without cache.")]
     [Trait("Category", "Unit")]
     public void CanNotBeCreatedWithoutCache()
     {
+        // Arrange
+        var logger = Mock.Of<ILogger<Mapper>>();
+
         // Act
         var exception = Record.Exception(() =>
-            _ = new Mapper(cache: null!));
+            _ = new Mapper(cache: null!, logger));
 
         // Assert
         exception.Should().NotBeNull().And.BeOfType<ArgumentNullException>();
     }
 
-    [Fact(DisplayName = $"The {nameof(Mapper)} can map single {nameof(Product)}.")]
+    [Fact(DisplayName = $"The {nameof(Mapper)} can map single entity.")]
     [Trait("Category", "Unit")]
     public void CanMapSingleProduct()
     {
         // Arrange
         var externalId = new ExternalID(1, Provider.Ivanov);
         var internalId = new InternalID(2);
-        
+
+        var product = new Product(externalId, new Price(1), 1);
+
         var link = new Link(internalId, externalId);
 
-        var cache = new Mock<ICache<ExternalID, Link>>();
-
-        cache.Setup(x => x.Contains(externalId))
-            .Returns(false);
+        var cache = new Mock<IKeyableCache<Link, ExternalID>>(MockBehavior.Strict);
+        var logger = Mock.Of<ILogger<Mapper>>();
 
         cache.Setup(x => x.GetByKey(externalId))
             .Returns(link);
 
-        var mapper = new Mapper(cache.Object);
+        var mapper = new Mapper(cache.Object, logger);
 
         // Act
-        var result = await command.ExecuteAsync();
+        var result = mapper.MapEntity(product);
 
         // Assert
-        expectedResult.Should().BeEquivalentTo(result);
-        cacheInvokeCount.Should().Be(1);
+        result.InternalID.Should().BeEquivalentTo(internalId);
+        result.ExternalID.Should().BeEquivalentTo(externalId);
+        result.IsMapped.Should().BeTrue();
+    }
 
-        cache.Verify(x => x.Add(link.ExternalID, link), Times.Once);
+    [Fact(DisplayName = $"The {nameof(Mapper)} return back {nameof(Product)} when mapping without {nameof(Link)}.")]
+    [Trait("Category", "Unit")]
+    public void CanMapWhenEntityLinkIsNotInCache()
+    {
+        // Arrange
+        var externalId = new ExternalID(1, Provider.Ivanov);
 
-        repository.Verify(x => x.AddAsync(link), Times.Once);
-        repository.Verify(x => x.SaveAsync(), Times.Once);
+        var product = new Product(externalId, new Price(1), 1);
+
+        var cache = new Mock<IKeyableCache<Link, ExternalID>>();
+        var logger = Mock.Of<ILogger<Mapper>>();
+
+        cache.Setup(x => x.Contains(externalId))
+            .Returns(false);
+
+        var mapper = new Mapper(cache.Object, logger);
+
+        // Act
+        var result = mapper.MapEntity(product);
+
+        // Assert
+        result.ExternalID.Should().BeEquivalentTo(externalId);
+        result.IsMapped.Should().BeFalse();
+    }
+
+
+    [Fact(DisplayName = $"The {nameof(Mapper)} can map collection of entities.")]
+    [Trait("Category", "Unit")]
+    public void CanMapSuccesfullyWithLackOfLinks()
+    {
+        //Arrange
+        var links = new Link[2]
+        {
+            new Link(new InternalID(1), new ExternalID(1,Provider.Ivanov)),
+            new Link(new InternalID(2), new ExternalID(2,Provider.HornsAndHooves))
+        };
+
+        var products = new Product[3]
+        {
+            new Product(links[0].ExternalID, new Price(1), 3),
+            new Product(links[1].ExternalID, new Price(2), 2),
+            new Product(new ExternalID(3,Provider.Ivanov), new Price(3), 1)
+        };
+
+        var cache = new Mock<IKeyableCache<Link, ExternalID>>(MockBehavior.Loose);
+        var logger = Mock.Of<ILogger<Mapper>>();
+
+        cache.Setup(x => x.GetByKey(links[0].ExternalID)).Returns(links[0]);
+        cache.Setup(x => x.GetByKey(links[1].ExternalID)).Returns(links[1]);
+        
+        var mapper = new Mapper(cache.Object, logger);
+
+        //Act
+        var result = mapper.MapCollection(products);
+
+        //Assert
+        result.Select(x => new { x.InternalID , x.ExternalID})
+            .Should().BeEquivalentTo(
+                links.Select(x => new { x.InternalID, x.ExternalID }), 
+                opt => opt.WithStrictOrdering());
+
+        result.Select(x => x.IsMapped)
+            .Should().AllBeEquivalentTo(true);
+       
+        products.Where(x => !x.IsMapped)
+            .Count()
+            .Should().Be(products.Length - result.Count);
+
+        products.Where(x => !x.IsMapped)
+            .Join(links, x => x.ExternalID, link => link.ExternalID, (x, link) => x)
+            .Should().BeEmpty();
     }
 }
