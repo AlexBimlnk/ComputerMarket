@@ -12,13 +12,14 @@ using Microsoft.Extensions.Logging;
 namespace Import.Logic;
 public class Mapper: IMapper<Product>
 {
-    private readonly ICache<ExternalID ,Link> _cache;
+    private readonly IKeyableCache<Link, ExternalID> _cache;
     private readonly ILogger<Mapper> _logger;
 
-    public Mapper(ICache<ExternalID, Link> cache, ILogger<Mapper> logger = null!)
+    public Mapper(IKeyableCache<Link, ExternalID> cache, ILogger<Mapper> logger)
     {
         ArgumentNullException.ThrowIfNull(cache, nameof(cache));
-        
+        ArgumentNullException.ThrowIfNull(logger, nameof(logger));
+
         _logger = logger;
         _cache = cache;
     }
@@ -27,29 +28,16 @@ public class Mapper: IMapper<Product>
     {
         ArgumentNullException.ThrowIfNull(entity, nameof(entity));
 
-        if (entity.IsMapped)
-        {
-            throw new ArgumentException("Entity already been mapped",nameof(entity));
-        }
-
-        if (!_cache.Contains(entity.ExternalID))
-        {
-            throw new ArgumentException($"Given entity doesn't exists in {nameof(_cache)}");
-        }
-
         var linkOfEntity = _cache.GetByKey(entity.ExternalID);
 
-        entity.MapTo(linkOfEntity.InternalID);
+        if (linkOfEntity is null)
+            return entity;
 
-        _cache.Delete(linkOfEntity.ExternalID);
+        entity.MapTo(linkOfEntity.InternalID);
 
         return entity;
     }
 
-    public IEnumerable<Product> MapEntityCollection(IEnumerable<Product> entities)
-    {
-        ArgumentNullException.ThrowIfNull(entities, nameof(entities));
-
-        return entities.Select(e => MapEntity(e));
-    }
+    public IReadOnlyCollection<Product> MapCollection(IReadOnlyCollection<Product> entityCollection) => 
+        entityCollection.Select((x) => MapEntity(x)).Where(x => x.IsMapped).ToList();
 }
