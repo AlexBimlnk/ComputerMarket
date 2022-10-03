@@ -62,7 +62,9 @@ public sealed class Product: IMappableEntity<InternalID, ExternalID>
     /// </summary>
     public int Quantity { get; }
 
-    ///<inheritdoc/>
+    /// <summary xml:lang = "ru">
+    /// Указывает на наличие связи с внутренним продуктом.
+    /// </summary>
     public bool IsMapped { get; private set; }
 
 

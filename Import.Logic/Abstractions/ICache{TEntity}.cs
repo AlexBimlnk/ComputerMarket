@@ -35,7 +35,7 @@ public interface ICache<TEntity>
     /// <returns xml:lang = "ru">
     /// <see langword="true"/>, если сущность есть в кэше, иначе - <see langword="false"/>.
     /// </returns>
-    public bool Contains(TEntity key);
+    public bool Contains(TEntity entity);
 
     /// <summary xml:lang = "ru">
     /// Удаляет сущность из кэша.
@@ -43,7 +43,5 @@ public interface ICache<TEntity>
     /// <param name="entity" xml:lang = "ru">
     /// Сущность.
     /// </param>
-    public void Delete(TEntity key);
-
-    //public TEntity GetByKey(TEntity key);
+    public void Delete(TEntity entity);
 }

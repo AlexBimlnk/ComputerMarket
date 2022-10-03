@@ -10,11 +10,19 @@ using Import.Logic.Models;
 using Microsoft.Extensions.Logging;
 
 namespace Import.Logic;
+/// <summary>
+/// Маппер продуктов.
+/// </summary>
 public class Mapper: IMapper<Product>
 {
     private readonly IKeyableCache<Link, ExternalID> _cache;
     private readonly ILogger<Mapper> _logger;
-
+    /// <summary>
+    /// Создание нового экземпляра типа <see cref="Mapper"/>.
+    /// </summary>
+    /// <param name="cache">кэш с ссылками для маппинга</param>
+    /// <param name="logger">логгер</param>
+    /// 
     public Mapper(IKeyableCache<Link, ExternalID> cache, ILogger<Mapper> logger)
     {
         ArgumentNullException.ThrowIfNull(cache, nameof(cache));
@@ -24,6 +32,7 @@ public class Mapper: IMapper<Product>
         _cache = cache;
     }
 
+    /// <inheritdoc/>
     public Product MapEntity(Product entity)
     {
         ArgumentNullException.ThrowIfNull(entity, nameof(entity));
@@ -38,6 +47,7 @@ public class Mapper: IMapper<Product>
         return entity;
     }
 
+    /// <inheritdoc/>
     public IReadOnlyCollection<Product> MapCollection(IReadOnlyCollection<Product> entityCollection) => 
         entityCollection.Select((x) => MapEntity(x)).Where(x => x.IsMapped).ToList();
 }
