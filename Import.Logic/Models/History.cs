@@ -49,7 +49,7 @@ public sealed class History
     /// </summary>
     public string? ProductDescription { get; }
 
-
+    /// <inheritdoc/>
     public override string ToString() =>
         $"External id: {ExternalId}, Product name: {ProductName}, Description: {ProductDescription}";
 }
