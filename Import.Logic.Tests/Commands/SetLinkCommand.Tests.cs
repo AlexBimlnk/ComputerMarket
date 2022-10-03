@@ -19,7 +19,7 @@ public class SetLinkCommandTests
             id,
             new(1), 
             new(1, Provider.Ivanov));
-        var cache = Mock.Of<IKeyableCache<Link, ExternalID>>();
+        var cache = Mock.Of<ICache<Link>>();
         var repository = Mock.Of<IRepository<Link>>();
 
         // Act
@@ -36,7 +36,7 @@ public class SetLinkCommandTests
     public void CanNotBeCreatedWithoutParameters()
     {
         // Arrange
-        var cache = Mock.Of<IKeyableCache<Link, ExternalID>>();
+        var cache = Mock.Of<ICache<Link>>();
         var repository = Mock.Of<IRepository<Link>>();
 
         // Act
@@ -77,7 +77,7 @@ public class SetLinkCommandTests
             id,
             new(1),
             new(1, Provider.Ivanov));
-        var cache = Mock.Of<IKeyableCache<Link, ExternalID>>();
+        var cache = Mock.Of<ICache<Link>>();
 
         // Act
         var exception = Record.Exception(() =>
@@ -99,9 +99,9 @@ public class SetLinkCommandTests
             new(1, Provider.Ivanov));
         var link = new Link(parameters.InternalID, parameters.ExternalID);
 
-        var cache = new Mock<IKeyableCache<Link, ExternalID>>();
+        var cache = new Mock<ICache<Link>>();
         var cacheInvokeCount = 0;
-        cache.Setup(x => x.Contains(link.ExternalID))
+        cache.Setup(x => x.Contains(link))
             .Returns(false)
             .Callback(() => cacheInvokeCount++);
 
@@ -141,9 +141,9 @@ public class SetLinkCommandTests
 
         var repository = new Mock<IRepository<Link>>(MockBehavior.Strict);
 
-        var cache = new Mock<IKeyableCache<Link, ExternalID>>();
+        var cache = new Mock<ICache<Link>>();
         var cacheInvokeCount = 0;
-        cache.Setup(x => x.Contains(link.ExternalID))
+        cache.Setup(x => x.Contains(link))
             .Returns(true)
             .Callback(() => cacheInvokeCount++);
 
