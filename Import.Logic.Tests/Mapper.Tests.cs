@@ -1,20 +1,13 @@
-﻿using System.Drawing;
-using System.Reflection;
-
-using Castle.Core.Logging;
-
-using Import.Logic.Abstractions;
-using Import.Logic.Commands;
+﻿using Import.Logic.Abstractions;
 using Import.Logic.Models;
 
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualBasic;
 
 using Moq;
 
 namespace Import.Logic.Tests;
 
-public class MapperTests 
+public class MapperTests
 {
     [Fact(DisplayName = $"The {nameof(Mapper)} can be created.")]
     [Trait("Category", "Unit")]
@@ -25,7 +18,7 @@ public class MapperTests
         var logger = Mock.Of<ILogger<Mapper>>();
 
         // Act
-        var exception = Record.Exception(() => 
+        var exception = Record.Exception(() =>
             _ = new Mapper(cache, logger));
 
         // Assert
@@ -100,7 +93,7 @@ public class MapperTests
 
         var product = new Product(externalId, new Price(1), 1);
 
-        var cache = new Mock<IKeyableCache<Link, ExternalID>>();
+        var cache = new Mock<IKeyableCache<Link, ExternalID>>(MockBehavior.Strict);
         var logger = Mock.Of<ILogger<Mapper>>();
 
         cache.Setup(x => x.Contains(externalId))
@@ -128,39 +121,42 @@ public class MapperTests
             new Link(new InternalID(2), new ExternalID(2,Provider.HornsAndHooves))
         };
 
-        var products = new Product[3]
+        var mappableProducts = new Product[2]
         {
             new Product(links[0].ExternalID, new Price(1), 3),
-            new Product(links[1].ExternalID, new Price(2), 2),
+            new Product(links[1].ExternalID, new Price(2), 2)
+        };
+
+        var noneMappableProducts = new Product[1]
+        {
             new Product(new ExternalID(3,Provider.Ivanov), new Price(3), 1)
         };
 
         var cache = new Mock<IKeyableCache<Link, ExternalID>>(MockBehavior.Loose);
         var logger = Mock.Of<ILogger<Mapper>>();
 
-        cache.Setup(x => x.GetByKey(links[0].ExternalID)).Returns(links[0]);
-        cache.Setup(x => x.GetByKey(links[1].ExternalID)).Returns(links[1]);
-        
+        cache.Setup(x => x.GetByKey(links[0].ExternalID))
+            .Returns(links[0]);
+        cache.Setup(x => x.GetByKey(links[1].ExternalID))
+            .Returns(links[1]);
+
         var mapper = new Mapper(cache.Object, logger);
 
         //Act
-        var result = mapper.MapCollection(products);
+        var result = mapper.MapCollection(mappableProducts.Concat(noneMappableProducts).ToList());
 
         //Assert
-        result.Select(x => new { x.InternalID , x.ExternalID})
+        result.Select(x => x.IsMapped)
+           .Should().AllBeEquivalentTo(true);
+
+        result.Select(x => x.ExternalID)
             .Should().BeEquivalentTo(
-                links.Select(x => new { x.InternalID, x.ExternalID }), 
+                mappableProducts.Select(x => x.ExternalID),
                 opt => opt.WithStrictOrdering());
 
-        result.Select(x => x.IsMapped)
-            .Should().AllBeEquivalentTo(true);
-       
-        products.Where(x => !x.IsMapped)
-            .Count()
-            .Should().Be(products.Length - result.Count);
-
-        products.Where(x => !x.IsMapped)
-            .Join(links, x => x.ExternalID, link => link.ExternalID, (x, link) => x)
-            .Should().BeEmpty();
+        result.Select(x => x.InternalID)
+            .Should().BeEquivalentTo(
+                mappableProducts.Select(x => x.InternalID),
+                opt => opt.WithStrictOrdering());
     }
 }
