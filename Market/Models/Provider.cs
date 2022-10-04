@@ -1,36 +1,33 @@
-﻿using System.Text.RegularExpressions;
-
-namespace Market.Models;
+﻿namespace Market.Models;
 
 /// <summary xml:lang = "ru">
 /// Модель поставщика.
 /// </summary>
 public class Provider
 {
-    /// <summary>
+    /// <summary xml:lang = "ru">
     /// Создает экземпляр типа <see cref="Provider"/>.
     /// </summary>
-    /// <param name="name">Название поставщика.</param>
-    /// <param name="inn">Инн поставщика.</param>
-    /// <param name="margin">Маржа поставщика.</param>
-    /// <param name="bankAccount">Счёт поставщика.</param>
-    /// <exception cref="ArgumentNullException">Если любой из параметров равен <see langword="null"/>.</exception>
-    /// <exception cref="ArgumentException">Если инн не соответсвует уставновленному формату или маржа имеет некоректное значение.</exception>
-    public Provider(string name, string inn, decimal margin, string bankAccount)
+    /// <param name="name" xml:lang = "ru">Название поставщика.</param>
+    /// <param name="margin" xml:lang = "ru">Маржа поставщика.</param>
+    /// <param name="providerMetaData" xml:lang = "ru">Дполнительная информация об поставщике.</param>
+    /// <exception cref="ArgumentNullException" xml:lang = "ru">
+    /// Если <paramref name="providerMetaData"/> равен <see langword="null"/>.
+    /// </exception>
+    /// <exception cref="ArgumentException" xml:lang = "ru">
+    /// Если <paramref name="name"/> не соответсвует уставновленному формату или <paramref name="margin"/> имеет некоректное значение.
+    /// </exception>
+    public Provider(string name, decimal margin, ProviderMetaData providerMetaData)
     {
-        var innPattern = @"^[0-9]{10}$";
-
-        Name = name ?? throw new ArgumentNullException(nameof(name));
-
-        if (!Regex.IsMatch(inn ?? throw new ArgumentNullException(nameof(inn)), innPattern))
-            throw new ArgumentException("Given inn not match with INN format");
-        INN = inn;
+        if (string.IsNullOrWhiteSpace(name))
+            throw new ArgumentException("Name can't be null or empty or contains only whitespaces", nameof(name));
+        Name = name;
 
         if (margin < 1)
             throw new ArgumentException("Given margin has incorrect value");
         Margin = margin;
 
-        BankAccount = bankAccount ?? throw new ArgumentNullException(nameof(bankAccount));
+        MetaData = providerMetaData ?? throw new ArgumentNullException(nameof(providerMetaData));
     }
 
     /// <summary xml:lang = "ru">
@@ -39,17 +36,12 @@ public class Provider
     public string Name { get; private set; }
 
     /// <summary xml:lang = "ru">
-    /// Инн поставщика.
-    /// </summary>
-    public string INN { get; private set; }
-
-    /// <summary xml:lang = "ru">
     /// Заданная маржа поставщика.
     /// </summary>
     public decimal Margin { get; private set; }
 
     /// <summary xml:lang = "ru">
-    /// Банковский счёт поставщика.
+    /// Дополнительная информация об поставщике.
     /// </summary>
-    public string BankAccount { get; private set; }
+    public ProviderMetaData MetaData { get; private set; }
 }
