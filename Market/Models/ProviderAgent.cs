@@ -17,7 +17,7 @@ public class ProviderAgent
         {
             { Type: UserType.Agent } => agent,
             null => throw new ArgumentNullException(nameof(agent)),
-            _ => throw new ArgumentException("Given user is not agent")
+            _ => throw new ArgumentException("Given user is not agent", nameof(agent))
         };
 
         Provider = provider ?? throw new ArgumentNullException(nameof(provider));
