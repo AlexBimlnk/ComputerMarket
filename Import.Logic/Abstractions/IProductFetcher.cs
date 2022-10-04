@@ -16,5 +16,5 @@ public interface IAPIProductFetcher
     /// <returns xml:lang = "ru">
     /// Коллекцию внутренних продуктов типа <see cref="Product"/>.
     /// </returns>
-    public IReadOnlyCollection<Product> FetchProducts(string request);
+    public Task<IReadOnlyCollection<Product>> FetchProductsAsync(string request);
 }
