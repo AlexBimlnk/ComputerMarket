@@ -5,10 +5,19 @@
 /// </summary>
 public class User
 {
-    /// <summary xml:lang = "ru">
-    /// Идентификатор пользователя.
+    /// <summary>
+    /// Создает экземпляр типа <see cref="User"/>.
     /// </summary>
-    public int Id { get; set; }
+    /// <param name="login">Логин пользователя.</param>
+    /// <param name="password">Пароль пользователя.</param>
+    /// <param name="type">Тип пользователя.</param>
+    /// <exception cref="ArgumentNullException">Если любой из параметров равен <see langword="null"/>.</exception>
+    public User(string login, string password, UserType type)
+    {
+        Login = login ?? throw new ArgumentNullException(nameof(login));
+        Password = password ?? throw new ArgumentNullException(nameof(login));
+        Type = type;
+    }
 
     /// <summary xml:lang = "ru">
     /// Логин пользователя.

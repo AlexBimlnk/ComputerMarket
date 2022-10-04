@@ -10,14 +10,17 @@ public class ProviderAgent
     /// </summary>
     /// <param name="agent" xml:lang = "ru">Пользователь.</param>
     /// <param name="provider" xml:lang = "ru">Поставщик.</param>
-    /// <exception cref="ArgumentException" xml:lang = "ru">Когда тип пользователья не <see cref="UserType.Agent"/></exception>
+    /// <exception cref="ArgumentException" xml:lang = "ru">Когда тип пользователья не <see cref="UserType.Agent"/>.</exception>
     public ProviderAgent(User agent, Provider provider)
     {
-        if (agent.Type != UserType.Agent)
-            throw new ArgumentException($"Given user is not agent");
+        Agent = agent switch
+        {
+            null => throw new ArgumentNullException(nameof(agent)),
+            { Type: UserType.Agent } => agent,
+            _ => throw new ArgumentException("Given user is not agent")
+        };
 
-        Agent = agent;
-        Provider = provider;
+        Provider = provider ?? throw new ArgumentNullException(nameof(provider));
     }
 
     /// <summary xml:lang = "ru">
