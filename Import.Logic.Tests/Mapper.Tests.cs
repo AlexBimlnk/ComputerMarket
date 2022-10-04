@@ -129,7 +129,7 @@ public class MapperTests
 
         var noneMappableProducts = new Product[1]
         {
-            new Product(new ExternalID(3,Provider.Ivanov), new Price(3), 1)
+            new Product(new ExternalID(3, Provider.Ivanov), new Price(3), 1)
         };
 
         var cache = new Mock<IKeyableCache<Link, ExternalID>>(MockBehavior.Loose);
@@ -158,5 +158,8 @@ public class MapperTests
             .Should().BeEquivalentTo(
                 mappableProducts.Select(x => x.InternalID),
                 opt => opt.WithStrictOrdering());
+
+        noneMappableProducts.Select(x => x.IsMapped)
+            .Should().AllBeEquivalentTo(false);
     }
 }
