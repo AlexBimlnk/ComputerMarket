@@ -93,7 +93,7 @@ public class MapperTests
 
         var product = new Product(externalId, new Price(1), 1);
 
-        var cache = new Mock<IKeyableCache<Link, ExternalID>>(MockBehavior.Strict);
+        var cache = new Mock<IKeyableCache<Link, ExternalID>>(MockBehavior.Loose);
         var logger = Mock.Of<ILogger<Mapper>>();
 
         cache.Setup(x => x.Contains(externalId))

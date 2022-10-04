@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
-
-namespace Import.Logic.Abstractions;
+﻿namespace Import.Logic.Abstractions;
 
 /// <summary xml:lang = "ru">
 /// Описывает кэш для сущности.

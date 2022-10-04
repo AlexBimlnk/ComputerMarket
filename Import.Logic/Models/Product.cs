@@ -5,7 +5,7 @@ namespace Import.Logic.Models;
 /// <summary xml:lang = "ru">
 /// Продукт.
 /// </summary>
-public sealed class Product: IMappableEntity<InternalID, ExternalID>
+public sealed class Product : IMappableEntity<InternalID, ExternalID>
 {
     private InternalID? _internalID;
 
@@ -66,7 +66,6 @@ public sealed class Product: IMappableEntity<InternalID, ExternalID>
     /// Указывает на наличие связи с внутренним продуктом.
     /// </summary>
     public bool IsMapped { get; private set; }
-
 
     /// <summary xml:lang = "ru">
     /// Устанавливает связь с внутренним продуктом.
