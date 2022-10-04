@@ -10,14 +10,14 @@ public class Provider
     /// </summary>
     /// <param name="name" xml:lang = "ru">Название поставщика.</param>
     /// <param name="margin" xml:lang = "ru">Маржа поставщика.</param>
-    /// <param name="providerMetaData" xml:lang = "ru">Дполнительная информация об поставщике.</param>
+    /// <param name="paymentTransactionsInformation" xml:lang = "ru">Дполнительная информация об поставщике.</param>
     /// <exception cref="ArgumentNullException" xml:lang = "ru">
-    /// Если <paramref name="providerMetaData"/> равен <see langword="null"/>.
+    /// Если <paramref name="paymentTransactionsInformation"/> равен <see langword="null"/>.
     /// </exception>
     /// <exception cref="ArgumentException" xml:lang = "ru">
     /// Если <paramref name="name"/> не соответсвует уставновленному формату или <paramref name="margin"/> имеет некоректное значение.
     /// </exception>
-    public Provider(string name, decimal margin, ProviderMetaData providerMetaData)
+    public Provider(string name, decimal margin, PaymentTransactionsInformation paymentTransactionsInformation)
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new ArgumentException("Name can't be null or empty or contains only whitespaces", nameof(name));
@@ -27,7 +27,7 @@ public class Provider
             throw new ArgumentException("Given margin has incorrect value");
         Margin = margin;
 
-        MetaData = providerMetaData ?? throw new ArgumentNullException(nameof(providerMetaData));
+        PaymentTransactionsInformation = paymentTransactionsInformation ?? throw new ArgumentNullException(nameof(paymentTransactionsInformation));
     }
 
     /// <summary xml:lang = "ru">
@@ -43,5 +43,5 @@ public class Provider
     /// <summary xml:lang = "ru">
     /// Дополнительная информация об поставщике.
     /// </summary>
-    public ProviderMetaData MetaData { get; private set; }
+    public PaymentTransactionsInformation PaymentTransactionsInformation { get; private set; }
 }

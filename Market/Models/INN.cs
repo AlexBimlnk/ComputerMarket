@@ -5,7 +5,7 @@ namespace Market.Models;
 /// <summary xml:lang = "ru">
 /// Представляет ИНН поставщика.
 /// </summary>
-public record struct INN
+public record INN
 {
     private readonly static string s_innPattern = @"^[0-9]{10}$";
 
@@ -13,15 +13,6 @@ public record struct INN
     /// Значение.
     /// </summary>
     public string Value { get; private set; }
-
-    /// <summary xml:lang = "ru">
-    /// Не поддерживаемы контсруктор <see cref="INN"/>.
-    /// </summary>
-    /// <exception cref="NotSupportedException"/>
-    public INN()
-    {
-        throw new NotSupportedException();
-    }
 
     /// <summary xml:lang = "ru">
     /// Создает экземпляр типа <see cref="INN"/>.
