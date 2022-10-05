@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace Market.Models;
+namespace Market.Logic.Models;
 
 /// <summary xml:lang = "ru">
 /// Представляет информацию для платежных операций.

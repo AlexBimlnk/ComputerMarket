@@ -1,4 +1,4 @@
-﻿namespace Market.Models;
+﻿namespace Market.Logic.Models;
 
 /// <summary xml:lang = "ru">
 /// Модель поставщика.
