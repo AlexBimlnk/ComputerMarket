@@ -1,11 +1,12 @@
 ﻿using Import.Logic.Abstractions;
 using Import.Logic.Models;
+using Import.Logic.Transport.Receivers;
 
 using Microsoft.Extensions.Logging;
 
 using Moq;
 
-namespace Import.Logic.Tests;
+namespace Import.Logic.Tests.Transport.Receivers;
 public class APIProductFetcherTests
 {
     [Fact(DisplayName = $"The instance can create.")]
@@ -17,11 +18,9 @@ public class APIProductFetcherTests
         var deserializer = Mock.Of<IDeserializer<string, FakeModel[]>>(MockBehavior.Strict);
         var converter = Mock.Of<IConverter<FakeModel, Product>>(MockBehavior.Strict);
 
-        APIProductFetcher<FakeModel> fetcher = null!;
-
         // Act
         var exception = Record.Exception(() =>
-            fetcher = new APIProductFetcher<FakeModel>(logger, deserializer, converter));
+            _ = new APIProductFetcher<FakeModel>(logger, deserializer, converter));
 
         // Assert
         exception.Should().BeNull();
@@ -29,17 +28,15 @@ public class APIProductFetcherTests
 
     [Fact(DisplayName = $"The instance can't create without logger.")]
     [Trait("Category", "Unit")]
-    public void CanNotBeCreatedWithoutParameters()
+    public void CanNotBeCreatedWithoutLogger()
     {
         // Arrange
         var deserializer = Mock.Of<IDeserializer<string, FakeModel[]>>(MockBehavior.Strict);
         var converter = Mock.Of<IConverter<FakeModel, Product>>(MockBehavior.Strict);
 
-        APIProductFetcher<FakeModel> fetcher = null!;
-
         // Act
         var exception = Record.Exception(() =>
-            fetcher = new APIProductFetcher<FakeModel>(null!, deserializer, converter));
+            _ = new APIProductFetcher<FakeModel>(null!, deserializer, converter));
 
         // Assert
         exception.Should().NotBeNull().And.BeOfType<ArgumentNullException>();
@@ -53,11 +50,9 @@ public class APIProductFetcherTests
         var logger = Mock.Of<ILogger<APIProductFetcher<FakeModel>>>(MockBehavior.Strict);
         var converter = Mock.Of<IConverter<FakeModel, Product>>(MockBehavior.Strict);
 
-        APIProductFetcher<FakeModel> fetcher = null!;
-
         // Act
         var exception = Record.Exception(() =>
-            fetcher = new APIProductFetcher<FakeModel>(logger, null!, converter));
+            _ = new APIProductFetcher<FakeModel>(logger, null!, converter));
 
         // Assert
         exception.Should().NotBeNull().And.BeOfType<ArgumentNullException>();
@@ -71,11 +66,9 @@ public class APIProductFetcherTests
         var logger = Mock.Of<ILogger<APIProductFetcher<FakeModel>>>(MockBehavior.Strict);
         var deserializer = Mock.Of<IDeserializer<string, FakeModel[]>>(MockBehavior.Strict);
 
-        APIProductFetcher<FakeModel> fetcher = null!;
-
         // Act
         var exception = Record.Exception(() =>
-            fetcher = new APIProductFetcher<FakeModel>(logger, deserializer, null!));
+            _ = new APIProductFetcher<FakeModel>(logger, deserializer, null!));
 
         // Assert
         exception.Should().NotBeNull().And.BeOfType<ArgumentNullException>();
