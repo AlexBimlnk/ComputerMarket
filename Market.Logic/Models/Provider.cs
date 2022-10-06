@@ -23,7 +23,7 @@ public class Provider
             throw new ArgumentException("Name can't be null or empty or contains only whitespaces", nameof(name));
         Name = name;
 
-        if (margin < 1)
+        if (margin < 1m)
             throw new ArgumentException("Given margin has incorrect value");
         Margin = margin;
 

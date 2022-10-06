@@ -7,7 +7,8 @@ namespace Market.Logic.Models;
 /// </summary>
 public class PaymentTransactionsInformation
 {
-    private readonly static string s_innPattern = @"^[0-9]{10}$";
+    private const string INN_PATTERN = @"^[0-9]{10}$";
+    private const string BANK_ACCOUNT_PATTERN = @"^[0-9]{20}$";
 
     /// <summary xml:lang = "ru">
     /// Инн поставщика.
@@ -32,12 +33,15 @@ public class PaymentTransactionsInformation
         if (string.IsNullOrWhiteSpace(bankAccount))
             throw new ArgumentException("Bank account can't be null or empty or contains only whitespaces", nameof(bankAccount));
 
+        if (!Regex.IsMatch(bankAccount, BANK_ACCOUNT_PATTERN))
+            throw new ArgumentException("Given bank account not match with account format");
+
         BankAccount = bankAccount;
 
         if (string.IsNullOrWhiteSpace(inn))
             throw new ArgumentException("INN can't be null or empty or contains only whitespaces", nameof(inn));
 
-        if (!Regex.IsMatch(inn, s_innPattern))
+        if (!Regex.IsMatch(inn, INN_PATTERN))
             throw new ArgumentException("Given inn not match with INN format");
 
         INN = inn;
