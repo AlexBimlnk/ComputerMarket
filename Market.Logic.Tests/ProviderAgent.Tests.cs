@@ -10,9 +10,11 @@ public class ProviderAgentTests
     {
         // Arrange
         ProviderAgent providerAgent = null!;
-        var provider = new Provider("Company Name", 1.1m,
-            new PaymentTransactionsInformation("1234567890", "1234"));
-        var user = new User("login", new Password("12345"), UserType.Agent);
+        var provider = new Provider(
+            "Company Name", 
+            1.1m,
+            new PaymentTransactionsInformation("1234567890", "01234012340123401234"));
+        var user = new User("login", new Password("12345"), "mail.ru", UserType.Agent);
 
         // Act
         var exception = Record.Exception(() => providerAgent = new ProviderAgent(
@@ -30,14 +32,16 @@ public class ProviderAgentTests
     public void CanNotCreateWhenProviderAgentMarginLessOne()
     {
         //Arrange
-        var provider = new Provider("Company Name", 1.1m,
-            new PaymentTransactionsInformation("1234567890", "1234"));
-        var user = new User("login", new Password("12345"), UserType.Customer);
+        var provider = new Provider(
+            "Company Name", 
+            1.1m,
+            new PaymentTransactionsInformation("1234567890", "01234012340123401234"));
+        var user = new User("login", new Password("12345"), "mail.ru", UserType.Customer);
 
         // Act
         var exception = Record.Exception(() => _ = new ProviderAgent(
             agent: user,
-            provider: provider));
+            provider));
 
         // Assert
         exception.Should().BeOfType<ArgumentException>();
@@ -47,11 +51,16 @@ public class ProviderAgentTests
     [Trait("Category", "Unit")]
     public void CanNotCreateWithoutUser()
     {
+        //Arrange
+        var provider = new Provider(
+                "Company Name",
+                1.1m,
+                new PaymentTransactionsInformation("1234567890", "01234012340123401234"));
+
         // Act
         var exception = Record.Exception(() => _ = new ProviderAgent(
             agent: null!,
-            provider: new Provider("Company Name", 1.1m,
-            new PaymentTransactionsInformation("1234567890", "1234"))));
+            provider));
 
         // Assert
         exception.Should().BeOfType<ArgumentNullException>();
@@ -63,7 +72,7 @@ public class ProviderAgentTests
     {
         // Act
         var exception = Record.Exception(() => _ = new ProviderAgent(
-            agent: new User("login", new Password("12345"), UserType.Agent),
+            agent: new User("login", new Password("12345"), "mail.ru", UserType.Agent),
             provider: null!));
 
         // Assert

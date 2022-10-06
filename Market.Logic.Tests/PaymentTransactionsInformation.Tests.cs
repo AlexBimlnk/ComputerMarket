@@ -11,7 +11,7 @@ public class PaymentTransactionsInformationTests
         // Arrange
         PaymentTransactionsInformation information = null!;
         var inn = "0123456789";
-        var bankAccount = "12345";
+        var bankAccount = "01234012340123401234";
 
         // Act
         var exception = Record.Exception(() => information = new PaymentTransactionsInformation(
@@ -30,6 +30,10 @@ public class PaymentTransactionsInformationTests
     [InlineData("")]
     [InlineData("     ")]
     [InlineData("\t \n\r ")]
+    [InlineData("abcdeabcdeabcdeabcde")]
+    [InlineData("s")]
+    [InlineData("012304")]
+    [InlineData("012340123401234012341")]
     public void CanNotCreateWhenBankAccountIncorrect(string bankAccount)
     {
         // Act
@@ -47,11 +51,15 @@ public class PaymentTransactionsInformationTests
     [InlineData("")]
     [InlineData("     ")]
     [InlineData("\t \n\r ")]
+    [InlineData("123456789")]
+    [InlineData("12345678900")]
+    [InlineData("abc")]
+    [InlineData("abcabcabcc")]
     public void CanNotCreateWhenInnIncorrect(string inn)
     {
         // Act
         var exception = Record.Exception(() => _ = new PaymentTransactionsInformation(
-            bankAccount: "1234",
+            bankAccount: "01234012340123401234",
             inn: inn));
 
         // Assert

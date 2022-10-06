@@ -12,7 +12,7 @@ public class ProviderTests
         Provider provider = null!;
         var name = "Company Name";
         var margin = 1.1m;
-        var information = new PaymentTransactionsInformation("1234567890", "1234");
+        var information = new PaymentTransactionsInformation("1234567890", "01234012340123401234");
 
         // Act
         var exception = Record.Exception(() => provider = new Provider(
@@ -27,15 +27,19 @@ public class ProviderTests
         provider.PaymentTransactionsInformation.Should().Be(information);
     }
 
-    [Fact(DisplayName = $"The {nameof(Provider)} cannot be created when margin less 1.")]
+    [Theory(DisplayName = $"The {nameof(Provider)} cannot be created when margin less 1.")]
     [Trait("Category", "Unit")]
-    public void CanNotCreateWhenProviderMarginLessOne()
+    [InlineData(0.9)]
+    [InlineData(-1)]
+    [InlineData(0.00001)]
+    [InlineData(0)]
+    public void CanNotCreateWhenProviderMarginLessOne(decimal margin)
     {
         // Act
         var exception = Record.Exception(() => _ = new Provider(
             name: "name",
-            margin: 0.1m,
-            paymentTransactionsInformation: new PaymentTransactionsInformation("1234567890", "1234")));
+            margin,
+            new PaymentTransactionsInformation("1234567890", "01234012340123401234")));
 
         // Assert
         exception.Should().BeOfType<ArgumentException>();
@@ -67,7 +71,7 @@ public class ProviderTests
         var exception = Record.Exception(() => _ = new Provider(
             name: name,
             margin: 1m,
-            paymentTransactionsInformation: new PaymentTransactionsInformation("1234567890", "1234")));
+            paymentTransactionsInformation: new PaymentTransactionsInformation("1234567890", "01234012340123401234")));
 
         // Assert
         exception.Should().BeOfType<ArgumentException>();
