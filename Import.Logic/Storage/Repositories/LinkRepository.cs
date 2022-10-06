@@ -64,8 +64,6 @@ public class LinkRepository : IRepository<Link>
 
         token.ThrowIfCancellationRequested();
 
-        var a = ConvertToStorageModel(entity);
-
         await _context.Links.AddAsync(ConvertToStorageModel(entity), token);
     }
 

@@ -22,12 +22,7 @@ public class ImportContext : DbContext
     {
         modelBuilder.Entity<History>(entity =>
         {
-            entity.HasKey(e => new
-            {
-                e.ProviderId,
-                e.ExternalId,
-                e.ProductName
-            });
+            entity.HasNoKey();
 
             entity.ToTable("histories");
 

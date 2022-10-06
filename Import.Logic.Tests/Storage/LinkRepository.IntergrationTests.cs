@@ -71,9 +71,10 @@ public class LinkRepositoryIntegrationTests : DBIntegrationTestBase
         dbLinks.Should().BeEquivalentTo(expectedLink);
     }
 
-    [Fact(DisplayName = $"The {nameof(LinkRepository)} contains get true if link contains in database.")]
+    [Theory(DisplayName = $"The {nameof(LinkRepository)} can contains works.")]
     [Trait("Category", "Integration")]
-    public async Task ContainsGetTrueIfContainsLinkAsync()
+    [MemberData(nameof(ContainsData))]
+    public async Task CanContainsWorksAsync(Link inputLink, bool expectedResult)
     {
         // Arrange
         var logger = Mock.Of<ILogger>();
@@ -89,8 +90,6 @@ public class LinkRepositoryIntegrationTests : DBIntegrationTestBase
         await AddLinkAsync(new(new(2), new(4, Provider.Ivanov)));
         await AddLinkAsync(new(new(1), new(1, Provider.HornsAndHooves)));
 
-        var inputLink = new Link(new(1), new(1, Provider.HornsAndHooves));
-
         var repository = new LinkRepository(
             context.Object,
             logger);
@@ -100,52 +99,52 @@ public class LinkRepositoryIntegrationTests : DBIntegrationTestBase
             .ConfigureAwait(false);
 
         // Assert
-        result.Should().BeTrue();
+        result.Should().Be(expectedResult);
     }
 
     [Fact(DisplayName = $"The {nameof(LinkRepository)} can delete link.")]
     [Trait("Category", "Integration")]
-    public void CanDeleteLink()
+    public async Task CanDeleteLinkAsync()
     {
         // Arrange
-        var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
         var logger = Mock.Of<ILogger>();
 
-        var storageLink = new TLink()
-        {
-            InternalId = 1,
-            ExternalId = 1,
-            ProviderId = 1
-        };
+        var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
+        context.SetupGet(x => x.Links)
+            .Returns(_importContext.Links);
+        context.Setup(x => x.SaveChanges())
+            .Callback(() => _importContext.SaveChanges());
 
-        var links = new Mock<DbSet<TLink>>(MockBehavior.Loose);
+        await AddProviderAsync(Provider.Ivanov);
+        await AddProviderAsync(Provider.HornsAndHooves);
 
-        context.Setup(x => x.Links)
-            .Returns(links.Object);
+        await AddLinkAsync(new(new(1), new(1, Provider.Ivanov)));
+        await AddLinkAsync(new(new(2), new(4, Provider.Ivanov)));
+        await AddLinkAsync(new(new(1), new(1, Provider.HornsAndHooves)));
 
-        var linkRepository = new LinkRepository(
+        var repository = new LinkRepository(
             context.Object,
             logger);
 
-        var containsLink = new Link(
-            new(1),
-            new(1, Provider.Ivanov));
+        var inputLink = new Link(new(1), new(1, Provider.Ivanov));
 
         // Act
+        var beforeContains = await repository.ContainsAsync(inputLink)
+            .ConfigureAwait(false);
+
         var exception = Record.Exception(() =>
-            linkRepository.Delete(containsLink));
+        {
+            repository.Delete(inputLink);
+            repository.Save();
+        });
+
+        var afterContains = await repository.ContainsAsync(inputLink)
+            .ConfigureAwait(false);
 
         // Assert
+        beforeContains.Should().BeTrue();
         exception.Should().BeNull();
-
-        links.Verify(x =>
-            x.Remove(
-                It.Is<TLink>(l =>
-                    l.InternalId == storageLink.InternalId &&
-                    l.ExternalId == storageLink.ExternalId &&
-                    l.ProviderId == storageLink.ProviderId &&
-                    l.Provider == storageLink.Provider)),
-            Times.Once);
+        afterContains.Should().BeFalse();
     }
 
     private async Task AddLinkAsync(Link link)
@@ -163,4 +162,16 @@ public class LinkRepositoryIntegrationTests : DBIntegrationTestBase
 
         await AddAsync(fromQuery, valuesQuery);
     }
+
+    public static readonly TheoryData<Link, bool> ContainsData = new()
+    {
+        {
+            new(new(1), new(1, Provider.Ivanov)),
+            true
+        },
+        {
+            new(new(2), new(4, Provider.HornsAndHooves)),
+            false
+        },
+    };
 }
