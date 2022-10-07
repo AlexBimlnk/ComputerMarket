@@ -80,6 +80,7 @@ public sealed class Product
         IsMapped = true;
     }
 
+    /// <inheritdoc/>
     public override string ToString() =>
         $"{{ {ExternalID}, {(IsMapped ? $"{InternalID}, " : string.Empty)}"+
         $"Price: {Price.Value}, Quantity: {Quantity} }}";
