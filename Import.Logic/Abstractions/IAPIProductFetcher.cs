@@ -5,7 +5,10 @@ namespace Import.Logic.Abstractions;
 /// <summary xml:lang = "ru">
 /// Описывает получателя продуктов по API.
 /// </summary>
-public interface IAPIProductFetcher
+/// <typeparam name="TExternalProduct" xml:lang = "ru">
+/// Маркерный тип внешнего продукта, который он обрабатывает.
+/// </typeparam>
+public interface IAPIProductFetcher<TExternalProduct>
 {
     /// <summary xml:lang = "ru">
     /// Получает список продуктов поставщика.
