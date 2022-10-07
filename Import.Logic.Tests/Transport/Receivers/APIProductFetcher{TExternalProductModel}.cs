@@ -1,11 +1,12 @@
 ﻿using Import.Logic.Abstractions;
 using Import.Logic.Models;
+using Import.Logic.Transport.Receivers;
 
 using Microsoft.Extensions.Logging;
 
 using Moq;
 
-namespace Import.Logic.Tests;
+namespace Import.Logic.Tests.Transport.Receivers;
 public class APIProductFetcherTests
 {
     [Fact(DisplayName = $"The instance can create.")]

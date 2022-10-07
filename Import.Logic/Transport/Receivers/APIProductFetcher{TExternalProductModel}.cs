@@ -3,7 +3,7 @@ using Import.Logic.Models;
 
 using Microsoft.Extensions.Logging;
 
-namespace Import.Logic;
+namespace Import.Logic.Transport.Receivers;
 
 /// <summary xml:lang = "ru">
 /// Получатель внешних продуктов по API.
@@ -54,7 +54,7 @@ public sealed class APIProductFetcher<TExternalProductModel> : IAPIProductFetche
             .ToList();
 
         _logger.LogDebug(
-            "External products '{Type}' succesfull fetch and converted", 
+            "External products '{Type}' succesfull fetch and converted",
             typeof(TExternalProductModel));
 
         return products;
