@@ -7,5 +7,6 @@ namespace Import.Logic.Transport.Configuration;
 /// </summary>
 public class InternalProductSenderConfiguration : ITransportSenderConfiguration
 {
+    /// <inheritdoc/>
     public string Destination { get; set; } = default!;
 }

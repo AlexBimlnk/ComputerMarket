@@ -16,6 +16,21 @@ public class APIInternalProductSender : ISender<InternalProductSenderConfigurati
     private readonly InternalProductSenderConfiguration _configuration;
     private readonly ISerializer<IReadOnlyCollection<Product>, string> _serializer;
 
+    /// <summary xml:lang = "ru">
+    /// Создает новый экземпля типа <see cref="APIInternalProductSender"/>.
+    /// </summary>
+    /// <param name="logger" xml:lang = "ru">
+    /// Логгер.
+    /// </param>
+    /// <param name="options" xml:lang = "ru">
+    /// Опции с конфигурацией отправителя.
+    /// </param>
+    /// <param name="serializer" xml:lang = "ru">
+    /// Сериализатор продуктов.
+    /// </param>
+    /// <exception cref="ArgumentNullException" xml:lang = "ru">
+    /// Если любой из параметров оказался <see langword="null"/>.
+    /// </exception>
     public APIInternalProductSender(
         ILogger<APIInternalProductSender> logger,
         IOptions<InternalProductSenderConfiguration> options,
