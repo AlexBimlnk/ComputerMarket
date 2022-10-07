@@ -1,10 +1,14 @@
-﻿namespace Market.Logic.Models;
+﻿using System.Text.RegularExpressions;
+
+namespace Market.Logic.Models;
 
 /// <summary xml:lang = "ru">
 /// Пользователь системы.
 /// </summary>
 public class User
 {
+    private const string EMAIL_PATTERN = @"^\w+@\w+\.\w+$";
+
     /// <summary xml:lang = "ru">
     /// Создает экземпляр типа <see cref="User"/>.
     /// </summary>
@@ -22,6 +26,8 @@ public class User
 
         if (string.IsNullOrWhiteSpace(email))
             throw new ArgumentException($"Email can't be null or empty or contains only whitespaces", nameof(email));
+        if (!Regex.IsMatch(email, EMAIL_PATTERN))
+            throw new ArgumentException($"Given email is not match with email pattern", nameof(email));
         Email = email;
 
         Password = password ?? throw new ArgumentNullException(nameof(login));

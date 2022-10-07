@@ -31,18 +31,18 @@ public class PaymentTransactionsInformation
     public PaymentTransactionsInformation(string inn, string bankAccount)
     {
         if (string.IsNullOrWhiteSpace(bankAccount))
-            throw new ArgumentException("Bank account can't be null or empty or contains only whitespaces", nameof(bankAccount));
+            throw new ArgumentException($"{nameof(bankAccount)} can't be null or empty or contains only whitespaces", nameof(bankAccount));
 
         if (!Regex.IsMatch(bankAccount, BANK_ACCOUNT_PATTERN))
-            throw new ArgumentException("Given bank account not match with account format");
+            throw new ArgumentException($"Given {nameof(bankAccount)} not match with account format");
 
         BankAccount = bankAccount;
 
         if (string.IsNullOrWhiteSpace(inn))
-            throw new ArgumentException("INN can't be null or empty or contains only whitespaces", nameof(inn));
+            throw new ArgumentException($"{nameof(inn)} can't be null or empty or contains only whitespaces", nameof(inn));
 
         if (!Regex.IsMatch(inn, INN_PATTERN))
-            throw new ArgumentException("Given inn not match with INN format");
+            throw new ArgumentException($"Given {nameof(inn)} not match with INN format");
 
         INN = inn;
     }

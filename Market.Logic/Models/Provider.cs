@@ -17,14 +17,17 @@ public class Provider
     /// <exception cref="ArgumentException" xml:lang = "ru">
     /// Если <paramref name="name"/> не соответсвует уставновленному формату или <paramref name="margin"/> имеет некоректное значение.
     /// </exception>
-    public Provider(string name, decimal margin, PaymentTransactionsInformation paymentTransactionsInformation)
+    public Provider(
+        string name, 
+        decimal margin, 
+        PaymentTransactionsInformation paymentTransactionsInformation)
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new ArgumentException("Name can't be null or empty or contains only whitespaces", nameof(name));
         Name = name;
 
         if (margin < 1m)
-            throw new ArgumentException("Given margin has incorrect value");
+            throw new ArgumentException($"Given {nameof(margin)} has incorrect value");
         Margin = margin;
 
         PaymentTransactionsInformation = paymentTransactionsInformation ?? throw new ArgumentNullException(nameof(paymentTransactionsInformation));

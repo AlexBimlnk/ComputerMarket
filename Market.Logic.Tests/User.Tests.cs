@@ -13,7 +13,7 @@ public class UserTests
         var login = "login";
         var password = new Password("password");
         var type = UserType.Customer;
-        var email = "mail.ru";
+        var email = "mAiL33@mail.ru";
 
         // Act
         var exception = Record.Exception(() => user = new User(
@@ -38,7 +38,7 @@ public class UserTests
         var exception = Record.Exception(() => _ = new User(
             login: "login",
             password: null!,
-            email: "mail.ru",
+            email: "mail@mail.ru",
             type: UserType.Customer));
 
         // Assert
@@ -47,13 +47,13 @@ public class UserTests
 
     [Fact(DisplayName = $"The {nameof(User)} cannot be created with incorrect user type enum value.")]
     [Trait("Category", "Unit")]
-    public void CanNotCreateWithWronUserTypeValue()
+    public void CanNotCreateWithWrongUserTypeValue()
     {
         // Act
         var exception = Record.Exception(() => _ = new User(
             login: "login",
             password: new Password("12345"),
-            email: "mail.ru",
+            email: "mail@mail.ru",
             type: (UserType)1234));
 
         // Assert
@@ -72,7 +72,7 @@ public class UserTests
         var exception = Record.Exception(() => _ = new User(
             login: login,
             password: new Password("12345"),
-            email: "mail.ru",
+            email: "mail@mail.ru",
             type: UserType.Customer));
 
         // Assert
@@ -85,6 +85,12 @@ public class UserTests
     [InlineData("")]
     [InlineData("     ")]
     [InlineData("\t \n\r ")]
+    [InlineData("asdavasdasd")]
+    [InlineData("mailmail.ru")]
+    [InlineData("mail@mailru")]
+    [InlineData("@mail.ru")]
+    [InlineData("mail@mail.ru.ru")]
+    [InlineData("mail@mail.")]
     public void CanNotCreateWhenEmailIncorrect(string email)
     {
         // Act
