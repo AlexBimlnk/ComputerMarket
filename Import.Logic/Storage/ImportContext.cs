@@ -43,7 +43,12 @@ public class ImportContext : DbContext
 
         modelBuilder.Entity<Link>(entity =>
         {
-            entity.HasNoKey();
+            entity.HasKey(e => new
+            {
+                e.InternalId,
+                e.ExternalId,
+                e.ProviderId
+            });
 
             entity.ToTable("links");
 
@@ -64,6 +69,8 @@ public class ImportContext : DbContext
 
         modelBuilder.Entity<Provider>(entity =>
         {
+            entity.HasKey(e => e.Id);
+
             entity.ToTable("providers");
 
             entity.Property(e => e.Id)
