@@ -32,9 +32,13 @@ public class Mapper : IMapper<Product>
         var linkOfEntity = _cache.GetByKey(entity.ExternalID);
 
         if (linkOfEntity is null)
+        {
+            _logger.LogWarning("Product with {ExternalID} doesn't mapped.", entity.ExternalID);
             return entity;
+        }
 
         entity.MapTo(linkOfEntity.InternalID);
+        _logger.LogDebug("Product with {ExternalID} succesfully mapped to {InternalID}", entity.InternalID, entity.InternalID);
 
         return entity;
     }
