@@ -16,6 +16,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Import.Logic", "Import.Logi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Import.Logic.Tests", "Import.Logic.Tests\Import.Logic.Tests.csproj", "{BC838259-BFD3-4CEA-B6CC-C34F53D8087E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Market.Logic", "Market.Logic\Market.Logic.csproj", "{E74C31E1-3A9E-487F-9B86-5C879BEDE3E9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Market.Logic.Tests", "Market.Logic.Tests\Market.Logic.Tests.csproj", "{ECB7C378-75D5-4776-9607-EB2FC62D2BA1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +42,14 @@ Global
 		{BC838259-BFD3-4CEA-B6CC-C34F53D8087E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BC838259-BFD3-4CEA-B6CC-C34F53D8087E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BC838259-BFD3-4CEA-B6CC-C34F53D8087E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E74C31E1-3A9E-487F-9B86-5C879BEDE3E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E74C31E1-3A9E-487F-9B86-5C879BEDE3E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E74C31E1-3A9E-487F-9B86-5C879BEDE3E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E74C31E1-3A9E-487F-9B86-5C879BEDE3E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ECB7C378-75D5-4776-9607-EB2FC62D2BA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECB7C378-75D5-4776-9607-EB2FC62D2BA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECB7C378-75D5-4776-9607-EB2FC62D2BA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECB7C378-75D5-4776-9607-EB2FC62D2BA1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
