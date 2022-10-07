@@ -11,8 +11,7 @@ namespace Import.Logic.Transport.Receivers;
 /// <typeparam name="TExternalProductModel" xml:lang = "ru">
 /// Тип внешних получаемых продуктов.
 /// </typeparam>
-public sealed class APIProductFetcher<TExternalProductModel> : IAPIProductFetcher
-    where TExternalProductModel : class
+public sealed class APIProductFetcher<TExternalProductModel> : IAPIProductFetcher<TExternalProductModel>
 {
     private readonly ILogger<APIProductFetcher<TExternalProductModel>> _logger;
     private readonly IDeserializer<string, TExternalProductModel[]> _deserializer;

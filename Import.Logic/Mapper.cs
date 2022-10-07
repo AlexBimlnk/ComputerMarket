@@ -44,6 +44,8 @@ public class Mapper : IMapper<Product>
     }
 
     /// <inheritdoc/>
-    public IReadOnlyCollection<Product> MapCollection(IReadOnlyCollection<Product> entityCollection) =>
-        entityCollection.Select((x) => MapEntity(x)).Where(x => x.IsMapped).ToList();
+    public IReadOnlyCollection<Product> MapCollection(IReadOnlyCollection<Product> entityCollection) 
+        => entityCollection.Select((x) => MapEntity(x))
+            .Where(x => x.IsMapped)
+            .ToList();
 }
