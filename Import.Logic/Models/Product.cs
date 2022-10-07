@@ -79,4 +79,8 @@ public sealed class Product
         _internalID = internalID;
         IsMapped = true;
     }
+
+    public override string ToString() =>
+        $"{{ {ExternalID}, {(IsMapped ? $"{InternalID}, " : string.Empty)}"+
+        $"Price: {Price.Value}, Quantity: {Quantity} }}";
 }
