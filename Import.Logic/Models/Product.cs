@@ -1,9 +1,11 @@
-﻿namespace Import.Logic.Models;
+﻿using Import.Logic.Abstractions;
+
+namespace Import.Logic.Models;
 
 /// <summary xml:lang = "ru">
 /// Продукт.
 /// </summary>
-public sealed class Product
+public sealed class Product : IMappableEntity<InternalID, ExternalID>
 {
     private InternalID? _internalID;
 
