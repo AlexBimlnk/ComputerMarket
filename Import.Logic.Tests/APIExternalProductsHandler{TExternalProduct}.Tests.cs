@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Import.Logic.Abstractions;
+﻿using Import.Logic.Abstractions;
 using Import.Logic.Models;
-using Import.Logic.Transport.Receivers;
+
 using Microsoft.Extensions.Logging;
+
 using Moq;
 
 namespace Import.Logic.Tests;
+
+using Configuration = Logic.Transport.Configuration.InternalProductSenderConfiguration;
+
 public class APIExternalProductsHandlerTests
 {
     [Fact(DisplayName = $"The instance can create.")]
@@ -21,13 +19,15 @@ public class APIExternalProductsHandlerTests
         var logger = Mock.Of<ILogger<APIExternalProductsHandler<FakeExternalProduct>>>(MockBehavior.Strict);
         var fetcher = Mock.Of<IAPIProductFetcher<FakeExternalProduct>>(MockBehavior.Strict);
         var mapper = Mock.Of<IMapper<Product>>(MockBehavior.Strict);
+        var sender = Mock.Of<ISender<Configuration, IReadOnlyCollection<Product>>>(MockBehavior.Strict);
 
         // Act
-        var exception = Record.Exception(() => 
+        var exception = Record.Exception(() =>
             _ = new APIExternalProductsHandler<FakeExternalProduct>(
                 logger,
                 fetcher,
-                mapper));
+                mapper,
+                sender));
 
         // Assert
         exception.Should().BeNull();
@@ -38,106 +38,80 @@ public class APIExternalProductsHandlerTests
     public void CanNotBeCreatedWithoutLogger()
     {
         // Arrange
-        var deserializer = Mock.Of<IDeserializer<string, FakeModel[]>>(MockBehavior.Strict);
-        var historyRecorder = Mock.Of<IHistoryRecorder>(MockBehavior.Strict);
-        var converter = Mock.Of<IConverter<FakeModel, Product>>(MockBehavior.Strict);
-        var historyConverter = Mock.Of<IConverter<FakeModel, History>>(MockBehavior.Strict);
+        var fetcher = Mock.Of<IAPIProductFetcher<FakeExternalProduct>>(MockBehavior.Strict);
+        var mapper = Mock.Of<IMapper<Product>>(MockBehavior.Strict);
+        var sender = Mock.Of<ISender<Configuration, IReadOnlyCollection<Product>>>(MockBehavior.Strict);
 
         // Act
-        var exception = Record.Exception(() => _ = new APIExternalProductsHandler<FakeExternalProduct>(
-            null!,
-            deserializer,
-            historyRecorder,
-            converter,
-            historyConverter));
+        var exception = Record.Exception(() =>
+            _ = new APIExternalProductsHandler<FakeExternalProduct>(
+                logger: null!,
+                fetcher,
+                mapper,
+                sender));
 
         // Assert
         exception.Should().NotBeNull().And.BeOfType<ArgumentNullException>();
     }
 
-    [Fact(DisplayName = $"The instance can't create without deserializer.")]
+    [Fact(DisplayName = $"The instance can't create without product fetcher.")]
     [Trait("Category", "Unit")]
-    public void CanNotBeCreatedWithoutDeserializer()
+    public void CanNotBeCreatedWithoutProductFetcher()
     {
         // Arrange
         var logger = Mock.Of<ILogger<APIExternalProductsHandler<FakeExternalProduct>>>(MockBehavior.Strict);
-        var historyRecorder = Mock.Of<IHistoryRecorder>(MockBehavior.Strict);
-        var converter = Mock.Of<IConverter<FakeModel, Product>>(MockBehavior.Strict);
-        var historyConverter = Mock.Of<IConverter<FakeModel, History>>(MockBehavior.Strict);
+        var mapper = Mock.Of<IMapper<Product>>(MockBehavior.Strict);
+        var sender = Mock.Of<ISender<Configuration, IReadOnlyCollection<Product>>>(MockBehavior.Strict);
 
         // Act
-        var exception = Record.Exception(() => _ = new APIExternalProductsHandler<FakeExternalProduct>(
-            logger,
-            null!,
-            historyRecorder,
-            converter,
-            historyConverter));
+        var exception = Record.Exception(() =>
+            _ = new APIExternalProductsHandler<FakeExternalProduct>(
+                logger,
+                fetcher: null!,
+                mapper,
+                sender));
 
         // Assert
         exception.Should().NotBeNull().And.BeOfType<ArgumentNullException>();
     }
 
-    [Fact(DisplayName = $"The instance can't create without deserializer.")]
+    [Fact(DisplayName = $"The instance can't create without mapper.")]
     [Trait("Category", "Unit")]
-    public void CanNotBeCreatedWithoutHistoryReader()
+    public void CanNotBeCreatedWithoutMapper()
     {
         // Arrange
         var logger = Mock.Of<ILogger<APIExternalProductsHandler<FakeExternalProduct>>>(MockBehavior.Strict);
-        var deserializer = Mock.Of<IDeserializer<string, FakeModel[]>>(MockBehavior.Strict);
-        var converter = Mock.Of<IConverter<FakeModel, Product>>(MockBehavior.Strict);
-        var historyConverter = Mock.Of<IConverter<FakeModel, History>>(MockBehavior.Strict);
+        var fetcher = Mock.Of<IAPIProductFetcher<FakeExternalProduct>>(MockBehavior.Strict);
+        var sender = Mock.Of<ISender<Configuration, IReadOnlyCollection<Product>>>(MockBehavior.Strict);
 
         // Act
-        var exception = Record.Exception(() => _ = new APIExternalProductsHandler<FakeExternalProduct>(
-            logger,
-            deserializer,
-            null!,
-            converter,
-            historyConverter));
+        var exception = Record.Exception(() =>
+            _ = new APIExternalProductsHandler<FakeExternalProduct>(
+                logger,
+                fetcher,
+                mapper: null!,
+                sender));
 
         // Assert
         exception.Should().NotBeNull().And.BeOfType<ArgumentNullException>();
     }
 
-    [Fact(DisplayName = $"The instance can't create without history reader.")]
+    [Fact(DisplayName = $"The instance can't create without history sender.")]
     [Trait("Category", "Unit")]
-    public void CanNotBeCreatedWithoutConverter()
+    public void CanNotBeCreatedWithoutSender()
     {
         // Arrange
         var logger = Mock.Of<ILogger<APIExternalProductsHandler<FakeExternalProduct>>>(MockBehavior.Strict);
-        var deserializer = Mock.Of<IDeserializer<string, FakeModel[]>>(MockBehavior.Strict);
-        var historyRecorder = Mock.Of<IHistoryRecorder>(MockBehavior.Strict);
-        var historyConverter = Mock.Of<IConverter<FakeModel, History>>(MockBehavior.Strict);
+        var fetcher = Mock.Of<IAPIProductFetcher<FakeExternalProduct>>(MockBehavior.Strict);
+        var mapper = Mock.Of<IMapper<Product>>(MockBehavior.Strict);
 
         // Act
-        var exception = Record.Exception(() => _ = new APIExternalProductsHandler<FakeExternalProduct>(
-            logger,
-            deserializer,
-            historyRecorder,
-            null!,
-            historyConverter));
-
-        // Assert
-        exception.Should().NotBeNull().And.BeOfType<ArgumentNullException>();
-    }
-
-    [Fact(DisplayName = $"The instance can't create without history converter.")]
-    [Trait("Category", "Unit")]
-    public void CanNotBeCreatedWithoutHistoryConverter()
-    {
-        // Arrange
-        var logger = Mock.Of<ILogger<APIExternalProductsHandler<FakeExternalProduct>>>(MockBehavior.Strict);
-        var deserializer = Mock.Of<IDeserializer<string, FakeModel[]>>(MockBehavior.Strict);
-        var historyRecorder = Mock.Of<IHistoryRecorder>(MockBehavior.Strict);
-        var converter = Mock.Of<IConverter<FakeModel, Product>>(MockBehavior.Strict);
-
-        // Act
-        var exception = Record.Exception(() => _ = new APIExternalProductsHandler<FakeExternalProduct>(
-            logger,
-            deserializer,
-            historyRecorder,
-            converter,
-            null!));
+        var exception = Record.Exception(() =>
+            _ = new APIExternalProductsHandler<FakeExternalProduct>(
+                logger,
+                fetcher,
+                mapper,
+                productsSender: null!));
 
         // Assert
         exception.Should().NotBeNull().And.BeOfType<ArgumentNullException>();
@@ -145,55 +119,50 @@ public class APIExternalProductsHandlerTests
 
     [Fact(DisplayName = $"The instance can fetch products.")]
     [Trait("Category", "Unit")]
-    public async Task CanFetchProductsAsync()
+    public async Task CanHandleProductsAsync()
     {
         // Arrange
         var logger = Mock.Of<ILogger<APIExternalProductsHandler<FakeExternalProduct>>>();
-        var deserializer = new Mock<IDeserializer<string, FakeModel[]>>(MockBehavior.Strict);
-        var historyRecorder = new Mock<IHistoryRecorder>(MockBehavior.Strict);
-        var converter = new Mock<IConverter<FakeModel, Product>>(MockBehavior.Strict);
-        var historyConverter = new Mock<IConverter<FakeModel, History>>(MockBehavior.Strict);
+        var fetcher = new Mock<IAPIProductFetcher<FakeExternalProduct>>(MockBehavior.Strict);
+        var mapper = new Mock<IMapper<Product>>(MockBehavior.Strict);
+        var sender = new Mock<ISender<Configuration, IReadOnlyCollection<Product>>>();
 
-        var externalModels = new[]
+        var request = "some request";
+
+        var products = new Product[]
         {
-            new FakeModel(),
-            new FakeModel(),
+            new(new(1, Provider.Ivanov), new(100), 2),
+            new(new(2, Provider.Ivanov), new(100), 2),
+            new(new(1, Provider.HornsAndHooves), new(100), 2)
         };
 
-        deserializer.Setup(x => x.Deserialize(It.IsAny<string>()))
-            .Returns(externalModels);
+        var fetcherInvokeCount = 0;
+        fetcher.Setup(x => x.FetchProductsAsync(request, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(products)
+            .Callback(() => fetcherInvokeCount++);
 
-        converter.Setup(x => x.Convert(It.IsAny<FakeModel>()))
-            .Returns(new Product(new(1, Provider.Ivanov), new(1), 1));
+        var mapperInvokeCount = 0;
+        mapper.Setup(x => x.MapCollection(products))
+            .Returns(products)
+            .Callback(() => mapperInvokeCount++);
 
-        historyConverter.Setup(x => x.Convert(It.IsAny<FakeModel>()))
-            .Returns(It.IsAny<History>());
-
-        historyRecorder.Setup(x => x.RecordHistoryAsync(
-                It.IsAny<IReadOnlyCollection<History>>(),
-                It.IsAny<CancellationToken>()))
-            .Returns(Task.CompletedTask);
-
-        var fetcher = new APIExternalProductsHandler<FakeExternalProduct>(
+        var handler = new APIExternalProductsHandler<FakeExternalProduct>(
             logger,
-            deserializer.Object,
-            historyRecorder.Object,
-            converter.Object,
-            historyConverter.Object);
-
-        var expectedResult = new[]
-        {
-            new Product(new(1, Provider.Ivanov), new(1), 1),
-            new Product(new(1, Provider.Ivanov), new(1), 1)
-        };
+            fetcher.Object,
+            mapper.Object,
+            sender.Object);
 
         // Act
-        var result = await fetcher.FetchProductsAsync("some request");
+        var exception = await Record.ExceptionAsync(async () =>
+            await handler.HandleAsync(request));
 
         // Assert
-        result.Should().BeEquivalentTo(expectedResult, opt =>
-            opt.Excluding(x => x.InternalID)
-            .RespectingRuntimeTypes());
+        exception.Should().BeNull();
+        fetcherInvokeCount.Should().Be(1);
+        mapperInvokeCount.Should().Be(1);
+        sender.Verify(x =>
+            x.SendAsync(products, It.IsAny<CancellationToken>()),
+            Times.Once());
     }
 
     [Theory(DisplayName = $"The instance can't fetch products if given bad request.")]
@@ -206,25 +175,51 @@ public class APIExternalProductsHandlerTests
     {
         // Arrange
         var logger = Mock.Of<ILogger<APIExternalProductsHandler<FakeExternalProduct>>>(MockBehavior.Strict);
-        var deserializer = Mock.Of<IDeserializer<string, FakeModel[]>>(MockBehavior.Strict);
-        var historyRecorder = Mock.Of<IHistoryRecorder>(MockBehavior.Strict);
-        var converter = Mock.Of<IConverter<FakeModel, Product>>(MockBehavior.Strict);
-        var historyConverter = Mock.Of<IConverter<FakeModel, History>>(MockBehavior.Strict);
+        var fetcher = Mock.Of<IAPIProductFetcher<FakeExternalProduct>>(MockBehavior.Strict);
+        var mapper = Mock.Of<IMapper<Product>>(MockBehavior.Strict);
+        var sender = Mock.Of<ISender<Configuration, IReadOnlyCollection<Product>>>(MockBehavior.Strict);
 
         // Act
-        var fetcher = new APIExternalProductsHandler<FakeExternalProduct>(
+        var handler = new APIExternalProductsHandler<FakeExternalProduct>(
             logger,
-            deserializer,
-            historyRecorder,
-            converter,
-            historyConverter);
+            fetcher,
+            mapper,
+            sender);
 
         // Act
         var exception = await Record.ExceptionAsync(async () =>
-            _ = await fetcher.FetchProductsAsync(request));
+            await handler.HandleAsync(request));
 
         // Assert
         exception.Should().BeOfType<ArgumentException>();
+    }
+
+    [Fact(DisplayName = $"The instance can cancel operation.")]
+    [Trait("Category", "Unit")]
+    public async Task CanCancelOperationAsync()
+    {
+        // Arrange
+        var logger = Mock.Of<ILogger<APIExternalProductsHandler<FakeExternalProduct>>>(MockBehavior.Strict);
+        var fetcher = Mock.Of<IAPIProductFetcher<FakeExternalProduct>>(MockBehavior.Strict);
+        var mapper = Mock.Of<IMapper<Product>>(MockBehavior.Strict);
+        var sender = Mock.Of<ISender<Configuration, IReadOnlyCollection<Product>>>(MockBehavior.Strict);
+
+        var request = "some request";
+        var cts = new CancellationTokenSource();
+
+        var handler = new APIExternalProductsHandler<FakeExternalProduct>(
+            logger,
+            fetcher,
+            mapper,
+            sender);
+
+        // Act
+        cts.Cancel();
+        var exception = await Record.ExceptionAsync(async () =>
+            await handler.HandleAsync(request, cts.Token));
+
+        // Assert
+        exception.Should().BeOfType<OperationCanceledException>();
     }
 
     public record class FakeExternalProduct();

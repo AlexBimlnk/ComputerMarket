@@ -19,5 +19,11 @@ public interface IAPIProductFetcher<TExternalProduct>
     /// <returns xml:lang = "ru">
     /// Коллекцию внутренних продуктов типа <see cref="Product"/>.
     /// </returns>
-    public Task<IReadOnlyCollection<Product>> FetchProductsAsync(string request);
+    /// <exception cref="ArgumentException" xml:lang = "ru">
+    /// Если <paramref name="request"/> имел некорректный формат.
+    /// </exception>
+    /// <exception cref="OperationCanceledException" xml:lang = "ru">
+    /// Когда операция была отменена.
+    /// </exception>
+    public Task<IReadOnlyCollection<Product>> FetchProductsAsync(string request, CancellationToken token = default);
 }

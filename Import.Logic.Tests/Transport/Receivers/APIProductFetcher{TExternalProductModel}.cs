@@ -210,7 +210,6 @@ public class APIProductFetcherTests
         var converter = Mock.Of<IConverter<FakeModel, Product>>(MockBehavior.Strict);
         var historyConverter = Mock.Of<IConverter<FakeModel, History>>(MockBehavior.Strict);
 
-        // Act
         var fetcher = new APIProductFetcher<FakeModel>(
             logger,
             deserializer,
@@ -224,6 +223,36 @@ public class APIProductFetcherTests
 
         // Assert
         exception.Should().BeOfType<ArgumentException>();
+    }
+
+    [Fact(DisplayName = $"The instance can cancel operation.")]
+    [Trait("Category", "Unit")]
+    public async Task CanCancelOperationAsync()
+    {
+        // Arrange
+        var logger = Mock.Of<ILogger<APIProductFetcher<FakeModel>>>(MockBehavior.Strict);
+        var deserializer = Mock.Of<IDeserializer<string, FakeModel[]>>(MockBehavior.Strict);
+        var historyRecorder = Mock.Of<IHistoryRecorder>(MockBehavior.Strict);
+        var converter = Mock.Of<IConverter<FakeModel, Product>>(MockBehavior.Strict);
+        var historyConverter = Mock.Of<IConverter<FakeModel, History>>(MockBehavior.Strict);
+
+        var request = "some request";
+        var cts = new CancellationTokenSource();
+
+        var fetcher = new APIProductFetcher<FakeModel>(
+            logger,
+            deserializer,
+            historyRecorder,
+            converter,
+            historyConverter);
+
+        // Act
+        cts.Cancel();
+        var exception = await Record.ExceptionAsync(async () =>
+            _ = await fetcher.FetchProductsAsync(request, cts.Token));
+
+        // Assert
+        exception.Should().BeOfType<OperationCanceledException>();
     }
 
     public record class FakeModel();

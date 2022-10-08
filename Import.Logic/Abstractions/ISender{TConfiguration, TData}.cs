@@ -27,5 +27,8 @@ public interface ISender<TConfiguration, TData>
     /// <exception cref="ArgumentNullException" xml:lang = "ru">
     /// Когда входные данные оказались <see langword="null"/>.
     /// </exception>
-    public Task SendAsync(TData entity, CancellationToken token);
+    /// <exception cref="OperationCanceledException" xml:lang = "ru">
+    /// Когда операция была отменена.
+    /// </exception>
+    public Task SendAsync(TData entity, CancellationToken token = default);
 }
