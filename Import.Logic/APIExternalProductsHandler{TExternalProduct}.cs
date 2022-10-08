@@ -12,7 +12,7 @@ namespace Import.Logic;
 /// <typeparam name="TExternalProduct" xml:lang = "ru">
 /// Маркерный тип внешнего обрабатываемого продукта.
 /// </typeparam>
-public class APIExternalProductsHandler<TExternalProduct> : IAPIExternalProductHandler<TExternalProduct>
+public sealed class APIExternalProductsHandler<TExternalProduct> : IAPIExternalProductHandler<TExternalProduct>
 {
     private readonly ILogger _logger;
     private readonly IAPIProductFetcher<TExternalProduct> _fetcher;
