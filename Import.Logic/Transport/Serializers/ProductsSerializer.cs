@@ -9,7 +9,7 @@ namespace Import.Logic.Transport.Serializers;
 /// <summary xml:lang = "ru">
 /// Сериализатор продуктов.
 /// </summary>
-public class ProductsSerializer : ISerializer<IReadOnlyCollection<Product>, string>
+public sealed class ProductsSerializer : ISerializer<IReadOnlyCollection<Product>, string>
 {
     /// <inheritdoc/>
     public string Serialize(IReadOnlyCollection<Product> source)
