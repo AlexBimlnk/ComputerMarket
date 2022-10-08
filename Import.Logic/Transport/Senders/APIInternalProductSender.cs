@@ -10,7 +10,7 @@ namespace Import.Logic.Transport.Senders;
 /// <summary xml:lang = "ru">
 /// Отправитель внутренних продуктов по API.
 /// </summary>
-public class APIInternalProductSender : ISender<InternalProductSenderConfiguration, IReadOnlyCollection<Product>>
+public sealed class APIInternalProductSender : ISender<InternalProductSenderConfiguration, IReadOnlyCollection<Product>>
 {
     private readonly ILogger<APIInternalProductSender> _logger;
     private readonly InternalProductSenderConfiguration _configuration;

@@ -10,7 +10,7 @@ namespace Import.Logic.Transport.Configuration;
 /// <typeparam name="TConfiguration" xml:lang = "ru">
 /// Тип конфигурации отправителя.
 /// </typeparam>
-public class SenderConfigurationValidator<TConfiguration> : IValidateOptions<TConfiguration>
+public sealed class SenderConfigurationValidator<TConfiguration> : IValidateOptions<TConfiguration>
     where TConfiguration : class, ITransportSenderConfiguration
 {
     /// <inheritdoc/>

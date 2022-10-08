@@ -8,7 +8,7 @@ namespace Import.Logic.Storage.Repositories;
 /// <summary xml:lang = "ru">
 /// Контекст БД для репозиториев.
 /// </summary>
-public class RepositoryContext : IRepositoryContext
+public sealed class RepositoryContext : IRepositoryContext
 {
     private readonly ImportContext _importContext;
     private readonly ILogger _logger;

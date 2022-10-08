@@ -24,6 +24,9 @@ public sealed class CommandParametersDeserializer : IDeserializer<string, Comman
     });
 
     /// <inheritdoc/>
+    /// <exception cref="ArgumentException" xml:lang = "ru">
+    /// Когда <paramref name="source"/> имел неверный формат.
+    /// </exception>
     public CommandParametersBase Deserialize(string source)
     {
         if (string.IsNullOrWhiteSpace(source))

@@ -8,7 +8,7 @@ namespace Import.Logic;
 /// <summary xml:lang = "ru">
 /// Маппер продуктов.
 /// </summary>
-public class Mapper : IMapper<Product>
+public sealed class Mapper : IMapper<Product>
 {
     private readonly IKeyableCache<Link, ExternalID> _cache;
     private readonly ILogger<Mapper> _logger;
