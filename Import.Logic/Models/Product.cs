@@ -81,4 +81,9 @@ public sealed class Product : IMappableEntity<InternalID, ExternalID>
         _internalID = internalID;
         IsMapped = true;
     }
+
+    /// <inheritdoc/>
+    public override string ToString() =>
+        $"{{ {ExternalID}, {(IsMapped ? $"{InternalID}, " : string.Empty)}"+
+        $"Price: {Price.Value}, Quantity: {Quantity} }}";
 }

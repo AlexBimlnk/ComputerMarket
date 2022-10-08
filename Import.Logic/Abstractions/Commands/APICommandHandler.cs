@@ -5,7 +5,7 @@ namespace Import.Logic.Abstractions.Commands;
 /// <summary xml:lang = "ru">
 /// Описывает обработчика команд, получаемых по HTTP.
 /// </summary>
-public interface IHTTPCommandHandler
+public interface IAPICommandHandler
 {
     /// <summary xml:lang = "ru">
     /// Обрабатывает запрос, содержащий команду.

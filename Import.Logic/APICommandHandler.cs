@@ -9,14 +9,14 @@ namespace Import.Logic;
 /// <summary xml:lang = "ru">
 /// Обработчик команд, получаемых по HTTP.
 /// </summary>
-public sealed class HTTPCommandHandler : IHTTPCommandHandler
+public sealed class APICommandHandler : IAPICommandHandler
 {
-    private readonly ILogger<HTTPCommandHandler> _logger;
+    private readonly ILogger<APICommandHandler> _logger;
     private readonly ICommandFactory _commandFactory;
     private readonly IDeserializer<string, CommandParametersBase> _deserializer;
 
     /// <summary xml:lang = "ru">
-    /// Создает новый экземпляр типа <see cref="HTTPCommandHandler"/>.
+    /// Создает новый экземпляр типа <see cref="APICommandHandler"/>.
     /// </summary>
     /// <param name="logger" xml:lang = "ru">
     /// Логгер.
@@ -30,8 +30,8 @@ public sealed class HTTPCommandHandler : IHTTPCommandHandler
     /// <exception cref="ArgumentNullException" xml:lang = "ru">
     /// Если любой из аргументов оказался <see langword="null"/>.
     /// </exception>
-    public HTTPCommandHandler(
-        ILogger<HTTPCommandHandler> logger,
+    public APICommandHandler(
+        ILogger<APICommandHandler> logger,
         ICommandFactory commandFactory,
         IDeserializer<string, CommandParametersBase> deserializer)
     {
