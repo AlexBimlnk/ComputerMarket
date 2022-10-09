@@ -73,6 +73,9 @@ public sealed class Product : IMappableEntity<InternalID, ExternalID>
     /// <param name="internalID" xml:lang = "ru">
     /// Идентификатор внутреннего продукта.
     /// </param>
+    /// <exception cref="InvalidOperationException" xml:lang = "ru">
+    /// Если продукт был уже связан.
+    /// </exception>
     public void MapTo(InternalID internalID)
     {
         if (IsMapped)

@@ -41,12 +41,14 @@ public sealed class APICommandHandler : IAPICommandHandler
     }
 
     /// <inheritdoc/>
-    public async Task<CommandResult> HandleAsync(string request)
+    public async Task<CommandResult> HandleAsync(string request, CancellationToken token = default)
     {
         if (string.IsNullOrWhiteSpace(request))
             throw new ArgumentException(
                 "Request can't be null, empty or has only whitespaces",
                 nameof(request));
+
+        token.ThrowIfCancellationRequested();
 
         _logger.LogDebug("Processing new request");
 
@@ -57,8 +59,8 @@ public sealed class APICommandHandler : IAPICommandHandler
         var result = await command.ExecuteAsync();
 
         _logger.LogInformation(
-            "Сommand {Id} processed with success: {Result}", 
-            result.Id, 
+            "Сommand {Id} processed with success: {Result}",
+            result.Id,
             result.IsSuccess);
 
         return result;
