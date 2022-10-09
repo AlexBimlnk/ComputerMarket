@@ -50,7 +50,7 @@ public class ProductsSerializerTests
         exception.Should().NotBeNull().And.BeOfType<ArgumentNullException>();
     }
 
-    public static TheoryData<IReadOnlyCollection<Product>, string> SerializeData = new()
+    public readonly static TheoryData<IReadOnlyCollection<Product>, string> SerializeData = new()
     {
         {
             new []
