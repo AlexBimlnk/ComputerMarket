@@ -12,7 +12,7 @@
 public interface IDeserializer<TSource, TTarget>
 {
     /// <summary xml:lang = "ru">
-    /// Десериализует исходный объект <paramref name="source"/> 
+    /// Десериализует исходный объект <typeparamref name="TSource"/> 
     /// в объект типа <typeparamref name="TTarget"/>.
     /// </summary>
     /// <param name="source" xml:lang = "ru">

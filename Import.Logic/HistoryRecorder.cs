@@ -10,7 +10,7 @@ namespace Import.Logic;
 /// <summary xml:lang = "ru">
 /// Записыватель историй о получении продуктов.
 /// </summary>
-public class HistoryRecorder : IHistoryRecorder
+public sealed class HistoryRecorder : IHistoryRecorder
 {
     private readonly IRepository<History> _repository;
     private readonly ILogger<HistoryRecorder> _logger;
