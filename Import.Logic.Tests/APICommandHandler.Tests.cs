@@ -140,4 +140,30 @@ public class APICommandHandlerTests
         // Assert
         exception.Should().BeOfType<ArgumentException>();
     }
+
+    [Fact(DisplayName = $"The instance can cancel operation.")]
+    [Trait("Category", "Unit")]
+    public async Task CanCancelOperationAsync()
+    {
+        // Arrange
+        var logger = Mock.Of<ILogger<APICommandHandler>>();
+        var factory = Mock.Of<ICommandFactory>(MockBehavior.Strict);
+        var deserializer = Mock.Of<IDeserializer<string, CommandParametersBase>>(MockBehavior.Strict);
+
+        var request = "some request";
+        var cts = new CancellationTokenSource();
+
+        var handler = new APICommandHandler(
+            logger,
+            factory,
+            deserializer);
+
+        // Act
+        cts.Cancel();
+        var exception = await Record.ExceptionAsync(async () =>
+            _ = await handler.HandleAsync(request, cts.Token));
+
+        // Assert
+        exception.Should().BeOfType<OperationCanceledException>();
+    }
 }

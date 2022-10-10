@@ -19,5 +19,8 @@ public interface IHistoryRecorder
     /// <returns xml:lang = "ru">
     /// <see cref="Task"/>.
     /// </returns>
+    /// <exception cref="OperationCanceledException" xml:lang = "ru">
+    /// Когда операция была отменена.
+    /// </exception>
     public Task RecordHistoryAsync(IReadOnlyCollection<History> histories, CancellationToken token = default);
 }

@@ -16,8 +16,14 @@ public interface IAPICommandHandler
     /// <returns xml:lang = "ru">
     /// <see cref="Task{TResult}"/>.
     /// </returns>
+    /// <param name="token" xml:lang = "ru">
+    /// Токен отмены операции.
+    /// </param>
     /// <exception cref="ArgumentException" xml:lang = "ru">
     /// Когда <paramref name="request"/> имел неверный формат.
     /// </exception>
-    public Task<CommandResult> HandleAsync(string request);
+    /// <exception cref="OperationCanceledException" xml:lang = "ru">
+    /// Если операция была отменена.
+    /// </exception>
+    public Task<CommandResult> HandleAsync(string request, CancellationToken token = default);
 }
