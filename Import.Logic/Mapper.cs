@@ -8,7 +8,7 @@ namespace Import.Logic;
 /// <summary xml:lang = "ru">
 /// Маппер продуктов.
 /// </summary>
-public class Mapper : IMapper<Product>
+public sealed class Mapper : IMapper<Product>
 {
     private readonly IKeyableCache<Link, ExternalID> _cache;
     private readonly ILogger<Mapper> _logger;
@@ -44,6 +44,8 @@ public class Mapper : IMapper<Product>
     }
 
     /// <inheritdoc/>
-    public IReadOnlyCollection<Product> MapCollection(IReadOnlyCollection<Product> entityCollection) =>
-        entityCollection.Select((x) => MapEntity(x)).Where(x => x.IsMapped).ToList();
+    public IReadOnlyCollection<Product> MapCollection(IReadOnlyCollection<Product> entityCollection) 
+        => entityCollection.Select((x) => MapEntity(x))
+            .Where(x => x.IsMapped)
+            .ToList();
 }

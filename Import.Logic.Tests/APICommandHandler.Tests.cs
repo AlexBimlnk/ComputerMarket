@@ -7,20 +7,20 @@ using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace Import.Logic.Tests;
-public class HTTPCommandHandlerTests
+public class APICommandHandlerTests
 {
     [Fact(DisplayName = $"The instance can create.")]
     [Trait("Category", "Unit")]
     public void CanBeCreated()
     {
         // Arrange
-        var logger = Mock.Of<ILogger<HTTPCommandHandler>>(MockBehavior.Strict);
+        var logger = Mock.Of<ILogger<APICommandHandler>>(MockBehavior.Strict);
         var factory = Mock.Of<ICommandFactory>(MockBehavior.Strict);
         var deserializer = Mock.Of<IDeserializer<string, CommandParametersBase>>(MockBehavior.Strict);
 
         // Act
         var exception = Record.Exception(() =>
-            _ = new HTTPCommandHandler(logger, factory, deserializer));
+            _ = new APICommandHandler(logger, factory, deserializer));
 
         // Assert
         exception.Should().BeNull();
@@ -36,7 +36,7 @@ public class HTTPCommandHandlerTests
 
         // Act
         var exception = Record.Exception(() =>
-            _ = new HTTPCommandHandler(logger: null!, factory, deserializer));
+            _ = new APICommandHandler(logger: null!, factory, deserializer));
 
         // Assert
         exception.Should().NotBeNull().And.BeOfType<ArgumentNullException>();
@@ -47,12 +47,12 @@ public class HTTPCommandHandlerTests
     public void CanNotBeCreatedWithoutCommandFactory()
     {
         // Arrange
-        var logger = Mock.Of<ILogger<HTTPCommandHandler>>(MockBehavior.Strict);
+        var logger = Mock.Of<ILogger<APICommandHandler>>(MockBehavior.Strict);
         var deserializer = Mock.Of<IDeserializer<string, CommandParametersBase>>(MockBehavior.Strict);
 
         // Act
         var exception = Record.Exception(() =>
-            _ = new HTTPCommandHandler(logger, commandFactory: null!, deserializer));
+            _ = new APICommandHandler(logger, commandFactory: null!, deserializer));
 
         // Assert
         exception.Should().NotBeNull().And.BeOfType<ArgumentNullException>();
@@ -63,12 +63,12 @@ public class HTTPCommandHandlerTests
     public void CanNotBeCreatedWithoutDeserializer()
     {
         // Arrange
-        var logger = Mock.Of<ILogger<HTTPCommandHandler>>(MockBehavior.Strict);
+        var logger = Mock.Of<ILogger<APICommandHandler>>(MockBehavior.Strict);
         var factory = Mock.Of<ICommandFactory>(MockBehavior.Strict);
 
         // Act
         var exception = Record.Exception(() =>
-            _ = new HTTPCommandHandler(logger, factory, deserializer: null!));
+            _ = new APICommandHandler(logger, factory, deserializer: null!));
 
         // Assert
         exception.Should().NotBeNull().And.BeOfType<ArgumentNullException>();
@@ -79,7 +79,7 @@ public class HTTPCommandHandlerTests
     public async Task CanHandleCommandAsync()
     {
         // Arrange
-        var logger = Mock.Of<ILogger<HTTPCommandHandler>>();
+        var logger = Mock.Of<ILogger<APICommandHandler>>();
         var factory = new Mock<ICommandFactory>(MockBehavior.Strict);
         var deserializer = new Mock<IDeserializer<string, CommandParametersBase>>(MockBehavior.Strict);
 
@@ -102,7 +102,7 @@ public class HTTPCommandHandlerTests
         factory.Setup(x => x.Create(commandParameters.Object))
             .Returns(command.Object);
 
-        var handler = new HTTPCommandHandler(
+        var handler = new APICommandHandler(
             logger,
             factory.Object,
             deserializer.Object);
@@ -124,11 +124,11 @@ public class HTTPCommandHandlerTests
     public async Task CanNotHandlerIfGivenBadRequestAsync(string request)
     {
         // Arrange
-        var logger = Mock.Of<ILogger<HTTPCommandHandler>>();
+        var logger = Mock.Of<ILogger<APICommandHandler>>();
         var factory = Mock.Of<ICommandFactory>(MockBehavior.Strict);
         var deserializer = Mock.Of<IDeserializer<string, CommandParametersBase>>(MockBehavior.Strict);
 
-        var handler = new HTTPCommandHandler(
+        var handler = new APICommandHandler(
             logger,
             factory,
             deserializer);
@@ -139,5 +139,31 @@ public class HTTPCommandHandlerTests
 
         // Assert
         exception.Should().BeOfType<ArgumentException>();
+    }
+
+    [Fact(DisplayName = $"The instance can cancel operation.")]
+    [Trait("Category", "Unit")]
+    public async Task CanCancelOperationAsync()
+    {
+        // Arrange
+        var logger = Mock.Of<ILogger<APICommandHandler>>();
+        var factory = Mock.Of<ICommandFactory>(MockBehavior.Strict);
+        var deserializer = Mock.Of<IDeserializer<string, CommandParametersBase>>(MockBehavior.Strict);
+
+        var request = "some request";
+        var cts = new CancellationTokenSource();
+
+        var handler = new APICommandHandler(
+            logger,
+            factory,
+            deserializer);
+
+        // Act
+        cts.Cancel();
+        var exception = await Record.ExceptionAsync(async () =>
+            _ = await handler.HandleAsync(request, cts.Token));
+
+        // Assert
+        exception.Should().BeOfType<OperationCanceledException>();
     }
 }

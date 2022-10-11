@@ -11,7 +11,7 @@ using TLink = Models.Link;
 /// <summary xml:lang = "ru">
 /// Репозиторий связей.
 /// </summary>
-public class LinkRepository : IRepository<Link>
+public sealed class LinkRepository : IRepository<Link>
 {
     private readonly IRepositoryContext _context;
     private readonly ILogger _logger;

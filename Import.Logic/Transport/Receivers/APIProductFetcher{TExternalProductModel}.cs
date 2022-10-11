@@ -11,8 +11,7 @@ namespace Import.Logic.Transport.Receivers;
 /// <typeparam name="TExternalProductModel" xml:lang = "ru">
 /// Тип внешних получаемых продуктов.
 /// </typeparam>
-public sealed class APIProductFetcher<TExternalProductModel> : IAPIProductFetcher
-    where TExternalProductModel : class
+public sealed class APIProductFetcher<TExternalProductModel> : IAPIProductFetcher<TExternalProductModel>
 {
     private readonly ILogger<APIProductFetcher<TExternalProductModel>> _logger;
     private readonly IDeserializer<string, TExternalProductModel[]> _deserializer;
@@ -20,6 +19,27 @@ public sealed class APIProductFetcher<TExternalProductModel> : IAPIProductFetche
     private readonly IConverter<TExternalProductModel, Product> _converter;
     private readonly IConverter<TExternalProductModel, History> _historyConverter;
 
+    /// <summary xml:lang = "ru">
+    /// Создает новый экземпляр типа <see cref="APIProductFetcher{TExternalProductModel}"/>.
+    /// </summary>
+    /// <param name="logger" xml:lang = "ru">
+    /// Логгер.
+    /// </param>
+    /// <param name="deserializer" xml:lang = "ru">
+    /// Десериализатор запросов.
+    /// </param>
+    /// <param name="historyRecorder" xml:lang = "ru">
+    /// Записыватель истории о получении продуктов.
+    /// </param>
+    /// <param name="converter" xml:lang = "ru">
+    /// Конвертер из модели внешнего продукта во внутреннюю.
+    /// </param>
+    /// <param name="historyConverter" xml:lang = "ru">
+    /// Конвертер внешних моделей продуктов в историю.
+    /// </param>
+    /// <exception cref="ArgumentNullException" xml:lang = "ru">
+    /// Когда любой из параметров оказался <see langword="null"/>.
+    /// </exception>
     public APIProductFetcher(
         ILogger<APIProductFetcher<TExternalProductModel>> logger,
         IDeserializer<string, TExternalProductModel[]> deserializer,
@@ -35,10 +55,12 @@ public sealed class APIProductFetcher<TExternalProductModel> : IAPIProductFetche
     }
 
     /// <inheritdoc/>
-    public async Task<IReadOnlyCollection<Product>> FetchProductsAsync(string request)
+    public async Task<IReadOnlyCollection<Product>> FetchProductsAsync(string request, CancellationToken token = default)
     {
         if (string.IsNullOrWhiteSpace(request))
             throw new ArgumentException(nameof(request));
+
+        token.ThrowIfCancellationRequested();
 
         _logger.LogDebug("Fetch external products '{Type}'", typeof(TExternalProductModel));
 

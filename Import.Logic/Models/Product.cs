@@ -73,6 +73,9 @@ public sealed class Product : IMappableEntity<InternalID, ExternalID>
     /// <param name="internalID" xml:lang = "ru">
     /// Идентификатор внутреннего продукта.
     /// </param>
+    /// <exception cref="InvalidOperationException" xml:lang = "ru">
+    /// Если продукт был уже связан.
+    /// </exception>
     public void MapTo(InternalID internalID)
     {
         if (IsMapped)
@@ -81,4 +84,9 @@ public sealed class Product : IMappableEntity<InternalID, ExternalID>
         _internalID = internalID;
         IsMapped = true;
     }
+
+    /// <inheritdoc/>
+    public override string ToString() =>
+        $"{{ {ExternalID}, {(IsMapped ? $"{InternalID}, " : string.Empty)}"+
+        $"Price: {Price.Value}, Quantity: {Quantity} }}";
 }
