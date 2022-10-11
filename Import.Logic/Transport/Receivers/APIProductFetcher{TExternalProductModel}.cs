@@ -14,7 +14,7 @@ namespace Import.Logic.Transport.Receivers;
 public sealed class APIProductFetcher<TExternalProductModel> : IAPIProductFetcher<TExternalProductModel>
 {
     private readonly ILogger<APIProductFetcher<TExternalProductModel>> _logger;
-    private readonly IDeserializer<string, TExternalProductModel[]> _deserializer;
+    private readonly IDeserializer<string, IReadOnlyCollection<TExternalProductModel>> _deserializer;
     private readonly IHistoryRecorder _historyRecorder;
     private readonly IConverter<TExternalProductModel, Product> _converter;
     private readonly IConverter<TExternalProductModel, History> _historyConverter;
@@ -42,7 +42,7 @@ public sealed class APIProductFetcher<TExternalProductModel> : IAPIProductFetche
     /// </exception>
     public APIProductFetcher(
         ILogger<APIProductFetcher<TExternalProductModel>> logger,
-        IDeserializer<string, TExternalProductModel[]> deserializer,
+        IDeserializer<string, IReadOnlyCollection<TExternalProductModel>> deserializer,
         IHistoryRecorder historyRecorder,
         IConverter<TExternalProductModel, Product> converter,
         IConverter<TExternalProductModel, History> historyConverter)
