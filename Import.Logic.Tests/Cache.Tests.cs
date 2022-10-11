@@ -273,4 +273,41 @@ public class CacheTests
         // Assert
         result.Should().BeEquivalentTo(expectedResult);
     }
+
+    [Fact(DisplayName = $"The {nameof(Cache)} can produce thread safety operations.")]
+    [Trait("Category", "Unit")]
+    public void CanDoOperations()
+    {
+        // Arrange
+        var links = new Link[]
+        {
+            new Link(new InternalID(3), new ExternalID(5,Provider.HornsAndHooves)),
+            new Link(new InternalID(4), new ExternalID(4,Provider.HornsAndHooves))
+        };
+
+        var key = new ExternalID(5,Provider.HornsAndHooves);
+        var link = new Link(new InternalID(1), new ExternalID(5, Provider.HornsAndHooves));
+
+        var cache = new Cache();
+        cache.AddRange(links);
+
+        // Act
+        Task.Run(() => {
+            var t = Thread.CurrentThread;
+            cache.Add(link);
+        });
+        var result = false;
+        Task.Run(() =>
+        {
+            var t = Thread.CurrentThread;
+            Thread.Sleep(200);
+            result = cache.Contains(key);
+        });
+
+        Task.WaitAll();
+        Thread.Sleep(200);
+        
+        // Assert
+        result.Should().BeTrue();
+    }
 }
