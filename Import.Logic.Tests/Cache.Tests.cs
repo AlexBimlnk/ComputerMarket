@@ -9,6 +9,8 @@ using Import.Logic.Models;
 using Microsoft.Extensions.Logging;
 using Moq;
 
+using Xunit.Sdk;
+
 namespace Import.Logic.Tests;
 public class CacheTests
 {
@@ -29,10 +31,7 @@ public class CacheTests
     public void CanAddSingleLink()
     {
         // Arrange
-        var externalId = new ExternalID(1, Provider.Ivanov);
-        var internalId = new InternalID(2);
-        var link = new Link(internalId, externalId);
-
+        var link = new Link(new InternalID(2), new ExternalID(1, Provider.Ivanov));
         var cache = new Cache();
 
         // Act
@@ -41,6 +40,21 @@ public class CacheTests
 
         // Assert
         exception.Should().BeNull();
+    }
+
+    [Fact(DisplayName = $"The {nameof(Cache)} cannot add null {nameof(Link)}.")]
+    [Trait("Category", "Unit")]
+    public void CanNotAddNull()
+    {
+        // Arrange
+        var cache = new Cache();
+
+        // Act
+        var exception = Record.Exception(() =>
+            cache.Add(entity:null!));
+
+        // Assert
+        exception.Should().BeOfType<ArgumentNullException>();
     }
 
     [Fact(DisplayName = $"The {nameof(Cache)} can add {nameof(Link)} range.")]
@@ -58,16 +72,30 @@ public class CacheTests
 
         // Act
         var exception = Record.Exception(() =>
-            cache.AddRange
-            (links));
+            cache.AddRange(links));
 
         // Assert
         exception.Should().BeNull();
     }
 
-    [Fact(DisplayName = $"The {nameof(Cache)} can determine containing of {nameof(Link)} by key.")]
+    [Fact(DisplayName = $"The {nameof(Cache)} cannot add null {nameof(Link)} range.")]
     [Trait("Category", "Unit")]
-    public void CanFindContainingOfLinkByKey()
+    public void CanNotAddNullRange()
+    {
+        // Arrange
+        var cache = new Cache();
+
+        // Act
+        var exception = Record.Exception(() =>
+            cache.AddRange(entities: null!));
+
+        // Assert
+        exception.Should().BeOfType<ArgumentNullException>();
+    }
+
+    [Fact(DisplayName = $"The {nameof(Cache)} can find {nameof(Link)} by key.")]
+    [Trait("Category", "Unit")]
+    public void CanFindLinkByKey()
     {
         // Arrange
         var keys = new ExternalID[]
@@ -93,16 +121,17 @@ public class CacheTests
         cache.AddRange(links);
 
         // Act
-        var result = keys.Concat(noneKeys).Select(x => new {Result = cache.Contains(x), Key = x } );
+        var goodResult = keys.Select(x => new {Result = cache.Contains(x), Key = x } );
+        var badResult = noneKeys.Select(x => new {Result = cache.Contains(x), Key = x } );
 
         // Assert
-        result.Join(keys, x => x.Key, k => k, (x,k) => x.Result).Should().AllBeEquivalentTo(true);
-        result.Join(noneKeys, x => x.Key, k => k, (x,k) => x.Result).Should().AllBeEquivalentTo(false);
+        goodResult.Should().AllBeEquivalentTo(true);
+        badResult.Should().AllBeEquivalentTo(false);
     }
 
-    [Fact(DisplayName = $"The {nameof(Cache)} can determine containing of {nameof(Link)} by entity.")]
+    [Fact(DisplayName = $"The {nameof(Cache)} can find {nameof(Link)}.")]
     [Trait("Category", "Unit")]
-    public void CanFindContainingOfLink()
+    public void CanFindLink()
     {
         // Arrange
         var links = new Link[]
@@ -121,33 +150,127 @@ public class CacheTests
         cache.AddRange(links);
 
         // Act
-        var result = links.Concat(badlinks).Select(x => new { Result = cache.Contains(x), Link = x });
+        var resultGood = links.Select(x => cache.Contains(x));
+        var resultBad = badlinks.Select(x => cache.Contains(x));
 
         // Assert
-        result.Join(links, x => x.Link, k => k, (x, k) => x.Result).Should().AllBeEquivalentTo(true);
-        result.Join(badlinks, x => x.Link, k => k, (x, k) => x.Result).Should().AllBeEquivalentTo(false);
+        resultGood.Should().AllBeEquivalentTo(true);
+        resultBad.Should().AllBeEquivalentTo(false);
+    }
+
+    [Fact(DisplayName = $"The {nameof(Cache)} can not find null {nameof(Link)}.")]
+    [Trait("Category", "Unit")]
+    public void CanNotFindNullLink()
+    {
+        // Arrange
+        var links = new Link[]
+        {
+            new Link(new InternalID(5), new ExternalID(1, Provider.Ivanov)),
+            new Link(new InternalID(6), new ExternalID(1, Provider.HornsAndHooves)),
+            new Link(new InternalID(7), new ExternalID(4, Provider.HornsAndHooves))
+        };
+
+        Link linkFind = null!;
+        var cache = new Cache();
+        cache.AddRange(links);
+
+        // Act
+        var exception = Record.Exception(() =>
+            cache.Contains
+            (linkFind));
+
+        // Assert
+        exception.Should().BeOfType<ArgumentNullException>();
     }
 
     [Fact(DisplayName = $"The {nameof(Cache)} can delete {nameof(Link)}s.")]
     [Trait("Category", "Unit")]
     public void CanDeleteLink()
     {
-        //Arrange
-        var links = new Link[2]
+        // Arrange
+        var links = new Link[]
+        {
+            new Link(new InternalID(3), new ExternalID(5,Provider.HornsAndHooves)),
+            new Link(new InternalID(4), new ExternalID(4,Provider.HornsAndHooves))
+        };
+
+        var deletableLinks = new Link[]
         {
             new Link(new InternalID(1), new ExternalID(1,Provider.Ivanov)),
-            new Link(new InternalID(2), new ExternalID(2,Provider.HornsAndHooves)),
+            new Link(new InternalID(2), new ExternalID(2,Provider.HornsAndHooves))
         };
 
         var cache = new Cache();
+        cache.AddRange(links.Concat(deletableLinks));
 
+        // Act
+        cache.Delete(deletableLinks[0]);
+        cache.Delete(deletableLinks[1]);
 
+        // Assert
+        links.Select(x => cache.Contains(x)).Should().AllBeEquivalentTo(true);
+        deletableLinks.Select(x => cache.Contains(x)).Should().AllBeEquivalentTo(false);
+    }
 
-        //Act
-        
+    [Fact(DisplayName = $"The {nameof(Cache)} can not delete null {nameof(Link)}.")]
+    [Trait("Category", "Unit")]
+    public void CanNotDeleteNullLink()
+    {
+        // Arrange
+        var links = new Link[]
+        {
+            new Link(new InternalID(5), new ExternalID(1, Provider.Ivanov)),
+            new Link(new InternalID(6), new ExternalID(1, Provider.HornsAndHooves)),
+            new Link(new InternalID(7), new ExternalID(4, Provider.HornsAndHooves))
+        };
 
+        Link linkFind = null!;
+        var cache = new Cache();
+        cache.AddRange(links);
 
-        //Assert
-        
+        // Act
+        var exception = Record.Exception(() =>
+            cache.Delete
+            (linkFind));
+
+        // Assert
+        exception.Should().BeOfType<ArgumentNullException>();
+    }
+
+    [Fact(DisplayName = $"The {nameof(Cache)} can get {nameof(Link)} by key.")]
+    [Trait("Category", "Unit")]
+    public void CanGetByLink()
+    {
+        // Arrange
+        var links = new Link[]
+        {
+            new Link(new InternalID(3), new ExternalID(5,Provider.HornsAndHooves)),
+            new Link(new InternalID(4), new ExternalID(4,Provider.HornsAndHooves))
+        };
+
+        var keys = new ExternalID[]
+        {
+            new ExternalID(5,Provider.HornsAndHooves),
+            new ExternalID(5,Provider.Ivanov),
+            new ExternalID(4,Provider.HornsAndHooves),
+            new ExternalID(1,Provider.HornsAndHooves)
+        };
+
+        var expectedResult = new Link?[]
+        {
+            links[0],
+            null!,
+            new Link(new InternalID(4), new ExternalID(4,Provider.HornsAndHooves)),
+            null!
+        };
+
+        var cache = new Cache();
+        cache.AddRange(links);
+
+        // Act
+        var result = keys.Select(x => cache.GetByKey(x));
+
+        // Assert
+        result.Should().BeEquivalentTo(expectedResult);
     }
 }
