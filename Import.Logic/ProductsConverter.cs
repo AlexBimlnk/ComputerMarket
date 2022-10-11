@@ -7,7 +7,7 @@ namespace Import.Logic;
 /// <summary xml:lang="ru">
 /// Конвертер продуктов.
 /// </summary>
-public class ProductsConverter : IConverter<ExternalProduct, Product>
+public sealed class ProductsConverter : IConverter<ExternalProduct, Product>
 {
     /// <summary xml:lang="ru">
     /// Конвертирует внешние продукта типа <see cref="ExternalProduct"/> во внутренние.
