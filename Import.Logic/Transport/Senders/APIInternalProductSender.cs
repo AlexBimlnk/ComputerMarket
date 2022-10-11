@@ -65,7 +65,8 @@ public sealed class APIInternalProductSender : ISender<InternalProductSenderConf
 
         try
         {
-            response = await client.PostAsync(_configuration.Destination, content, token);
+            response = await client.PostAsync(_configuration.Destination, content, token)
+                .ConfigureAwait(false);
 
             if (response.IsSuccessStatusCode)
                 _logger.LogInformation("The products have been successfully sended");

@@ -69,7 +69,8 @@ public sealed class APIProductFetcher<TExternalProductModel> : IAPIProductFetche
         await _historyRecorder.RecordHistoryAsync(
             externalProducts
                 .Select(x => _historyConverter.Convert(x))
-                .ToList());
+                .ToList())
+            .ConfigureAwait(false);
 
         var products = externalProducts
             .Select(x => _converter.Convert(x))
