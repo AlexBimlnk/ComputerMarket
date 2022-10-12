@@ -1,15 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Import.Logic.Abstractions;
-using Import.Logic.Models;
-using Microsoft.Extensions.Logging;
-using Moq;
-
-using Xunit.Sdk;
+﻿using Import.Logic.Models;
 
 namespace Import.Logic.Tests;
 public class CacheTests
@@ -51,7 +40,7 @@ public class CacheTests
 
         // Act
         var exception = Record.Exception(() =>
-            cache.Add(entity:null!));
+            cache.Add(entity: null!));
 
         // Assert
         exception.Should().BeOfType<ArgumentNullException>();
@@ -67,7 +56,7 @@ public class CacheTests
             new Link(new InternalID(3), new ExternalID(2, Provider.Ivanov)),
             new Link(new InternalID(4), new ExternalID(3, Provider.Ivanov))
         };
-        
+
         var cache = new Cache();
 
         // Act
@@ -121,8 +110,8 @@ public class CacheTests
         cache.AddRange(links);
 
         // Act
-        var goodResult = keys.Select(x => new {Result = cache.Contains(x), Key = x } );
-        var badResult = noneKeys.Select(x => new {Result = cache.Contains(x), Key = x } );
+        var goodResult = keys.Select(x => cache.Contains(x));
+        var badResult = noneKeys.Select(x => cache.Contains(x));
 
         // Assert
         goodResult.Should().AllBeEquivalentTo(true);
@@ -176,8 +165,7 @@ public class CacheTests
 
         // Act
         var exception = Record.Exception(() =>
-            cache.Contains
-            (linkFind));
+            cache.Contains(linkFind));
 
         // Assert
         exception.Should().BeOfType<ArgumentNullException>();
@@ -272,42 +260,5 @@ public class CacheTests
 
         // Assert
         result.Should().BeEquivalentTo(expectedResult);
-    }
-
-    [Fact(DisplayName = $"The {nameof(Cache)} can produce thread safety operations.")]
-    [Trait("Category", "Unit")]
-    public void CanDoOperations()
-    {
-        // Arrange
-        var links = new Link[]
-        {
-            new Link(new InternalID(3), new ExternalID(5,Provider.HornsAndHooves)),
-            new Link(new InternalID(4), new ExternalID(4,Provider.HornsAndHooves))
-        };
-
-        var key = new ExternalID(5,Provider.HornsAndHooves);
-        var link = new Link(new InternalID(1), new ExternalID(5, Provider.HornsAndHooves));
-
-        var cache = new Cache();
-        cache.AddRange(links);
-
-        // Act
-        Task.Run(() => {
-            var t = Thread.CurrentThread;
-            cache.Add(link);
-        });
-        var result = false;
-        Task.Run(() =>
-        {
-            var t = Thread.CurrentThread;
-            Thread.Sleep(200);
-            result = cache.Contains(key);
-        });
-
-        Task.WaitAll();
-        Thread.Sleep(200);
-        
-        // Assert
-        result.Should().BeTrue();
     }
 }
