@@ -8,7 +8,7 @@ namespace Import.Logic.Transport.Deserializers;
 /// <summary xml:lang = "ru">
 /// Десериализатор внешних продуктов.
 /// </summary>
-public sealed class ExternalProductsDeserializer : IDeserializer<string, ExternalProduct[]>
+public sealed class ExternalProductsDeserializer : IDeserializer<string, IReadOnlyCollection<ExternalProduct>>
 {
     private readonly JsonSerializer _serializer = JsonSerializer.CreateDefault();
 
@@ -16,7 +16,7 @@ public sealed class ExternalProductsDeserializer : IDeserializer<string, Externa
     /// <exception cref="ArgumentException" xml:lang = "ru">
     /// Когда <paramref name="source"/> имел неверный формат.
     /// </exception>
-    public ExternalProduct[] Deserialize(string source)
+    public IReadOnlyCollection<ExternalProduct> Deserialize(string source)
     {
         if (string.IsNullOrWhiteSpace(source))
             throw new ArgumentException(
@@ -25,6 +25,6 @@ public sealed class ExternalProductsDeserializer : IDeserializer<string, Externa
 
         using var reader = new JsonTextReader(new StringReader(source));
 
-        return _serializer.Deserialize<ExternalProduct[]>(reader)!;
+        return _serializer.Deserialize<IReadOnlyCollection<ExternalProduct>>(reader)!;
     }
 }

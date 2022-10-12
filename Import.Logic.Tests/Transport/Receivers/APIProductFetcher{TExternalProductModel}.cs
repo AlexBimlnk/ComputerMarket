@@ -15,7 +15,7 @@ public class APIProductFetcherTests
     {
         // Arrange
         var logger = Mock.Of<ILogger<APIProductFetcher<FakeModel>>>(MockBehavior.Strict);
-        var deserializer = Mock.Of<IDeserializer<string, FakeModel[]>>(MockBehavior.Strict);
+        var deserializer = Mock.Of<IDeserializer<string, IReadOnlyCollection<FakeModel>>>(MockBehavior.Strict);
         var historyRecorder = Mock.Of<IHistoryRecorder>(MockBehavior.Strict);
         var converter = Mock.Of<IConverter<FakeModel, Product>>(MockBehavior.Strict);
         var historyConverter = Mock.Of<IConverter<FakeModel, History>>(MockBehavior.Strict);
@@ -37,7 +37,7 @@ public class APIProductFetcherTests
     public void CanNotBeCreatedWithoutLogger()
     {
         // Arrange
-        var deserializer = Mock.Of<IDeserializer<string, FakeModel[]>>(MockBehavior.Strict);
+        var deserializer = Mock.Of<IDeserializer<string, IReadOnlyCollection<FakeModel>>>(MockBehavior.Strict);
         var historyRecorder = Mock.Of<IHistoryRecorder>(MockBehavior.Strict);
         var converter = Mock.Of<IConverter<FakeModel, Product>>(MockBehavior.Strict);
         var historyConverter = Mock.Of<IConverter<FakeModel, History>>(MockBehavior.Strict);
@@ -82,7 +82,7 @@ public class APIProductFetcherTests
     {
         // Arrange
         var logger = Mock.Of<ILogger<APIProductFetcher<FakeModel>>>(MockBehavior.Strict);
-        var deserializer = Mock.Of<IDeserializer<string, FakeModel[]>>(MockBehavior.Strict);
+        var deserializer = Mock.Of<IDeserializer<string, IReadOnlyCollection<FakeModel>>>(MockBehavior.Strict);
         var converter = Mock.Of<IConverter<FakeModel, Product>>(MockBehavior.Strict);
         var historyConverter = Mock.Of<IConverter<FakeModel, History>>(MockBehavior.Strict);
 
@@ -104,7 +104,7 @@ public class APIProductFetcherTests
     {
         // Arrange
         var logger = Mock.Of<ILogger<APIProductFetcher<FakeModel>>>(MockBehavior.Strict);
-        var deserializer = Mock.Of<IDeserializer<string, FakeModel[]>>(MockBehavior.Strict);
+        var deserializer = Mock.Of<IDeserializer<string, IReadOnlyCollection<FakeModel>>>(MockBehavior.Strict);
         var historyRecorder = Mock.Of<IHistoryRecorder>(MockBehavior.Strict);
         var historyConverter = Mock.Of<IConverter<FakeModel, History>>(MockBehavior.Strict);
 
@@ -126,7 +126,7 @@ public class APIProductFetcherTests
     {
         // Arrange
         var logger = Mock.Of<ILogger<APIProductFetcher<FakeModel>>>(MockBehavior.Strict);
-        var deserializer = Mock.Of<IDeserializer<string, FakeModel[]>>(MockBehavior.Strict);
+        var deserializer = Mock.Of<IDeserializer<string, IReadOnlyCollection<FakeModel>>>(MockBehavior.Strict);
         var historyRecorder = Mock.Of<IHistoryRecorder>(MockBehavior.Strict);
         var converter = Mock.Of<IConverter<FakeModel, Product>>(MockBehavior.Strict);
 
@@ -148,7 +148,7 @@ public class APIProductFetcherTests
     {
         // Arrange
         var logger = Mock.Of<ILogger<APIProductFetcher<FakeModel>>>();
-        var deserializer = new Mock<IDeserializer<string, FakeModel[]>>(MockBehavior.Strict);
+        var deserializer = new Mock<IDeserializer<string, IReadOnlyCollection<FakeModel>>>(MockBehavior.Strict);
         var historyRecorder = new Mock<IHistoryRecorder>(MockBehavior.Strict);
         var converter = new Mock<IConverter<FakeModel, Product>>(MockBehavior.Strict);
         var historyConverter = new Mock<IConverter<FakeModel, History>>(MockBehavior.Strict);        
@@ -205,7 +205,7 @@ public class APIProductFetcherTests
     {
         // Arrange
         var logger = Mock.Of<ILogger<APIProductFetcher<FakeModel>>>(MockBehavior.Strict);
-        var deserializer = Mock.Of<IDeserializer<string, FakeModel[]>>(MockBehavior.Strict);
+        var deserializer = Mock.Of<IDeserializer<string, IReadOnlyCollection<FakeModel>>>(MockBehavior.Strict);
         var historyRecorder = Mock.Of<IHistoryRecorder>(MockBehavior.Strict);
         var converter = Mock.Of<IConverter<FakeModel, Product>>(MockBehavior.Strict);
         var historyConverter = Mock.Of<IConverter<FakeModel, History>>(MockBehavior.Strict);
@@ -231,7 +231,7 @@ public class APIProductFetcherTests
     {
         // Arrange
         var logger = Mock.Of<ILogger<APIProductFetcher<FakeModel>>>(MockBehavior.Strict);
-        var deserializer = Mock.Of<IDeserializer<string, FakeModel[]>>(MockBehavior.Strict);
+        var deserializer = Mock.Of<IDeserializer<string, IReadOnlyCollection<FakeModel>>>(MockBehavior.Strict);
         var historyRecorder = Mock.Of<IHistoryRecorder>(MockBehavior.Strict);
         var converter = Mock.Of<IConverter<FakeModel, Product>>(MockBehavior.Strict);
         var historyConverter = Mock.Of<IConverter<FakeModel, History>>(MockBehavior.Strict);
