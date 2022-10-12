@@ -27,7 +27,7 @@ public class DeleteLinkCommand : CommandBase
 
     public override CommandID Id => _parameters.Id;
 
-    protected override Task ExecuteCoreAsync()
+    protected override async Task ExecuteCoreAsync()
     {
         var link = new Link(_parameters.InternalID, _parameters.ExternalID);
 
@@ -35,11 +35,9 @@ public class DeleteLinkCommand : CommandBase
             throw new InvalidOperationException("Such a link doesn't exist.");
 
         _linkRepository.Delete(link);
-
+        
         _linkRepository.Save();
 
         _cacheLinks.Delete(link);
-
-        return new Task(() => _linkRepository.Delete(link));
     }
 }

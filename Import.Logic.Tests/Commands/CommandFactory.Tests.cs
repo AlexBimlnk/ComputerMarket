@@ -19,10 +19,11 @@ public class CommandFactoryTests
     {
         // Arrange
         var setLink = Mock.Of<Func<SetLinkCommandParameters, ICommand>>();
+        var deleteLink = Mock.Of<Func<DeleteLinkCommandParameters, ICommand>>();
 
         // Act
         var exception = Record.Exception(() =>
-            _ = new CommandFactory(setLink));
+            _ = new CommandFactory(setLink, deleteLink));
 
         // Assert
         exception.Should().BeNull();
@@ -33,7 +34,12 @@ public class CommandFactoryTests
     public void CanCreateSetLinkCommand()
     {
         // Arrange
-        var parameters = new SetLinkCommandParameters(
+        var setParameters = new SetLinkCommandParameters(
+            new("some id"),
+            new(1),
+            new(1, Provider.Ivanov));
+
+        var deleteParameters = new DeleteLinkCommandParameters(
             new("some id"),
             new(1),
             new(1, Provider.Ivanov));
@@ -41,22 +47,36 @@ public class CommandFactoryTests
         var command = Mock.Of<ICommand>(MockBehavior.Strict);
 
         var setLink = new Mock<Func<SetLinkCommandParameters, ICommand>>(MockBehavior.Strict);
+        var deleteLink = new Mock<Func<DeleteLinkCommandParameters, ICommand>>(MockBehavior.Strict);
         var setLinkInvokeCount = 0;
-        setLink.Setup(x => x.Invoke(parameters))
+        var deleteLinkInvokeCount = 0;
+        setLink.Setup(x => x.Invoke(setParameters))
             .Returns(command)
             .Callback(() => setLinkInvokeCount++);
+        deleteLink.Setup(x => x.Invoke(deleteParameters))
+            .Returns(command)
+            .Callback(() => deleteLinkInvokeCount++);
 
-        var factory = new CommandFactory(setLink.Object);
+
+        var factory = new CommandFactory(setLink.Object, deleteLink.Object);
 
         // Act
-        ICommand result = null!;
-        var exception = Record.Exception(() =>
-            result = factory.Create(parameters));
+        ICommand setResult = null!;
+        ICommand deleteResult = null!;
+
+        var setException = Record.Exception(() =>
+            setResult = factory.Create(setParameters));
+
+        var deleteException = Record.Exception(() =>
+            deleteResult = factory.Create(deleteParameters));
 
         // Assert
-        exception.Should().BeNull();
-        result.Should().Be(command);
+        setException.Should().BeNull();
+        setResult.Should().Be(command);
+        deleteException.Should().BeNull();
+        deleteResult.Should().Be(command);
         setLinkInvokeCount.Should().Be(1);
+        deleteLinkInvokeCount.Should().Be(1);
     }
 
     [Fact(DisplayName = $"The {nameof(CommandFactory)} can't create without parameters.")]
@@ -65,8 +85,9 @@ public class CommandFactoryTests
     {
         // Arrange
         var setLink = Mock.Of<Func<SetLinkCommandParameters, ICommand>>(MockBehavior.Strict);
+        var deleteLink = Mock.Of<Func<DeleteLinkCommandParameters, ICommand>>();
 
-        var factory = new CommandFactory(setLink);
+        var factory = new CommandFactory(setLink, deleteLink);
 
         // Act
         var exception = Record.Exception(() =>
@@ -82,9 +103,10 @@ public class CommandFactoryTests
     {
         // Arrange
         var setLink = Mock.Of<Func<SetLinkCommandParameters, ICommand>>(MockBehavior.Strict);
+        var deleteLink = Mock.Of<Func<DeleteLinkCommandParameters, ICommand>>();
         var unknownParameters = new UnknownParameters(new("some id"));
 
-        var factory = new CommandFactory(setLink);
+        var factory = new CommandFactory(setLink, deleteLink);
 
         // Act
         var exception = Record.Exception(() =>
