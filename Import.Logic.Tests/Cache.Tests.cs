@@ -259,6 +259,6 @@ public class CacheTests
         var result = keys.Select(x => cache.GetByKey(x));
 
         // Assert
-        result.Should().BeEquivalentTo(expectedResult);
+        result.Should().BeEquivalentTo(expectedResult, opt => opt.WithoutStrictOrdering());
     }
 }
