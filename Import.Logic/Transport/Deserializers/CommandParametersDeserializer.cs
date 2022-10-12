@@ -9,6 +9,7 @@ namespace Import.Logic.Transport.Deserializers;
 
 using TCommand = Models.Commands.CommandBase;
 using TSetLinkCommand = Models.Commands.SetLinkCommand;
+using TDeleteLinkCommand = Models.Commands.DeleteLinkCommand;
 
 /// <summary xml:lang = "ru">
 /// Дессериализатор из <see cref="string"/> в <see cref="CommandParametersBase"/>.
@@ -44,6 +45,11 @@ public sealed class CommandParametersDeserializer : IDeserializer<string, Comman
                 new(setLinkCommand.Id),
                 new(setLinkCommand.InternalID),
                 new(setLinkCommand.ExternalID, setLinkCommand.Provider)),
+
+            TDeleteLinkCommand deleteLinkCommand => new DeleteLinkCommandParameters(
+                new(deleteLinkCommand.Id),
+                new(deleteLinkCommand.InternalID),
+                new(deleteLinkCommand.ExternalID, deleteLinkCommand.Provider)),
 
             var unknownCommandType =>
                 throw new InvalidOperationException($"The source contains unknown command '{unknownCommandType?.GetType().Name}'. ")

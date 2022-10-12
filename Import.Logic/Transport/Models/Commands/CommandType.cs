@@ -13,5 +13,10 @@ public enum CommandType
     /// <summary xml:lang = "ru">
     /// Установка связи.
     /// </summary>
-    SetLink
+    SetLink,
+
+    /// <summary xml:lang = "ru">
+    /// Удаление связи.
+    /// </summary>
+    DeleteLink
 }
