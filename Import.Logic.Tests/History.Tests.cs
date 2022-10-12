@@ -9,54 +9,24 @@ public class HistoryTests
     {
         // Arrange
         var externalId = new ExternalID(1, Provider.Ivanov);
-        var productName = "Some name";
-        var description = "Some description";
+        var metadata = "Some metadata";
 
         History? history = null!;
 
         // Act
         var exception = Record.Exception(() => history = new History(
             externalId,
-            productName,
-            description));
+            metadata));
 
         // Assert
         exception.Should().BeNull();
         history.ExternalId.Should().Be(externalId);
-        history.ProductName.Should().Be(productName);
-        history.ProductDescription.Should().Be(description);
+        history.ProductMetadata.Should().Be(metadata);
     }
 
-    [Fact(DisplayName = $"The {nameof(History)} can be created.")]
+    [Fact(DisplayName = $"The {nameof(History)} can be created without product metadata.")]
     [Trait("Category", "Unit")]
-    public void CanBeCreatedWithoutDescription()
-    {
-        // Arrange
-        var externalId = new ExternalID(1, Provider.Ivanov);
-        var productName = "Some name";
-
-        History? history = null!;
-
-        // Act
-        var exception = Record.Exception(() => history = new History(
-            externalId,
-            productName));
-
-        // Assert
-        exception.Should().BeNull();
-        history.ExternalId.Should().Be(externalId);
-        history.ProductName.Should().Be(productName);
-        history.ProductDescription.Should().Be(null);
-    }
-
-    [Theory(DisplayName = $"The {nameof(History)} can't be created when product name is null, empty " +
-        $"or has only whitespaces.")]
-    [Trait("Category", "Unit")]
-    [InlineData(null)]
-    [InlineData("")]
-    [InlineData("  ")]
-    [InlineData(" \n\r \t ")]
-    public void CanNotBeCreatedWhenGivenBadProductName(string productName)
+    public void CanBeCreatedWithoutProductMetadata()
     {
         // Arrange
         var externalId = new ExternalID(1, Provider.Ivanov);
@@ -66,9 +36,11 @@ public class HistoryTests
         // Act
         var exception = Record.Exception(() => history = new History(
             externalId,
-            productName));
+            null!));
 
         // Assert
-        exception.Should().BeOfType<ArgumentException>();
+        exception.Should().BeNull();
+        history.ExternalId.Should().Be(externalId);
+        history.ProductMetadata.Should().BeNull();
     }
 }

@@ -16,12 +16,7 @@ public sealed class History
     public int ProviderId { get; set; }
 
     /// <summary xml:lang = "ru">
-    /// Название продукта.
+    /// Методанные продукта.
     /// </summary>
-    public string ProductName { get; set; } = null!;
-
-    /// <summary xml:lang = "ru">
-    /// Описание продукта.
-    /// </summary>
-    public string? ProductDescription { get; set; }
+    public string? ProductMetadata { get; set; }
 }

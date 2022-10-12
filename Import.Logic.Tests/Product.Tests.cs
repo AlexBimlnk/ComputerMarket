@@ -13,19 +13,48 @@ public class ProductTests
         var externalID = new ExternalID(1, Provider.HornsAndHooves);
         var price = new Price(100m);
         var quantity = 5;
+        var metadata = "some metadata";
 
         // Act
         var exception = Record.Exception(() => product = new Product(
             externalID,
             price,
-            quantity));
+            quantity,
+            metadata));
 
         // Assert
         exception.Should().BeNull();
         product.ExternalID.Should().Be(externalID);
         product.Price.Should().Be(price);
         product.Quantity.Should().Be(quantity);
-        product.IsMapped.Should().Be(false);
+        product.IsMapped.Should().BeFalse();
+        product.Metadata.Should().Be(metadata);
+    }
+
+    [Fact(DisplayName = $"The {nameof(Product)} can be created without metadata.")]
+    [Trait("Category", "Unit")]
+    public void CanBeCreatedWithoutMetadata()
+    {
+        // Arrange
+        Product product = null!;
+        var externalID = new ExternalID(1, Provider.HornsAndHooves);
+        var price = new Price(100m);
+        var quantity = 5;
+
+        // Act
+        var exception = Record.Exception(() => product = new Product(
+            externalID,
+            price,
+            quantity,
+            metadata: null!));
+
+        // Assert
+        exception.Should().BeNull();
+        product.ExternalID.Should().Be(externalID);
+        product.Price.Should().Be(price);
+        product.Quantity.Should().Be(quantity);
+        product.IsMapped.Should().BeFalse();
+        product.Metadata.Should().BeNull();
     }
 
     [Fact(DisplayName = $"The {nameof(Product)} cannot be created when quantity less 0.")]
