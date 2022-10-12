@@ -61,11 +61,13 @@ public sealed class APIExternalProductsHandler<TExternalProduct> : IAPIExternalP
 
         _logger.LogInformation("Handle request..");
 
-        var products = await _fetcher.FetchProductsAsync(request, token);
+        var products = await _fetcher.FetchProductsAsync(request, token)
+            .ConfigureAwait(false);
 
         var mappedProducts = _mapper.MapCollection(products);
 
-        await _productsSender.SendAsync(mappedProducts, token);
+        await _productsSender.SendAsync(mappedProducts, token)
+            .ConfigureAwait(false);
 
         _logger.LogInformation("The request be handled");
     }

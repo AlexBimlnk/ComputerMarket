@@ -56,7 +56,8 @@ public sealed class APICommandHandler : IAPICommandHandler
 
         var command = _commandFactory.Create(parameters);
 
-        var result = await command.ExecuteAsync();
+        var result = await command.ExecuteAsync()
+            .ConfigureAwait(false);
 
         _logger.LogInformation(
             "Сommand {Id} processed with success: {Result}",

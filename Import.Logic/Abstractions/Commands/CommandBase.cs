@@ -20,7 +20,9 @@ public abstract class CommandBase : ICommand
     {
         try
         {
-            await ExecuteCoreAsync();
+            await ExecuteCoreAsync()
+                .ConfigureAwait(false);
+
             return CommandResult.Success(Id);
         }
         catch (InvalidOperationException ex)

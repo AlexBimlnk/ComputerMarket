@@ -46,13 +46,14 @@ public sealed class HistoryRecorder : IHistoryRecorder
         token.ThrowIfCancellationRequested();
 
         var _mutex = new AsyncLock();
-        using (await _mutex.LockAsync(token))
+        using (await _mutex.LockAsync(token).ConfigureAwait(false))
         {
             _logger.LogDebug("Start writing new history...");
 
             foreach (var history in histories)
             {
-                await _repository.AddAsync(history, token);
+                await _repository.AddAsync(history, token)
+                    .ConfigureAwait(false);
             }
 
             _repository.Save();

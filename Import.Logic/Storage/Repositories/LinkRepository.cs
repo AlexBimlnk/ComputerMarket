@@ -64,7 +64,8 @@ public sealed class LinkRepository : IRepository<Link>
 
         token.ThrowIfCancellationRequested();
 
-        await _context.Links.AddAsync(ConvertToStorageModel(entity), token);
+        await _context.Links.AddAsync(ConvertToStorageModel(entity), token)
+            .ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
@@ -74,7 +75,8 @@ public sealed class LinkRepository : IRepository<Link>
 
         token.ThrowIfCancellationRequested();
 
-        return await _context.Links.ContainsAsync(ConvertToStorageModel(entity), token);
+        return await _context.Links.ContainsAsync(ConvertToStorageModel(entity), token)
+            .ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
