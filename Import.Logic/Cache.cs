@@ -25,7 +25,10 @@ public sealed class Cache : IKeyableCache<Link, ExternalID>
     public void Add(Link entity)
     {
         ArgumentNullException.ThrowIfNull(entity, nameof(entity));
-        _dictionaryCache.TryAdd(entity.ExternalID, entity);
+        if (!_dictionaryCache.TryAdd(entity.ExternalID, entity))
+        {
+            throw new InvalidOperationException($"Attempt to add exsisting {nameof(Link)} to collection");
+        }
     }
 
     /// <inheritdoc/>
@@ -50,17 +53,17 @@ public sealed class Cache : IKeyableCache<Link, ExternalID>
     /// <exception cref="ArgumentNullException" xml:lang = "ru">Если <paramref name="entity"/> - <see langword="null"/>.</exception>
     public void Delete(Link entity)
     {
-        Link link;
         ArgumentNullException.ThrowIfNull(entity, nameof(entity));
-        _ = _dictionaryCache.TryRemove(entity.ExternalID, out link);
+        if (!_dictionaryCache.TryRemove(entity.ExternalID, out var link))
+        {
+            throw new InvalidOperationException($"Attempt to delete not exsisting {nameof(Link)}");
+        }
     }
 
     /// <inheritdoc/>
     public Link? GetByKey(ExternalID key)
     {
-        Link? link;
-
-        _ = _dictionaryCache.TryGetValue(key, out link);
+        _ = _dictionaryCache.TryGetValue(key, out var link);
 
         return link;
     }

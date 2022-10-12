@@ -46,12 +46,31 @@ public class CacheTests
         exception.Should().BeOfType<ArgumentNullException>();
     }
 
+    [Fact(DisplayName = $"The {nameof(Cache)} cannot add already exsisting {nameof(Link)}.")]
+    [Trait("Category", "Unit")]
+    public void CanNotAddExsistingLink()
+    {
+        // Arrange
+        var link1 = new Link(new InternalID(1), new ExternalID(2, Provider.Ivanov));
+        var link2 = new Link(new InternalID(1), new ExternalID(2, Provider.Ivanov));
+        var cache = new Cache();
+        cache.Add(link1);
+
+        // Act
+        var exception = Record.Exception(() =>
+            cache.Add(link2));
+
+        // Assert
+        exception.Should().BeOfType<InvalidOperationException>();
+    }
+
     [Fact(DisplayName = $"The {nameof(Cache)} can add {nameof(Link)} range.")]
     [Trait("Category", "Unit")]
     public void CanAddLinkRange()
     {
         // Arrange
-        var links = new Link[] {
+        var links = new Link[] 
+        {
             new Link(new InternalID(2), new ExternalID(1, Provider.Ivanov)),
             new Link(new InternalID(3), new ExternalID(2, Provider.Ivanov)),
             new Link(new InternalID(4), new ExternalID(3, Provider.Ivanov))
@@ -218,11 +237,34 @@ public class CacheTests
 
         // Act
         var exception = Record.Exception(() =>
-            cache.Delete
-            (linkFind));
+            cache.Delete(linkFind));
 
         // Assert
         exception.Should().BeOfType<ArgumentNullException>();
+    }
+
+    [Fact(DisplayName = $"The {nameof(Cache)} can not delete not exsisting {nameof(Link)}.")]
+    [Trait("Category", "Unit")]
+    public void CanNotDeleteNotExsistinglLink()
+    {
+        // Arrange
+        var links = new Link[]
+        {
+            new Link(new InternalID(5), new ExternalID(1, Provider.Ivanov)),
+            new Link(new InternalID(6), new ExternalID(1, Provider.HornsAndHooves)),
+            new Link(new InternalID(7), new ExternalID(4, Provider.HornsAndHooves))
+        };
+
+        var link = new Link(new InternalID(9), new ExternalID(2, Provider.Ivanov));
+        var cache = new Cache();
+        cache.AddRange(links);
+
+        // Act
+        var exception = Record.Exception(() =>
+            cache.Delete(link));
+
+        // Assert
+        exception.Should().BeOfType<InvalidOperationException>();
     }
 
     [Fact(DisplayName = $"The {nameof(Cache)} can get {nameof(Link)} by key.")]
