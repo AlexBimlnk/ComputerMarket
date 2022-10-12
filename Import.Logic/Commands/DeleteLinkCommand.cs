@@ -9,7 +9,7 @@ using Import.Logic.Abstractions.Commands;
 using Import.Logic.Models;
 
 namespace Import.Logic.Commands;
-public class DeleteLinkCommand : CommandBase
+public sealed class DeleteLinkCommand : CommandBase
 {
     private readonly DeleteLinkCommandParameters _parameters;
     private readonly ICache<Link> _cacheLinks;
