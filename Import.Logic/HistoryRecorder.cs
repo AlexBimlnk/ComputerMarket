@@ -1,6 +1,7 @@
 ﻿using Import.Logic.Abstractions;
 using Import.Logic.Models;
 
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 using Nito.AsyncEx;
@@ -12,8 +13,8 @@ namespace Import.Logic;
 /// </summary>
 public sealed class HistoryRecorder : IHistoryRecorder
 {
-    private readonly IRepository<History> _repository;
     private readonly ILogger<HistoryRecorder> _logger;
+    private readonly IServiceScopeFactory _scopeFactory;
 
     /// <summary xml:lang = "ru">
     /// Создаёт новый экземляр типа <see cref="HistoryRecorder"/>.
@@ -21,16 +22,18 @@ public sealed class HistoryRecorder : IHistoryRecorder
     /// <param name="logger" xml:lang = "ru">
     /// Логгер.
     /// </param>
-    /// <param name="repository" xml:lang = "ru">
-    /// Репозиторий историй.
+    /// <param name="scopeFactory" xml:lang = "ru">
+    /// Фабрика сервисов с областью применения.
     /// </param>
     /// <exception cref="ArgumentNullException" xml:lang = "ru">
     /// Если один из параметров равен <see langword="null"/>.
     /// </exception>
-    public HistoryRecorder(ILogger<HistoryRecorder> logger, IRepository<History> repository)
+    public HistoryRecorder(
+        ILogger<HistoryRecorder> logger,
+        IServiceScopeFactory scopeFactory)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+        _scopeFactory = scopeFactory ?? throw new ArgumentNullException(nameof(scopeFactory));
     }
 
     /// <inheritdoc/>
@@ -50,13 +53,17 @@ public sealed class HistoryRecorder : IHistoryRecorder
         {
             _logger.LogDebug("Start writing new history...");
 
+            using var scope = _scopeFactory.CreateScope();
+
+            var repository = scope.ServiceProvider.GetRequiredService<IRepository<History>>();
+
             foreach (var history in histories)
             {
-                await _repository.AddAsync(history, token)
+                await repository.AddAsync(history, token)
                     .ConfigureAwait(false);
             }
 
-            _repository.Save();
+            repository.Save();
 
             _logger.LogInformation(
                 "New history: {History} be writed to database",
