@@ -4,12 +4,12 @@ using Import.Logic.Models;
 namespace Import.Logic.Commands;
 
 /// <summary xml:lang = "ru">
-/// Параметры для команды на установку связи.
+/// Параметры для команды на удаление связи.
 /// </summary>
-public sealed class SetLinkCommandParameters : CommandParametersBase
+public sealed class DeleteLinkCommandParameters : CommandParametersBase
 {
     /// <summary xml:lang = "ru">
-    /// Создает новый экземпляр типа <see cref="SetLinkCommandParameters"/>.
+    /// Создает новый экземпляр типа <see cref="DeleteLinkCommandParameters"/>.
     /// </summary>
     /// <param name="id" xml:lang = "ru">
     /// Идентификатор команды.
@@ -20,20 +20,19 @@ public sealed class SetLinkCommandParameters : CommandParametersBase
     /// <param name="externalID" xml:lang = "ru">
     /// Внешний идентификатор.
     /// </param>
-    public SetLinkCommandParameters(CommandID id, InternalID internalID, ExternalID externalID)
-        : base(id)
+    public DeleteLinkCommandParameters(CommandID id, InternalID internalID, ExternalID externalID) : base(id)
     {
-        InternalID = internalID;
         ExternalID = externalID;
+        InternalID = internalID;
     }
-
-    /// <summary xml:lang = "ru">
-    /// Внутренний идентификатор.
-    /// </summary>
-    public InternalID InternalID { get; }
 
     /// <summary xml:lang = "ru">
     /// Внешний идентификатор.
     /// </summary>
     public ExternalID ExternalID { get; }
+
+    /// <summary xml:lang = "ru">
+    /// Внутренний идентификатор.
+    /// </summary>
+    public InternalID InternalID { get; }
 }
