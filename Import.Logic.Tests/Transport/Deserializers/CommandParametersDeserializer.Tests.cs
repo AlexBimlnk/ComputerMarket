@@ -131,7 +131,7 @@ public class CommandParametersDeserializerTests
                 new(2),
                 new(2, Provider.Ivanov))
         },
-                {
+        {
             /*lang=json,strict*/ @"
             {
                 ""type"": ""delete_link"",

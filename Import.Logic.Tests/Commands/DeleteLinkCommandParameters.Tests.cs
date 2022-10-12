@@ -30,7 +30,7 @@ public class DeleteLinkCommandParametersTests
 
     [Fact(DisplayName = $"The {nameof(DeleteLinkCommandParameters)} can't create without id.")]
     [Trait("Category", "Unit")]
-    public void CanNotBeCreatedWithoutParameters()
+    public void CanNotBeCreatedWithoutId()
     {
         // Act
         var exception = Record.Exception(() => _ = new DeleteLinkCommandParameters(

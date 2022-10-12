@@ -17,7 +17,7 @@ public sealed class CommandFactory : ICommandFactory
     /// Делегат, создающий на основе <see cref="CommandID"/> и <see cref="SetLinkCommandParameters"/>
     /// команду типа <see cref="ICommand"/>.
     /// </param>
-    /// <param name="setLinkCommandFactory" xml:lang = "ru">
+    /// <param name="deleteLinkCommandFactory" xml:lang = "ru">
     /// Делегат, создающий на основе <see cref="CommandID"/> и <see cref="DeleteLinkCommandParameters"/>
     /// команду типа <see cref="ICommand"/>.
     /// </param>

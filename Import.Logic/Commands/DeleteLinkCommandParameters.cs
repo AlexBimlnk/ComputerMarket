@@ -20,7 +20,11 @@ public sealed class DeleteLinkCommandParameters : CommandParametersBase
     /// <param name="externalID" xml:lang = "ru">
     /// Внешний идентификатор.
     /// </param>
-    public DeleteLinkCommandParameters(CommandID id, InternalID internalID, ExternalID externalID) : base(id)
+    public DeleteLinkCommandParameters(
+        CommandID id,
+        InternalID internalID,
+        ExternalID externalID)
+        : base(id)
     {
         ExternalID = externalID;
         InternalID = internalID;

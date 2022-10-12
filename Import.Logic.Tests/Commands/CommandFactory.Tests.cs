@@ -29,7 +29,7 @@ public class CommandFactoryTests
         exception.Should().BeNull();
     }
 
-    [Fact(DisplayName = $"The {nameof(CommandFactory)} can create command.")]
+    [Fact(DisplayName = $"The {nameof(CommandFactory)} can create set link command.")]
     [Trait("Category", "Unit")]
     public void CanCreateSetLinkCommand()
     {
@@ -39,6 +39,35 @@ public class CommandFactoryTests
             new(1),
             new(1, Provider.Ivanov));
 
+        var command = Mock.Of<ICommand>(MockBehavior.Strict);
+
+        var setLink = new Mock<Func<SetLinkCommandParameters, ICommand>>(MockBehavior.Strict);
+        var deleteLink = Mock.Of<Func<DeleteLinkCommandParameters, ICommand>>();
+
+        var setLinkInvokeCount = 0;
+        setLink.Setup(x => x.Invoke(setParameters))
+            .Returns(command)
+            .Callback(() => setLinkInvokeCount++);
+        
+        var factory = new CommandFactory(setLink.Object, deleteLink);
+
+        // Act
+        ICommand result = null!;
+        
+        var exception = Record.Exception(() =>
+            result = factory.Create(setParameters));
+
+        // Assert
+        exception.Should().BeNull();
+        result.Should().Be(command);
+        setLinkInvokeCount.Should().Be(1);
+    }
+
+    [Fact(DisplayName = $"The {nameof(CommandFactory)} can create delete link command.")]
+    [Trait("Category", "Unit")]
+    public void CanCreateDeleteLinkCommand()
+    {
+        // Arrange
         var deleteParameters = new DeleteLinkCommandParameters(
             new("some id"),
             new(1),
@@ -46,36 +75,26 @@ public class CommandFactoryTests
 
         var command = Mock.Of<ICommand>(MockBehavior.Strict);
 
-        var setLink = new Mock<Func<SetLinkCommandParameters, ICommand>>(MockBehavior.Strict);
+        var setLink = Mock.Of<Func<SetLinkCommandParameters, ICommand>>();
         var deleteLink = new Mock<Func<DeleteLinkCommandParameters, ICommand>>(MockBehavior.Strict);
-        var setLinkInvokeCount = 0;
+        
         var deleteLinkInvokeCount = 0;
-        setLink.Setup(x => x.Invoke(setParameters))
-            .Returns(command)
-            .Callback(() => setLinkInvokeCount++);
         deleteLink.Setup(x => x.Invoke(deleteParameters))
             .Returns(command)
             .Callback(() => deleteLinkInvokeCount++);
 
 
-        var factory = new CommandFactory(setLink.Object, deleteLink.Object);
+        var factory = new CommandFactory(setLink, deleteLink.Object);
 
         // Act
-        ICommand setResult = null!;
-        ICommand deleteResult = null!;
+        ICommand result = null!;
 
-        var setException = Record.Exception(() =>
-            setResult = factory.Create(setParameters));
-
-        var deleteException = Record.Exception(() =>
-            deleteResult = factory.Create(deleteParameters));
+        var exception = Record.Exception(() =>
+            result = factory.Create(deleteParameters));
 
         // Assert
-        setException.Should().BeNull();
-        setResult.Should().Be(command);
-        deleteException.Should().BeNull();
-        deleteResult.Should().Be(command);
-        setLinkInvokeCount.Should().Be(1);
+        exception.Should().BeNull();
+        result.Should().Be(command);
         deleteLinkInvokeCount.Should().Be(1);
     }
 
