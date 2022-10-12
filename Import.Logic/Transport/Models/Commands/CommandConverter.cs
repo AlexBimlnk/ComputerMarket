@@ -21,6 +21,7 @@ public sealed class CommandConverter : JsonConverter<CommandBase>
         return rawCommand["type"]!.ToObject<CommandType>() switch
         {
             CommandType.SetLink => rawCommand.ToObject<SetLinkCommand>(),
+            CommandType.DeleteLink => rawCommand.ToObject<DeleteLinkCommand>(),
             var unknownCommandType =>
                 throw new InvalidOperationException($"The unknown command type has been received '{unknownCommandType}'. ")
         };

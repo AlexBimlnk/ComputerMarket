@@ -130,6 +130,20 @@ public class CommandParametersDeserializerTests
                 new("some id"),
                 new(2),
                 new(2, Provider.Ivanov))
-        }
+        },
+        {
+            /*lang=json,strict*/ @"
+            {
+                ""type"": ""delete_link"",
+                ""id"": ""some id"",
+                ""internal_id"": 3,
+                ""external_id"": 4,
+                ""provider"": ""horns_and_hooves""
+            }",
+            new SetLinkCommandParameters(
+                new("some id"),
+                new(3),
+                new(4, Provider.HornsAndHooves))
+        },
     };
 }
