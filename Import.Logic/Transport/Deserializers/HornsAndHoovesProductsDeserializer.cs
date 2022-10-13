@@ -6,9 +6,9 @@ using Newtonsoft.Json;
 namespace Import.Logic.Transport.Deserializers;
 
 /// <summary xml:lang = "ru">
-/// Десериализатор внешних продуктов от поставщика <see cref="Logic.Models.Provider.Ivanov"/>.
+/// Десериализатор внешних продуктов от поставщика <see cref="Logic.Models.Provider.HornsAndHooves"/>.
 /// </summary>
-public sealed class ExternalProductsDeserializer : IDeserializer<string, IReadOnlyCollection<ExternalProduct>>
+public sealed class HornsAndHoovesProductsDeserializer : IDeserializer<string, IReadOnlyCollection<HornsAndHoovesProduct>>
 {
     private readonly JsonSerializer _serializer = JsonSerializer.CreateDefault();
 
@@ -16,7 +16,7 @@ public sealed class ExternalProductsDeserializer : IDeserializer<string, IReadOn
     /// <exception cref="ArgumentException" xml:lang = "ru">
     /// Когда <paramref name="source"/> имел неверный формат.
     /// </exception>
-    public IReadOnlyCollection<ExternalProduct> Deserialize(string source)
+    public IReadOnlyCollection<HornsAndHoovesProduct> Deserialize(string source)
     {
         if (string.IsNullOrWhiteSpace(source))
             throw new ArgumentException(
@@ -25,6 +25,6 @@ public sealed class ExternalProductsDeserializer : IDeserializer<string, IReadOn
 
         using var reader = new JsonTextReader(new StringReader(source));
 
-        return _serializer.Deserialize<IReadOnlyCollection<ExternalProduct>>(reader)!;
+        return _serializer.Deserialize<IReadOnlyCollection<HornsAndHoovesProduct>>(reader)!;
     }
 }

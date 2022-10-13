@@ -20,5 +20,8 @@ public interface IConverter<TSource, TTarget>
     /// <returns xml:lang = "ru">
     /// Сконвертированная сущность типа <typeparamref name="TTarget"/>.
     /// </returns>
+    /// <exception cref="ArgumentNullException" xml:lang="ru">
+    /// Когда <paramref name="source"/> был <see langword="null"/>.
+    /// </exception>
     public TTarget Convert(TSource source);
 }
