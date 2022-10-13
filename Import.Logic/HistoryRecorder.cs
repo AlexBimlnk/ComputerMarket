@@ -37,14 +37,11 @@ public sealed class HistoryRecorder : IHistoryRecorder
     }
 
     /// <inheritdoc/>
-    /// <exception cref="ArgumentNullException" xml:lang = "ru">
-    /// Если история равна <see langword="null"/>.
-    /// </exception>
     public async Task RecordHistoryAsync(
-        IReadOnlyCollection<History> histories,
+        Product product,
         CancellationToken token = default)
     {
-        ArgumentNullException.ThrowIfNull(histories);
+        ArgumentNullException.ThrowIfNull(product);
 
         token.ThrowIfCancellationRequested();
 
@@ -57,17 +54,16 @@ public sealed class HistoryRecorder : IHistoryRecorder
 
             var repository = scope.ServiceProvider.GetRequiredService<IRepository<History>>();
 
-            foreach (var history in histories)
-            {
-                await repository.AddAsync(history, token)
+            var history = new History(product.ExternalID, product.Metadata);
+
+            await repository.AddAsync(history, token)
                     .ConfigureAwait(false);
-            }
 
             repository.Save();
 
-            _logger.LogInformation(
+            _logger.LogDebug(
                 "New history: {History} be writed to database",
-                string.Join('|', histories));
+                history);
         }
 
     }

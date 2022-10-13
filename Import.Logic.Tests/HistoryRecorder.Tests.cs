@@ -76,17 +76,19 @@ public class HistoryRecorderTests
         serviceProvider.Setup(x => x.GetService(typeof(IRepository<History>)))
             .Returns(repository.Object);
 
-        var histories = new[]
-        {
-            new History(new(1, Provider.Ivanov)),
-            new History(new(1, Provider.HornsAndHooves), "some metadata")
-        };
+        var product = new Product(
+            new ExternalID(1, Provider.Ivanov),
+            new Price(100),
+            7,
+            "some metadata");
+
+        var history = new History(new(1, Provider.Ivanov), "some metadata");
 
         var recorder = new HistoryRecorder(logger, scopeFactory.Object);
 
         // Act
         var exception = await Record.ExceptionAsync(async () =>
-            await recorder.RecordHistoryAsync(histories));
+            await recorder.RecordHistoryAsync(product));
 
         // Assert
         exception.Should().BeNull();
@@ -94,9 +96,11 @@ public class HistoryRecorderTests
         repository.Verify(x => x.Save(), Times.Once);
         repository.Verify(x => 
             x.AddAsync(
-                It.IsIn(histories), 
+                It.Is<History>(x => 
+                    x.ExternalId == history.ExternalId && 
+                    x.ProductMetadata == x.ProductMetadata), 
                 It.IsAny<CancellationToken>()), 
-            Times.Exactly(2));
+            Times.Once);
     }
 
     [Fact(DisplayName = $"The instance can't record without history async.")]
@@ -125,11 +129,11 @@ public class HistoryRecorderTests
         var logger = Mock.Of<ILogger<HistoryRecorder>>(MockBehavior.Strict);
         var scopeFactory = Mock.Of<IServiceScopeFactory>(MockBehavior.Strict);
 
-        var histories = new[]
-        {
-            new History(new(1, Provider.Ivanov)),
-            new History(new(1, Provider.HornsAndHooves), "some metadata")
-        };
+        var product = new Product(
+            new ExternalID(1, Provider.Ivanov),
+            new Price(100),
+            7,
+            "some metadata");
 
         var cts = new CancellationTokenSource();
 
@@ -138,7 +142,7 @@ public class HistoryRecorderTests
         // Act
         cts.Cancel();
         var exception = await Record.ExceptionAsync(async () =>
-            await recorder.RecordHistoryAsync(histories, cts.Token));
+            await recorder.RecordHistoryAsync(product, cts.Token));
 
         // Assert
         exception.Should().BeOfType<OperationCanceledException>();
