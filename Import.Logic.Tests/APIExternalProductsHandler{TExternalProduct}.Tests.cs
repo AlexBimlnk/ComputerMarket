@@ -129,7 +129,7 @@ public class APIExternalProductsHandlerTests
 
         var request = "some request";
 
-        var products = new Product[]
+        IReadOnlyCollection<Product> products = new Product[]
         {
             new(new(1, Provider.Ivanov), new(100), 2),
             new(new(2, Provider.Ivanov), new(100), 2),
@@ -142,8 +142,8 @@ public class APIExternalProductsHandlerTests
             .Callback(() => fetcherInvokeCount++);
 
         var mapperInvokeCount = 0;
-        mapper.Setup(x => x.MapCollection(products))
-            .Returns(products)
+        mapper.Setup(x => x.MapCollectionAsync(products, It.IsAny<CancellationToken>()))
+            .Returns(ValueTask.FromResult(products))
             .Callback(() => mapperInvokeCount++);
 
         var handler = new APIExternalProductsHandler<FakeExternalProduct>(

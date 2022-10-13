@@ -18,5 +18,5 @@ public class ImportController : ControllerBase
     }
 
     [HttpGet]
-    public IEnumerable<string> Get() => _context.Histories.Select(x => x.ProductName).ToList()!;
+    public IEnumerable<string> Get() => _context.Histories.Select(x => x.ProductMetadata).ToList()!;
 }
