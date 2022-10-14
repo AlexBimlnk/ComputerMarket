@@ -8,12 +8,12 @@ public sealed class History
     /// <summary xml:lang = "ru">
     /// Внешний идентификатор продукта.
     /// </summary>
-    public int ExternalId { get; set; }
+    public long ExternalId { get; set; }
 
     /// <summary xml:lang = "ru">
     /// Идентификатор поставщика.
     /// </summary>
-    public int ProviderId { get; set; }
+    public short ProviderId { get; set; }
 
     /// <summary xml:lang = "ru">
     /// Методанные продукта.
