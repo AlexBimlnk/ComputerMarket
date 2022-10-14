@@ -67,22 +67,22 @@ public class HistoryRepositoryTests
             ProductMetadata = "product meta data"
         };
 
-        var Histories = new Mock<DbSet<THistory>>(MockBehavior.Strict);
-        var HistoriesCallback = 0;
-        Histories.Setup(x => x
+        var histories = new Mock<DbSet<THistory>>(MockBehavior.Strict);
+        var historiesCallback = 0;
+        histories.Setup(x => x
             .AddAsync(
                 It.Is<THistory>(l =>
                     l.ExternalId == storageHistory.ExternalId &&
                     l.ProviderId == storageHistory.ProviderId &&
                     l.ProductMetadata == storageHistory.ProductMetadata),
                 It.IsAny<CancellationToken>()))
-            .Callback(() => HistoriesCallback++)
+            .Callback(() => historiesCallback++)
             .Returns(new ValueTask<EntityEntry<THistory>>());
 
         context.Setup(x => x.Histories)
-            .Returns(Histories.Object);
+            .Returns(histories.Object);
 
-        var HistoryRepository = new HistoryRepository(
+        var historyRepository = new HistoryRepository(
             context.Object,
             logger);
 
@@ -92,11 +92,11 @@ public class HistoryRepositoryTests
 
         // Act
         var exception = await Record.ExceptionAsync(async () =>
-            await HistoryRepository.AddAsync(inputHistory));
+            await historyRepository.AddAsync(inputHistory));
 
         // Assert
         exception.Should().BeNull();
-        HistoriesCallback.Should().Be(1);
+        historiesCallback.Should().Be(1);
     }
 
     [Fact(DisplayName = $"The {nameof(HistoryRepository)} cannot add history when history is null.")]
@@ -107,13 +107,13 @@ public class HistoryRepositoryTests
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
         var logger = Mock.Of<ILogger>();
 
-        var HistoryRepository = new HistoryRepository(
+        var historyRepository = new HistoryRepository(
             context.Object,
             logger);
 
         // Act
         var exception = await Record.ExceptionAsync(async () =>
-            await HistoryRepository.AddAsync(null!));
+            await historyRepository.AddAsync(null!));
 
         // Assert
         exception.Should().BeOfType<ArgumentNullException>();
@@ -129,7 +129,7 @@ public class HistoryRepositoryTests
 
         var cts = new CancellationTokenSource();
 
-        var HistoryRepository = new HistoryRepository(
+        var historyRepository = new HistoryRepository(
             context.Object,
             logger);
 
@@ -140,7 +140,7 @@ public class HistoryRepositoryTests
         // Act
         cts.Cancel();
         var exception = await Record.ExceptionAsync(async () =>
-            await HistoryRepository.AddAsync(inputHistory, cts.Token));
+            await historyRepository.AddAsync(inputHistory, cts.Token));
 
         // Assert
         exception.Should().BeOfType<OperationCanceledException>();
@@ -154,13 +154,13 @@ public class HistoryRepositoryTests
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
         var logger = Mock.Of<ILogger>();
 
-        var HistoryRepository = new HistoryRepository(
+        var historyRepository = new HistoryRepository(
             context.Object,
             logger);
 
         // Act
         var exception = await Record.ExceptionAsync(async () =>
-            await HistoryRepository.ContainsAsync(null!));
+            await historyRepository.ContainsAsync(null!));
 
         // Assert
         exception.Should().BeOfType<ArgumentNullException>();
@@ -176,7 +176,7 @@ public class HistoryRepositoryTests
 
         var cts = new CancellationTokenSource();
 
-        var HistoryRepository = new HistoryRepository(
+        var historyRepository = new HistoryRepository(
             context.Object,
             logger);
 
@@ -187,7 +187,7 @@ public class HistoryRepositoryTests
         // Act
         cts.Cancel();
         var exception = await Record.ExceptionAsync(async () =>
-            await HistoryRepository.ContainsAsync(inputHistory, cts.Token));
+            await historyRepository.ContainsAsync(inputHistory, cts.Token));
 
         // Assert
         exception.Should().BeOfType<OperationCanceledException>();
@@ -208,12 +208,12 @@ public class HistoryRepositoryTests
             ProductMetadata = "product meta data"
         };
 
-        var Histories = new Mock<DbSet<THistory>>(MockBehavior.Loose);
+        var histories = new Mock<DbSet<THistory>>(MockBehavior.Loose);
 
         context.Setup(x => x.Histories)
-            .Returns(Histories.Object);
+            .Returns(histories.Object);
 
-        var HistoryRepository = new HistoryRepository(
+        var historyRepository = new HistoryRepository(
             context.Object,
             logger);
 
@@ -223,12 +223,12 @@ public class HistoryRepositoryTests
 
         // Act
         var exception = Record.Exception(() =>
-            HistoryRepository.Delete(containsHistory));
+            historyRepository.Delete(containsHistory));
 
         // Assert
         exception.Should().BeNull();
 
-        Histories.Verify(x =>
+        histories.Verify(x =>
             x.Remove(
                 It.Is<THistory>(l =>
                     l.ExternalId == storageHistory.ExternalId &&
@@ -245,13 +245,13 @@ public class HistoryRepositoryTests
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
         var logger = Mock.Of<ILogger>();
 
-        var HistoryRepository = new HistoryRepository(
+        var historyRepository = new HistoryRepository(
             context.Object,
             logger);
 
         // Act
         var exception = Record.Exception(() =>
-            HistoryRepository.Delete(null!));
+            historyRepository.Delete(null!));
 
         // Assert
         exception.Should().BeOfType<ArgumentNullException>();
@@ -272,13 +272,13 @@ public class HistoryRepositoryTests
             ProductMetadata = "product meta data"
         };
 
-        var HistoryRepository = new HistoryRepository(
+        var historyRepository = new HistoryRepository(
             context.Object,
             logger);
 
         // Act
         var exception = Record.Exception(() =>
-            HistoryRepository.Save());
+            historyRepository.Save());
 
         // Assert
         exception.Should().BeNull();
