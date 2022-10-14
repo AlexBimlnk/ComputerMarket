@@ -3,7 +3,7 @@
 namespace Import.Logic.Transport.Models;
 
 /// <summary xml:lang = "ru">
-/// Транспортная модель продукта поставщика.
+/// Транспортная модель продукта поставщика <see cref="Logic.Models.Provider.Ivanov"/>.
 /// </summary>
 public sealed class ExternalProduct
 {

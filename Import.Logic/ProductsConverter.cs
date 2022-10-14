@@ -7,27 +7,37 @@ namespace Import.Logic;
 /// <summary xml:lang="ru">
 /// Конвертер продуктов.
 /// </summary>
-public sealed class ProductsConverter : IConverter<ExternalProduct, Product>
+public sealed class ProductsConverter : 
+    IConverter<ExternalProduct, Product>,
+    IConverter<HornsAndHoovesProduct, Product>
 {
-    /// <summary xml:lang="ru">
-    /// Конвертирует внешние продукта типа <see cref="ExternalProduct"/> во внутренние.
-    /// </summary>
-    /// <param name="source" xml:lang="ru">
-    /// Продукт типа <see cref="ExternalProduct"/>, который нужно сконвертировать.
-    /// </param>
-    /// <returns xml:lang="ru">
-    /// Сконвертированный продукт типа <see cref="Product"/>.
-    /// </returns>
-    /// <exception cref="ArgumentNullException" xml:lang="ru">
-    /// Когда <paramref name="source"/> был <see langword="null"/>.
-    /// </exception>
+    /// <inheritdoc/>
     public Product Convert(ExternalProduct source)
     {
         ArgumentNullException.ThrowIfNull(source, nameof(source));
 
+        var metadata = 
+            $"{source.Name}" +
+            $"{(source.Description?.Count == 0 ? string.Empty : "|" + string.Join("|", source.Description!))}";
+
         return new Product(
             new ExternalID(source.Id, Provider.Ivanov),
             new Price(source.Price),
-            source.Quantity);
+            source.Quantity,
+            metadata);
+    }
+
+    /// <inheritdoc/>
+    public Product Convert(HornsAndHoovesProduct source)
+    {
+        ArgumentNullException.ThrowIfNull(source, nameof(source));
+
+        var metadata = $"{source.Name}|{source.Description}|{source.Type}";
+
+        return new Product(
+            new ExternalID(source.Id, Provider.HornsAndHooves),
+            new Price(source.Price),
+            source.Quantity,
+            metadata);
     }
 }
