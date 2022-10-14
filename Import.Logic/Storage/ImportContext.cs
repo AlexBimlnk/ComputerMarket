@@ -9,33 +9,50 @@ namespace Import.Logic.Storage;
 /// </summary>
 public sealed class ImportContext : DbContext
 {
+    /// <summary xml:lang="ru">
+    /// Создаёт новый экземпляр типа <see cref="ImportContext"/>.
+    /// </summary>
+    /// <param name="options" xml:lang="ru">
+    /// Опции.
+    /// </param>
     public ImportContext(DbContextOptions<ImportContext> options)
             : base(options)
     {
     }
 
+    /// <summary xml:lang="ru">
+    /// Истории.
+    /// </summary>
     public DbSet<History> Histories { get; set; } = default!;
+
+    /// <summary xml:lang="ru">
+    /// Связи.
+    /// </summary>
     public DbSet<Link> Links { get; set; } = default!;
+
+    /// <summary xml:lang="ru">
+    /// Провайдеры.
+    /// </summary>
     public DbSet<Provider> Providers { get; set; } = default!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<History>(entity =>
         {
-            entity.HasNoKey();
+            entity.HasKey(e => new
+            {
+                e.ExternalId,
+                e.ProviderId
+            });
 
             entity.ToTable("histories");
 
             entity.Property(e => e.ExternalId)
                 .HasColumnName("external_id");
 
-            entity.Property(e => e.ProductDescription)
-                .HasMaxLength(50)
-                .HasColumnName("product_description");
-
-            entity.Property(e => e.ProductName)
-                .HasMaxLength(40)
-                .HasColumnName("product_name");
+            entity.Property(e => e.ProductMetadata)
+                .HasMaxLength(80)
+                .HasColumnName("product_metadata");
 
             entity.Property(e => e.ProviderId)
                 .HasColumnName("provider_id");

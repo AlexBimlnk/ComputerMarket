@@ -11,27 +11,19 @@ public sealed class History
     /// <param name="externalId" xml:lang = "ru">
     /// Внешний идентификатор продукта.
     /// </param>
-    /// <param name="productName" xml:lang = "ru">
-    /// Название продукта.
-    /// </param>
-    /// <param name="productDescription" xml:lang = "ru">
-    /// Описание продукта.
+    /// <param name="productMetadata" xml:lang = "ru">
+    /// Методанные продукта.
     /// </param>
     /// <exception cref="ArgumentException" xml:lang = "ru">
     /// Если имя поставщика отсутствует.
     /// </exception>
     public History(
         ExternalID externalId,
-        string productName, 
-        string? productDescription = default)
+        string? productMetadata = null)
     {
         ExternalId = externalId;
 
-        if (string.IsNullOrWhiteSpace(productName))
-            throw new ArgumentException(nameof(productName));
-
-        ProductName = productName ?? throw new ArgumentException(nameof(productName));
-        ProductDescription = productDescription;
+        ProductMetadata = productMetadata;
     }
 
     /// <summary xml:lang = "ru">
@@ -40,16 +32,11 @@ public sealed class History
     public ExternalID ExternalId { get; }
 
     /// <summary xml:lang = "ru">
-    /// Название продукта.
+    /// Методанные продукта.
     /// </summary>
-    public string ProductName { get; }
-
-    /// <summary xml:lang = "ru">
-    /// Описание продукта.
-    /// </summary>
-    public string? ProductDescription { get; }
+    public string? ProductMetadata { get; }
 
     /// <inheritdoc/>
     public override string ToString() =>
-        $"External id: {ExternalId}, Product name: {ProductName}, Description: {ProductDescription}";
+        $"External id: {ExternalId}, Metadata: {ProductMetadata}";
 }

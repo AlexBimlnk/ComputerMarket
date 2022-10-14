@@ -16,10 +16,13 @@ public class MapperTests
         // Arrange
         var cache = Mock.Of<IKeyableCache<Link, ExternalID>>();
         var logger = Mock.Of<ILogger<Mapper>>();
+        var historyRecorder = Mock.Of<IHistoryRecorder>();
 
         // Act
-        var exception = Record.Exception(() =>
-            _ = new Mapper(cache, logger));
+        var exception = Record.Exception(() => _ = new Mapper(
+            cache,
+            logger,
+            historyRecorder));
 
         // Assert
         exception.Should().BeNull();
@@ -31,10 +34,13 @@ public class MapperTests
     {
         // Arrange
         var cache = Mock.Of<IKeyableCache<Link, ExternalID>>();
+        var historyRecorder = Mock.Of<IHistoryRecorder>();
 
         // Act
-        var exception = Record.Exception(() =>
-            _ = new Mapper(cache, logger: null!));
+        var exception = Record.Exception(() => _ = new Mapper(
+            cache,
+            logger: null!,
+            historyRecorder));
 
         // Assert
         exception.Should().NotBeNull().And.BeOfType<ArgumentNullException>();
@@ -46,10 +52,13 @@ public class MapperTests
     {
         // Arrange
         var logger = Mock.Of<ILogger<Mapper>>();
+        var historyRecorder = Mock.Of<IHistoryRecorder>();
 
         // Act
-        var exception = Record.Exception(() =>
-            _ = new Mapper(cache: null!, logger));
+        var exception = Record.Exception(() => _ = new Mapper(
+            cache: null!,
+            logger,
+            historyRecorder));
 
         // Assert
         exception.Should().NotBeNull().And.BeOfType<ArgumentNullException>();
@@ -57,7 +66,7 @@ public class MapperTests
 
     [Fact(DisplayName = $"The {nameof(Mapper)} can map single entity.")]
     [Trait("Category", "Unit")]
-    public void CanMapSingleProduct()
+    public async Task CanMapSingleProductAsync()
     {
         // Arrange
         var externalId = new ExternalID(1, Provider.Ivanov);
@@ -69,14 +78,18 @@ public class MapperTests
 
         var cache = new Mock<IKeyableCache<Link, ExternalID>>(MockBehavior.Strict);
         var logger = Mock.Of<ILogger<Mapper>>();
+        var historyRecorder = Mock.Of<IHistoryRecorder>(MockBehavior.Strict);
 
         cache.Setup(x => x.GetByKey(externalId))
             .Returns(link);
 
-        var mapper = new Mapper(cache.Object, logger);
+        var mapper = new Mapper(
+            cache.Object,
+            logger,
+            historyRecorder);
 
         // Act
-        var result = mapper.MapEntity(product);
+        var result = await mapper.MapEntityAsync(product);
 
         // Assert
         result.InternalID.Should().BeEquivalentTo(internalId);
@@ -86,7 +99,7 @@ public class MapperTests
 
     [Fact(DisplayName = $"The {nameof(Mapper)} return back {nameof(Product)} when mapping without {nameof(Link)}.")]
     [Trait("Category", "Unit")]
-    public void CanMapWhenEntityLinkIsNotInCache()
+    public async Task CanMapWhenEntityLinkIsNotInCacheAsync()
     {
         // Arrange
         var externalId = new ExternalID(1, Provider.Ivanov);
@@ -95,26 +108,62 @@ public class MapperTests
 
         var cache = new Mock<IKeyableCache<Link, ExternalID>>(MockBehavior.Loose);
         var logger = Mock.Of<ILogger<Mapper>>();
+        var historyRecorder = new Mock<IHistoryRecorder>();
 
         cache.Setup(x => x.Contains(externalId))
             .Returns(false);
 
-        var mapper = new Mapper(cache.Object, logger);
+        var mapper = new Mapper(
+            cache.Object,
+            logger,
+            historyRecorder.Object);
 
         // Act
-        var result = mapper.MapEntity(product);
+        var result = await mapper.MapEntityAsync(product);
 
         // Assert
         result.ExternalID.Should().BeEquivalentTo(externalId);
         result.IsMapped.Should().BeFalse();
+        historyRecorder.Verify(x =>
+            x.RecordHistoryAsync(
+                product,
+                It.IsAny<CancellationToken>()),
+            Times.Exactly(1));
     }
 
+    [Fact(DisplayName = $"The instance can cancel single map operation.")]
+    [Trait("Category", "Unit")]
+    public async Task CanCancelMapSingleOperationAsync()
+    {
+        // Arrange
+        var cache = new Mock<IKeyableCache<Link, ExternalID>>(MockBehavior.Loose);
+        var logger = Mock.Of<ILogger<Mapper>>();
+        var historyRecorder = new Mock<IHistoryRecorder>();
+
+        var externalId = new ExternalID(1, Provider.Ivanov);
+        var product = new Product(externalId, new Price(1), 1);
+
+        var cts = new CancellationTokenSource();
+
+        var mapper = new Mapper(
+            cache.Object,
+            logger,
+            historyRecorder.Object);
+
+        // Act
+        cts.Cancel();
+        var exception = await Record.ExceptionAsync(async () =>
+            _ = await mapper.MapEntityAsync(product, cts.Token));
+
+        // Assert
+        exception.Should().BeOfType<OperationCanceledException>();
+    }
 
     [Fact(DisplayName = $"The {nameof(Mapper)} can map collection of entities.")]
     [Trait("Category", "Unit")]
-    public void CanMapSuccesfullyWithLackOfLinks()
+    public async Task CanMapSuccesfullyWithLackOfLinksAsync()
     {
-        //Arrange
+        // Arrange
         var links = new Link[2]
         {
             new Link(new InternalID(1), new ExternalID(1,Provider.Ivanov)),
@@ -127,39 +176,77 @@ public class MapperTests
             new Product(links[1].ExternalID, new Price(2), 2)
         };
 
-        var noneMappableProducts = new Product[1]
-        {
-            new Product(new ExternalID(3, Provider.Ivanov), new Price(3), 1)
-        };
+        var noneMappableProduct = new Product(
+            new ExternalID(3, Provider.Ivanov),
+            new Price(3),
+            quantity: 1);
 
         var cache = new Mock<IKeyableCache<Link, ExternalID>>(MockBehavior.Loose);
         var logger = Mock.Of<ILogger<Mapper>>();
+        var historyRecorder = new Mock<IHistoryRecorder>();
 
         cache.Setup(x => x.GetByKey(links[0].ExternalID))
             .Returns(links[0]);
         cache.Setup(x => x.GetByKey(links[1].ExternalID))
             .Returns(links[1]);
 
-        var mapper = new Mapper(cache.Object, logger);
+        var mapper = new Mapper(
+            cache.Object,
+            logger,
+            historyRecorder.Object);
 
-        //Act
-        var result = mapper.MapCollection(mappableProducts.Concat(noneMappableProducts).ToList());
+        // Act
+        var result = await mapper.MapCollectionAsync(
+            mappableProducts
+                .Append(noneMappableProduct)
+                .ToList());
 
-        //Assert
+        // Assert
         result.Select(x => x.IsMapped)
            .Should().AllBeEquivalentTo(true);
 
-        result.Select(x => x.ExternalID)
+        result.Select(x => new { x.ExternalID, x.InternalID })
             .Should().BeEquivalentTo(
-                mappableProducts.Select(x => x.ExternalID),
+                mappableProducts.Select(x => new { x.ExternalID, x.InternalID }),
                 opt => opt.WithStrictOrdering());
 
-        result.Select(x => x.InternalID)
-            .Should().BeEquivalentTo(
-                mappableProducts.Select(x => x.InternalID),
-                opt => opt.WithStrictOrdering());
+        noneMappableProduct.IsMapped.Should().BeFalse();
 
-        noneMappableProducts.Select(x => x.IsMapped)
-            .Should().AllBeEquivalentTo(false);
+        historyRecorder.Verify(x =>
+            x.RecordHistoryAsync(
+                noneMappableProduct,
+                It.IsAny<CancellationToken>()),
+            Times.Exactly(1));
+    }
+
+    [Fact(DisplayName = $"The instance can cancel map collection operation.")]
+    [Trait("Category", "Unit")]
+    public async Task CanCancelMapCollectionOperationAsync()
+    {
+        // Arrange
+        var cache = new Mock<IKeyableCache<Link, ExternalID>>(MockBehavior.Loose);
+        var logger = Mock.Of<ILogger<Mapper>>();
+        var historyRecorder = new Mock<IHistoryRecorder>();
+
+        var externalId = new ExternalID(1, Provider.Ivanov);
+        var products = new[]
+        {
+            new Product(externalId, new Price(1), 1)
+        };
+
+        var cts = new CancellationTokenSource();
+
+        var mapper = new Mapper(
+            cache.Object,
+            logger,
+            historyRecorder.Object);
+
+        // Act
+        cts.Cancel();
+        var exception = await Record.ExceptionAsync(async () =>
+            _ = await mapper.MapCollectionAsync(products, cts.Token));
+
+        // Assert
+        exception.Should().BeOfType<OperationCanceledException>();
     }
 }
