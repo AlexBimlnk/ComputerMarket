@@ -22,8 +22,5 @@ public interface IAPIProductFetcher<TExternalProduct>
     /// <exception cref="ArgumentException" xml:lang = "ru">
     /// Если <paramref name="request"/> имел некорректный формат.
     /// </exception>
-    /// <exception cref="OperationCanceledException" xml:lang = "ru">
-    /// Когда операция была отменена.
-    /// </exception>
-    public Task<IReadOnlyCollection<Product>> FetchProductsAsync(string request, CancellationToken token = default);
+    public IReadOnlyCollection<Product> FetchProducts(string request);
 }

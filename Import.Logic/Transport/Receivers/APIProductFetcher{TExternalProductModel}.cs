@@ -43,12 +43,10 @@ public sealed class APIProductFetcher<TExternalProductModel> : IAPIProductFetche
     }
 
     /// <inheritdoc/>
-    public async Task<IReadOnlyCollection<Product>> FetchProductsAsync(string request, CancellationToken token = default)
+    public IReadOnlyCollection<Product> FetchProducts(string request)
     {
         if (string.IsNullOrWhiteSpace(request))
             throw new ArgumentException(nameof(request));
-
-        token.ThrowIfCancellationRequested();
 
         _logger.LogDebug("Fetch external products '{Type}'", typeof(TExternalProductModel));
 

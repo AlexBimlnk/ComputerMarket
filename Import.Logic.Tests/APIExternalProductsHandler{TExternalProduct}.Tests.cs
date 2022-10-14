@@ -137,8 +137,8 @@ public class APIExternalProductsHandlerTests
         };
 
         var fetcherInvokeCount = 0;
-        fetcher.Setup(x => x.FetchProductsAsync(request, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(products)
+        fetcher.Setup(x => x.FetchProducts(request))
+            .Returns(products)
             .Callback(() => fetcherInvokeCount++);
 
         var mapperInvokeCount = 0;

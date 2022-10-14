@@ -84,7 +84,7 @@ public class APIProductFetcherTests
 
     [Fact(DisplayName = $"The instance can fetch products.")]
     [Trait("Category", "Unit")]
-    public async Task CanFetchProductsAsync()
+    public void CanFetchProducts()
     {
         // Arrange
         var logger = Mock.Of<ILogger<APIProductFetcher<FakeModel>>>();
@@ -115,7 +115,7 @@ public class APIProductFetcherTests
         };
 
         // Act
-        var result = await fetcher.FetchProductsAsync("some request");
+        var result = fetcher.FetchProducts("some request");
 
         // Assert
         result.Should().BeEquivalentTo(expectedResult, opt =>
@@ -129,7 +129,7 @@ public class APIProductFetcherTests
     [InlineData("  ")]
     [InlineData("\t \n\r ")]
     [InlineData("")]
-    public async Task CanNotFetchProductsIfGivenBadRequestAsync(string request)
+    public void CanNotFetchProductsIfGivenBadRequest(string request)
     {
         // Arrange
         var logger = Mock.Of<ILogger<APIProductFetcher<FakeModel>>>(MockBehavior.Strict);
@@ -142,37 +142,11 @@ public class APIProductFetcherTests
             converter);
 
         // Act
-        var exception = await Record.ExceptionAsync(async () =>
-            _ = await fetcher.FetchProductsAsync(request));
+        var exception = Record.Exception(() =>
+            _ = fetcher.FetchProducts(request));
 
         // Assert
         exception.Should().BeOfType<ArgumentException>();
-    }
-
-    [Fact(DisplayName = $"The instance can cancel operation.")]
-    [Trait("Category", "Unit")]
-    public async Task CanCancelOperationAsync()
-    {
-        // Arrange
-        var logger = Mock.Of<ILogger<APIProductFetcher<FakeModel>>>(MockBehavior.Strict);
-        var deserializer = Mock.Of<IDeserializer<string, IReadOnlyCollection<FakeModel>>>(MockBehavior.Strict);
-        var converter = Mock.Of<IConverter<FakeModel, Product>>(MockBehavior.Strict);
-
-        var request = "some request";
-        var cts = new CancellationTokenSource();
-
-        var fetcher = new APIProductFetcher<FakeModel>(
-            logger,
-            deserializer,
-            converter);
-
-        // Act
-        cts.Cancel();
-        var exception = await Record.ExceptionAsync(async () =>
-            _ = await fetcher.FetchProductsAsync(request, cts.Token));
-
-        // Assert
-        exception.Should().BeOfType<OperationCanceledException>();
     }
 
     public record class FakeModel();
