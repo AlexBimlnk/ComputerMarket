@@ -42,7 +42,7 @@ public sealed class HistoryRepository : IRepository<History>
 
     private static THistory ConvertToStorageModel(History history) => new()
     {
-        ExternalId = (int)history.ExternalId.Value,
+        ExternalId = history.ExternalId.Value,
         ProviderId = (short)history.ExternalId.Provider,
         ProductMetadata = history.ProductMetadata
     };
