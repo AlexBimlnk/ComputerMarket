@@ -16,10 +16,15 @@ public sealed class ProductsConverter :
     {
         ArgumentNullException.ThrowIfNull(source, nameof(source));
 
+        var metadata = 
+            $"{source.Name}" +
+            $"{(source.Description is null ? string.Empty : string.Join("|", source.Description))}";
+
         return new Product(
             new ExternalID(source.Id, Provider.Ivanov),
             new Price(source.Price),
-            source.Quantity);
+            source.Quantity,
+            metadata);
     }
 
     /// <inheritdoc/>
@@ -27,9 +32,12 @@ public sealed class ProductsConverter :
     {
         ArgumentNullException.ThrowIfNull(source, nameof(source));
 
+        var metadata = $"{source.Name}|{source.Description}|{source.Type}";
+
         return new Product(
             new ExternalID(source.Id, Provider.HornsAndHooves),
             new Price(source.Price),
-            source.Quantity);
+            source.Quantity,
+            metadata);
     }
 }

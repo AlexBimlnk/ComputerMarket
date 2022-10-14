@@ -34,12 +34,12 @@ public sealed class HornsAndHoovesProduct
     /// <summary xml:lang = "ru">
     /// Описание продукта.
     /// </summary>
-    [JsonProperty("product_quantity", Required = Required.Always)]
+    [JsonProperty("product_description", Required = Required.Always)]
     public string Description { get; set; } = default!;
 
     /// <summary xml:lang = "ru">
     /// Тип продукта.
     /// </summary>
-    [JsonProperty("product_quantity", Required = Required.Always)]
+    [JsonProperty("product_type", Required = Required.Always)]
     public string Type { get; set; } = default!;
 }
