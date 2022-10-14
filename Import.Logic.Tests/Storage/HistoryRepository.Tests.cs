@@ -134,7 +134,7 @@ public class HistoryRepositoryTests
             logger);
 
         var inputHistory = new History(
-            new(1, Provider.Ivanov), 
+            new(1, Provider.Ivanov),
             "product meta data");
 
         // Act
@@ -218,7 +218,7 @@ public class HistoryRepositoryTests
             logger);
 
         var containsHistory = new History(
-            new(1, Provider.Ivanov), 
+            new(1, Provider.Ivanov),
             productMetadata: "product meta data");
 
         // Act
