@@ -21,8 +21,8 @@ public sealed class Product : IMappableEntity<InternalID, ExternalID>
     /// <param name="quantity" xml:lang = "ru">
     /// Количество.
     /// </param>
-    /// <param name="internalID" xml:lang = "ru">
-    /// Внутренний идентификатор продукта.
+    /// <param name="metadata" xml:lang = "ru">
+    /// Метаданные о продукте, полученные от поставщика.
     /// </param>
     /// <exception cref="ArgumentOutOfRangeException" xml:lang = "ru">
     /// Когда <paramref name="quantity"/> меньше нуля.
@@ -30,7 +30,8 @@ public sealed class Product : IMappableEntity<InternalID, ExternalID>
     public Product(
         ExternalID externalID,
         Price price,
-        int quantity)
+        int quantity,
+        string? metadata = null)
     {
         ExternalID = externalID;
         Price = price;
@@ -39,6 +40,7 @@ public sealed class Product : IMappableEntity<InternalID, ExternalID>
             throw new ArgumentOutOfRangeException(nameof(quantity));
 
         Quantity = quantity;
+        Metadata = metadata;
     }
 
     /// <summary xml:lang = "ru">
@@ -66,6 +68,11 @@ public sealed class Product : IMappableEntity<InternalID, ExternalID>
     /// Указывает на наличие связи с внутренним продуктом.
     /// </summary>
     public bool IsMapped { get; private set; }
+
+    /// <summary xml:lang="ru">
+    /// Метаданные о продукте, полученные от поставщика.
+    /// </summary>
+    public string? Metadata { get; }
 
     /// <summary xml:lang = "ru">
     /// Устанавливает связь с внутренним продуктом.

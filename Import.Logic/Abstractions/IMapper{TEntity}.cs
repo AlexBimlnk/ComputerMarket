@@ -14,14 +14,26 @@ public interface IMapper<TEntity> where TEntity : IMappableEntity<InternalID, Ex
     /// Связывание сущности по ссылке.
     /// </summary>
     /// <param name="entity" xml:lang = "ru">Сущность для маппинга.</param>
-    /// <returns xml:lang = "ru">Результат маппинга сущности.</returns>
-    public TEntity MapEntity(TEntity entity);
+    /// <param name="token" xml:lang = "ru">
+    /// Токен отмены операции.
+    /// </param>
+    /// <returns xml:lang = "ru">
+    /// Результат маппинга сущности типа <see cref="ValueTask{TResult}"/>.
+    /// </returns>
+    public ValueTask<TEntity> MapEntityAsync(TEntity entity, CancellationToken token = default);
 
     /// <summary xml:lang = "ru">
     /// Маппинг коллекции сущностей.
     /// </summary>
     /// <param name="entities" xml:lang = "ru">Коллекция сущостей.</param>
-    /// <returns xml:lang = "ru">Коллекция сущностей после маппинга.</returns>
-    public IReadOnlyCollection<TEntity> MapCollection(IReadOnlyCollection<TEntity> entities);
+    /// <param name="token" xml:lang = "ru">
+    /// Токен отмены операции.
+    /// </param>
+    /// <returns xml:lang = "ru">
+    /// Коллекция сущностей после маппинга типа <see cref="ValueTask{TResult}"/>.
+    /// </returns>
+    public ValueTask<IReadOnlyCollection<TEntity>> MapCollectionAsync(
+        IReadOnlyCollection<TEntity> entities,
+        CancellationToken token = default);
 
 }

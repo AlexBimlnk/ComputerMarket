@@ -10,8 +10,8 @@ public interface IHistoryRecorder
     /// <summary xml:lang = "ru">
     /// Записывает историю получения продуктов в БД.
     /// </summary>
-    /// <param name="histories" xml:lang = "ru">
-    /// История.
+    /// <param name="product" xml:lang = "ru">
+    /// Продукт.
     /// </param>
     /// <param name="token" xml:lang = "ru">
     /// Токен отмены.
@@ -19,8 +19,11 @@ public interface IHistoryRecorder
     /// <returns xml:lang = "ru">
     /// <see cref="Task"/>.
     /// </returns>
+    /// <exception cref="ArgumentNullException" xml:lang = "ru">
+    /// Когда <paramref name="product"/> оказался <see langword="null"/>.
+    /// </exception>
     /// <exception cref="OperationCanceledException" xml:lang = "ru">
     /// Когда операция была отменена.
     /// </exception>
-    public Task RecordHistoryAsync(IReadOnlyCollection<History> histories, CancellationToken token = default);
+    public Task RecordHistoryAsync(Product product, CancellationToken token = default);
 }
