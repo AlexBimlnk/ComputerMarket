@@ -32,8 +32,8 @@ public class CommandParametersDeserializerTests
         var result = deserializer.Deserialize(rawSource);
 
         // Assert
-        result.Should().BeEquivalentTo(expectedParameters,
-            options => options.RespectingRuntimeTypes());
+        result.Should().BeEquivalentTo(expectedParameters);
+        result.GetType().Should().Be(expectedParameters.GetType());
     }
 
     [Theory(DisplayName = $"The {nameof(CommandParametersDeserializer)} can't deserialize bad string.")]
@@ -140,7 +140,7 @@ public class CommandParametersDeserializerTests
                 ""external_id"": 4,
                 ""provider"": ""horns_and_hooves""
             }",
-            new SetLinkCommandParameters(
+            new DeleteLinkCommandParameters(
                 new("some id"),
                 new(3),
                 new(4, Provider.HornsAndHooves))

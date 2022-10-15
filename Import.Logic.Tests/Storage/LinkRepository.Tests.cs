@@ -20,7 +20,7 @@ public class LinkRepositoryTests
         // Act
         var exception = Record.Exception(() => _ = new LinkRepository(
             Mock.Of<IRepositoryContext>(MockBehavior.Strict),
-            Mock.Of<ILogger>(MockBehavior.Strict)));
+            Mock.Of<ILogger<LinkRepository>>(MockBehavior.Strict)));
 
         // Assert
         exception.Should().BeNull();
@@ -33,7 +33,7 @@ public class LinkRepositoryTests
         // Act
         var exception = Record.Exception(() => _ = new LinkRepository(
             context: null!,
-            Mock.Of<ILogger>()));
+            Mock.Of<ILogger<LinkRepository>>()));
 
         // Assert
         exception.Should().BeOfType<ArgumentNullException>();
@@ -58,7 +58,7 @@ public class LinkRepositoryTests
     {
         // Arrange
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
-        var logger = Mock.Of<ILogger>();
+        var logger = Mock.Of<ILogger<LinkRepository>>();
 
         var storageLink = new TLink()
         {
@@ -106,7 +106,7 @@ public class LinkRepositoryTests
     {
         // Arrange
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
-        var logger = Mock.Of<ILogger>();
+        var logger = Mock.Of<ILogger<LinkRepository>>();
 
         var linkRepository = new LinkRepository(
             context.Object,
@@ -126,7 +126,7 @@ public class LinkRepositoryTests
     {
         // Arrange
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
-        var logger = Mock.Of<ILogger>();
+        var logger = Mock.Of<ILogger<LinkRepository>>();
 
         var cts = new CancellationTokenSource();
 
@@ -153,7 +153,7 @@ public class LinkRepositoryTests
     {
         // Arrange
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
-        var logger = Mock.Of<ILogger>();
+        var logger = Mock.Of<ILogger<LinkRepository>>();
 
         var linkRepository = new LinkRepository(
             context.Object,
@@ -173,7 +173,7 @@ public class LinkRepositoryTests
     {
         // Arrange
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
-        var logger = Mock.Of<ILogger>();
+        var logger = Mock.Of<ILogger<LinkRepository>>();
 
         var cts = new CancellationTokenSource();
 
@@ -200,7 +200,7 @@ public class LinkRepositoryTests
     {
         // Arrange
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
-        var logger = Mock.Of<ILogger>();
+        var logger = Mock.Of<ILogger<LinkRepository>>();
 
         var storageLink = new TLink()
         {
@@ -245,7 +245,7 @@ public class LinkRepositoryTests
     {
         // Arrange
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
-        var logger = Mock.Of<ILogger>();
+        var logger = Mock.Of<ILogger<LinkRepository>>();
 
         var linkRepository = new LinkRepository(
             context.Object,
@@ -265,7 +265,7 @@ public class LinkRepositoryTests
     {
         // Arrange
         var context = new Mock<IRepositoryContext>(MockBehavior.Loose);
-        var logger = Mock.Of<ILogger>();
+        var logger = Mock.Of<ILogger<LinkRepository>>();
 
         var storageLink = new TLink()
         {
