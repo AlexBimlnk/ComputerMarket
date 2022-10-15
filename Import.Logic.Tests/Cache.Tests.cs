@@ -1,5 +1,7 @@
 ﻿using Import.Logic.Models;
 
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+
 namespace Import.Logic.Tests;
 public class CacheTests
 {
@@ -302,5 +304,39 @@ public class CacheTests
 
         // Assert
         result.Should().BeEquivalentTo(expectedResult, opt => opt.WithoutStrictOrdering());
+    }
+
+
+
+    [Fact(DisplayName = $"The {nameof(Cache)} can provide thread safety add.")]
+    [Trait("Category", "Unit")]
+    public async void CanProvideThreadSafetyAddAsync()
+    {
+        // Arrange
+        var provider1Links = Enumerable.Range(1, 100)
+            .Select(x => new Link(new InternalID(x), new ExternalID(x, Provider.Ivanov)));
+        var provider2Links = Enumerable.Range(2, 101)
+            .Select(x => new Link(new InternalID(x), new ExternalID(x, Provider.HornsAndHooves)));
+
+        var cache = new Cache();
+        var mres = new ManualResetEventSlim();
+
+        var t1 = Task.Run(() =>
+        {
+            mres.Wait();
+            cache.AddRange(provider1Links);
+        });
+        var t2 = Task.Run(() =>
+        {
+            mres.Wait();
+            cache.AddRange(provider2Links);
+        });
+
+        // Act
+        mres.Set();
+        await Task.WhenAll(t1,t2);
+
+        // Assert
+        provider1Links.Concat(provider2Links).Select(x => cache.Contains(x)).Should().AllBeEquivalentTo(true);
     }
 }
