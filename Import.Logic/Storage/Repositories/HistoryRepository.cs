@@ -72,8 +72,13 @@ public sealed class HistoryRepository : IRepository<History>
 
         token.ThrowIfCancellationRequested();
 
-        await _context.Histories.AddAsync(ConvertToStorageModel(entity), token)
-            .ConfigureAwait(false);
+        var storageModel = ConvertToStorageModel(entity);
+
+        _ = _context.Histories.Contains(storageModel)
+            ? _context.Histories.Update(storageModel)
+            : await _context.Histories
+                .AddAsync(ConvertToStorageModel(entity), token)
+                .ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
