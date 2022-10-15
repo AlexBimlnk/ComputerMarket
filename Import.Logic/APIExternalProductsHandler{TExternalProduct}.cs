@@ -14,7 +14,7 @@ namespace Import.Logic;
 /// </typeparam>
 public sealed class APIExternalProductsHandler<TExternalProduct> : IAPIExternalProductHandler<TExternalProduct>
 {
-    private readonly ILogger _logger;
+    private readonly ILogger<APIExternalProductsHandler<TExternalProduct>> _logger;
     private readonly IAPIProductFetcher<TExternalProduct> _fetcher;
     private readonly IMapper<Product> _mapper;
     private readonly ISender<InternalProductSenderConfiguration, IReadOnlyCollection<Product>> _productsSender;
@@ -38,7 +38,7 @@ public sealed class APIExternalProductsHandler<TExternalProduct> : IAPIExternalP
     /// Когда любой из аргументов оказался <see langword="null"/>.
     /// </exception>
     public APIExternalProductsHandler(
-        ILogger logger,
+        ILogger<APIExternalProductsHandler<TExternalProduct>> logger,
         IAPIProductFetcher<TExternalProduct> fetcher,
         IMapper<Product> mapper,
         ISender<InternalProductSenderConfiguration, IReadOnlyCollection<Product>> productsSender)

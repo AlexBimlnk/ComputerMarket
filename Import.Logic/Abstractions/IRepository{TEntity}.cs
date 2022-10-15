@@ -15,7 +15,7 @@ public interface IRepository<TEntity>
     /// <returns xml:lang = "ru">
     /// Коллекция типа <see cref="IQueryable{T}"/>.
     /// </returns>
-    public IQueryable<TEntity> GetEntities();
+    public IEnumerable<TEntity> GetEntities();
 
     /// <summary xml:lang = "ru">
     /// Определяет, находится ли данная сущность в репозитории.
