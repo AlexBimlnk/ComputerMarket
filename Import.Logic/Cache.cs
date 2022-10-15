@@ -10,18 +10,12 @@ namespace Import.Logic;
 /// </summary>
 public sealed class Cache : IKeyableCache<Link, ExternalID>
 {
-    private readonly ConcurrentDictionary<ExternalID, Link> _dictionaryCache;
-
-    /// <summary xml:lang = "ru">
-    /// Создание нового экземпляра типа <see cref="Cache"/>.
-    /// </summary>
-    public Cache()
-    {
-        _dictionaryCache = new ConcurrentDictionary<ExternalID, Link>();
-    }
+    private readonly ConcurrentDictionary<ExternalID, Link> _dictionaryCache = new();
 
     /// <inheritdoc/>
-    /// <exception cref="ArgumentNullException" xml:lang = "ru">Если <paramref name="entity"/> - <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException" xml:lang = "ru">
+    /// Если <paramref name="entity"/> - <see langword="null"/>.
+    /// </exception>
     public void Add(Link entity)
     {
         ArgumentNullException.ThrowIfNull(entity, nameof(entity));
@@ -32,10 +26,13 @@ public sealed class Cache : IKeyableCache<Link, ExternalID>
     }
 
     /// <inheritdoc/>
-    /// <exception cref="ArgumentNullException" xml:lang = "ru">Если <paramref name="entities"/> - <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException" xml:lang = "ru">
+    /// Если <paramref name="entities"/> - <see langword="null"/>.
+    /// </exception>
     public void AddRange(IEnumerable<Link> entities)
     {
-        foreach (var entity in entities ?? throw new ArgumentNullException(nameof(entities), $"{nameof(entities)} is null"))
+        ArgumentNullException.ThrowIfNull(entities, nameof(entities));
+        foreach (var entity in entities)
         {
             Add(entity);
         }
@@ -45,12 +42,19 @@ public sealed class Cache : IKeyableCache<Link, ExternalID>
     public bool Contains(ExternalID key) => _dictionaryCache.ContainsKey(key);
 
     /// <inheritdoc/>
-    /// <exception cref="ArgumentNullException" xml:lang = "ru">Если <paramref name="entity"/> - <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException" xml:lang = "ru">
+    /// Если <paramref name="entity"/> - <see langword="null"/>.
+    /// </exception>
     public bool Contains(Link entity) =>
-        _dictionaryCache.ContainsKey((entity ?? throw new ArgumentNullException(nameof(entity), $"{nameof(entity)} is null")).ExternalID);
+        _dictionaryCache.ContainsKey((
+            entity ?? throw new ArgumentNullException(
+                nameof(entity), 
+                $"{nameof(entity)} is null")).ExternalID);
 
     /// <inheritdoc/>
-    /// <exception cref="ArgumentNullException" xml:lang = "ru">Если <paramref name="entity"/> - <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException" xml:lang = "ru">
+    /// Если <paramref name="entity"/> - <see langword="null"/>.
+    /// </exception>
     public void Delete(Link entity)
     {
         ArgumentNullException.ThrowIfNull(entity, nameof(entity));
