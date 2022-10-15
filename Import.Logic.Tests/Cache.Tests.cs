@@ -308,9 +308,9 @@ public class CacheTests
 
 
 
-    [Fact(DisplayName = $"The {nameof(Cache)} can provide thread safety add.")]
+    [Fact(DisplayName = $"The {nameof(Cache)} can provide thread safe add.")]
     [Trait("Category", "Unit")]
-    public async void CanProvideThreadSafetyAddAsync()
+    public async void CanProvideThreadSafeAddAsync()
     {
         // Arrange
         var provider1Links = Enumerable.Range(1, 100)
