@@ -6,6 +6,15 @@
 public struct Price
 {
     /// <summary xml:lang = "ru">
+    /// Не поддерживаемый конструктор цены.
+    /// </summary>
+    /// <exception cref="NotSupportedException"/>
+    public Price()
+    {
+        throw new NotSupportedException();
+    }
+
+    /// <summary xml:lang = "ru">
     /// Создает новый экемпляр типа <see cref="ProductPrice"/>.
     /// </summary>
     /// <param name="price" xml:lang = "ru">
