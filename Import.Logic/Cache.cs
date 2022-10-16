@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 
-using Import.Logic.Abstractions;
+using General.Storage;
+
 using Import.Logic.Models;
 
 namespace Import.Logic;
@@ -48,7 +49,7 @@ public sealed class Cache : IKeyableCache<Link, ExternalID>
     public bool Contains(Link entity) =>
         _dictionaryCache.ContainsKey((
             entity ?? throw new ArgumentNullException(
-                nameof(entity), 
+                nameof(entity),
                 $"{nameof(entity)} is null")).ExternalID);
 
     /// <inheritdoc/>

@@ -1,3 +1,5 @@
+using General.Logic;
+
 using Import.Logic.Abstractions;
 using Import.Logic.Transport.Models;
 
@@ -13,8 +15,8 @@ namespace Import.Controllers;
 public class ImportController : ControllerBase
 {
     private readonly ILogger<ImportController> _logger;
-    private readonly IAPIExternalProductHandler<ExternalProduct> _ivanovHandler;
-    private readonly IAPIExternalProductHandler<HornsAndHoovesProduct> _hornsAndHoovesHandler;
+    private readonly IAPIRequestHandler<ExternalProduct> _ivanovHandler;
+    private readonly IAPIRequestHandler<HornsAndHoovesProduct> _hornsAndHoovesHandler;
 
     /// <summary xml:lang = "ru">
     /// Создаёт новый экземпляр типа <see cref="ImportController"/>.
@@ -33,8 +35,8 @@ public class ImportController : ControllerBase
     /// </exception>
     public ImportController(
         ILogger<ImportController> logger,
-        IAPIExternalProductHandler<ExternalProduct> ivanovHandler,
-        IAPIExternalProductHandler<HornsAndHoovesProduct> hornsAndHoovesHandler)
+        IAPIRequestHandler<ExternalProduct> ivanovHandler,
+        IAPIRequestHandler<HornsAndHoovesProduct> hornsAndHoovesHandler)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _ivanovHandler = ivanovHandler ?? throw new ArgumentNullException(nameof(ivanovHandler));

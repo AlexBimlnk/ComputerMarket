@@ -1,4 +1,4 @@
-﻿using Import.Logic.Abstractions;
+﻿using General.Models;
 
 namespace Import.Logic.Models;
 
@@ -94,6 +94,6 @@ public sealed class Product : IMappableEntity<InternalID, ExternalID>
 
     /// <inheritdoc/>
     public override string ToString() =>
-        $"{{ {ExternalID}, {(IsMapped ? $"{InternalID}, " : string.Empty)}"+
+        $"{{ {ExternalID}, {(IsMapped ? $"{InternalID}, " : string.Empty)}" +
         $"Price: {Price.Value}, Quantity: {Quantity} }}";
 }

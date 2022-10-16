@@ -1,4 +1,5 @@
-﻿using Import.Logic.Abstractions;
+﻿using General.Transport;
+
 using Import.Logic.Models;
 using Import.Logic.Transport.Configuration;
 
@@ -75,7 +76,7 @@ public sealed class APIInternalProductSender : ISender<InternalProductSenderConf
                     "The products have not been sended. Response status code: {Status code}",
                     response.StatusCode);
         }
-        catch (Exception ex) 
+        catch (Exception ex)
             when (ex is InvalidOperationException or HttpRequestException)
         {
             _logger.LogWarning(

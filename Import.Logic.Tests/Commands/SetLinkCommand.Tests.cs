@@ -1,4 +1,5 @@
-﻿using Import.Logic.Abstractions;
+﻿using General.Storage;
+
 using Import.Logic.Commands;
 using Import.Logic.Models;
 
@@ -19,7 +20,7 @@ public class SetLinkCommandTests
         var id = new CommandID("some id");
         var parameters = new SetLinkCommandParameters(
             id,
-            new(1), 
+            new(1),
             new(1, Provider.Ivanov));
         var cache = Mock.Of<ICache<Link>>();
         var scopeFactory = Mock.Of<IServiceScopeFactory>();
@@ -123,8 +124,8 @@ public class SetLinkCommandTests
             .Returns(repository.Object);
 
         var command = new SetLinkCommand(
-            parameters, 
-            cache.Object, 
+            parameters,
+            cache.Object,
             scopeFactory.Object);
 
         var expectedResult = CommandResult.Success(id);
@@ -186,7 +187,7 @@ public class SetLinkCommandTests
         var result = await command.ExecuteAsync();
 
         // Assert
-        expectedResult.Should().BeEquivalentTo(result, 
+        expectedResult.Should().BeEquivalentTo(result,
             opt => opt.Excluding(x => x.ErrorMessage));
         cacheInvokeCount.Should().Be(1);
     }

@@ -1,4 +1,6 @@
-﻿using Import.Logic.Abstractions;
+﻿using General.Logic;
+using General.Transport;
+
 using Import.Logic.Models;
 using Import.Logic.Transport.Receivers;
 
@@ -20,7 +22,7 @@ public class APIProductFetcherTests
 
         // Act
         var exception = Record.Exception(() => _ = new APIProductFetcher<FakeModel>(
-            logger, 
+            logger,
             deserializer,
             converter));
 

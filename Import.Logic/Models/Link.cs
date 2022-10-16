@@ -1,4 +1,4 @@
-﻿using Import.Logic.Abstractions;
+﻿using General.Models;
 
 namespace Import.Logic.Models;
 

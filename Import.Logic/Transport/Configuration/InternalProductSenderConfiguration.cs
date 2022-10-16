@@ -1,4 +1,4 @@
-﻿using Import.Logic.Abstractions;
+﻿using General.Transport;
 
 namespace Import.Logic.Transport.Configuration;
 

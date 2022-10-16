@@ -1,4 +1,5 @@
-﻿using Import.Logic.Abstractions;
+﻿using General.Transport;
+
 using Import.Logic.Models;
 
 using Newtonsoft.Json;
@@ -17,13 +18,13 @@ public sealed class ProductsSerializer : ISerializer<IReadOnlyCollection<Product
         ArgumentNullException.ThrowIfNull(source, nameof(source));
 
         var transportProducts = source.Select(x => new TransportProduct
-            {
-                ExternalID = x.ExternalID.Value,
-                InternalID = x.InternalID.Value,
-                Provider = x.ExternalID.Provider,
-                Price = x.Price.Value,
-                Quantity = x.Quantity
-            })
+        {
+            ExternalID = x.ExternalID.Value,
+            InternalID = x.InternalID.Value,
+            Provider = x.ExternalID.Provider,
+            Price = x.Price.Value,
+            Quantity = x.Quantity
+        })
             .ToList();
 
         return JsonConvert.SerializeObject(transportProducts, new StringEnumConverter());

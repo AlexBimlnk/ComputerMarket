@@ -1,4 +1,5 @@
-﻿using Import.Logic.Abstractions;
+﻿using General.Transport;
+
 using Import.Logic.Abstractions.Commands;
 using Import.Logic.Commands;
 

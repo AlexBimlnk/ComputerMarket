@@ -1,4 +1,6 @@
-﻿using Import.Logic.Abstractions;
+﻿using General.Transport;
+
+using Import.Logic.Abstractions;
 using Import.Logic.Transport.Configuration;
 
 namespace Import.Logic.Tests.Transport;

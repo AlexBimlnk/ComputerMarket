@@ -1,4 +1,5 @@
-﻿using Import.Logic.Abstractions;
+﻿using General.Logic;
+
 using Import.Logic.Models;
 using Import.Logic.Transport.Models;
 
@@ -7,7 +8,7 @@ namespace Import.Logic;
 /// <summary xml:lang="ru">
 /// Конвертер продуктов.
 /// </summary>
-public sealed class ProductsConverter : 
+public sealed class ProductsConverter :
     IConverter<ExternalProduct, Product>,
     IConverter<HornsAndHoovesProduct, Product>
 {
@@ -16,7 +17,7 @@ public sealed class ProductsConverter :
     {
         ArgumentNullException.ThrowIfNull(source, nameof(source));
 
-        var metadata = 
+        var metadata =
             $"{source.Name}" +
             $"{(source.Description is null ? string.Empty : "|" + string.Join("|", source.Description!))}";
 

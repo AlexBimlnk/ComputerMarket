@@ -1,4 +1,5 @@
-﻿using Import.Logic.Abstractions;
+﻿using General.Storage;
+
 using Import.Logic.Models;
 
 using Microsoft.EntityFrameworkCore;
@@ -29,7 +30,7 @@ public sealed class LinkRepository : IRepository<Link>
     /// Если любой из параметров равен <see langword="null"/>.
     /// </exception>
     public LinkRepository(
-        IRepositoryContext context, 
+        IRepositoryContext context,
         ILogger<LinkRepository> logger)
     {
         _context = context ?? throw new ArgumentNullException(nameof(context));

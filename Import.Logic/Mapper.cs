@@ -1,4 +1,6 @@
-﻿using Import.Logic.Abstractions;
+﻿using General.Storage;
+
+using Import.Logic.Abstractions;
 using Import.Logic.Models;
 
 using Microsoft.Extensions.Logging;
@@ -23,7 +25,7 @@ public sealed class Mapper : IMapper<Product>
     /// Записывателей истории неспамленных продуктов.
     /// </param>
     public Mapper(
-        IKeyableCache<Link, ExternalID> cache, 
+        IKeyableCache<Link, ExternalID> cache,
         ILogger<Mapper> logger,
         IHistoryRecorder historyRecorder)
     {

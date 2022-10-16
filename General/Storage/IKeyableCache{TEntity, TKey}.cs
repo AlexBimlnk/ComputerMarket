@@ -1,4 +1,6 @@
-﻿namespace Import.Logic.Abstractions;
+﻿using General.Models;
+
+namespace General.Storage;
 
 /// <summary xml:lang = "ru">
 /// Описывает кэш сущностей с ключом.
