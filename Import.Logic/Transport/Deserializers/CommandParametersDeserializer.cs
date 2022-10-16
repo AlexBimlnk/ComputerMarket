@@ -1,4 +1,5 @@
-﻿using Import.Logic.Abstractions;
+﻿using General.Transport;
+
 using Import.Logic.Abstractions.Commands;
 using Import.Logic.Commands;
 using Import.Logic.Transport.Models.Commands;
@@ -8,8 +9,8 @@ using Newtonsoft.Json;
 namespace Import.Logic.Transport.Deserializers;
 
 using TCommand = Models.Commands.CommandBase;
-using TSetLinkCommand = Models.Commands.SetLinkCommand;
 using TDeleteLinkCommand = Models.Commands.DeleteLinkCommand;
+using TSetLinkCommand = Models.Commands.SetLinkCommand;
 
 /// <summary xml:lang = "ru">
 /// Дессериализатор из <see cref="string"/> в <see cref="CommandParametersBase"/>.

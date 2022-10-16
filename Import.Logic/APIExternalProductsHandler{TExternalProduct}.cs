@@ -1,4 +1,7 @@
-﻿using Import.Logic.Abstractions;
+﻿using General.Logic;
+using General.Transport;
+
+using Import.Logic.Abstractions;
 using Import.Logic.Models;
 using Import.Logic.Transport.Configuration;
 
@@ -12,7 +15,7 @@ namespace Import.Logic;
 /// <typeparam name="TExternalProduct" xml:lang = "ru">
 /// Маркерный тип внешнего обрабатываемого продукта.
 /// </typeparam>
-public sealed class APIExternalProductsHandler<TExternalProduct> : IAPIExternalProductHandler<TExternalProduct>
+public sealed class APIExternalProductsHandler<TExternalProduct> : IAPIRequestHandler<TExternalProduct>
 {
     private readonly ILogger<APIExternalProductsHandler<TExternalProduct>> _logger;
     private readonly IAPIProductFetcher<TExternalProduct> _fetcher;

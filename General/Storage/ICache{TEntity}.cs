@@ -1,4 +1,4 @@
-﻿namespace Import.Logic.Abstractions;
+﻿namespace General.Storage;
 
 /// <summary xml:lang = "ru">
 /// Описывает кэш для сущности.

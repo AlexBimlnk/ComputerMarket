@@ -1,4 +1,5 @@
-﻿using Import.Logic.Abstractions;
+﻿using General.Storage;
+
 using Import.Logic.Models;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -94,12 +95,12 @@ public class HistoryRecorderTests
         exception.Should().BeNull();
         scope.Verify(x => x.Dispose(), Times.Once);
         repository.Verify(x => x.Save(), Times.Once);
-        repository.Verify(x => 
+        repository.Verify(x =>
             x.AddAsync(
-                It.Is<History>(x => 
-                    x.ExternalId == history.ExternalId && 
-                    x.ProductMetadata == x.ProductMetadata), 
-                It.IsAny<CancellationToken>()), 
+                It.Is<History>(x =>
+                    x.ExternalId == history.ExternalId &&
+                    x.ProductMetadata == x.ProductMetadata),
+                It.IsAny<CancellationToken>()),
             Times.Once);
     }
 

@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using General.Storage;
 
-using Import.Logic.Abstractions;
 using Import.Logic.Models;
 
 using Microsoft.EntityFrameworkCore;
@@ -35,7 +30,7 @@ public sealed class HistoryRepository : IRepository<History>
     /// Если любой из параметров равен <see langword="null"/>.
     /// </exception>
     public HistoryRepository(
-        IRepositoryContext context, 
+        IRepositoryContext context,
         ILogger<HistoryRepository> logger)
     {
         _context = context ?? throw new ArgumentNullException(nameof(context));

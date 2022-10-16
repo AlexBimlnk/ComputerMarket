@@ -1,4 +1,4 @@
-﻿namespace Import.Logic.Abstractions;
+﻿namespace General.Transport;
 
 /// <summary xml:lang = "ru">
 /// Описывает отпавителя данных.

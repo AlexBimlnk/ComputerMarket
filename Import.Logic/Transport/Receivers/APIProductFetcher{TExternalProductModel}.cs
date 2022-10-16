@@ -1,4 +1,7 @@
-﻿using Import.Logic.Abstractions;
+﻿using General.Logic;
+using General.Transport;
+
+using Import.Logic.Abstractions;
 using Import.Logic.Models;
 
 using Microsoft.Extensions.Logging;

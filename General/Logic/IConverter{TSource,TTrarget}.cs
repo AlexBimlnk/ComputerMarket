@@ -1,4 +1,4 @@
-﻿namespace Import.Logic.Abstractions;
+﻿namespace General.Logic;
 
 /// <summary xml:lang = "ru">
 /// Описывает интерфейс конвертера.

@@ -1,4 +1,8 @@
-﻿using Import.Logic;
+﻿using General.Logic;
+using General.Storage;
+using General.Transport;
+
+using Import.Logic;
 using Import.Logic.Abstractions;
 using Import.Logic.Abstractions.Commands;
 using Import.Logic.Commands;
@@ -39,8 +43,8 @@ public static class Registrations
             .AddSingleton<IHistoryRecorder, HistoryRecorder>()
 
             .AddSingleton<IAPICommandHandler, APICommandHandler>()
-            .AddSingleton<IAPIExternalProductHandler<ExternalProduct>, APIExternalProductsHandler<ExternalProduct>>()
-            .AddSingleton<IAPIExternalProductHandler<HornsAndHoovesProduct>, APIExternalProductsHandler<HornsAndHoovesProduct>>()
+            .AddSingleton<IAPIRequestHandler<ExternalProduct>, APIExternalProductsHandler<ExternalProduct>>()
+            .AddSingleton<IAPIRequestHandler<HornsAndHoovesProduct>, APIExternalProductsHandler<HornsAndHoovesProduct>>()
 
             .AddSingleton<IConverter<ExternalProduct, Product>, ProductsConverter>()
             .AddSingleton(sp => (IConverter<HornsAndHoovesProduct, Product>)sp

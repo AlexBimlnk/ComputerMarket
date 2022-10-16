@@ -1,4 +1,5 @@
-﻿using Import.Logic.Abstractions;
+﻿using General.Transport;
+
 using Import.Logic.Transport.Models;
 
 using Newtonsoft.Json;

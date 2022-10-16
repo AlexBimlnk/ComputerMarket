@@ -1,4 +1,4 @@
-﻿namespace Import.Logic.Abstractions;
+﻿namespace General.Models;
 
 /// <summary xml:lang = "ru">
 /// Описывает сущность способную иметь ключ.

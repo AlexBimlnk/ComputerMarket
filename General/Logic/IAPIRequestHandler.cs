@@ -1,15 +1,15 @@
-﻿namespace Import.Logic.Abstractions;
+﻿namespace General.Logic;
 
 /// <summary xml:lang = "ru">
-/// Описывает обработчика внешних продуктов, пришедших по API.
+/// Описывает обработчика запросов пришедших по API.
 /// </summary>
-/// <typeparam name="TExternalProduct" xml:lang = "ru">
-/// Маркерный тип внешних продуктов.
+/// <typeparam name="TMarker" xml:lang = "ru">
+/// Маркерный тип обработчика запросов.
 /// </typeparam>
-public interface IAPIExternalProductHandler<TExternalProduct>
+public interface IAPIRequestHandler<TMarker>
 {
     /// <summary xml:lang = "ru">
-    /// Обрабатывает запрос с пришедшими извне продуктами.
+    /// Обрабатывает запрос.
     /// </summary>
     /// <param name="request" xml:lang = "ru">
     /// Входящий запрос.
