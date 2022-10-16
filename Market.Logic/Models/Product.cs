@@ -20,23 +20,23 @@ public sealed class Product
     /// <param name="item" xml:lang = "ru">Описание продукта.</param>
     /// <param name="provider" xml:lang = "ru">Поставщик продукта.</param>
     /// <param name="price" xml:lang = "ru">Цена назначенная поставщиком.</param>
-    /// <param name="quantiy" xml:lang = "ru">Колличество продукта.</param>
+    /// <param name="quantity" xml:lang = "ru">Колличество продукта.</param>
     /// <exception cref="ArgumentNullException" xml:lang = "ru">
     /// Если <paramref name="item"/> или <paramref name="price"/> - <see langword="null"/>.
     /// </exception>
     /// <exception cref="ArgumentOutOfRangeException" xml:lang = "ru">
-    /// Если <paramref name="quantiy"/> меньше 0.
+    /// Если <paramref name="quantity"/> меньше 0.
     /// </exception>
-    public Product(Item item, Provider provider, Price price, int quantiy)
+    public Product(Item item, Provider provider, Price price, int quantity)
     {
         Item = item ?? throw new ArgumentNullException(nameof(item));
         _price = price;
         Provider = provider ?? throw new ArgumentNullException(nameof(item));
         
-        if (quantiy < 0)
-            throw new ArgumentOutOfRangeException(nameof(quantiy));
+        if (quantity < 0)
+            throw new ArgumentOutOfRangeException(nameof(quantity));
         
-        Quantity = quantiy;
+        Quantity = quantity;
     }
 
     /// <summary xml:lang = "ru">

@@ -30,15 +30,11 @@ public sealed class Order
 
         ArgumentNullException.ThrowIfNull(products, nameof(products));
 
-        if (products.DistinctBy(x => x.Key).Count() != products.Count)
-            throw new InvalidOperationException("Order can't contain similar positions");
+        if (!products.Any())
+            throw new InvalidOperationException("Order can't contains zero items");
 
         Items = products
-            .Where(x => x.Value > 0)
             .Select(x => new OrderItem(x.Key, x.Value));
-
-        if (!Items.Any())
-            throw new InvalidOperationException("Order can't contains zero items");
     }
 
     /// <summary xml:lang = "ru">

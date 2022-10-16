@@ -69,7 +69,7 @@ public class ProductTests
             item,
             provider,
             price: new(100m),
-            quantiy: -5));
+            quantity: -5));
 
         // Assert
         exception.Should().BeOfType<ArgumentOutOfRangeException>();
@@ -92,7 +92,7 @@ public class ProductTests
             item: null!,
             provider,
             price: new(100m),
-            quantiy: -5));
+            quantity: -5));
 
         // Assert
         exception.Should().BeOfType<ArgumentNullException>();
@@ -113,7 +113,7 @@ public class ProductTests
             item,
             provider: null!,
             price: new(100m),
-            quantiy: -5));
+            quantity: -5));
 
         // Assert
         exception.Should().BeOfType<ArgumentNullException>();
