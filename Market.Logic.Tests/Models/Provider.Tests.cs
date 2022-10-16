@@ -1,6 +1,6 @@
 ﻿using Market.Logic.Models;
 
-namespace Market.Logic.Tests;
+namespace Market.Logic.Tests.Models;
 
 public class ProviderTests
 {
@@ -42,7 +42,7 @@ public class ProviderTests
             new PaymentTransactionsInformation("1234567890", "01234012340123401234")));
 
         // Assert
-        exception.Should().BeOfType<ArgumentException>();
+        exception.Should().BeOfType<ArgumentOutOfRangeException>();
     }
 
     [Fact(DisplayName = $"The {nameof(Provider)} cannot create witout {nameof(PaymentTransactionsInformation)}.")]
@@ -75,5 +75,25 @@ public class ProviderTests
 
         // Assert
         exception.Should().BeOfType<ArgumentException>();
+    }
+
+    [Theory(DisplayName = $"The can't set new {nameof(Provider)} margin less 1.")]
+    [Trait("Category", "Unit")]
+    [InlineData(0.9)]
+    [InlineData(-1)]
+    [InlineData(0.00001)]
+    [InlineData(0)]
+    public void CanNotSetNewProviderMarginLessTheOne(decimal margin)
+    {
+        // Arrange
+        var name = "Company Name";
+        var information = new PaymentTransactionsInformation("1234567890", "01234012340123401234");
+        var provider = new Provider(name, margin: 1.1m, information);
+
+        // Act
+        var exception = Record.Exception(() => provider.Margin = margin);
+
+        // Assert
+        exception.Should().BeOfType<ArgumentOutOfRangeException>();
     }
 }

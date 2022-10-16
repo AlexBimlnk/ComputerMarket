@@ -1,6 +1,6 @@
 ﻿using Market.Logic.Models;
 
-namespace Market.Logic.Tests;
+namespace Market.Logic.Tests.Models;
 
 public class ProviderAgentTests
 {
@@ -11,7 +11,7 @@ public class ProviderAgentTests
         // Arrange
         ProviderAgent providerAgent = null!;
         var provider = new Provider(
-            "Company Name", 
+            "Company Name",
             1.1m,
             new PaymentTransactionsInformation("1234567890", "01234012340123401234"));
         var user = new User("login", new Password("12345"), "mail@mail.ru", UserType.Agent);
@@ -33,7 +33,7 @@ public class ProviderAgentTests
     {
         //Arrange
         var provider = new Provider(
-            "Company Name", 
+            "Company Name",
             1.1m,
             new PaymentTransactionsInformation("1234567890", "01234012340123401234"));
         var user = new User("login", new Password("12345"), "mail@mail.ru", UserType.Customer);
