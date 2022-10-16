@@ -18,7 +18,7 @@ public sealed class ProductsConverter :
 
         var metadata = 
             $"{source.Name}" +
-            $"{(source.Description?.Count == 0 ? string.Empty : "|" + string.Join("|", source.Description!))}";
+            $"{(source.Description is null ? string.Empty : "|" + string.Join("|", source.Description!))}";
 
         return new Product(
             new ExternalID(source.Id, Provider.Ivanov),

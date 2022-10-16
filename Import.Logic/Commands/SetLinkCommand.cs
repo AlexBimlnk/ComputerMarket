@@ -2,6 +2,8 @@
 using Import.Logic.Abstractions.Commands;
 using Import.Logic.Models;
 
+using Microsoft.Extensions.DependencyInjection;
+
 namespace Import.Logic.Commands;
 
 /// <summary xml:lang = "ru">
@@ -11,7 +13,7 @@ public sealed class SetLinkCommand : CommandBase
 {
     private readonly SetLinkCommandParameters _parameters;
     private readonly ICache<Link> _cacheLinks;
-    private readonly IRepository<Link> _linkRepository;
+    private readonly IServiceScopeFactory _scopeFactory;
 
     /// <summary xml:lang = "ru">
     /// Создает новый экземпляр типа <see cref="SetLinkCommand"/>.
@@ -22,8 +24,8 @@ public sealed class SetLinkCommand : CommandBase
     /// <param name="cacheLinks" xml:lang = "ru">
     /// Кэш связей.
     /// </param>
-    /// <param name="linkRepository" xml:lang = "ru">
-    /// Репозиторий связей.
+    /// <param name="scopeFactory" xml:lang = "ru">
+    /// Фабрика сервисов с областью применения.
     /// </param>
     /// <exception cref="ArgumentNullException" xml:lang = "ru">
     /// Когда любой из параметров равен <see langword="null"/>.
@@ -31,11 +33,11 @@ public sealed class SetLinkCommand : CommandBase
     public SetLinkCommand(
         SetLinkCommandParameters parameters,
         ICache<Link> cacheLinks,
-        IRepository<Link> linkRepository)
+        IServiceScopeFactory scopeFactory)
     {
         _parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
         _cacheLinks = cacheLinks ?? throw new ArgumentNullException(nameof(cacheLinks));
-        _linkRepository = linkRepository ?? throw new ArgumentNullException(nameof(linkRepository));
+        _scopeFactory = scopeFactory ?? throw new ArgumentNullException(nameof(scopeFactory));
     }
 
     /// <inheritdoc/>
@@ -48,10 +50,14 @@ public sealed class SetLinkCommand : CommandBase
         if (_cacheLinks.Contains(link))
             throw new InvalidOperationException("Such a link already exists.");
 
-        await _linkRepository.AddAsync(link)
+        using var scope = _scopeFactory.CreateScope();
+
+        var repository = scope.ServiceProvider.GetRequiredService<IRepository<Link>>();
+
+        await repository.AddAsync(link)
             .ConfigureAwait(false);
-        
-        _linkRepository.Save();
+
+        repository.Save();
 
         _cacheLinks.Add(link);
     }

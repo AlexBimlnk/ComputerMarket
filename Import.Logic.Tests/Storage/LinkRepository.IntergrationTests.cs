@@ -20,7 +20,7 @@ public class LinkRepositoryIntegrationTests : DBIntegrationTestBase
     public async Task CanAddLinkAsync()
     {
         // Arrange
-        var logger = Mock.Of<ILogger>();
+        var logger = Mock.Of<ILogger<LinkRepository>>();
 
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
         context.SetupGet(x => x.Links)
@@ -77,7 +77,7 @@ public class LinkRepositoryIntegrationTests : DBIntegrationTestBase
     public async Task CanContainsWorksAsync(Link inputLink, bool expectedResult)
     {
         // Arrange
-        var logger = Mock.Of<ILogger>();
+        var logger = Mock.Of<ILogger<LinkRepository>>();
 
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
         context.SetupGet(x => x.Links)
@@ -107,7 +107,7 @@ public class LinkRepositoryIntegrationTests : DBIntegrationTestBase
     public async Task CanDeleteLinkAsync()
     {
         // Arrange
-        var logger = Mock.Of<ILogger>();
+        var logger = Mock.Of<ILogger<LinkRepository>>();
 
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
         context.SetupGet(x => x.Links)

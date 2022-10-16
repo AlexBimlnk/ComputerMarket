@@ -11,7 +11,7 @@ namespace Import.Logic.Storage.Repositories;
 public sealed class RepositoryContext : IRepositoryContext
 {
     private readonly ImportContext _importContext;
-    private readonly ILogger _logger;
+    private readonly ILogger<RepositoryContext> _logger;
 
     /// <summary xml:lang = "ru">
     /// Создает новый экземпляр типа <see cref="RepositoryContext"/>.
@@ -22,7 +22,9 @@ public sealed class RepositoryContext : IRepositoryContext
     /// <param name="logger" xml:lang = "ru">
     /// Логгер.
     /// </param>
-    public RepositoryContext(ImportContext importContext, ILogger logger)
+    public RepositoryContext(
+        ImportContext importContext, 
+        ILogger<RepositoryContext> logger)
     {
         _importContext = importContext;
         _logger = logger;

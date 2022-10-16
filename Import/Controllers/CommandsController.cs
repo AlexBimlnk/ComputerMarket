@@ -9,7 +9,7 @@ namespace Import.Controllers;
 /// Контроллер команд.
 /// </summary>
 [ApiController]
-[Route("[controller]")]
+[Route("import/[controller]")]
 public class CommandsController : ControllerBase
 {
     private readonly ILogger<ImportController> _logger;

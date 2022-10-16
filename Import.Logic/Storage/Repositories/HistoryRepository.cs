@@ -20,7 +20,7 @@ using THistory = Models.History;
 public sealed class HistoryRepository : IRepository<History>
 {
     private readonly IRepositoryContext _context;
-    private readonly ILogger _logger;
+    private readonly ILogger<HistoryRepository> _logger;
 
     /// <summary xml:lang = "ru">
     /// Создает новый экземпляр типа <see cref="HistoryRepository"/>.
@@ -34,7 +34,9 @@ public sealed class HistoryRepository : IRepository<History>
     /// <exception cref="ArgumentNullException" xml:lang = "ru">
     /// Если любой из параметров равен <see langword="null"/>.
     /// </exception>
-    public HistoryRepository(IRepositoryContext context, ILogger logger)
+    public HistoryRepository(
+        IRepositoryContext context, 
+        ILogger<HistoryRepository> logger)
     {
         _context = context ?? throw new ArgumentNullException(nameof(context));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -70,8 +72,13 @@ public sealed class HistoryRepository : IRepository<History>
 
         token.ThrowIfCancellationRequested();
 
-        await _context.Histories.AddAsync(ConvertToStorageModel(entity), token)
-            .ConfigureAwait(false);
+        var storageModel = ConvertToStorageModel(entity);
+
+        _ = _context.Histories.Contains(storageModel)
+            ? _context.Histories.Update(storageModel)
+            : await _context.Histories
+                .AddAsync(ConvertToStorageModel(entity), token)
+                .ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
@@ -94,8 +101,9 @@ public sealed class HistoryRepository : IRepository<History>
     }
 
     /// <inheritdoc/>
-    public IQueryable<History> GetEntities() =>
+    public IEnumerable<History> GetEntities() =>
         _context.Histories
+        .AsEnumerable()
         .Select(x => ConvertFromStorageModel(x))
         .Where(x => x != null)!;
 

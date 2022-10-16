@@ -54,7 +54,7 @@ public class ImportController : ControllerBase
     /// <returns xml:lang = "ru">
     /// <see cref="Task"/>.
     /// </returns>
-    [HttpGet("product/ivanov")]
+    [HttpPost("product/ivanov")]
     public async Task HandleIvanovProductsAsync()
     {
         var body = await ReadRequestBodyAsync();
@@ -71,7 +71,7 @@ public class ImportController : ControllerBase
     /// <returns xml:lang = "ru">
     /// <see cref="Task"/>.
     /// </returns>
-    [HttpGet("product/hah")]
+    [HttpPost("product/hah")]
     public async Task HandleHornsAndHoovesProductsAsync()
     {
         var body = await ReadRequestBodyAsync();

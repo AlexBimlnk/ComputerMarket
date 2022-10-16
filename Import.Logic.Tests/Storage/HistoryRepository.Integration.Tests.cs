@@ -1,7 +1,6 @@
 ﻿using Import.Logic.Models;
 using Import.Logic.Storage.Repositories;
 
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 using Moq;
@@ -20,7 +19,7 @@ public class HistoryRepositoryIntegrationTests : DBIntegrationTestBase
     public async Task CanAddHistoryAsync()
     {
         // Arrange
-        var logger = Mock.Of<ILogger>();
+        var logger = Mock.Of<ILogger<HistoryRepository>>();
 
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
         context.SetupGet(x => x.Histories)
@@ -30,7 +29,7 @@ public class HistoryRepositoryIntegrationTests : DBIntegrationTestBase
         await AddProviderAsync(Provider.HornsAndHooves);
 
         var inputHistory = new History(
-            new(4, Provider.HornsAndHooves), 
+            new(4, Provider.HornsAndHooves),
             productMetadata: "product_meta_data");
 
         var expectedHistory = new THistory[]
@@ -73,13 +72,73 @@ public class HistoryRepositoryIntegrationTests : DBIntegrationTestBase
         dbHistories.Should().BeEquivalentTo(expectedHistory);
     }
 
+    [Fact(DisplayName = $"The {nameof(HistoryRepository)} can add history if already exists.")]
+    [Trait("Category", "Integration")]
+    public async Task CanAddHistoryIfAlreadyExistsAsync()
+    {
+        // Arrange
+        var logger = Mock.Of<ILogger<HistoryRepository>>();
+
+        var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
+        context.SetupGet(x => x.Histories)
+            .Returns(_importContext.Histories);
+
+        await AddProviderAsync(Provider.Ivanov);
+        await AddProviderAsync(Provider.HornsAndHooves);
+
+        await AddHistoryAsync(new(new(1, Provider.Ivanov), "product1_meta_data"));
+
+        var inputHistory = new History(
+            new(1, Provider.Ivanov),
+            productMetadata: "product_meta_data 2");
+
+        var expectedHistory = new THistory[]
+        {
+            new THistory
+            {
+                ExternalId = 1,
+                ProviderId = 1,
+                ProductMetadata = "product_meta_data 2"
+            }
+        };
+
+        var repository = new HistoryRepository(
+            context.Object,
+            logger);
+
+        // Act
+        using var transaction = _importContext.Database
+            .BeginTransaction();
+
+        await repository.AddAsync(inputHistory)
+            .ConfigureAwait(false);
+
+        await _importContext.SaveChangesAsync()
+            .ConfigureAwait(false);
+
+        await transaction.CommitAsync()
+            .ConfigureAwait(false);
+
+        var dbHistories = await GetTableRecordsAsync(
+            "Histories",
+            r => new THistory
+            {
+                ExternalId = (int)r.GetInt64(0),
+                ProviderId = r.GetInt16(1),
+                ProductMetadata = r.GetString(2)
+            });
+
+        // Assert
+        dbHistories.Should().BeEquivalentTo(expectedHistory);
+    }
+
     [Theory(DisplayName = $"The {nameof(HistoryRepository)} can contains works.")]
     [Trait("Category", "Integration")]
     [MemberData(nameof(ContainsData))]
     public async Task CanContainsWorksAsync(History inputHistory, bool expectedResult)
     {
         // Arrange
-        var logger = Mock.Of<ILogger>();
+        var logger = Mock.Of<ILogger<HistoryRepository>>();
 
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
         context.SetupGet(x => x.Histories)
@@ -109,7 +168,7 @@ public class HistoryRepositoryIntegrationTests : DBIntegrationTestBase
     public async Task CanDeleteHistoryAsync()
     {
         // Arrange
-        var logger = Mock.Of<ILogger>();
+        var logger = Mock.Of<ILogger<HistoryRepository>>();
 
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
         context.SetupGet(x => x.Histories)
@@ -129,8 +188,8 @@ public class HistoryRepositoryIntegrationTests : DBIntegrationTestBase
             logger);
 
         var inputHistory = new History(
-            new(1, Provider.Ivanov), 
-            productMetadata:"product1_meta_data");
+            new(1, Provider.Ivanov),
+            productMetadata: "product1_meta_data");
 
         // Act
         var beforeContains = await repository.ContainsAsync(inputHistory)

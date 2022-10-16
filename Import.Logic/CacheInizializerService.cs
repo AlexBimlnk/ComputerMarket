@@ -51,7 +51,7 @@ public sealed class CacheInizializerService : IHostedService
         using var scope = _scopeFactory.CreateScope();
         var repository = scope.ServiceProvider.GetRequiredService<IRepository<Link>>();
 
-        _cache.AddRange(repository.GetEntities().ToList());
+        _cache.AddRange(repository.GetEntities());
 
         _logger.LogInformation("The cache has been initialized.");
 

@@ -14,7 +14,7 @@ using TLink = Models.Link;
 public sealed class LinkRepository : IRepository<Link>
 {
     private readonly IRepositoryContext _context;
-    private readonly ILogger _logger;
+    private readonly ILogger<LinkRepository> _logger;
 
     /// <summary xml:lang = "ru">
     /// Создает новый экземпляр типа <see cref="LinkRepository"/>.
@@ -28,7 +28,9 @@ public sealed class LinkRepository : IRepository<Link>
     /// <exception cref="ArgumentNullException" xml:lang = "ru">
     /// Если любой из параметров равен <see langword="null"/>.
     /// </exception>
-    public LinkRepository(IRepositoryContext context, ILogger logger)
+    public LinkRepository(
+        IRepositoryContext context, 
+        ILogger<LinkRepository> logger)
     {
         _context = context ?? throw new ArgumentNullException(nameof(context));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -43,7 +45,7 @@ public sealed class LinkRepository : IRepository<Link>
 
     private Link? ConvertFromStorageModel(TLink link)
     {
-        if (!Enum.IsDefined(typeof(Provider), link.ProviderId))
+        if (!Enum.IsDefined(typeof(Provider), (int)link.ProviderId))
         {
             _logger.LogWarning(
                 "The link with provider id: {ProviderId} can't be converted",
@@ -88,8 +90,9 @@ public sealed class LinkRepository : IRepository<Link>
     }
 
     /// <inheritdoc/>
-    public IQueryable<Link> GetEntities() =>
+    public IEnumerable<Link> GetEntities() =>
         _context.Links
+        .AsEnumerable()
         .Select(x => ConvertFromStorageModel(x))
         .Where(x => x != null)!;
 

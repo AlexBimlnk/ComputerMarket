@@ -20,7 +20,7 @@ public class HistoryRepositoryTests
         // Act
         var exception = Record.Exception(() => _ = new HistoryRepository(
             Mock.Of<IRepositoryContext>(MockBehavior.Strict),
-            Mock.Of<ILogger>(MockBehavior.Strict)));
+            Mock.Of<ILogger<HistoryRepository>>(MockBehavior.Strict)));
 
         // Assert
         exception.Should().BeNull();
@@ -33,7 +33,7 @@ public class HistoryRepositoryTests
         // Act
         var exception = Record.Exception(() => _ = new HistoryRepository(
             context: null!,
-            Mock.Of<ILogger>()));
+            Mock.Of<ILogger<HistoryRepository>>()));
 
         // Assert
         exception.Should().BeOfType<ArgumentNullException>();
@@ -52,60 +52,13 @@ public class HistoryRepositoryTests
         exception.Should().BeOfType<ArgumentNullException>();
     }
 
-    [Fact(DisplayName = $"The {nameof(HistoryRepository)} can add history.")]
-    [Trait("Category", "Unit")]
-    public async void CanAddHistoryAsync()
-    {
-        // Arrange
-        var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
-        var logger = Mock.Of<ILogger>();
-
-        var storageHistory = new THistory()
-        {
-            ExternalId = 1,
-            ProviderId = 1,
-            ProductMetadata = "product meta data"
-        };
-
-        var histories = new Mock<DbSet<THistory>>(MockBehavior.Strict);
-        var historiesCallback = 0;
-        histories.Setup(x => x
-            .AddAsync(
-                It.Is<THistory>(l =>
-                    l.ExternalId == storageHistory.ExternalId &&
-                    l.ProviderId == storageHistory.ProviderId &&
-                    l.ProductMetadata == storageHistory.ProductMetadata),
-                It.IsAny<CancellationToken>()))
-            .Callback(() => historiesCallback++)
-            .Returns(new ValueTask<EntityEntry<THistory>>());
-
-        context.Setup(x => x.Histories)
-            .Returns(histories.Object);
-
-        var historyRepository = new HistoryRepository(
-            context.Object,
-            logger);
-
-        var inputHistory = new History(
-            new(1, Provider.Ivanov),
-            productMetadata: "product meta data");
-
-        // Act
-        var exception = await Record.ExceptionAsync(async () =>
-            await historyRepository.AddAsync(inputHistory));
-
-        // Assert
-        exception.Should().BeNull();
-        historiesCallback.Should().Be(1);
-    }
-
     [Fact(DisplayName = $"The {nameof(HistoryRepository)} cannot add history when history is null.")]
     [Trait("Category", "Unit")]
     public async void CanNotAddHistoryWhenHistoryIsNullAsync()
     {
         // Arrange
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
-        var logger = Mock.Of<ILogger>();
+        var logger = Mock.Of<ILogger<HistoryRepository>>();
 
         var historyRepository = new HistoryRepository(
             context.Object,
@@ -125,7 +78,7 @@ public class HistoryRepositoryTests
     {
         // Arrange
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
-        var logger = Mock.Of<ILogger>();
+        var logger = Mock.Of<ILogger<HistoryRepository>>();
 
         var cts = new CancellationTokenSource();
 
@@ -152,7 +105,7 @@ public class HistoryRepositoryTests
     {
         // Arrange
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
-        var logger = Mock.Of<ILogger>();
+        var logger = Mock.Of<ILogger<HistoryRepository>>();
 
         var historyRepository = new HistoryRepository(
             context.Object,
@@ -172,7 +125,7 @@ public class HistoryRepositoryTests
     {
         // Arrange
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
-        var logger = Mock.Of<ILogger>();
+        var logger = Mock.Of<ILogger<HistoryRepository>>();
 
         var cts = new CancellationTokenSource();
 
@@ -199,7 +152,7 @@ public class HistoryRepositoryTests
     {
         // Arrange
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
-        var logger = Mock.Of<ILogger>();
+        var logger = Mock.Of<ILogger<HistoryRepository>>();
 
         var storageHistory = new THistory()
         {
@@ -243,7 +196,7 @@ public class HistoryRepositoryTests
     {
         // Arrange
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
-        var logger = Mock.Of<ILogger>();
+        var logger = Mock.Of<ILogger<HistoryRepository>>();
 
         var historyRepository = new HistoryRepository(
             context.Object,
@@ -263,7 +216,7 @@ public class HistoryRepositoryTests
     {
         // Arrange
         var context = new Mock<IRepositoryContext>(MockBehavior.Loose);
-        var logger = Mock.Of<ILogger>();
+        var logger = Mock.Of<ILogger<HistoryRepository>>();
 
         var storageHistory = new THistory()
         {
