@@ -38,12 +38,12 @@ public sealed class Item
     /// Тип товара.
     /// </summary>
     public ItemType Type { get; }
-
+    
     /// <summary xml:lang = "ru">
     /// Название товара.
     /// </summary>
     public string Name { get; }
-
+    
     /// <summary xml:lang = "ru">
     /// Характеристики товара.
     /// </summary>
