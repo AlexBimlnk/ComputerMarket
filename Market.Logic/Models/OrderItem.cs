@@ -15,8 +15,7 @@ public sealed class OrderItem
     public OrderItem(Product product, int quantity)
     {
         Product = product ?? throw new ArgumentNullException(nameof(product));
-        Price = product.FinalCost;
-
+        
         if (quantity <= 0)
             throw new ArgumentOutOfRangeException(nameof(quantity));
 
@@ -27,11 +26,6 @@ public sealed class OrderItem
     ///  Продукт.
     /// </summary>
     public Product Product { get; }
-
-    /// <summary  xml:lang = "ru">
-    /// Цена продукта.
-    /// </summary>
-    public decimal Price { get; }
 
     /// <summary  xml:lang = "ru">
     /// Количество продуктов.
