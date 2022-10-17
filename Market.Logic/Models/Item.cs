@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Market.Logic.Models;
+﻿namespace Market.Logic.Models;
 
 /// <summary xml:lang = "ru">
 /// Представляет описание товара.
@@ -23,7 +17,7 @@ public sealed class Item
     /// <exception cref="ArgumentException" xml:lang = "ru">
     ///  Если <paramref name="name"/> - состоит из пробелов, явялется пустой строкой или <see langword="null"/>.
     /// </exception>
-    public Item(ItemType type, string name, IEnumerable<ItemProperty> properties)
+    public Item(ItemType type, string name, IReadOnlyCollection<ItemProperty> properties)
     {
         Type = type ?? throw new ArgumentNullException(nameof(type));
 
@@ -38,15 +32,15 @@ public sealed class Item
     /// Тип товара.
     /// </summary>
     public ItemType Type { get; }
-    
+
     /// <summary xml:lang = "ru">
     /// Название товара.
     /// </summary>
     public string Name { get; }
-    
+
     /// <summary xml:lang = "ru">
     /// Характеристики товара.
     /// </summary>
-    public IEnumerable<ItemProperty> Properties { get; }
+    public IReadOnlyCollection<ItemProperty> Properties { get; }
 
 }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Market.Logic.Models;
+﻿namespace Market.Logic.Models;
 
 /// <summary xml:lang = "ru">
 /// Состояние заказа.
@@ -29,7 +23,7 @@ public enum OrderState
     /// <summary xml:lang = "ru">
     /// Ожидает ответа от поставщиков.
     /// </summary>
-    ProviderAnwerWait,
+    ProviderAnswerWait,
 
     /// <summary xml:lang = "ru">
     /// Ожидает доставки всех товаров.

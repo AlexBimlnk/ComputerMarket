@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Market.Logic.Models;
+﻿namespace Market.Logic.Models;
 
 /// <summary xml:lang = "ru">
 ///  Заказ.
@@ -14,15 +8,15 @@ public sealed class Order
     /// <summary xml:lang = "ru">
     /// Создает экземпляр типа <see cref="Order"/>.
     /// </summary>
-    /// <param name="user" xml:lang = "ru">Пользотваль создавший заказ.</param>
+    /// <param name="user" xml:lang = "ru">Пользователь создавший заказ.</param>
     /// <param name="products" xml:lang = "ru">Продукты для добавления в заказ.</param>
     /// <exception cref="ArgumentNullException" xml:lang = "ru">
     /// Если <paramref name="user"/> или <paramref name="products"/> - <see langword="null"/>.
     /// </exception>
-    /// <exception cref="InvalidOperationException" xml:lang = "ru"
-    /// >Если в заказе имеются одинаковые продукты или продуктов нет.
+    /// <exception cref="InvalidOperationException" xml:lang = "ru">
+    /// Если в заказе имеются одинаковые продукты или продуктов нет.
     /// </exception>
-    public Order(User user, Dictionary<Product, int> products)
+    public Order(User user, IReadOnlyDictionary<Product, int> products)
     {
         Creator = user ?? throw new ArgumentNullException(nameof(user));
         State = OrderState.PaymentWait;
@@ -55,7 +49,7 @@ public sealed class Order
     /// <summary xml:lang = "ru">
     /// Дата создания заказа.
     /// </summary>
-    public DateTime OrderDate { get; set; }
+    public DateTime OrderDate { get; }
 
     /// <summary xml:lang = "ru">
     /// Метод высчитывающий итоговую стоимость заказа.

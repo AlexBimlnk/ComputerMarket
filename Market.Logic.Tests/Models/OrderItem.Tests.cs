@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Market.Logic.Models;
+﻿using Market.Logic.Models;
 
 namespace Market.Logic.Tests.Models;
+
 public class OrderItemTests
 {
     [Fact(DisplayName = $"The {nameof(OrderItem)} can be created.")]
@@ -20,10 +15,10 @@ public class OrderItemTests
             item: new Item(
                 new ItemType("some_type"),
                 "some_name",
-                properties: Enumerable.Empty<ItemProperty>()),
+                properties: Array.Empty<ItemProperty>()),
             provider: new Provider(
                 "provider_name",
-                1.1m,
+                new Margin(1.1m),
                 new PaymentTransactionsInformation(
                     "0123456789",
                     "01234012340123401234")),
@@ -50,7 +45,7 @@ public class OrderItemTests
         exception.Should().BeOfType<ArgumentNullException>();
     }
 
-    [Theory(DisplayName = $"The {nameof(OrderItem)} cannot be created with empty or null or white spaced value.")]
+    [Theory(DisplayName = $"The {nameof(OrderItem)} cannot be created with quantity less than one.")]
     [Trait("Category", "Unit")]
     [InlineData(0)]
     [InlineData(-1)]
@@ -61,10 +56,10 @@ public class OrderItemTests
             item: new Item(
                 new ItemType("some_type"),
                 "some_name",
-                properties: Enumerable.Empty<ItemProperty>()),
+                properties: Array.Empty<ItemProperty>()),
             provider: new Provider(
                 "provider_name",
-                1.1m,
+                new Margin(1.1m),
                 new PaymentTransactionsInformation(
                     "0123456789",
                     "01234012340123401234")),

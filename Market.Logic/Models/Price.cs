@@ -34,5 +34,5 @@ public struct Price
     /// <summary xml:lang = "ru">
     /// Значение.
     /// </summary>
-    public decimal Value { get; private set; }
+    public decimal Value { get; }
 }

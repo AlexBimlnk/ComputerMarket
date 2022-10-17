@@ -1,6 +1,7 @@
 ﻿using Market.Logic.Models;
 
 namespace Market.Logic.Tests.Models;
+
 public class ItemPropertyTests
 {
     [Fact(DisplayName = $"The {nameof(ItemProperty)} can be created.")]

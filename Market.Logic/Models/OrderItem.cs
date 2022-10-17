@@ -34,7 +34,7 @@ public sealed class OrderItem
     public decimal Price { get; }
 
     /// <summary  xml:lang = "ru">
-    /// Колличество продуктов.
+    /// Количество продуктов.
     /// </summary>
     public int Quantity { get; }
 

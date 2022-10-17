@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Market.Logic.Models;
+﻿using Market.Logic.Models;
 
 namespace Market.Logic.Tests.Models;
 
@@ -17,23 +11,23 @@ public class OrderTests
         // Arrange
         Order order = null!;
         var user = new User(
-            login: "login", 
-            new Password("12345"), 
-            email: "mail@mail.ru", 
+            login: "login",
+            new Password("12345"),
+            email: "mail@mail.ru",
             UserType.Customer);
         var quantity = 2;
-        var product =new Product(
+        var product = new Product(
             item: new Item(
                 new ItemType("some_type"),
                 "some_name",
-                properties: Enumerable.Empty<ItemProperty>()), 
+                properties: Array.Empty<ItemProperty>()),
             provider: new Provider(
                 "provider_name",
-                1.1m,
+                new Margin(1.1m),
                 new PaymentTransactionsInformation(
                     "0123456789",
                     "01234012340123401234")),
-            price: new Price(100m), 
+            price: new Price(100m),
             quantity: 10);
 
         var products = new Dictionary<Product, int>();
@@ -61,10 +55,10 @@ public class OrderTests
             item: new Item(
                 new ItemType("some_type"),
                 "some_name",
-                properties: Enumerable.Empty<ItemProperty>()),
+                properties: Array.Empty<ItemProperty>()),
             provider: new Provider(
                 "provider_name",
-                1.1m,
+                new Margin(1.1m),
                 new PaymentTransactionsInformation(
                     "0123456789",
                     "01234012340123401234")),
@@ -131,13 +125,13 @@ public class OrderTests
             UserType.Customer);
         var provider1 = new Provider(
                 "provider_name",
-                1.1m,
+                new Margin(1.1m),
                 new PaymentTransactionsInformation(
                     "0123456789",
                     "01234012340123401234"));
         var provider2 = new Provider(
                 "provider_name",
-                1.6m,
+                new Margin(1.6m),
                 new PaymentTransactionsInformation(
                     "0123456789",
                     "01234012340123401234"));
@@ -148,11 +142,11 @@ public class OrderTests
         var item1 = new Item(
                 new ItemType("some_type"),
                 "some_name1",
-                properties: Enumerable.Empty<ItemProperty>());
+                properties: Array.Empty<ItemProperty>());
         var item2 = new Item(
                 new ItemType("some_type"),
                 "some_name2",
-                properties: Enumerable.Empty<ItemProperty>());
+                properties: Array.Empty<ItemProperty>());
 
         var product1 = new Product(
             item1,
@@ -170,7 +164,7 @@ public class OrderTests
         products[product1] = quantity1;
         products[product2] = quantity2;
         var order = new Order(user, products);
-        var expectedResult = quantity1 * provider1.Margin * price1 + quantity2 * provider2.Margin * price2;
+        var expectedResult = quantity1 * provider1.Margin.Value * price1 + quantity2 * provider2.Margin.Value * price2;
 
         // Act
         var result = order.GetSumCost();

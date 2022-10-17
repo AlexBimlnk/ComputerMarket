@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Market.Logic.Models;
+﻿namespace Market.Logic.Models;
 
 /// <summary xml:lang = "ru">
 /// Продукт.
@@ -32,10 +25,10 @@ public sealed class Product
         Item = item ?? throw new ArgumentNullException(nameof(item));
         _price = price;
         Provider = provider ?? throw new ArgumentNullException(nameof(item));
-        
+
         if (quantity < 0)
             throw new ArgumentOutOfRangeException(nameof(quantity));
-        
+
         Quantity = quantity;
     }
 
@@ -52,7 +45,7 @@ public sealed class Product
     /// <summary xml:lang = "ru">
     /// Итоговая цена продукта.
     /// </summary>
-    public decimal FinalCost => _price.Value * Provider.Margin;
+    public decimal FinalCost => _price.Value * Provider.Margin.Value;
 
     /// <summary xml:lang = "ru">
     /// Поставщик продукта.
@@ -60,7 +53,7 @@ public sealed class Product
     public Provider Provider { get; }
 
     /// <summary xml:lang = "ru">
-    /// Колличестов продукта.
+    /// Количестов продукта.
     /// </summary>
-    public int Quantity { get; private set; }
+    public int Quantity { get; }
 }

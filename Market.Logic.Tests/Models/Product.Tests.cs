@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Market.Logic.Models;
+﻿using Market.Logic.Models;
 
 namespace Market.Logic.Tests.Models;
 
@@ -17,8 +11,8 @@ public class ProductTests
         // Arrange
         Product product = null!;
         var provider = new Provider(
-            "provider_name", 
-            1.1m, 
+            "provider_name",
+            new Margin(1.1m),
             new PaymentTransactionsInformation(
                 "0123456789",
                 "01234012340123401234"));
@@ -26,11 +20,11 @@ public class ProductTests
         var item = new Item(
             new ItemType("some_type"),
             "some_name",
-            properties: Enumerable.Empty<ItemProperty>());
+            properties: Array.Empty<ItemProperty>());
 
         var price = new Price(100m);
         var quantity = 5;
-        
+
         // Act
         var exception = Record.Exception(() => product = new Product(
             item,
@@ -54,7 +48,7 @@ public class ProductTests
         // Arrange
         var provider = new Provider(
             "provider_name",
-            1.1m,
+            new Margin(1.1m),
             new PaymentTransactionsInformation(
                 "0123456789",
                 "01234012340123401234"));
@@ -62,7 +56,7 @@ public class ProductTests
         var item = new Item(
             new ItemType("some_type"),
             "some_name",
-            properties: Enumerable.Empty<ItemProperty>());
+            properties: Array.Empty<ItemProperty>());
 
         // Act
         var exception = Record.Exception(() => _ = new Product(
@@ -82,7 +76,7 @@ public class ProductTests
         // Arrange
         var provider = new Provider(
             "provider_name",
-            1.1m,
+            new Margin(1.1m),
             new PaymentTransactionsInformation(
                 "0123456789",
                 "01234012340123401234"));
@@ -106,7 +100,7 @@ public class ProductTests
         var item = new Item(
             new ItemType("some_type"),
             "some_name",
-            properties: Enumerable.Empty<ItemProperty>());
+            properties: Array.Empty<ItemProperty>());
 
         // Act
         var exception = Record.Exception(() => _ = new Product(

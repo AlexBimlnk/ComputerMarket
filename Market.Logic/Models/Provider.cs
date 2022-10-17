@@ -3,10 +3,8 @@
 /// <summary xml:lang = "ru">
 /// Модель поставщика.
 /// </summary>
-public class Provider
+public sealed class Provider
 {
-    private decimal _margin;
-
     /// <summary xml:lang = "ru">
     /// Создает экземпляр типа <see cref="Provider"/>.
     /// </summary>
@@ -19,19 +17,15 @@ public class Provider
     /// <exception cref="ArgumentException" xml:lang = "ru">
     /// Если <paramref name="name"/> не соответсвует уставновленному формату.
     /// </exception>
-    /// <exception cref="ArgumentOutOfRangeException" xml:lang = "ru">
-    /// Если <paramref name="margin"/> меньше 1.
-    /// </exception>
     public Provider(
         string name, 
-        decimal margin, 
+        Margin margin, 
         PaymentTransactionsInformation paymentTransactionsInformation)
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new ArgumentException("Name can't be null or empty or contains only whitespaces", nameof(name));
         Name = name;
 
-        
         Margin = margin;
 
         PaymentTransactionsInformation = paymentTransactionsInformation ?? throw new ArgumentNullException(nameof(paymentTransactionsInformation));
@@ -45,19 +39,7 @@ public class Provider
     /// <summary xml:lang = "ru">
     /// Заданная маржа поставщика.
     /// </summary>
-    /// <exception cref="ArgumentOutOfRangeException" xml:lang = "ru">
-    /// Если новое значение маржи меньше 1.
-    /// </exception>
-    public decimal Margin 
-    { 
-        get => _margin; 
-        set
-        {
-            if (value < 1m)
-                throw new ArgumentOutOfRangeException(nameof(value));
-            _margin = value;
-        } 
-    }
+    public Margin Margin { get; }
 
     /// <summary xml:lang = "ru">
     /// Дополнительная информация об поставщике.
