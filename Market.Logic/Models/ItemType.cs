@@ -3,7 +3,7 @@
 /// <summary xml:lang = "ru">
 ///  Тип товара.
 /// </summary>
-public sealed record ItemType
+public sealed record class ItemType
 {
     /// <summary>
     /// 

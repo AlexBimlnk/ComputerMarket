@@ -3,7 +3,7 @@
 /// <summary xml:lang = "ru">
 /// Модель поставщика.
 /// </summary>
-public sealed class Provider
+public sealed class Provider: IEquatable<Provider>
 {
     /// <summary xml:lang = "ru">
     /// Создает экземпляр типа <see cref="Provider"/>.
@@ -45,4 +45,17 @@ public sealed class Provider
     /// Дополнительная информация об поставщике.
     /// </summary>
     public PaymentTransactionsInformation PaymentTransactionsInformation { get; private set; }
+
+    /// <inheritdoc/>
+    public override int GetHashCode() => HashCode.Combine(PaymentTransactionsInformation, Name, Margin);
+
+    /// <inheritdoc/>
+    public override bool Equals(object? obj) => obj is Provider provider && Equals(provider);
+
+    /// <inheritdoc/>
+    public bool Equals(Provider? other) => 
+        Margin.Equals(other?.Margin) && 
+        Name.Equals(other?.Name) && 
+        PaymentTransactionsInformation.Equals(other?.PaymentTransactionsInformation);
+        
 }

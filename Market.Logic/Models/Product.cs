@@ -3,7 +3,7 @@
 /// <summary xml:lang = "ru">
 /// Продукт.
 /// </summary>
-public sealed class Product
+public sealed class Product: IEquatable<Product>
 {
     private readonly Price _price;
 
@@ -56,4 +56,16 @@ public sealed class Product
     /// Количестов продукта.
     /// </summary>
     public int Quantity { get; }
+
+    /// <inheritdoc/>
+    public override int GetHashCode() =>
+        HashCode.Combine(Provider, Item);
+
+    /// <inheritdoc/>
+    public override bool Equals(object? obj) => obj is Product product && Equals(product);
+
+    /// <inheritdoc/>
+    public bool Equals(Product? other) =>
+        Provider.Equals(other?.Provider) &&
+        Item.Equals(other?.Item);
 }

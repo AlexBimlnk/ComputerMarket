@@ -3,7 +3,7 @@
 /// <summary xml:lang = "ru">
 /// Представляет описание товара.
 /// </summary>
-public sealed class Item
+public sealed class Item: IEquatable<Item>
 {
     /// <summary xml:lang = "ru">
     /// Создает экземпляр типа <see cref="Item"/>.
@@ -43,4 +43,14 @@ public sealed class Item
     /// </summary>
     public IReadOnlyCollection<ItemProperty> Properties { get; }
 
+    /// <inheritdoc/>
+    public override int GetHashCode() => HashCode.Combine(Type, Name);
+
+    /// <inheritdoc/>
+    public override bool Equals(object? obj) => obj is Item && Equals(obj);
+
+    /// <inheritdoc/>
+    public bool Equals(Item? other) =>
+        Name.Equals(other?.Name) &&
+        Type.Equals(other?.Type);
 }
