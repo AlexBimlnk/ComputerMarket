@@ -47,7 +47,7 @@ public sealed class Item: IEquatable<Item>
     public override int GetHashCode() => HashCode.Combine(Type, Name);
 
     /// <inheritdoc/>
-    public override bool Equals(object? obj) => obj is Item && Equals(obj);
+    public override bool Equals(object? obj) => obj is Item item && Equals(item);
 
     /// <inheritdoc/>
     public bool Equals(Item? other) =>

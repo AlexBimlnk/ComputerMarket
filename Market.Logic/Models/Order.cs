@@ -9,32 +9,36 @@ public sealed class Order
     /// Создает экземпляр типа <see cref="Order"/>.
     /// </summary>
     /// <param name="user" xml:lang = "ru">Пользователь создавший заказ.</param>
-    /// <param name="products" xml:lang = "ru">Продукты для добавления в заказ.</param>
+    /// <param name="items" xml:lang = "ru">Продукты для добавления в заказ.</param>
     /// <exception cref="ArgumentNullException" xml:lang = "ru">
-    /// Если <paramref name="user"/> или <paramref name="products"/> - <see langword="null"/>.
+    /// Если <paramref name="user"/> или <paramref name="items"/> - <see langword="null"/>.
     /// </exception>
     /// <exception cref="InvalidOperationException" xml:lang = "ru">
     /// Если в заказе имеются одинаковые продукты или продуктов нет.
     /// </exception>
-    public Order(User user, IReadOnlyDictionary<Product, int> products)
+    public Order(User user, IReadOnlyCollection<OrderItem> items)
     {
         Creator = user ?? throw new ArgumentNullException(nameof(user));
         State = OrderState.PaymentWait;
         OrderDate = DateTime.Now;
 
-        ArgumentNullException.ThrowIfNull(products, nameof(products));
+        ArgumentNullException.ThrowIfNull(items, nameof(items));
 
-        if (!products.Any())
+        Items = items
+            .Where(x => x.Selected)
+            .ToArray();
+
+        if (!Items.Any())
             throw new InvalidOperationException("Order can't contains zero items");
 
-        Items = products
-            .Select(x => new OrderItem(x.Key, x.Value));
+        if (Items.GroupBy(x => x.Product).Count() != Items.Count)
+            throw new InvalidOperationException("Order can't contains items with same product");
     }
 
     /// <summary xml:lang = "ru">
     /// Позиции в заказе.
     /// </summary>
-    public IEnumerable<OrderItem> Items { get; }
+    public IReadOnlyCollection<OrderItem> Items { get; }
 
     /// <summary xml:lang = "ru">
     /// Пользователь создавший заказ.

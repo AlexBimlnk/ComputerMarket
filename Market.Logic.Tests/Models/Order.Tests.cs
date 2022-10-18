@@ -17,32 +17,32 @@ public class OrderTests
             UserType.Customer);
         var quantity = 2;
         var product = new Product(
-            item: new Item(
+            new Item(
                 new ItemType("some_type"),
                 "some_name",
                 properties: Array.Empty<ItemProperty>()),
-            provider: new Provider(
+            new Provider(
                 "provider_name",
                 new Margin(1.1m),
                 new PaymentTransactionsInformation(
                     "0123456789",
                     "01234012340123401234")),
-            price: new Price(100m),
+            new Price(100m),
             quantity: 10);
 
-        var products = new Dictionary<Product, int>();
-        products[product] = quantity;
-
-        var expectedOrderItems = products.Select(x => new OrderItem(x.Key, x.Value));
+        var items = new List<OrderItem>()
+        {
+            new OrderItem(product, quantity)
+        };
 
         // Act
-        var exception = Record.Exception(() => order = new Order(user, products));
+        var exception = Record.Exception(() => order = new Order(user, items));
 
         // Assert
         exception.Should().BeNull();
         order.Creator.Should().Be(user);
         order.State.Should().Be(OrderState.PaymentWait);
-        order.Items.Should().BeEquivalentTo(expectedOrderItems, opt => opt.WithStrictOrdering());
+        order.Items.Should().BeEquivalentTo(items, opt => opt.WithStrictOrdering());
     }
 
     [Fact(DisplayName = $"The {nameof(Order)} cannot be created without {nameof(User)}.")]
@@ -52,31 +52,34 @@ public class OrderTests
         // Arrange
         var quantity = 2;
         var product = new Product(
-            item: new Item(
+            new Item(
                 new ItemType("some_type"),
                 "some_name",
                 properties: Array.Empty<ItemProperty>()),
-            provider: new Provider(
+            new Provider(
                 "provider_name",
                 new Margin(1.1m),
                 new PaymentTransactionsInformation(
                     "0123456789",
                     "01234012340123401234")),
-            price: new Price(100m),
+            new Price(100m),
             quantity: 10);
-        var dictionary = new Dictionary<Product, int>();
-        dictionary[product] = quantity;
+
+        var items = new List<OrderItem>()
+        {
+            new OrderItem(product, quantity)
+        };
 
         // Act
-        var exception = Record.Exception(() => _ = new Order(user: null!, dictionary));
+        var exception = Record.Exception(() => _ = new Order(user: null!, items));
 
         // Assert
         exception.Should().BeOfType<ArgumentNullException>();
     }
 
-    [Fact(DisplayName = $"The {nameof(Order)} cannot be created without {nameof(Product)}s.")]
+    [Fact(DisplayName = $"The {nameof(Order)} cannot be created without items.")]
     [Trait("Category", "Unit")]
-    public void CanNotCreateWithoutProducts()
+    public void CanNotCreateWithoutItems()
     {
         // Arrange       
         var user = new User(
@@ -86,16 +89,16 @@ public class OrderTests
             UserType.Customer);
 
         // Act
-        var exception = Record.Exception(() => _ = new Order(user, products: null!));
+        var exception = Record.Exception(() => _ = new Order(user, items: null!));
 
         // Assert
         exception.Should().BeOfType<ArgumentNullException>();
     }
 
 
-    [Fact(DisplayName = $"The {nameof(Order)} cannot be created with zero products.")]
+    [Fact(DisplayName = $"The {nameof(Order)} cannot be created with zero items.")]
     [Trait("Category", "Unit")]
-    public void CanNotCreateWithZeroProducts()
+    public void CanNotCreateWithZeroItems()
     {
         // Arrange       
         var user = new User(
@@ -103,11 +106,68 @@ public class OrderTests
             new Password("12345"),
             email: "mail@mail.ru",
             UserType.Customer);
+        var quantity = 2;
+        var product = new Product(
+            new Item(
+                new ItemType("some_type"),
+                "some_name",
+                properties: Array.Empty<ItemProperty>()),
+            new Provider(
+                "provider_name",
+                new Margin(1.1m),
+                new PaymentTransactionsInformation(
+                    "0123456789",
+                    "01234012340123401234")),
+            new Price(100m),
+            quantity: 10);
 
-        var products = new Dictionary<Product, int>();
+        var items = new List<OrderItem>()
+        {
+            new OrderItem(product, quantity)
+            {
+                Selected = false
+            }
+        }; 
 
         // Act
-        var exception = Record.Exception(() => _ = new Order(user, products));
+        var exception = Record.Exception(() => _ = new Order(user, items));
+
+        // Assert
+        exception.Should().BeOfType<InvalidOperationException>();
+    }
+
+    [Fact(DisplayName = $"The {nameof(Order)} cannot be created with same items.")]
+    [Trait("Category", "Unit")]
+    public void CanNotCreateWithSameItems()
+    {
+        // Arrange       
+        var user = new User(
+            login: "login",
+            new Password("12345"),
+            email: "mail@mail.ru",
+            UserType.Customer);
+        var product = new Product(
+            new Item(
+                new ItemType("some_type"),
+                "some_name",
+                properties: Array.Empty<ItemProperty>()),
+            new Provider(
+                "provider_name",
+                new Margin(1.1m),
+                new PaymentTransactionsInformation(
+                    "0123456789",
+                    "01234012340123401234")),
+            new Price(100m),
+            quantity: 10);
+
+        var items = new List<OrderItem>()
+        {
+            new OrderItem(product, quantity: 2),
+            new OrderItem(product, quantity: 4)
+        };
+
+        // Act
+        var exception = Record.Exception(() => _ = new Order(user, items));
 
         // Assert
         exception.Should().BeOfType<InvalidOperationException>();
@@ -160,10 +220,14 @@ public class OrderTests
             price: new Price(price2),
             quantity: 10);
 
-        var products = new Dictionary<Product, int>();
-        products[product1] = quantity1;
-        products[product2] = quantity2;
-        var order = new Order(user, products);
+        var items = new List<OrderItem>()
+        {
+            new OrderItem(product1, quantity1),
+            new OrderItem(product2, quantity2)
+
+        };
+       
+        var order = new Order(user, items);
         var expectedResult = quantity1 * provider1.Margin.Value * price1 + quantity2 * provider2.Margin.Value * price2;
 
         // Act
