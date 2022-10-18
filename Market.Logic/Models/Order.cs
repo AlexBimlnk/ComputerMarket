@@ -16,7 +16,7 @@ public sealed class Order
     /// <exception cref="InvalidOperationException" xml:lang = "ru">
     /// Если в заказе имеются одинаковые продукты или продуктов нет.
     /// </exception>
-    public Order(User user, IReadOnlyCollection<OrderItem> items)
+    public Order(User user, IReadOnlyCollection<PurchasableEntity> items)
     {
         Creator = user ?? throw new ArgumentNullException(nameof(user));
         State = OrderState.PaymentWait;
@@ -38,7 +38,7 @@ public sealed class Order
     /// <summary xml:lang = "ru">
     /// Позиции в заказе.
     /// </summary>
-    public IReadOnlyCollection<OrderItem> Items { get; }
+    public IReadOnlyCollection<PurchasableEntity> Items { get; }
 
     /// <summary xml:lang = "ru">
     /// Пользователь создавший заказ.

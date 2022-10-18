@@ -30,19 +30,19 @@ public class OrderTests
             new Price(100m),
             quantity: 10);
 
-        var items = new List<OrderItem>()
+        var entities = new List<PurchasableEntity>()
         {
-            new OrderItem(product, quantity)
+            new PurchasableEntity(product, quantity)
         };
 
         // Act
-        var exception = Record.Exception(() => order = new Order(user, items));
+        var exception = Record.Exception(() => order = new Order(user, entities));
 
         // Assert
         exception.Should().BeNull();
         order.Creator.Should().Be(user);
         order.State.Should().Be(OrderState.PaymentWait);
-        order.Items.Should().BeEquivalentTo(items, opt => opt.WithStrictOrdering());
+        order.Items.Should().BeEquivalentTo(entities, opt => opt.WithStrictOrdering());
     }
 
     [Fact(DisplayName = $"The {nameof(Order)} cannot be created without {nameof(User)}.")]
@@ -65,13 +65,13 @@ public class OrderTests
             new Price(100m),
             quantity: 10);
 
-        var items = new List<OrderItem>()
+        var entities = new List<PurchasableEntity>()
         {
-            new OrderItem(product, quantity)
+            new PurchasableEntity(product, quantity)
         };
 
         // Act
-        var exception = Record.Exception(() => _ = new Order(user: null!, items));
+        var exception = Record.Exception(() => _ = new Order(user: null!, entities));
 
         // Assert
         exception.Should().BeOfType<ArgumentNullException>();
@@ -121,16 +121,16 @@ public class OrderTests
             new Price(100m),
             quantity: 10);
 
-        var items = new List<OrderItem>()
+        var entities = new List<PurchasableEntity>()
         {
-            new OrderItem(product, quantity)
+            new PurchasableEntity(product, quantity)
             {
                 Selected = false
             }
         }; 
 
         // Act
-        var exception = Record.Exception(() => _ = new Order(user, items));
+        var exception = Record.Exception(() => _ = new Order(user, entities));
 
         // Assert
         exception.Should().BeOfType<InvalidOperationException>();
@@ -160,14 +160,14 @@ public class OrderTests
             new Price(100m),
             quantity: 10);
 
-        var items = new List<OrderItem>()
+        var entities = new List<PurchasableEntity>()
         {
-            new OrderItem(product, quantity: 2),
-            new OrderItem(product, quantity: 4)
+            new PurchasableEntity(product, quantity: 2),
+            new PurchasableEntity(product, quantity: 4)
         };
 
         // Act
-        var exception = Record.Exception(() => _ = new Order(user, items));
+        var exception = Record.Exception(() => _ = new Order(user, entities));
 
         // Assert
         exception.Should().BeOfType<InvalidOperationException>();
@@ -220,14 +220,14 @@ public class OrderTests
             price: new Price(price2),
             quantity: 10);
 
-        var items = new List<OrderItem>()
+        var entities = new List<PurchasableEntity>()
         {
-            new OrderItem(product1, quantity1),
-            new OrderItem(product2, quantity2)
+            new PurchasableEntity(product1, quantity1),
+            new PurchasableEntity(product2, quantity2)
 
         };
        
-        var order = new Order(user, items);
+        var order = new Order(user, entities);
         var expectedResult = quantity1 * provider1.Margin.Value * price1 + quantity2 * provider2.Margin.Value * price2;
 
         // Act

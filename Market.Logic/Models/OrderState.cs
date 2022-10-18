@@ -6,11 +6,6 @@
 public enum OrderState
 {
     /// <summary xml:lang = "ru">
-    /// Создан.
-    /// </summary>
-    Initialize,
-
-    /// <summary xml:lang = "ru">
     /// Отменён.
     /// </summary>
     Cancel,

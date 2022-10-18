@@ -1,18 +1,18 @@
 ﻿namespace Market.Logic.Models;
 
 /// <summary xml:lang = "ru">
-/// Позиция в заказе.
+///  Сущность приобретаемая пользователем.
 /// </summary>
-public sealed class OrderItem: IEquatable<OrderItem>
+public sealed class PurchasableEntity: IEquatable<PurchasableEntity>
 {
     /// <summary xml:lang = "ru">
-    /// Создает экземпляр типа <see cref="OrderItem"/>.
+    /// Создает экземпляр типа <see cref="PurchasableEntity"/>.
     /// </summary>
     /// <param name="product"  xml:lang = "ru">Товар в позиции заказа.</param>
     /// <param name="quantity"  xml:lang = "ru">Колличесиво товар в позиции.</param>
     /// <exception cref="ArgumentNullException"  xml:lang = "ru">Если <paramref name="product"/> - <see langword="null"/>.</exception>
     /// <exception cref="ArgumentOutOfRangeException"  xml:lang = "ru"> Если <paramref name="quantity"/> <= 0 или больше колличества продуктов.</exception>
-    public OrderItem(Product product, int quantity)
+    public PurchasableEntity(Product product, int quantity)
     {
         Product = product ?? throw new ArgumentNullException(nameof(product));
         
@@ -38,7 +38,7 @@ public sealed class OrderItem: IEquatable<OrderItem>
     public bool Selected { get; set; } = true;
 
     /// <summary xml:lang = "ru">
-    /// Увеличивает количество продуктов на один.
+    /// Увеличивает количество продуктов на один до доступного колличсетва продуктов.
     /// </summary>
     public void IncQuantity()
     {
@@ -63,8 +63,8 @@ public sealed class OrderItem: IEquatable<OrderItem>
     public override int GetHashCode() => Product.GetHashCode();
 
     /// <inheritdoc/>
-    public override bool Equals(object? obj) => obj is OrderItem item && Equals(item);
+    public override bool Equals(object? obj) => obj is PurchasableEntity item && Equals(item);
 
     /// <inheritdoc/>
-    public bool Equals(OrderItem? other) => Product.Equals(other?.Product);
+    public bool Equals(PurchasableEntity? other) => Product.Equals(other?.Product);
 }

@@ -1,6 +1,4 @@
-﻿using System.Runtime.InteropServices;
-
-using Market.Logic.Models;
+﻿using Market.Logic.Models;
 
 namespace Market.Logic.Tests.Models;
 
@@ -44,7 +42,7 @@ public class BasketTests
 
         // Act
         basket.Add(product);
-        
+
         // Assert
         basket.Items.Count.Should().Be(1);
         basket.Items.Where(x => x.Product.Equals(product)).FirstOrDefault().Should().NotBeNull();
@@ -89,7 +87,7 @@ public class BasketTests
         var basket = new Basket();
         basket.Add(product);
 
-        var expectedResult = new OrderItem(product, quantity);
+        var expectedResult = new PurchasableEntity(product, quantity);
 
         // Act
         var result = basket.GetBasketItem(product);
