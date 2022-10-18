@@ -89,7 +89,7 @@ public class OrderTests
             UserType.Customer);
 
         // Act
-        var exception = Record.Exception(() => _ = new Order(user, items: null!));
+        var exception = Record.Exception(() => _ = new Order(user, entities: null!));
 
         // Assert
         exception.Should().BeOfType<ArgumentNullException>();

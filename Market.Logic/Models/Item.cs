@@ -44,7 +44,7 @@ public sealed class Item: IEquatable<Item>
     public IReadOnlyCollection<ItemProperty> Properties { get; }
 
     /// <inheritdoc/>
-    public override int GetHashCode() => HashCode.Combine(Type, Name);
+    public override int GetHashCode() => HashCode.Combine(Type, Name, Properties);
 
     /// <inheritdoc/>
     public override bool Equals(object? obj) => obj is Item item && Equals(item);
@@ -52,5 +52,6 @@ public sealed class Item: IEquatable<Item>
     /// <inheritdoc/>
     public bool Equals(Item? other) =>
         Name.Equals(other?.Name) &&
-        Type.Equals(other?.Type);
+        Type.Equals(other?.Type) &&
+        Properties.Equals(other?.Properties);
 }

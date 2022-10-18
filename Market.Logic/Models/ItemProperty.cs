@@ -3,7 +3,7 @@
 /// <summary xml:lang = "ru">
 /// Свойтсво товара.
 /// </summary>
-public sealed class ItemProperty
+public sealed record class ItemProperty
 {
     /// <summary xml:lang = "ru">
     /// Название свойства.

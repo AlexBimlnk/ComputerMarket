@@ -4,7 +4,7 @@ using Market.Logic.Models;
 
 namespace Market.Logic.Tests.Models;
 
-public class OrderItemTests
+public class PurchasableEntityTests
 {
     [Fact(DisplayName = $"The {nameof(PurchasableEntity)} can be created.")]
     [Trait("Category", "Unit")]
@@ -53,7 +53,7 @@ public class OrderItemTests
     [InlineData(0)]
     [InlineData(-1)]
     [InlineData(10000000)]
-    public void CanNotCreateWhenQuantityLessThanOne(int quantity)
+    public void CanNotCreateWhenQuantityLessThanOneOrGreaterThanProductQuantity(int quantity)
     {
         // Arrange
         var product = new Product(

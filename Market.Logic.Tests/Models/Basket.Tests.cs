@@ -27,17 +27,17 @@ public class BasketTests
         // Arrange
         var basket = new Basket();
         var product = new Product(
-            item: new Item(
+            new Item(
                 new ItemType("some_type"),
                 "some_name",
                 properties: Array.Empty<ItemProperty>()),
-            provider: new Provider(
+            new Provider(
                 "provider_name",
                 new Margin(1.1m),
                 new PaymentTransactionsInformation(
                     "0123456789",
                     "01234012340123401234")),
-            price: new Price(100m),
+            new Price(100m),
             quantity: 10);
 
         // Act
@@ -46,8 +46,8 @@ public class BasketTests
         // Assert
         basket.Items.Count.Should().Be(1);
         basket.Items.Where(x => x.Product.Equals(product)).FirstOrDefault().Should().NotBeNull();
-        basket.Items.Where(x => x.Product.Equals(product)).FirstOrDefault()?.Quantity.Should().Be(1);
-        basket.Items.Where(x => x.Product.Equals(product)).FirstOrDefault()?.Selected.Should().BeTrue();
+        basket.Items.Where(x => x.Product.Equals(product)).First().Quantity.Should().Be(1);
+        basket.Items.Where(x => x.Product.Equals(product)).First().Selected.Should().BeTrue();
     }
 
     [Fact(DisplayName = $"The {nameof(Basket)} can't add null {nameof(Product)}.")]
@@ -71,17 +71,17 @@ public class BasketTests
         // Arrange
         var quantity = 1;
         var product = new Product(
-            item: new Item(
+            new Item(
                 new ItemType("some_type"),
                 "some_name",
                 properties: Array.Empty<ItemProperty>()),
-            provider: new Provider(
+            new Provider(
                 "provider_name",
                 new Margin(1.1m),
                 new PaymentTransactionsInformation(
                     "0123456789",
                     "01234012340123401234")),
-            price: new Price(100m),
+            new Price(100m),
             quantity: 10);
 
         var basket = new Basket();
@@ -119,17 +119,17 @@ public class BasketTests
         // Arrange       
         var basket = new Basket();
         var product = new Product(
-            item: new Item(
+            new Item(
                 new ItemType("some_type"),
                 "some_name",
                 properties: Array.Empty<ItemProperty>()),
-            provider: new Provider(
+            new Provider(
                 "provider_name",
                 new Margin(1.1m),
                 new PaymentTransactionsInformation(
                     "0123456789",
                     "01234012340123401234")),
-            price: new Price(100m),
+            new Price(100m),
             quantity: 10);
 
         // Act
@@ -183,17 +183,17 @@ public class BasketTests
     {
         // Arrange
         var product = new Product(
-            item: new Item(
+            new Item(
                 new ItemType("some_type"),
                 "some_name",
                 properties: Array.Empty<ItemProperty>()),
-            provider: new Provider(
+            new Provider(
                 "provider_name",
                 new Margin(1.1m),
                 new PaymentTransactionsInformation(
                     "0123456789",
                     "01234012340123401234")),
-            price: new Price(100m),
+            new Price(100m),
             quantity: 10);
 
         var basket = new Basket();

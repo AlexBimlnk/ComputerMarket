@@ -5,8 +5,6 @@
 /// </summary>
 public sealed class Product: IEquatable<Product>
 {
-    private readonly Price _price;
-
     /// <summary xml:lang = "ru">
     /// Создает экземпляр типа <see cref="Product"/>.
     /// </summary>
@@ -23,7 +21,7 @@ public sealed class Product: IEquatable<Product>
     public Product(Item item, Provider provider, Price price, int quantity)
     {
         Item = item ?? throw new ArgumentNullException(nameof(item));
-        _price = price;
+        Price = price;
         Provider = provider ?? throw new ArgumentNullException(nameof(item));
 
         if (quantity < 0)
@@ -31,6 +29,8 @@ public sealed class Product: IEquatable<Product>
 
         Quantity = quantity;
     }
+
+    private Price Price { get; }
 
     /// <summary xml:lang = "ru">
     /// Описание продукта.
@@ -40,12 +40,12 @@ public sealed class Product: IEquatable<Product>
     /// <summary xml:lang = "ru">
     /// Цена назначаенная поставщиком.
     /// </summary>
-    public decimal ProviderCost => _price.Value;
+    public decimal ProviderCost => Price.Value;
 
     /// <summary xml:lang = "ru">
     /// Итоговая цена продукта.
     /// </summary>
-    public decimal FinalCost => _price.Value * Provider.Margin.Value;
+    public decimal FinalCost => Price.Value * Provider.Margin.Value;
 
     /// <summary xml:lang = "ru">
     /// Поставщик продукта.

@@ -9,22 +9,22 @@ public sealed class Order
     /// Создает экземпляр типа <see cref="Order"/>.
     /// </summary>
     /// <param name="user" xml:lang = "ru">Пользователь создавший заказ.</param>
-    /// <param name="items" xml:lang = "ru">Продукты для добавления в заказ.</param>
+    /// <param name="entities" xml:lang = "ru">Продукты для добавления в заказ.</param>
     /// <exception cref="ArgumentNullException" xml:lang = "ru">
-    /// Если <paramref name="user"/> или <paramref name="items"/> - <see langword="null"/>.
+    /// Если <paramref name="user"/> или <paramref name="entities"/> - <see langword="null"/>.
     /// </exception>
     /// <exception cref="InvalidOperationException" xml:lang = "ru">
     /// Если в заказе имеются одинаковые продукты или продуктов нет.
     /// </exception>
-    public Order(User user, IReadOnlyCollection<PurchasableEntity> items)
+    public Order(User user, IReadOnlyCollection<PurchasableEntity> entities)
     {
         Creator = user ?? throw new ArgumentNullException(nameof(user));
         State = OrderState.PaymentWait;
         OrderDate = DateTime.Now;
 
-        ArgumentNullException.ThrowIfNull(items, nameof(items));
+        ArgumentNullException.ThrowIfNull(entities, nameof(entities));
 
-        Items = items
+        Items = entities
             .Where(x => x.Selected)
             .ToArray();
 
