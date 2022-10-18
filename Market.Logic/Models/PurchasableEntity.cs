@@ -3,7 +3,7 @@
 /// <summary xml:lang = "ru">
 ///  Сущность приобретаемая пользователем.
 /// </summary>
-public sealed class PurchasableEntity: IEquatable<PurchasableEntity>
+public sealed class PurchasableEntity : IEquatable<PurchasableEntity>
 {
     /// <summary xml:lang = "ru">
     /// Создает экземпляр типа <see cref="PurchasableEntity"/>.
@@ -15,7 +15,7 @@ public sealed class PurchasableEntity: IEquatable<PurchasableEntity>
     public PurchasableEntity(Product product, int quantity)
     {
         Product = product ?? throw new ArgumentNullException(nameof(product));
-        
+
         if (quantity < 1 || quantity > product.Quantity)
             throw new ArgumentOutOfRangeException(nameof(quantity));
 
@@ -60,7 +60,7 @@ public sealed class PurchasableEntity: IEquatable<PurchasableEntity>
     }
 
     /// <inheritdoc/>
-    public override int GetHashCode() => Product.GetHashCode();
+    public override int GetHashCode() => HashCode.Combine(Product);
 
     /// <inheritdoc/>
     public override bool Equals(object? obj) => obj is PurchasableEntity item && Equals(item);

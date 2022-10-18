@@ -5,15 +5,7 @@
 /// </summary>
 public sealed class Basket
 {
-    private readonly HashSet<PurchasableEntity> _items;
-
-    /// <summary xml:lang = "ru">
-    /// Создает экземпляр типа <see cref="Basket"/>.
-    /// </summary>
-    public Basket()
-    {
-        _items = new();
-    }
+    private readonly HashSet<PurchasableEntity> _items = new();
 
     /// <summary xml:lang = "ru">
     /// Добавляет продукт в корзину.
@@ -46,7 +38,8 @@ public sealed class Basket
     public void Remove(Product product)
     {
         ArgumentNullException.ThrowIfNull(product);
-        if (_items.RemoveWhere(item => item.Product.Equals(product)) == 0)
+        var entity = new PurchasableEntity(product, 1);
+        if (!_items.Remove(entity))
             throw new InvalidOperationException("Can't remove product which is not in basket");
     }
 
