@@ -6,7 +6,7 @@
 public sealed record class ItemType
 {
     /// <summary>
-    /// 
+    /// Создаёт экземпляр типа <see cref="ItemType"/>.
     /// </summary>
     /// <param name="name" xml:lang = "ru">Название типа.</param>
     /// <exception cref="ArgumentException">

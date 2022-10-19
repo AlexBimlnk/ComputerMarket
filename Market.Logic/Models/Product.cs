@@ -11,7 +11,7 @@ public sealed class Product: IEquatable<Product>
     /// <param name="item" xml:lang = "ru">Описание продукта.</param>
     /// <param name="provider" xml:lang = "ru">Поставщик продукта.</param>
     /// <param name="price" xml:lang = "ru">Цена назначенная поставщиком.</param>
-    /// <param name="quantity" xml:lang = "ru">Колличество продукта.</param>
+    /// <param name="quantity" xml:lang = "ru">Количество продукта.</param>
     /// <exception cref="ArgumentNullException" xml:lang = "ru">
     /// Если <paramref name="item"/> или <paramref name="price"/> - <see langword="null"/>.
     /// </exception>

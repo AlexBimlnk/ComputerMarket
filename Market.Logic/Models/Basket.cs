@@ -64,5 +64,5 @@ public sealed class Basket
     /// <summary xml:lang = "ru">
     /// Коллекция элементов, находящихся в корзине.
     /// </summary>
-    public IReadOnlyCollection<PurchasableEntity> Items => _items;
+    public IReadOnlySet<PurchasableEntity> Items => _items;
 }

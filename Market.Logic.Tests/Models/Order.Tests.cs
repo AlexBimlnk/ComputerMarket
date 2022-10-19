@@ -30,7 +30,7 @@ public class OrderTests
             new Price(100m),
             quantity: 10);
 
-        var entities = new List<PurchasableEntity>()
+        var entities = new HashSet<PurchasableEntity>()
         {
             new PurchasableEntity(product, quantity)
         };
@@ -65,7 +65,7 @@ public class OrderTests
             new Price(100m),
             quantity: 10);
 
-        var entities = new List<PurchasableEntity>()
+        var entities = new HashSet<PurchasableEntity>()
         {
             new PurchasableEntity(product, quantity)
         };
@@ -121,50 +121,13 @@ public class OrderTests
             new Price(100m),
             quantity: 10);
 
-        var entities = new List<PurchasableEntity>()
+        var entities = new HashSet<PurchasableEntity>()
         {
             new PurchasableEntity(product, quantity)
             {
                 Selected = false
             }
         }; 
-
-        // Act
-        var exception = Record.Exception(() => _ = new Order(user, entities));
-
-        // Assert
-        exception.Should().BeOfType<InvalidOperationException>();
-    }
-
-    [Fact(DisplayName = $"The {nameof(Order)} cannot be created with same items.")]
-    [Trait("Category", "Unit")]
-    public void CanNotCreateWithSameItems()
-    {
-        // Arrange       
-        var user = new User(
-            login: "login",
-            new Password("12345"),
-            email: "mail@mail.ru",
-            UserType.Customer);
-        var product = new Product(
-            new Item(
-                new ItemType("some_type"),
-                "some_name",
-                properties: Array.Empty<ItemProperty>()),
-            new Provider(
-                "provider_name",
-                new Margin(1.1m),
-                new PaymentTransactionsInformation(
-                    "0123456789",
-                    "01234012340123401234")),
-            new Price(100m),
-            quantity: 10);
-
-        var entities = new List<PurchasableEntity>()
-        {
-            new PurchasableEntity(product, quantity: 2),
-            new PurchasableEntity(product, quantity: 4)
-        };
 
         // Act
         var exception = Record.Exception(() => _ = new Order(user, entities));
@@ -220,7 +183,7 @@ public class OrderTests
             price: new Price(price2),
             quantity: 10);
 
-        var entities = new List<PurchasableEntity>()
+        var entities = new HashSet<PurchasableEntity>()
         {
             new PurchasableEntity(product1, quantity1),
             new PurchasableEntity(product2, quantity2)

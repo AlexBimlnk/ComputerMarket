@@ -16,7 +16,7 @@ public sealed class Order
     /// <exception cref="InvalidOperationException" xml:lang = "ru">
     /// Если в заказе имеются одинаковые продукты или продуктов нет.
     /// </exception>
-    public Order(User user, IReadOnlyCollection<PurchasableEntity> entities)
+    public Order(User user, IReadOnlySet<PurchasableEntity> entities)
     {
         Creator = user ?? throw new ArgumentNullException(nameof(user));
         State = OrderState.PaymentWait;
@@ -30,9 +30,6 @@ public sealed class Order
 
         if (!Items.Any())
             throw new InvalidOperationException("Order can't contains zero items");
-
-        if (Items.GroupBy(x => x.Product).Count() != Items.Count)
-            throw new InvalidOperationException("Order can't contains items with same product");
     }
 
     /// <summary xml:lang = "ru">

@@ -9,9 +9,13 @@ public sealed class PurchasableEntity : IEquatable<PurchasableEntity>
     /// Создает экземпляр типа <see cref="PurchasableEntity"/>.
     /// </summary>
     /// <param name="product"  xml:lang = "ru">Товар в позиции заказа.</param>
-    /// <param name="quantity"  xml:lang = "ru">Колличесиво товар в позиции.</param>
-    /// <exception cref="ArgumentNullException"  xml:lang = "ru">Если <paramref name="product"/> - <see langword="null"/>.</exception>
-    /// <exception cref="ArgumentOutOfRangeException"  xml:lang = "ru"> Если <paramref name="quantity"/> <= 0 или больше колличества продуктов.</exception>
+    /// <param name="quantity"  xml:lang = "ru">Количество товар в позиции.</param>
+    /// <exception cref="ArgumentNullException"  xml:lang = "ru">
+    /// Если <paramref name="product"/> - <see langword="null"/>.
+    /// </exception>
+    /// <exception cref="ArgumentOutOfRangeException"  xml:lang = "ru">
+    /// Если <paramref name="quantity"/> <= 0 или больше количества продуктов.
+    /// </exception>
     public PurchasableEntity(Product product, int quantity)
     {
         Product = product ?? throw new ArgumentNullException(nameof(product));
@@ -38,7 +42,7 @@ public sealed class PurchasableEntity : IEquatable<PurchasableEntity>
     public bool Selected { get; set; } = true;
 
     /// <summary xml:lang = "ru">
-    /// Увеличивает количество продуктов на один до доступного колличсетва продуктов.
+    /// Увеличивает количество продуктов на один до доступного количества продуктов.
     /// </summary>
     public void IncQuantity()
     {
@@ -63,7 +67,7 @@ public sealed class PurchasableEntity : IEquatable<PurchasableEntity>
     public override int GetHashCode() => HashCode.Combine(Product);
 
     /// <inheritdoc/>
-    public override bool Equals(object? obj) => obj is PurchasableEntity item && Equals(item);
+    public override bool Equals(object? obj) => obj is PurchasableEntity entity && Equals(entity);
 
     /// <inheritdoc/>
     public bool Equals(PurchasableEntity? other) => Product.Equals(other?.Product);
