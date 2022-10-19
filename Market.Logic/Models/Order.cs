@@ -26,7 +26,7 @@ public sealed class Order
 
         Items = entities
             .Where(x => x.Selected)
-            .ToArray();
+            .ToHashSet();
 
         if (!Items.Any())
             throw new InvalidOperationException("Order can't contains zero items");
@@ -35,7 +35,7 @@ public sealed class Order
     /// <summary xml:lang = "ru">
     /// Позиции в заказе.
     /// </summary>
-    public IReadOnlyCollection<PurchasableEntity> Items { get; }
+    public  IReadOnlySet<PurchasableEntity> Items { get; }
 
     /// <summary xml:lang = "ru">
     /// Пользователь создавший заказ.
