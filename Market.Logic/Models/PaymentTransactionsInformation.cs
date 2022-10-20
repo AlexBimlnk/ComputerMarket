@@ -5,7 +5,7 @@ namespace Market.Logic.Models;
 /// <summary xml:lang = "ru">
 /// Представляет информацию для платежных операций.
 /// </summary>
-public class PaymentTransactionsInformation
+public record class PaymentTransactionsInformation
 {
     private const string INN_PATTERN = @"^[0-9]{10}$";
     private const string BANK_ACCOUNT_PATTERN = @"^[0-9]{20}$";
@@ -13,12 +13,12 @@ public class PaymentTransactionsInformation
     /// <summary xml:lang = "ru">
     /// Инн поставщика.
     /// </summary>
-    public string INN { get; private set; }
+    public string INN { get; }
 
     /// <summary xml:lang = "ru">
     /// Банковский счёт поставщика.
     /// </summary>
-    public string BankAccount { get; private set; }
+    public string BankAccount { get; }
 
     /// <summary xml:lang = "ru">
     /// Создает экземпляр типа <see cref="PaymentTransactionsInformation"/>.

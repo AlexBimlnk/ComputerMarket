@@ -3,7 +3,7 @@
 /// <summary xml:lang = "ru">
 /// Модель поставщика.
 /// </summary>
-public class Provider
+public sealed class Provider: IEquatable<Provider>
 {
     /// <summary xml:lang = "ru">
     /// Создает экземпляр типа <see cref="Provider"/>.
@@ -15,19 +15,17 @@ public class Provider
     /// Если <paramref name="paymentTransactionsInformation"/> равен <see langword="null"/>.
     /// </exception>
     /// <exception cref="ArgumentException" xml:lang = "ru">
-    /// Если <paramref name="name"/> не соответсвует уставновленному формату или <paramref name="margin"/> имеет некоректное значение.
+    /// Если <paramref name="name"/> не соответсвует уставновленному формату.
     /// </exception>
     public Provider(
         string name, 
-        decimal margin, 
+        Margin margin, 
         PaymentTransactionsInformation paymentTransactionsInformation)
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new ArgumentException("Name can't be null or empty or contains only whitespaces", nameof(name));
         Name = name;
 
-        if (margin < 1m)
-            throw new ArgumentException($"Given {nameof(margin)} has incorrect value");
         Margin = margin;
 
         PaymentTransactionsInformation = paymentTransactionsInformation ?? throw new ArgumentNullException(nameof(paymentTransactionsInformation));
@@ -41,10 +39,23 @@ public class Provider
     /// <summary xml:lang = "ru">
     /// Заданная маржа поставщика.
     /// </summary>
-    public decimal Margin { get; private set; }
+    public Margin Margin { get; }
 
     /// <summary xml:lang = "ru">
     /// Дополнительная информация об поставщике.
     /// </summary>
     public PaymentTransactionsInformation PaymentTransactionsInformation { get; private set; }
+
+    /// <inheritdoc/>
+    public override int GetHashCode() => HashCode.Combine(PaymentTransactionsInformation, Name, Margin);
+
+    /// <inheritdoc/>
+    public override bool Equals(object? obj) => obj is Provider provider && Equals(provider);
+
+    /// <inheritdoc/>
+    public bool Equals(Provider? other) => 
+        Margin.Equals(other?.Margin) && 
+        Name.Equals(other?.Name) && 
+        PaymentTransactionsInformation.Equals(other?.PaymentTransactionsInformation);
+        
 }

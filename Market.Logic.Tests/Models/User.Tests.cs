@@ -1,6 +1,6 @@
 ﻿using Market.Logic.Models;
 
-namespace Market.Logic.Tests;
+namespace Market.Logic.Tests.Models;
 
 public class UserTests
 {
