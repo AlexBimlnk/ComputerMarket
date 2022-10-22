@@ -46,9 +46,11 @@ public static class Registrations
             .AddSingleton<IAPIRequestHandler<ExternalProduct>, APIExternalProductsHandler<ExternalProduct>>()
             .AddSingleton<IAPIRequestHandler<HornsAndHoovesProduct>, APIExternalProductsHandler<HornsAndHoovesProduct>>()
 
-            .AddSingleton<IConverter<ExternalProduct, Product>, ProductsConverter>()
-            .AddSingleton(sp => (IConverter<HornsAndHoovesProduct, Product>)sp
-                .GetRequiredService<IConverter<ExternalProduct, Product>>())
+            .AddSingleton<ProductsConverter>()
+            .AddSingleton<IConverter<ExternalProduct, Product>>(sp =>
+                sp.GetRequiredService<ProductsConverter>())
+            .AddSingleton<IConverter<HornsAndHoovesProduct, Product>>(sp =>
+                sp.GetRequiredService<ProductsConverter>())
 
             .AddSingleton<ICommandFactory, CommandFactory>()
             .AddSingleton<Func<SetLinkCommandParameters, ICommand>>(
@@ -75,8 +77,9 @@ public static class Registrations
             .AddScoped<IRepository<Link>, LinkRepository>()
             .AddScoped<IRepository<History>, HistoryRepository>()
 
-            .AddSingleton<IKeyableCache<Link, ExternalID>, Cache>()
-            .AddSingleton<ICache<Link>>(sp => sp.GetRequiredService<IKeyableCache<Link, ExternalID>>());
+            .AddSingleton<Cache>()
+            .AddSingleton<IKeyableCache<Link, ExternalID>>(sp => sp.GetRequiredService<Cache>())
+            .AddSingleton<ICache<Link>>(sp => sp.GetRequiredService<Cache>());
 
     private static IServiceCollection AddHostedServices(this IServiceCollection services)
         => services.AddHostedService<CacheInizializerService>();
