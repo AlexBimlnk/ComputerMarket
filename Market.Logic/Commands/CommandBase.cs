@@ -17,6 +17,9 @@ public abstract class CommandBase
     protected CommandBase(CommandId id, CommandType type)
     {
         Id = id ?? throw new ArgumentNullException(nameof(id));
+
+        if (!Enum.IsDefined(typeof(CommandType), type)) 
+            throw new ArgumentException("Given unknown command type", nameof(type));
         Type = type;
     }
 
