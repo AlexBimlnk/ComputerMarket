@@ -37,7 +37,18 @@ public sealed class SetLinkCommand : ImportCommand
         Provider = provider ?? throw new ArgumentNullException(nameof(provider));
     }
 
+    /// <summary xml:lang = "ru">
+    /// Идентификатор внутреннего продукта.
+    /// </summary>
     public InternalID InternalItemId { get; }
+
+    /// <summary xml:lang = "ru">
+    /// Идентификатор продукта у постащика.
+    /// </summary>
     public InternalID ExternalItemId { get; }
+
+    /// <summary xml:lang = "ru">
+    /// Поставщик.
+    /// </summary>
     public Provider Provider { get; }
 }
