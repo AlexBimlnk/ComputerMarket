@@ -11,7 +11,8 @@ public abstract class ImportCommand : CommandBase
     /// <param name="id" xml:lang = "ru">
     /// Идентификатор команды.
     /// </param>
-    protected ImportCommand(CommandId id) : base(id)
+    protected ImportCommand(CommandId id, CommandType type)
+        : base(id, type)
     {
     }
 }

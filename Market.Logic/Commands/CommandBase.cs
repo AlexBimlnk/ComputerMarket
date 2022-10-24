@@ -14,13 +14,19 @@ public abstract class CommandBase
     /// <exception cref="ArgumentNullException" xml:lang = "ru">
     /// Если <paramref name="id"/> оказался <see langword="null"/>.
     /// </exception>
-    protected CommandBase(CommandId id)
+    protected CommandBase(CommandId id, CommandType type)
     {
         Id = id ?? throw new ArgumentNullException(nameof(id));
+        Type = type;
     }
 
     /// <summary xml:lang = "ru">
     /// Идентификатор команды.
     /// </summary>
     public CommandId Id { get; }
+
+    /// <summary xml:lang = "ru">
+    /// Тип команды.
+    /// </summary>
+    public CommandType Type { get; }
 }

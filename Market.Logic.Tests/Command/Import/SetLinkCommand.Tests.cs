@@ -20,8 +20,10 @@ public class SetLinkCommandTests
 
         var provider = new Provider(
             "some name",
-            new Margin(1),
-            paymentTransactionsInformation: new("2313213", "13123123"));
+            new Margin(2),
+            new PaymentTransactionsInformation(
+                inn: "0123456789",
+                bankAccount: "01234012340123401234"));
 
         // Act
         var exception = Record.Exception(() => command =
@@ -49,8 +51,10 @@ public class SetLinkCommandTests
 
         var provider = new Provider(
             "some name",
-            new Margin(1),
-            paymentTransactionsInformation: new("2313213", "13123123"));
+            new Margin(2),
+            new PaymentTransactionsInformation(
+                inn: "0123456789",
+                bankAccount: "01234012340123401234"));
 
         // Act
         var exception = Record.Exception(() =>

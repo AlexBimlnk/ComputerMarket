@@ -30,7 +30,7 @@ public sealed class SetLinkCommand : ImportCommand
         InternalID internalItemId,
         InternalID externalItemId,
         Provider provider) 
-        : base(id)
+        : base(id, CommandType.SetLink)
     {
         InternalItemId = internalItemId;
         ExternalItemId = externalItemId;

@@ -196,11 +196,12 @@ public class CommandSenderTests
         exception.Should().NotBeNull().And.BeOfType<OperationCanceledException>();
     }
 
-    private sealed record class FakeConfiguration(string Destination) : ITransportSenderConfiguration;
+    public sealed record class FakeConfiguration(string Destination) : ITransportSenderConfiguration;
 
-    private sealed class FakeCommand : CommandBase
+    public sealed class FakeCommand : CommandBase
     {
-        public FakeCommand(CommandId id) : base(id)
+        public FakeCommand(CommandId id) 
+            : base(id, CommandType.SetLink)
         {
         }
     }
