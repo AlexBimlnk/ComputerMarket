@@ -1,5 +1,5 @@
 ﻿using Market.Logic.Models;
-using Market.Logic.Transport.Models.Commands;
+using Market.Logic.Transport.Models.Commands.Import;
 
 namespace Market.Logic.Tests.Transport.Models.Commands;
 public class SetLinkCommandTests

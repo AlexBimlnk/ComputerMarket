@@ -7,7 +7,7 @@ using Newtonsoft.Json.Converters;
 
 namespace Market.Logic.Transport.Serializers;
 
-using TSetLinkCommand = Transport.Models.Commands.SetLinkCommand;
+using TSetLinkCommand = Transport.Models.Commands.Import.SetLinkCommand;
 
 public sealed class ImportCommandSerializer : ISerializer<ImportCommand, string>
 {

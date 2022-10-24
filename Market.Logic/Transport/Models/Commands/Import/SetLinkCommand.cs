@@ -3,7 +3,7 @@ using Market.Logic.Commands.Import;
 
 using Newtonsoft.Json;
 
-namespace Market.Logic.Transport.Models.Commands;
+namespace Market.Logic.Transport.Models.Commands.Import;
 
 /// <summary xml:lang = "ru">
 /// Транспортная модель команды для установки связи.
