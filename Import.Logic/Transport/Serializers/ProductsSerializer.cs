@@ -25,7 +25,7 @@ public sealed class ProductsSerializer : ISerializer<IReadOnlyCollection<Product
             Price = x.Price.Value,
             Quantity = x.Quantity
         })
-            .ToList();
+        .ToList();
 
         return JsonConvert.SerializeObject(transportProducts, new StringEnumConverter());
     }
