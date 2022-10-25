@@ -1,4 +1,5 @@
 ﻿using Market.Logic.Storage.Models;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace Market.Logic.Storage;
@@ -48,10 +49,10 @@ public sealed class MarketContext : DbContext
     public DbSet<Product> Products { get; set; } = default!;
 
     /// <summary xml:lang = "ru">
-    /// 
+    /// Группы свойств.
     /// </summary>
-
     public DbSet<PropertyGroup> PropertyGroups { get; set; } = default!;
+
     /// <summary xml:lang = "ru">
     /// Поставщики.
     /// </summary>
@@ -68,7 +69,7 @@ public sealed class MarketContext : DbContext
     public DbSet<UserType> UserTypes { get; set; } = default!;
 
     /// <summary xml:lang = "ru">
-    /// 
+    /// Представители поставщиков.
     /// </summary>
     public DbSet<ProviderAgent> ProviderAgents { get; set; } = default!;
 
