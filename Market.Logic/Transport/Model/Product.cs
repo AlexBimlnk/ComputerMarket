@@ -22,8 +22,8 @@ public sealed class Product
     /// <summary xml:lang = "ru">
     /// Название поставщика.
     /// </summary>
-    [JsonProperty("provider_name")]
-    public string Provider { get; set; }
+    [JsonProperty("provider_id")]
+    public long? ProviderID { get; set; }
 
     /// <summary xml:lang = "ru">
     /// Цена продукта.

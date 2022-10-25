@@ -65,13 +65,13 @@ public class ProductDeserializerTests
     {
         {
             /*lang=json,strict*/@"[
-                {""external_id"":1,""internal_id"":1,""provider_name"":""ivanov"",""price"":100.0,""quantity"":5},
-                {""external_id"":1,""internal_id"":4,""provider_name"":""horns_and_hooves"",""price"":55.0,""quantity"":3}
+                {""external_id"":1,""internal_id"":1,""provider_id"":1,""price"":100.0,""quantity"":5},
+                {""external_id"":1,""internal_id"":4,""provider_id"":2,""price"":55.0,""quantity"":3}
             ]",
             new []
             {
-                new Product() {ExternalID = 1, InternalID = 1, Provider = "ivanov", Price = 100m, Quantity = 5 },
-                new Product() {ExternalID = 1, InternalID = 4, Provider = "horns_and_hooves", Price = 55m, Quantity = 3 }
+                new Product() {ExternalID = 1, InternalID = 1, ProviderID = 1, Price = 100m, Quantity = 5 },
+                new Product() {ExternalID = 1, InternalID = 4, ProviderID = 2, Price = 55m, Quantity = 3 }
             }
         },
         {
