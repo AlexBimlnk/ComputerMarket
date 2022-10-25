@@ -59,12 +59,11 @@ public class ProductDeserializerTests
         exception.Should().BeOfType<ArgumentException>();
     }
 
-
-
     public readonly static TheoryData<string, IReadOnlyCollection<Product>> DeserializeParameters = new()
     {
         {
-            /*lang=json,strict*/@"[
+            /*lang=json,strict*/
+            @"[
                 {""external_id"":1,""internal_id"":1,""provider_id"":1,""price"":100.0,""quantity"":5},
                 {""external_id"":1,""internal_id"":4,""provider_id"":2,""price"":55.0,""quantity"":3}
             ]",

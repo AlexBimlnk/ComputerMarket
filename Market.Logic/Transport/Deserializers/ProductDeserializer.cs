@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 namespace Market.Logic.Transport.Deserializers;
 
 /// <summary xml:lang = "ru">
-/// Дессериализатор из <see cref="string"/> в <see cref="Product"/>.
+/// Дессериализатор <see cref="Product"/>.
 /// </summary>
 public sealed class ProductDeserializer : IDeserializer<string, IReadOnlyCollection<Product>>
 {

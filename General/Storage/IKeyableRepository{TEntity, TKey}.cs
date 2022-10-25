@@ -11,7 +11,8 @@ namespace General.Storage;
 /// <typeparam name="TKey" xml:lang = "ru">
 /// Тип ключа для сущности в репозитории.
 /// </typeparam>
-public interface IKeyableRepository<TEntity, TKey> : IRepository<TEntity> where TEntity : class, IKeyable<TKey> 
+public interface IKeyableRepository<TEntity, TKey> : IRepository<TEntity> 
+    where TEntity : class, IKeyable<TKey> 
 {
     /// <summary xml:lang = "ru">
     /// Возвращет сущность <see cref="TEntity"/> из кэша по соответсвующему ключу <see cref="TKey"/>.
