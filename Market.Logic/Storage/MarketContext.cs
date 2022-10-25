@@ -86,7 +86,8 @@ public sealed class MarketContext : DbContext
                     .HasMaxLength(40)
                     .HasColumnName("name");
 
-                entity.Property(e => e.TypeId).HasColumnName("type_id");
+                entity.Property(e => e.TypeId)
+                    .HasColumnName("type_id");
 
                 entity.HasOne(d => d.Type)
                     .WithMany(p => p.Items)
@@ -97,7 +98,8 @@ public sealed class MarketContext : DbContext
 
             modelBuilder.Entity<ItemDescription>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => new { e.ItemId, e.PropertyId })
+                    .HasName("item_description_pkey");
 
                 entity.ToTable("item_description");
 
@@ -111,13 +113,13 @@ public sealed class MarketContext : DbContext
                     .HasDefaultValueSql("NULL::character varying");
 
                 entity.HasOne(d => d.Item)
-                    .WithMany()
+                    .WithMany(d => d.Description)
                     .HasForeignKey(d => d.ItemId)
                     .OnDelete(DeleteBehavior.Restrict)
                     .HasConstraintName("item_description_item_id_fkey");
 
                 entity.HasOne(d => d.Property)
-                    .WithMany()
+                    .WithMany(p => p.ItemDescriptions)
                     .HasForeignKey(d => d.PropertyId)
                     .HasConstraintName("item_description_property_id_fkey");
             });
@@ -156,6 +158,23 @@ public sealed class MarketContext : DbContext
                 entity.Property(e => e.Name)
                     .HasMaxLength(40)
                     .HasColumnName("name");
+
+                entity.HasMany(d => d.Properties)
+                    .WithMany(p => p.Types)
+                    .UsingEntity<Dictionary<string, object>>(
+                        "ItemTypeProperty",
+                        l => l.HasOne<ItemProperty>().WithMany().HasForeignKey("PropertyId").HasConstraintName("item_type_properties_property_id_fkey"),
+                        r => r.HasOne<ItemType>().WithMany().HasForeignKey("TypeId").OnDelete(DeleteBehavior.Restrict).HasConstraintName("item_type_properties_type_id_fkey"),
+                        j =>
+                        {
+                            j.HasKey("TypeId", "PropertyId").HasName("item_type_properties_pkey");
+
+                            j.ToTable("item_type_properties");
+
+                            j.IndexerProperty<int>("TypeId").HasColumnName("type_id");
+
+                            j.IndexerProperty<long>("PropertyId").HasColumnName("property_id");
+                        });
             });
 
             modelBuilder.Entity<ItemTypeProperty>(entity =>

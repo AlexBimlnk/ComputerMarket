@@ -34,4 +34,14 @@ public sealed class ItemProperty
     /// Группа к которой относится свойство.
     /// </summary>
     public PropertyGroup? Group { get; set; }
+
+    /// <summary xml:lang = "ru">
+    /// Товары, которые имеют данное свойство.
+    /// </summary>
+    public ICollection<ItemDescription> ItemDescriptions { get; set; } = new HashSet<ItemDescription>();
+    
+    /// <summary xml:lang = "ru">
+    /// Типы, к которым относится свойство.
+    /// </summary>
+    public ICollection<ItemType> Types { get; set; } = new HashSet<ItemType>();
 }

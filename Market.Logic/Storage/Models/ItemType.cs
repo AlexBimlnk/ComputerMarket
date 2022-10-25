@@ -19,4 +19,9 @@ public sealed class ItemType
     /// Товары относящиеся к данному типу.
     /// </summary>
     public ICollection<Item> Items { get; set; } = new HashSet<Item>();
+
+    /// <summary xml:lang = "ru">
+    /// Свойства, которые относятся к данному типу.
+    /// </summary>
+    public ICollection<ItemProperty> Properties { get; set; } = new HashSet<ItemProperty>();
 }
