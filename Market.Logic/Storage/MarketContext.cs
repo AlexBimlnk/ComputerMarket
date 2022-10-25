@@ -243,7 +243,7 @@ public sealed class MarketContext : DbContext
 
                 entity.ToTable("providers_agents");
 
-                entity.HasIndex(e => e.UserId, "user_unique")
+                entity.HasIndex(e => e.UserId, "unique_user_check")
                     .IsUnique();
 
                 entity.Property(e => e.UserId).HasColumnName("user_id");
