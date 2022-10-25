@@ -39,11 +39,6 @@ public sealed class MarketContext : DbContext
     public DbSet<ItemType> ItemTypes { get; set; } = default!;
 
     /// <summary xml:lang = "ru">
-    /// Свойства относящиеся к типу товаров.
-    /// </summary>
-    public DbSet<ItemTypeProperty> ItemTypeProperties { get; set; } = default!;
-
-    /// <summary xml:lang = "ru">
     /// Продукты.
     /// </summary>
     public DbSet<Product> Products { get; set; } = default!;
@@ -175,28 +170,6 @@ public sealed class MarketContext : DbContext
 
                             j.IndexerProperty<long>("PropertyId").HasColumnName("property_id");
                         });
-            });
-
-            modelBuilder.Entity<ItemTypeProperty>(entity =>
-            {
-                entity.HasNoKey();
-
-                entity.ToTable("item_type_properties");
-
-                entity.Property(e => e.PropertyId).HasColumnName("property_id");
-
-                entity.Property(e => e.TypeId).HasColumnName("type_id");
-
-                entity.HasOne(d => d.Property)
-                    .WithMany()
-                    .HasForeignKey(d => d.PropertyId)
-                    .HasConstraintName("item_type_properties_property_id_fkey");
-
-                entity.HasOne(d => d.Type)
-                    .WithMany()
-                    .HasForeignKey(d => d.TypeId)
-                    .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("item_type_properties_type_id_fkey");
             });
 
             modelBuilder.Entity<Product>(entity =>
