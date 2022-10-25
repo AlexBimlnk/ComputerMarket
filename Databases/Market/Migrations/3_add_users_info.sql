@@ -20,14 +20,14 @@ CREATE TABLE users(
     Id BIGSERIAL PRIMARY KEY,
     Login VARCHAR(20) NOT NULL,
     Password VARCHAR(20) NOT NULL,
-    User_type_id SMALLINT NOT NULL,
+    User_type_id INT NOT NULL,
         FOREIGN KEY(User_type_id) REFERENCES user_type(Id) ON DELETE RESTRICT
 );
 
 CREATE TABLE providers_agents(
-    User_id BIGINT NOT NULL UNIQUE,
+    User_id INT NOT NULL,
         FOREIGN KEY(User_id) REFERENCES users(Id) ON DELETE CASCADE,
-    Provider_id BIGINT NOT NULL,
+    Provider_id INT NOT NULL,
         FOREIGN KEY (Provider_id) REFERENCES  providers(Id) ON DELETE CASCADE,
     PRIMARY KEY (User_id, Provider_id)
 );
