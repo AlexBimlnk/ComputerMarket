@@ -13,7 +13,7 @@ public sealed class ProductDeserializer : IDeserializer<string, IReadOnlyCollect
     private JsonSerializer _serializer = JsonSerializer.CreateDefault();
 
     /// <inheritdoc/>
-    /// /// <exception cref="ArgumentException" xml:lang = "ru">
+    /// <exception cref="ArgumentException" xml:lang = "ru">
     /// Когда <paramref name="source"/> имел неверный формат.
     /// </exception>
     public IReadOnlyCollection<Product> Deserialize(string source)
