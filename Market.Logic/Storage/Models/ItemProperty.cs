@@ -36,10 +36,15 @@ public sealed class ItemProperty
     public PropertyGroup? Group { get; set; }
 
     /// <summary xml:lang = "ru">
-    /// Товары, которые имеют данное свойство.
+    /// Значения этого свойства у кажого товара.
     /// </summary>
     public ICollection<ItemDescription> ItemDescriptions { get; set; } = new HashSet<ItemDescription>();
-    
+
+    /// <summary xml:lang = "ru">
+    /// Товары, которые имеют данное свойство.
+    /// </summary>
+    public ICollection<Item> Items { get; set; } = new HashSet<Item>();
+
     /// <summary xml:lang = "ru">
     /// Типы, к которым относится свойство.
     /// </summary>

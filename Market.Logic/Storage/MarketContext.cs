@@ -70,10 +70,13 @@ public sealed class MarketContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        {
+        
             modelBuilder.Entity<Item>(entity =>
             {
                 entity.ToTable("items");
+
+                entity.HasKey(e => e.Id)
+                    .HasName("item_description_pkey");
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
@@ -84,19 +87,43 @@ public sealed class MarketContext : DbContext
                 entity.Property(e => e.TypeId)
                     .HasColumnName("type_id");
 
-                entity.HasOne(d => d.Type)
+                /*entity.HasOne(d => d.Type)
                     .WithMany(p => p.Items)
                     .HasForeignKey(d => d.TypeId)
                     .OnDelete(DeleteBehavior.Restrict)
                     .HasConstraintName("items_type_id_fkey");
+
+                entity
+                .HasMany(c => c.Properties)
+                .WithMany(s => s.Items)
+                .UsingEntity<ItemDescription>(
+                    j => j
+                        .HasOne(pt => pt.Property)
+                        .WithMany(t => t.ItemDescriptions)
+                        .HasForeignKey(pt => pt.PropertyId),
+                    j => j
+                        .HasOne(pt => pt.Item)
+                        .WithMany(p => p.Description)
+                        .HasForeignKey(pt => pt.ItemId),
+                    j =>
+                    {
+                        j.Property(pt => pt.PropertyValue);
+                        j.HasKey(t => new { t.PropertyId, t.ItemId });
+                        j.ToTable("item_description");
+                    });
+
+                entity.HasMany(d => d.Description)
+                    .WithOne(p => p.Item)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("items_type_id_fkey");*/
             });
 
             modelBuilder.Entity<ItemDescription>(entity =>
             {
+                entity.ToTable("item_description");
+
                 entity.HasKey(e => new { e.ItemId, e.PropertyId })
                     .HasName("item_description_pkey");
-
-                entity.ToTable("item_description");
 
                 entity.Property(e => e.ItemId).HasColumnName("item_id");
 
@@ -107,7 +134,7 @@ public sealed class MarketContext : DbContext
                     .HasColumnName("property_value")
                     .HasDefaultValueSql("NULL::character varying");
 
-                entity.HasOne(d => d.Item)
+                /*entity.HasOne(d => d.Item)
                     .WithMany(d => d.Description)
                     .HasForeignKey(d => d.ItemId)
                     .OnDelete(DeleteBehavior.Restrict)
@@ -116,12 +143,15 @@ public sealed class MarketContext : DbContext
                 entity.HasOne(d => d.Property)
                     .WithMany(p => p.ItemDescriptions)
                     .HasForeignKey(d => d.PropertyId)
-                    .HasConstraintName("item_description_property_id_fkey");
+                    .HasConstraintName("item_description_property_id_fkey");*/
             });
 
             modelBuilder.Entity<ItemProperty>(entity =>
             {
                 entity.ToTable("item_properties");
+
+                entity.HasKey(e => e.Id)
+                    .HasName("item_properties_pkey");
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
@@ -138,15 +168,18 @@ public sealed class MarketContext : DbContext
                     .HasColumnName("property_data_type")
                     .HasDefaultValueSql("'varchar'::character varying");
 
-                entity.HasOne(d => d.Group)
+                /*entity.HasOne(d => d.Group)
                     .WithMany(p => p.ItemProperties)
                     .HasForeignKey(d => d.GroupId)
-                    .HasConstraintName("item_properties_group_id_fkey");
+                    .HasConstraintName("item_properties_group_id_fkey");*/
             });
 
             modelBuilder.Entity<ItemType>(entity =>
             {
                 entity.ToTable("item_type");
+
+                entity.HasKey(e => e.Id)
+                    .HasName("item_type_pkey");
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
@@ -154,7 +187,7 @@ public sealed class MarketContext : DbContext
                     .HasMaxLength(40)
                     .HasColumnName("name");
 
-                entity.HasMany(d => d.Properties)
+                /*entity.HasMany(d => d.Properties)
                     .WithMany(p => p.Types)
                     .UsingEntity<Dictionary<string, object>>(
                         "ItemTypeProperty",
@@ -169,7 +202,7 @@ public sealed class MarketContext : DbContext
                             j.IndexerProperty<int>("TypeId").HasColumnName("type_id");
 
                             j.IndexerProperty<long>("PropertyId").HasColumnName("property_id");
-                        });
+                        });*/
             });
 
             modelBuilder.Entity<Product>(entity =>
@@ -189,7 +222,7 @@ public sealed class MarketContext : DbContext
 
                 entity.Property(e => e.Quantity).HasColumnName("quantity");
 
-                entity.HasOne(d => d.Item)
+                /*entity.HasOne(d => d.Item)
                     .WithMany(p => p.Products)
                     .HasForeignKey(d => d.ItemId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
@@ -198,12 +231,15 @@ public sealed class MarketContext : DbContext
                 entity.HasOne(d => d.Provider)
                     .WithMany(p => p.Products)
                     .HasForeignKey(d => d.ProviderId)
-                    .HasConstraintName("product_provider_id_fkey");
+                    .HasConstraintName("product_provider_id_fkey");*/
             });
 
             modelBuilder.Entity<PropertyGroup>(entity =>
             {
                 entity.ToTable("property_group");
+
+                entity.HasKey(e => e.Id)
+                    .HasName("property_group_pkey");
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
@@ -215,6 +251,9 @@ public sealed class MarketContext : DbContext
             modelBuilder.Entity<Provider>(entity =>
             {
                 entity.ToTable("providers");
+
+                entity.HasKey(e => e.Id)
+                    .HasName("providers_pkey");
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
@@ -250,7 +289,7 @@ public sealed class MarketContext : DbContext
 
                 entity.Property(e => e.ProviderId).HasColumnName("provider_id");
 
-                entity.HasOne(d => d.Provider)
+                /*entity.HasOne(d => d.Provider)
                     .WithMany(p => p.ProvidersAgents)
                     .HasForeignKey(d => d.ProviderId)
                     .HasConstraintName("providers_agents_provider_id_fkey");
@@ -258,12 +297,15 @@ public sealed class MarketContext : DbContext
                 entity.HasOne(d => d.User)
                     .WithOne(p => p.ProvidersAgent)
                     .HasForeignKey<ProviderAgent>(d => d.UserId)
-                    .HasConstraintName("providers_agents_user_id_fkey");
+                    .HasConstraintName("providers_agents_user_id_fkey");*/
             });
 
             modelBuilder.Entity<User>(entity =>
             {
                 entity.ToTable("users");
+
+                entity.HasKey(e => e.Id)
+                    .HasName("users_pkey");
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
@@ -278,7 +320,7 @@ public sealed class MarketContext : DbContext
                 entity.Property(e => e.UserTypeId).HasColumnName("user_type_id");
 
                 entity.HasOne(d => d.UserType)
-                    .WithMany(p => p.Users)
+                    .WithMany()
                     .HasForeignKey(d => d.UserTypeId)
                     .OnDelete(DeleteBehavior.Restrict)
                     .HasConstraintName("users_user_type_id_fkey");
@@ -288,12 +330,16 @@ public sealed class MarketContext : DbContext
             {
                 entity.ToTable("user_type");
 
+                entity.HasKey(e => e.Id)
+                    .HasName("user_type_pkey");
+
                 entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(8)
                     .HasColumnName("name");
             });
-        }
+
+        
     }
 }

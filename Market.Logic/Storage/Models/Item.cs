@@ -30,6 +30,10 @@ public sealed class Item
     /// </summary>
     public ICollection<Product> Products { get; set; } = new HashSet<Product>();
 
+    /// <summary xml:lang = "ru">
+    ///  Продукты относящиеся к данному товару.
+    /// </summary>
+    public ICollection<ItemProperty> Properties { get; set; } = new HashSet<ItemProperty>();
 
     /// <summary xml:lang = "ru">
     ///  Свойства данного товара.

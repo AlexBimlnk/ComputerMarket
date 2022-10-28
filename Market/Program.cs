@@ -1,7 +1,14 @@
+using Market.Logic.Storage;
+
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddDbContext<MarketContext>(opt =>
+    opt.UseNpgsql(builder.Configuration.GetSection("ConnectionString").Value));
 
 var app = builder.Build();
 
