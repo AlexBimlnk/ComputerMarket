@@ -2,6 +2,7 @@
 
 using Import.Logic.Abstractions.Commands;
 using Import.Logic.Commands;
+using Import.Logic.Models;
 using Import.Logic.Transport.Models.Commands;
 
 using Newtonsoft.Json;
@@ -45,12 +46,12 @@ public sealed class CommandParametersDeserializer : IDeserializer<string, Comman
             TSetLinkCommand setLinkCommand => new SetLinkCommandParameters(
                 new(setLinkCommand.Id),
                 new(setLinkCommand.InternalID),
-                new(setLinkCommand.ExternalID, setLinkCommand.Provider)),
+                new(setLinkCommand.ExternalID, (Provider)setLinkCommand.ProviderID)),
 
             TDeleteLinkCommand deleteLinkCommand => new DeleteLinkCommandParameters(
                 new(deleteLinkCommand.Id),
                 new(deleteLinkCommand.InternalID),
-                new(deleteLinkCommand.ExternalID, deleteLinkCommand.Provider)),
+                new(deleteLinkCommand.ExternalID, (Provider)deleteLinkCommand.ProviderID)),
 
             var unknownCommandType =>
                 throw new InvalidOperationException($"The source contains unknown command '{unknownCommandType?.GetType().Name}'. ")

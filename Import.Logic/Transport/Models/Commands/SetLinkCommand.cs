@@ -1,6 +1,4 @@
-﻿using Import.Logic.Models;
-
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace Import.Logic.Transport.Models.Commands;
 
@@ -30,8 +28,8 @@ public sealed class SetLinkCommand : CommandBase
     public long ExternalID { get; set; }
 
     /// <summary xml:lang = "ru">
-    /// Имя провайдера.
+    /// Идентификатор провайдера.
     /// </summary>
-    [JsonProperty("provider")]
-    public Provider Provider { get; set; } = default!;
+    [JsonProperty("provider_id")]
+    public long ProviderID { get; set; } = default!;
 }

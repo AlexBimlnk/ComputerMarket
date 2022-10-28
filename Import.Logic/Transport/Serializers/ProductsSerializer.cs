@@ -21,7 +21,7 @@ public sealed class ProductsSerializer : ISerializer<IReadOnlyCollection<Product
         {
             ExternalID = x.ExternalID.Value,
             InternalID = x.InternalID.Value,
-            Provider = x.ExternalID.Provider,
+            ProviderID = (long)x.ExternalID.Provider,
             Price = x.Price.Value,
             Quantity = x.Quantity
         })
@@ -38,8 +38,8 @@ public sealed class ProductsSerializer : ISerializer<IReadOnlyCollection<Product
         [JsonProperty("internal_id")]
         public long? InternalID { get; set; }
 
-        [JsonProperty("provider_name")]
-        public Provider Provider { get; set; }
+        [JsonProperty("provider_id")]
+        public long ProviderID { get; set; }
 
         [JsonProperty("price")]
         public decimal Price { get; set; }

@@ -2,27 +2,27 @@
 using Import.Logic.Transport.Models;
 
 namespace Import.Logic.Tests.Transport.Deserializers;
-public class ExternalProductsDeserializerTests
+public class IvanovProductsDeserializerTests
 {
-    [Fact(DisplayName = $"The {nameof(ExternalProductsDeserializer)} can create.")]
+    [Fact(DisplayName = $"The {nameof(IvanovProductsDeserializer)} can create.")]
     [Trait("Category", "Unit")]
     public void CanBeCreated()
     {
         // Act
         var exception = Record.Exception(() =>
-            _ = new ExternalProductsDeserializer());
+            _ = new IvanovProductsDeserializer());
 
         // Assert
         exception.Should().BeNull();
     }
 
-    [Theory(DisplayName = $"The {nameof(ExternalProductsDeserializer)} can deserialize.")]
+    [Theory(DisplayName = $"The {nameof(IvanovProductsDeserializer)} can deserialize.")]
     [Trait("Category", "Unit")]
     [MemberData(nameof(DeserializeParameters))]
     public void CanDeserialize(string rawSource, ExternalProduct[] expectedResult)
     {
         // Arrange
-        var deserializer = new ExternalProductsDeserializer();
+        var deserializer = new IvanovProductsDeserializer();
 
         // Act
         var result = deserializer.Deserialize(rawSource);
@@ -31,7 +31,7 @@ public class ExternalProductsDeserializerTests
         result.Should().BeEquivalentTo(expectedResult);
     }
 
-    [Theory(DisplayName = $"The {nameof(ExternalProductsDeserializer)} can't deserialize bad string.")]
+    [Theory(DisplayName = $"The {nameof(IvanovProductsDeserializer)} can't deserialize bad string.")]
     [Trait("Category", "Unit")]
     [InlineData(null)]
     [InlineData("")]
@@ -40,7 +40,7 @@ public class ExternalProductsDeserializerTests
     public void CanNotDeserializeBadString(string source)
     {
         // Arrange
-        var deserializer = new ExternalProductsDeserializer();
+        var deserializer = new IvanovProductsDeserializer();
 
         // Act
         var exception = Record.Exception(() =>

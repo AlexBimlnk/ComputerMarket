@@ -18,5 +18,5 @@ public enum Provider
     /// <summary xml:lang = "ru">
     /// Рога и копыта.
     /// </summary>
-    HornsAndHooves,
+    HornsAndHooves = 2,
 }
