@@ -21,18 +21,15 @@ namespace Import;
 
 public static class Registrations
 {
-    public static IServiceCollection AddImportServices(this IServiceCollection services, IConfiguration configuration)
-    {
-        services.AddConfigurations(configuration);
+    public static IServiceCollection AddImportServices(this IServiceCollection services, IConfiguration configuration) =>
+        services
+        .AddConfigurations(configuration)
+        .AddHostedServices()
+        .AddLogic()
+        .AddTransport()
+        .AddStorage();
 
-        return services
-            .AddHostedServices()
-            .AddLogic()
-            .AddTransport()
-            .AddStorage();
-    }
-
-    private static void AddConfigurations(this IServiceCollection services, IConfiguration configuration)
+    private static IServiceCollection AddConfigurations(this IServiceCollection services, IConfiguration configuration)
         => services
             .Configure<InternalProductSenderConfiguration>(configuration.GetSection(nameof(InternalProductSenderConfiguration)))
             .AddSingleton<IValidateOptions<InternalProductSenderConfiguration>, SenderConfigurationValidator<InternalProductSenderConfiguration>>();
@@ -42,9 +39,9 @@ public static class Registrations
             .AddSingleton<IMapper<Product>, Mapper>()
             .AddSingleton<IHistoryRecorder, HistoryRecorder>()
 
-            .AddSingleton<IAPICommandHandler, APICommandHandler>()
-            .AddSingleton<IAPIRequestHandler<ExternalProduct>, APIExternalProductsHandler<ExternalProduct>>()
-            .AddSingleton<IAPIRequestHandler<HornsAndHoovesProduct>, APIExternalProductsHandler<HornsAndHoovesProduct>>()
+            .AddScoped<IAPICommandHandler, APICommandHandler>()
+            .AddScoped<IAPIRequestHandler<ExternalProduct>, APIExternalProductsHandler<ExternalProduct>>()
+            .AddScoped<IAPIRequestHandler<HornsAndHoovesProduct>, APIExternalProductsHandler<HornsAndHoovesProduct>>()
 
             .AddSingleton<ProductsConverter>()
             .AddSingleton<IConverter<ExternalProduct, Product>>(sp =>

@@ -3,8 +3,6 @@
 using Import.Logic.Abstractions.Commands;
 using Import.Logic.Models;
 
-using Microsoft.Extensions.DependencyInjection;
-
 namespace Import.Logic.Commands;
 
 /// <summary xml:lang = "ru">
@@ -14,7 +12,7 @@ public sealed class SetLinkCommand : CommandBase
 {
     private readonly SetLinkCommandParameters _parameters;
     private readonly ICache<Link> _cacheLinks;
-    private readonly IServiceScopeFactory _scopeFactory;
+    private readonly IRepository<Link> _repository;
 
     /// <summary xml:lang = "ru">
     /// Создает новый экземпляр типа <see cref="SetLinkCommand"/>.
@@ -34,11 +32,11 @@ public sealed class SetLinkCommand : CommandBase
     public SetLinkCommand(
         SetLinkCommandParameters parameters,
         ICache<Link> cacheLinks,
-        IServiceScopeFactory scopeFactory)
+        IRepository<Link> repository)
     {
         _parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
         _cacheLinks = cacheLinks ?? throw new ArgumentNullException(nameof(cacheLinks));
-        _scopeFactory = scopeFactory ?? throw new ArgumentNullException(nameof(scopeFactory));
+        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
     }
 
     /// <inheritdoc/>
@@ -51,14 +49,10 @@ public sealed class SetLinkCommand : CommandBase
         if (_cacheLinks.Contains(link))
             throw new InvalidOperationException("Such a link already exists.");
 
-        using var scope = _scopeFactory.CreateScope();
-
-        var repository = scope.ServiceProvider.GetRequiredService<IRepository<Link>>();
-
-        await repository.AddAsync(link)
+        await _repository.AddAsync(link)
             .ConfigureAwait(false);
 
-        repository.Save();
+        _repository.Save();
 
         _cacheLinks.Add(link);
     }
