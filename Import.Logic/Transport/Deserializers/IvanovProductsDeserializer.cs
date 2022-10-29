@@ -9,7 +9,7 @@ namespace Import.Logic.Transport.Deserializers;
 /// <summary xml:lang = "ru">
 /// Десериализатор внешних продуктов от поставщика <see cref="Logic.Models.Provider.Ivanov"/>.
 /// </summary>
-public sealed class ExternalProductsDeserializer : IDeserializer<string, IReadOnlyCollection<ExternalProduct>>
+public sealed class IvanovProductsDeserializer : IDeserializer<string, IReadOnlyCollection<ExternalProduct>>
 {
     private readonly JsonSerializer _serializer = JsonSerializer.CreateDefault();
 
