@@ -3,7 +3,7 @@
 /// <summary xml:lang = "ru">
 /// Транспортная модель описания товара, используемая хранилищнм.
 /// </summary>
-public sealed class ItemDescription
+public class ItemDescription
 {
     /// <summary xml:lang = "ru">
     /// Индетификатор товара.
@@ -23,10 +23,10 @@ public sealed class ItemDescription
     /// <summary xml:lang = "ru">
     /// Товар.
     /// </summary>
-    public Item Item { get; set; } = null!;
+    public virtual Item Item { get; set; } = null!;
 
     /// <summary xml:lang = "ru">
     /// Свойство товара.
     /// </summary>
-    public ItemProperty Property { get; set; } = null!;
+    public virtual ItemProperty Property { get; set; } = null!;
 }

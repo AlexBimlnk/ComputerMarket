@@ -3,7 +3,7 @@
 /// <summary xml:lang = "ru">
 /// Транспортная модель товара, используемая хранилищем.
 /// </summary>
-public sealed class Item
+public class Item
 {
     /// <summary xml:lang = "ru">
     /// Индетификатор товара.
@@ -23,20 +23,15 @@ public sealed class Item
     /// <summary xml:lang = "ru">
     /// Тип товара.
     /// </summary>
-    public ItemType Type { get; set; } = null!;
+    public virtual ItemType Type { get; set; } = null!;
 
     /// <summary xml:lang = "ru">
     ///  Продукты относящиеся к данному товару.
     /// </summary>
-    public ICollection<Product> Products { get; set; } = new HashSet<Product>();
-
-    /// <summary xml:lang = "ru">
-    ///  Продукты относящиеся к данному товару.
-    /// </summary>
-    public ICollection<ItemProperty> Properties { get; set; } = new HashSet<ItemProperty>();
+    public virtual ICollection<Product> Products { get; set; } = new HashSet<Product>();
 
     /// <summary xml:lang = "ru">
     ///  Свойства данного товара.
     /// </summary>
-    public ICollection<ItemDescription> Description { get; set; } = new HashSet<ItemDescription>();
+    public virtual ICollection<ItemDescription> Description { get; set; } = new HashSet<ItemDescription>();
 }

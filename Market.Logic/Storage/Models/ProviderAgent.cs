@@ -3,7 +3,7 @@
 /// <summary xml:lang = "ru">
 /// Транспортная модель представителя поставщика, используемая хранилищем.
 /// </summary>
-public sealed class ProviderAgent
+public class ProviderAgent
 {
     /// <summary xml:lang = "ru">
     /// Индетификатор пользователя.
@@ -18,10 +18,10 @@ public sealed class ProviderAgent
     /// <summary xml:lang = "ru">
     /// Поставщик.
     /// </summary>
-    public Provider Provider { get; set; } = null!;
+    public virtual Provider Provider { get; set; } = null!;
 
     /// <summary xml:lang = "ru">
     /// Пользователь.
     /// </summary>
-    public User User { get; set; } = null!;
+    public virtual User User { get; set; } = null!;
 }

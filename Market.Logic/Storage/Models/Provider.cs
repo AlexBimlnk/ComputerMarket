@@ -3,7 +3,7 @@
 /// <summary xml:lang = "ru">
 /// Транспортная модель поставщика, используемая хранилищем.
 /// </summary>
-public sealed class Provider
+public class Provider
 {
     /// <summary xml:lang = "ru">
     /// Индетификатор поставщика.
@@ -33,10 +33,10 @@ public sealed class Provider
     /// <summary xml:lang = "ru">
     /// Продукты предоставляемые поставщиком.
     /// </summary>
-    public ICollection<Product> Products { get; set; } = new HashSet<Product>();
+    public virtual ICollection<Product> Products { get; set; } = new HashSet<Product>();
 
     /// <summary xml:lang = "ru">
     /// Представители поставщика.
     /// </summary>
-    public ICollection<ProviderAgent> ProvidersAgents { get; set; } = new HashSet<ProviderAgent>();
+    public virtual ICollection<ProviderAgent> ProvidersAgents { get; set; } = new HashSet<ProviderAgent>();
 }

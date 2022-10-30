@@ -3,7 +3,7 @@
 /// <summary xml:lang = "ru">
 /// Транспортная модель группы свойств, используемая хранилищем.
 /// </summary>
-public sealed class PropertyGroup
+public class PropertyGroup
 {
     /// <summary xml:lang = "ru">
     /// Индетификатор группы свойств.
@@ -14,9 +14,4 @@ public sealed class PropertyGroup
     /// Название группы.
     /// </summary>
     public string? Name { get; set; }
-
-    /// <summary xml:lang = "ru">
-    /// Свойства относящиеся к данной группе.
-    /// </summary>
-    public ICollection<ItemProperty> ItemProperties { get; set; } = new HashSet<ItemProperty>();
 }

@@ -3,7 +3,7 @@
 /// <summary xml:lang = "ru">
 /// Транспортная модель пользователя, используемая хранилищем.
 /// </summary>
-public sealed class User
+public class User
 {
     /// <summary xml:lang = "ru">
     /// Индетифкатор пользователя.
@@ -28,10 +28,10 @@ public sealed class User
     /// <summary xml:lang = "ru">
     /// Тип пользователя.
     /// </summary>
-    public UserType UserType { get; set; } = null!;
+    public virtual UserType UserType { get; set; } = null!;
 
     /// <summary xml:lang = "ru">
     /// Поставщик к которому относится пользователь.
     /// </summary>
-    public ProviderAgent? ProvidersAgent { get; set; }
+    public virtual ProviderAgent? ProvidersAgent { get; set; }
 }

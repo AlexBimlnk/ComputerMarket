@@ -3,7 +3,7 @@
 /// <summary xml:lang = "ru">
 /// Транспортаня модель типа пользователя, используемая хранилищем.
 /// </summary>
-public sealed class UserType
+public class UserType
 {
     /// <summary xml:lang = "ru">
     /// Индетифкатор типа пользователя.
@@ -14,9 +14,4 @@ public sealed class UserType
     /// Название типа пользователя.
     /// </summary>
     public string Name { get; set; } = null!;
-
-    /// <summary xml:lang = "ru">
-    /// Пользователи относящиеся к данному типу.
-    /// </summary>
-    public ICollection<User> Users { get; set; } = new HashSet<User>();
 }

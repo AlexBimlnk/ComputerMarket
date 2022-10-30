@@ -3,7 +3,7 @@
 /// <summary xml:lang = "ru">
 /// Транспортная модель продукта, используемая хранилищем.
 /// </summary>
-public sealed class Product
+public class Product
 {
     /// <summary xml:lang = "ru">
     /// Индетификатор товара.
@@ -28,10 +28,10 @@ public sealed class Product
     /// <summary xml:lang = "ru">
     /// Това.
     /// </summary>
-    public Item Item { get; set; } = null!;
+    public virtual Item Item { get; set; } = null!;
 
     /// <summary xml:lang = "ru">
     /// Поставщик.
     /// </summary>
-    public Provider Provider { get; set; } = null!;
+    public virtual Provider Provider { get; set; } = null!;
 }
