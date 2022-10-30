@@ -19,7 +19,7 @@ public class HomeController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> IndexAsync() => View(await _context.Users.ToListAsync());
+    public async Task<IActionResult> IndexAsync() => View(await _context.Users.Include(p => p.UserType).ToListAsync());
 
     public IActionResult Privacy() => View();
 
