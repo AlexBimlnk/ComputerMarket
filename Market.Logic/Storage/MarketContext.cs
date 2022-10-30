@@ -2,6 +2,7 @@
 
 using Microsoft.EntityFrameworkCore;
 
+
 namespace Market.Logic.Storage;
 
 /// <summary xml:lang = "ru">
@@ -16,6 +17,14 @@ public sealed class MarketContext : DbContext
     public MarketContext(DbContextOptions<MarketContext> options)
         : base(options)
     {
+    }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder
+            .UseLazyLoadingProxies();
+
+        base.OnConfiguring(optionsBuilder);
     }
 
     /// <summary xml:lang = "ru">
@@ -87,35 +96,11 @@ public sealed class MarketContext : DbContext
                 entity.Property(e => e.TypeId)
                     .HasColumnName("type_id");
 
-                /*entity.HasOne(d => d.Type)
+                entity.HasOne(d => d.Type)
                     .WithMany(p => p.Items)
                     .HasForeignKey(d => d.TypeId)
                     .OnDelete(DeleteBehavior.Restrict)
                     .HasConstraintName("items_type_id_fkey");
-
-                entity
-                .HasMany(c => c.Properties)
-                .WithMany(s => s.Items)
-                .UsingEntity<ItemDescription>(
-                    j => j
-                        .HasOne(pt => pt.Property)
-                        .WithMany(t => t.ItemDescriptions)
-                        .HasForeignKey(pt => pt.PropertyId),
-                    j => j
-                        .HasOne(pt => pt.Item)
-                        .WithMany(p => p.Description)
-                        .HasForeignKey(pt => pt.ItemId),
-                    j =>
-                    {
-                        j.Property(pt => pt.PropertyValue);
-                        j.HasKey(t => new { t.PropertyId, t.ItemId });
-                        j.ToTable("item_description");
-                    });
-
-                entity.HasMany(d => d.Description)
-                    .WithOne(p => p.Item)
-                    .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("items_type_id_fkey");*/
             });
 
             modelBuilder.Entity<ItemDescription>(entity =>
@@ -134,16 +119,16 @@ public sealed class MarketContext : DbContext
                     .HasColumnName("property_value")
                     .HasDefaultValueSql("NULL::character varying");
 
-                /*entity.HasOne(d => d.Item)
+                entity.HasOne(i => i.Item)
                     .WithMany(d => d.Description)
                     .HasForeignKey(d => d.ItemId)
                     .OnDelete(DeleteBehavior.Restrict)
                     .HasConstraintName("item_description_item_id_fkey");
 
                 entity.HasOne(d => d.Property)
-                    .WithMany(p => p.ItemDescriptions)
+                    .WithMany()
                     .HasForeignKey(d => d.PropertyId)
-                    .HasConstraintName("item_description_property_id_fkey");*/
+                    .HasConstraintName("item_description_property_id_fkey");
             });
 
             modelBuilder.Entity<ItemProperty>(entity =>
@@ -168,10 +153,10 @@ public sealed class MarketContext : DbContext
                     .HasColumnName("property_data_type")
                     .HasDefaultValueSql("'varchar'::character varying");
 
-                /*entity.HasOne(d => d.Group)
-                    .WithMany(p => p.ItemProperties)
+                entity.HasOne(d => d.Group)
+                    .WithMany()
                     .HasForeignKey(d => d.GroupId)
-                    .HasConstraintName("item_properties_group_id_fkey");*/
+                    .HasConstraintName("item_properties_group_id_fkey");
             });
 
             modelBuilder.Entity<ItemType>(entity =>
@@ -187,7 +172,7 @@ public sealed class MarketContext : DbContext
                     .HasMaxLength(40)
                     .HasColumnName("name");
 
-                /*entity.HasMany(d => d.Properties)
+                entity.HasMany(d => d.Properties)
                     .WithMany(p => p.Types)
                     .UsingEntity<Dictionary<string, object>>(
                         "ItemTypeProperty",
@@ -202,7 +187,7 @@ public sealed class MarketContext : DbContext
                             j.IndexerProperty<int>("TypeId").HasColumnName("type_id");
 
                             j.IndexerProperty<long>("PropertyId").HasColumnName("property_id");
-                        });*/
+                        });
             });
 
             modelBuilder.Entity<Product>(entity =>
@@ -222,7 +207,7 @@ public sealed class MarketContext : DbContext
 
                 entity.Property(e => e.Quantity).HasColumnName("quantity");
 
-                /*entity.HasOne(d => d.Item)
+                entity.HasOne(d => d.Item)
                     .WithMany(p => p.Products)
                     .HasForeignKey(d => d.ItemId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
@@ -231,7 +216,7 @@ public sealed class MarketContext : DbContext
                 entity.HasOne(d => d.Provider)
                     .WithMany(p => p.Products)
                     .HasForeignKey(d => d.ProviderId)
-                    .HasConstraintName("product_provider_id_fkey");*/
+                    .HasConstraintName("product_provider_id_fkey");
             });
 
             modelBuilder.Entity<PropertyGroup>(entity =>
@@ -289,7 +274,7 @@ public sealed class MarketContext : DbContext
 
                 entity.Property(e => e.ProviderId).HasColumnName("provider_id");
 
-                /*entity.HasOne(d => d.Provider)
+                entity.HasOne(d => d.Provider)
                     .WithMany(p => p.ProvidersAgents)
                     .HasForeignKey(d => d.ProviderId)
                     .HasConstraintName("providers_agents_provider_id_fkey");
@@ -297,7 +282,7 @@ public sealed class MarketContext : DbContext
                 entity.HasOne(d => d.User)
                     .WithOne(p => p.ProvidersAgent)
                     .HasForeignKey<ProviderAgent>(d => d.UserId)
-                    .HasConstraintName("providers_agents_user_id_fkey");*/
+                    .HasConstraintName("providers_agents_user_id_fkey");
             });
 
             modelBuilder.Entity<User>(entity =>
