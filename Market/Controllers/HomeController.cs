@@ -6,6 +6,8 @@ using Market.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+
 namespace Market.Controllers;
 public class HomeController : Controller
 {
@@ -19,7 +21,7 @@ public class HomeController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> IndexAsync() => View(await _context.Users.Include(p => p.UserType).ToListAsync());
+    public IActionResult Index() => View();
 
     public IActionResult Privacy() => View();
 
