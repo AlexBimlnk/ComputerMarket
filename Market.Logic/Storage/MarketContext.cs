@@ -33,11 +33,6 @@ public sealed class MarketContext : DbContext
     public DbSet<Item> Items { get; set; } = default!;
 
     /// <summary xml:lang = "ru">
-    /// Описания товаров.
-    /// </summary>
-    public DbSet<ItemDescription> ItemDescriptions { get; set; } = default!;
-
-    /// <summary xml:lang = "ru">
     /// Свойства товаров.
     /// </summary>
     public DbSet<ItemProperty> ItemProperties { get; set; } = default!;
@@ -71,11 +66,6 @@ public sealed class MarketContext : DbContext
     /// Типы пользователей.
     /// </summary>
     public DbSet<UserType> UserTypes { get; set; } = default!;
-
-    /// <summary xml:lang = "ru">
-    /// Представители поставщиков.
-    /// </summary>
-    public DbSet<ProviderAgent> ProviderAgents { get; set; } = default!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
