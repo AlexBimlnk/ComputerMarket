@@ -17,7 +17,7 @@ public interface IKeyableCache<TEntity, TKey> : ICache<TEntity> where TEntity : 
     /// Возвращет сущность <see cref="TEntity"/> из кэша по соответсвующему ключу <see cref="TKey"/>.
     /// </summary>
     /// <param name="key" xml:lang = "ru">
-    /// Ключ сущности.  <see cref="TEntity"/>
+    /// Ключ сущности <see cref="TEntity"/>.
     /// </param>
     /// <returns xml:lang = "ru">
     /// Сущность соответсвующая ключу из кеша если такой сущности по ключу в кэше нет - <see langword="null"/>.

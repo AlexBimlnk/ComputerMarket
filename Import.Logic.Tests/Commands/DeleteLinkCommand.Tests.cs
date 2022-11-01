@@ -3,8 +3,6 @@
 using Import.Logic.Commands;
 using Import.Logic.Models;
 
-using Microsoft.Extensions.DependencyInjection;
-
 using Moq;
 
 namespace Import.Logic.Tests.Commands;
@@ -23,7 +21,7 @@ public class DeleteLinkCommandTests
             new(1),
             new(1, Provider.Ivanov));
         var cache = Mock.Of<ICache<Link>>();
-        var repository = Mock.Of<IServiceScopeFactory>();
+        var repository = Mock.Of<IRepository<Link>>();
 
         // Act
         var exception = Record.Exception(() =>
@@ -40,7 +38,7 @@ public class DeleteLinkCommandTests
     {
         // Arrange
         var cache = Mock.Of<ICache<Link>>();
-        var repository = Mock.Of<IServiceScopeFactory>();
+        var repository = Mock.Of<IRepository<Link>>();
 
         // Act
         var exception = Record.Exception(() =>
@@ -60,19 +58,19 @@ public class DeleteLinkCommandTests
             id,
             new(1),
             new(1, Provider.Ivanov));
-        var scopeFactory = Mock.Of<IServiceScopeFactory>();
+        var repository = Mock.Of<IRepository<Link>>();
 
         // Act
         var exception = Record.Exception(() =>
-            _ = new DeleteLinkCommand(parameters, cacheLinks: null!, scopeFactory));
+            _ = new DeleteLinkCommand(parameters, cacheLinks: null!, repository));
 
         // Assert
         exception.Should().NotBeNull().And.BeOfType<ArgumentNullException>();
     }
 
-    [Fact(DisplayName = $"The {nameof(DeleteLinkCommand)} can't create without scope factory.")]
+    [Fact(DisplayName = $"The {nameof(DeleteLinkCommand)} can't create without repository.")]
     [Trait("Category", "Unit")]
-    public void CanNotBeCreatedWithoutScopeFactory()
+    public void CanNotBeCreatedWithoutRepository()
     {
         // Arrange
         var id = new CommandID("some id");
@@ -84,7 +82,7 @@ public class DeleteLinkCommandTests
 
         // Act
         var exception = Record.Exception(() =>
-            _ = new DeleteLinkCommand(parameters, cache, scopeFactory: null!));
+            _ = new DeleteLinkCommand(parameters, cache, repository: null!));
 
         // Assert
         exception.Should().NotBeNull().And.BeOfType<ArgumentNullException>();
@@ -110,23 +108,10 @@ public class DeleteLinkCommandTests
 
         var repository = new Mock<IRepository<Link>>();
 
-        var scopeFactory = new Mock<IServiceScopeFactory>();
-        var scope = new Mock<IServiceScope>();
-        var serviceProvider = new Mock<IServiceProvider>(MockBehavior.Strict);
-
-        scopeFactory.Setup(x => x.CreateScope())
-            .Returns(scope.Object);
-
-        scope.Setup(x => x.ServiceProvider)
-            .Returns(serviceProvider.Object);
-
-        serviceProvider.Setup(x => x.GetService(typeof(IRepository<Link>)))
-            .Returns(repository.Object);
-
         var command = new DeleteLinkCommand(
             parameters,
             cache.Object,
-            scopeFactory.Object);
+            repository.Object);
 
         var expectedResult = CommandResult.Success(id);
 
@@ -143,9 +128,9 @@ public class DeleteLinkCommandTests
         repository.Verify(x => x.Save(), Times.Once);
     }
 
-    [Fact(DisplayName = $"The {nameof(DeleteLinkCommand)} can execute when link not exists.")]
+    [Fact(DisplayName = $"The {nameof(DeleteLinkCommand)} can execute when link already exists.")]
     [Trait("Category", "Unit")]
-    public async void CanExecuteWhenLinkNotExistsAsync()
+    public async void CanExecuteWhenLinkAlreadyExistsAsync()
     {
         // Arrange
         var id = new CommandID("some id");
@@ -155,31 +140,18 @@ public class DeleteLinkCommandTests
             new(1, Provider.Ivanov));
         var link = new Link(parameters.InternalID, parameters.ExternalID);
 
+        var repository = new Mock<IRepository<Link>>(MockBehavior.Strict);
+
         var cache = new Mock<ICache<Link>>();
         var cacheInvokeCount = 0;
         cache.Setup(x => x.Contains(link))
             .Returns(false)
             .Callback(() => cacheInvokeCount++);
 
-        var repository = new Mock<IRepository<Link>>();
-
-        var scopeFactory = new Mock<IServiceScopeFactory>();
-        var scope = new Mock<IServiceScope>();
-        var serviceProvider = new Mock<IServiceProvider>(MockBehavior.Strict);
-
-        scopeFactory.Setup(x => x.CreateScope())
-            .Returns(scope.Object);
-
-        scope.Setup(x => x.ServiceProvider)
-            .Returns(serviceProvider.Object);
-
-        serviceProvider.Setup(x => x.GetService(typeof(IRepository<Link>)))
-            .Returns(repository.Object);
-
         var command = new DeleteLinkCommand(
             parameters,
             cache.Object,
-            scopeFactory.Object);
+            repository.Object);
 
         var expectedResult = CommandResult.Fail(id, "some error message");
 

@@ -3,8 +3,6 @@ using Import.Logic.Commands;
 using Import.Logic.Models;
 using Import.Logic.Transport.Deserializers;
 
-using Newtonsoft.Json;
-
 namespace Import.Logic.Tests.Transport.Deserializers;
 public class CommandParametersDeserializerTests
 {
@@ -67,7 +65,7 @@ public class CommandParametersDeserializerTests
             ""id"": ""some id"",
             ""internal_id"": 1,
             ""external_id"": 1,
-            ""provider"": ""horns_and_hooves""
+            ""provider_id"": 1
         }";
 
         // Act
@@ -76,29 +74,6 @@ public class CommandParametersDeserializerTests
 
         // Assert
         exception.Should().BeOfType<ArgumentException>();
-    }
-
-    [Fact(DisplayName = $"The {nameof(CommandParametersDeserializer)} can't deserialize unknown provider.")]
-    [Trait("Category", "Unit")]
-    public void CanNotDeserializeUnknownProvider()
-    {
-        // Arrange
-        var deserializer = new CommandParametersDeserializer();
-        var rawSource = /*lang=json,strict*/ @"
-        {
-            ""type"": ""set_link"",
-            ""id"": ""some id"",
-            ""internal_id"": 1,
-            ""external_id"": 1,
-            ""provider"": ""unknown_provider""
-        }";
-
-        // Act
-        var exception = Record.Exception(() =>
-            _ = deserializer.Deserialize(rawSource));
-
-        // Assert
-        exception.Should().BeOfType<JsonSerializationException>();
     }
 
     public readonly static TheoryData<string, CommandParametersBase> DeserializeParameters = new()
@@ -110,7 +85,7 @@ public class CommandParametersDeserializerTests
                 ""id"": ""some id"",
                 ""internal_id"": 1,
                 ""external_id"": 1,
-                ""provider"": ""horns_and_hooves""
+                ""provider_id"": 2
             }",
             new SetLinkCommandParameters(
                 new("some id"),
@@ -124,7 +99,7 @@ public class CommandParametersDeserializerTests
             ""id"": ""some id"",
             ""internal_id"": 2,
             ""external_id"": 2,
-            ""provider"": ""ivanov""
+            ""provider_id"": 1
             }",
             new SetLinkCommandParameters(
                 new("some id"),
@@ -138,7 +113,7 @@ public class CommandParametersDeserializerTests
                 ""id"": ""some id"",
                 ""internal_id"": 3,
                 ""external_id"": 4,
-                ""provider"": ""horns_and_hooves""
+                ""provider_id"": 2
             }",
             new DeleteLinkCommandParameters(
                 new("some id"),
