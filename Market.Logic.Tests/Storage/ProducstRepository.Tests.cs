@@ -15,40 +15,40 @@ using TItemType = Logic.Storage.Models.ItemType;
 using TProduct = Logic.Storage.Models.Product;
 using TProvider = Logic.Storage.Models.Provider;
 
-public class ProductRepositoryTests
+public class ProductsRepositoryTests
 {
-    [Fact(DisplayName = $"The {nameof(ProductRepository)} can be created.")]
+    [Fact(DisplayName = $"The {nameof(ProductsRepository)} can be created.")]
     [Trait("Category", "Unit")]
     public void CanBeCreated()
     {
         // Act
-        var exception = Record.Exception(() => _ = new ProductRepository(
+        var exception = Record.Exception(() => _ = new ProductsRepository(
             Mock.Of<IRepositoryContext>(MockBehavior.Strict),
-            Mock.Of<ILogger<ProductRepository>>(MockBehavior.Strict)));
+            Mock.Of<ILogger<ProductsRepository>>(MockBehavior.Strict)));
 
         // Assert
         exception.Should().BeNull();
     }
 
-    [Fact(DisplayName = $"The {nameof(ProductRepository)} cannot be created when repository context is null.")]
+    [Fact(DisplayName = $"The {nameof(ProductsRepository)} cannot be created when repository context is null.")]
     [Trait("Category", "Unit")]
     public void CanNotCreateWithoutRepositoryContext()
     {
         // Act
-        var exception = Record.Exception(() => _ = new ProductRepository(
+        var exception = Record.Exception(() => _ = new ProductsRepository(
             context: null!,
-            Mock.Of<ILogger<ProductRepository>>()));
+            Mock.Of<ILogger<ProductsRepository>>()));
 
         // Assert
         exception.Should().BeOfType<ArgumentNullException>();
     }
 
-    [Fact(DisplayName = $"The {nameof(ProductRepository)} cannot be created when logger is null.")]
+    [Fact(DisplayName = $"The {nameof(ProductsRepository)} cannot be created when logger is null.")]
     [Trait("Category", "Unit")]
     public void CanNotCreateWithoutLogger()
     {
         // Act
-        var exception = Record.Exception(() => _ = new ProductRepository(
+        var exception = Record.Exception(() => _ = new ProductsRepository(
             Mock.Of<IRepositoryContext>(),
             logger: null!));
 
@@ -56,13 +56,13 @@ public class ProductRepositoryTests
         exception.Should().BeOfType<ArgumentNullException>();
     }
 
-    [Fact(DisplayName = $"The {nameof(ProductRepository)} can add product.")]
+    [Fact(DisplayName = $"The {nameof(ProductsRepository)} can add product.")]
     [Trait("Category", "Unit")]
     public async void CanAddProductAsync()
     {
         // Arrange
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
-        var logger = Mock.Of<ILogger<ProductRepository>>();
+        var logger = Mock.Of<ILogger<ProductsRepository>>();
 
         var storageProduct = new TProduct()
         {
@@ -88,7 +88,7 @@ public class ProductRepositoryTests
         context.Setup(x => x.Products)
             .Returns(products.Object);
 
-        var productRepository = new ProductRepository(
+        var productRepository = new ProductsRepository(
             context.Object,
             logger);
 
@@ -117,15 +117,15 @@ public class ProductRepositoryTests
         productsCallback.Should().Be(1);
     }
 
-    [Fact(DisplayName = $"The {nameof(ProductRepository)} cannot add product when product is null.")]
+    [Fact(DisplayName = $"The {nameof(ProductsRepository)} cannot add product when product is null.")]
     [Trait("Category", "Unit")]
     public async void CanNotAddProductWhenProductIsNullAsync()
     {
         // Arrange
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
-        var logger = Mock.Of<ILogger<ProductRepository>>();
+        var logger = Mock.Of<ILogger<ProductsRepository>>();
 
-        var productRepository = new ProductRepository(
+        var productRepository = new ProductsRepository(
             context.Object,
             logger);
 
@@ -137,17 +137,17 @@ public class ProductRepositoryTests
         exception.Should().BeOfType<ArgumentNullException>();
     }
 
-    [Fact(DisplayName = $"The {nameof(ProductRepository)} can cancel add product.")]
+    [Fact(DisplayName = $"The {nameof(ProductsRepository)} can cancel add product.")]
     [Trait("Category", "Unit")]
     public async void CanCancelAddProductAsync()
     {
         // Arrange
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
-        var logger = Mock.Of<ILogger<ProductRepository>>();
+        var logger = Mock.Of<ILogger<ProductsRepository>>();
 
         var cts = new CancellationTokenSource();
 
-        var productRepository = new ProductRepository(
+        var productRepository = new ProductsRepository(
             context.Object,
             logger);
 
@@ -176,15 +176,15 @@ public class ProductRepositoryTests
         exception.Should().BeOfType<OperationCanceledException>();
     }
 
-    [Fact(DisplayName = $"The {nameof(ProductRepository)} cannot contains product when product is null.")]
+    [Fact(DisplayName = $"The {nameof(ProductsRepository)} cannot contains product when product is null.")]
     [Trait("Category", "Unit")]
     public async void CanNotContainsWhenProductIsNullAsync()
     {
         // Arrange
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
-        var logger = Mock.Of<ILogger<ProductRepository>>();
+        var logger = Mock.Of<ILogger<ProductsRepository>>();
 
-        var productRepository = new ProductRepository(
+        var productRepository = new ProductsRepository(
             context.Object,
             logger);
 
@@ -196,17 +196,17 @@ public class ProductRepositoryTests
         exception.Should().BeOfType<ArgumentNullException>();
     }
 
-    [Fact(DisplayName = $"The {nameof(ProductRepository)} can cancel contains product.")]
+    [Fact(DisplayName = $"The {nameof(ProductsRepository)} can cancel contains product.")]
     [Trait("Category", "Unit")]
     public async void CanCancelContainsAsync()
     {
         // Arrange
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
-        var logger = Mock.Of<ILogger<ProductRepository>>();
+        var logger = Mock.Of<ILogger<ProductsRepository>>();
 
         var cts = new CancellationTokenSource();
 
-        var productRepository = new ProductRepository(
+        var productRepository = new ProductsRepository(
             context.Object,
             logger);
 
@@ -235,13 +235,13 @@ public class ProductRepositoryTests
         exception.Should().BeOfType<OperationCanceledException>();
     }
 
-    [Fact(DisplayName = $"The {nameof(ProductRepository)} can delete product.")]
+    [Fact(DisplayName = $"The {nameof(ProductsRepository)} can delete product.")]
     [Trait("Category", "Unit")]
     public void CanDeleteProduct()
     {
         // Arrange
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
-        var logger = Mock.Of<ILogger<ProductRepository>>();
+        var logger = Mock.Of<ILogger<ProductsRepository>>();
 
         var storageProduct = new TProduct()
         {
@@ -256,7 +256,7 @@ public class ProductRepositoryTests
         context.Setup(x => x.Products)
             .Returns(products.Object);
 
-        var productRepository = new ProductRepository(
+        var productRepository = new ProductsRepository(
             context.Object,
             logger);
 
@@ -293,15 +293,15 @@ public class ProductRepositoryTests
             Times.Once);
     }
 
-    [Fact(DisplayName = $"The {nameof(ProductRepository)} cannot delete product when product is null.")]
+    [Fact(DisplayName = $"The {nameof(ProductsRepository)} cannot delete product when product is null.")]
     [Trait("Category", "Unit")]
     public void CanNotDeleteWhenProductIsNull()
     {
         // Arrange
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
-        var logger = Mock.Of<ILogger<ProductRepository>>();
+        var logger = Mock.Of<ILogger<ProductsRepository>>();
 
-        var productRepository = new ProductRepository(
+        var productRepository = new ProductsRepository(
             context.Object,
             logger);
 
@@ -313,13 +313,13 @@ public class ProductRepositoryTests
         exception.Should().BeOfType<ArgumentNullException>();
     }
 
-    [Fact(DisplayName = $"The {nameof(ProductRepository)} can get product by key.")]
+    [Fact(DisplayName = $"The {nameof(ProductsRepository)} can get product by key.")]
     [Trait("Category", "Unit")]
     public void CanGetByKey()
     {
         // Arrange
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
-        var logger = Mock.Of<ILogger<ProductRepository>>();
+        var logger = Mock.Of<ILogger<ProductsRepository>>();
 
         var data = new List<TProduct>
         {
@@ -374,7 +374,7 @@ public class ProductRepositoryTests
         context.Setup(x => x.Products)
             .Returns(products.Object);
 
-        var productRepository = new ProductRepository(
+        var productRepository = new ProductsRepository(
             context.Object,
             logger);
 
@@ -404,13 +404,13 @@ public class ProductRepositoryTests
         result2.Should().BeNull();
     }
 
-    [Fact(DisplayName = $"The {nameof(ProductRepository)} can get all products.")]
+    [Fact(DisplayName = $"The {nameof(ProductsRepository)} can get all products.")]
     [Trait("Category", "Unit")]
     public void CanGetEntities()
     {
         // Arrange
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
-        var logger = Mock.Of<ILogger<ProductRepository>>();
+        var logger = Mock.Of<ILogger<ProductsRepository>>();
 
         var data = new List<TProduct>
         {
@@ -465,7 +465,7 @@ public class ProductRepositoryTests
         context.Setup(x => x.Products)
             .Returns(products.Object);
 
-        var productRepository = new ProductRepository(
+        var productRepository = new ProductsRepository(
             context.Object,
             logger);
 
@@ -496,13 +496,13 @@ public class ProductRepositoryTests
     }
 
 
-    [Fact(DisplayName = $"The {nameof(ProductRepository)} can save.")]
+    [Fact(DisplayName = $"The {nameof(ProductsRepository)} can save.")]
     [Trait("Category", "Unit")]
     public void CanSave()
     {
         // Arrange
         var context = new Mock<IRepositoryContext>(MockBehavior.Loose);
-        var logger = Mock.Of<ILogger<ProductRepository>>();
+        var logger = Mock.Of<ILogger<ProductsRepository>>();
 
         var storageProduct = new TProduct()
         {
@@ -512,7 +512,7 @@ public class ProductRepositoryTests
             ProviderCost = 100.00m
         };
 
-        var productRepository = new ProductRepository(
+        var productRepository = new ProductsRepository(
             context.Object,
             logger);
 

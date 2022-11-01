@@ -9,12 +9,12 @@ using TProduct = Market.Logic.Storage.Models.Product;
 
 namespace Market.Logic.Storage.Repositories;
 
-public sealed class ProductRepository : IKeyableRepository<Product, (long, long)>
+public sealed class ProductsRepository : IKeyableRepository<Product, (long, long)>
 {
-    private readonly ILogger<ProductRepository> _logger;
+    private readonly ILogger<ProductsRepository> _logger;
     private readonly IRepositoryContext _context;
 
-    public ProductRepository(IRepositoryContext context, ILogger<ProductRepository> logger)
+    public ProductsRepository(IRepositoryContext context, ILogger<ProductsRepository> logger)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _context = context ?? throw new ArgumentNullException(nameof(context));
