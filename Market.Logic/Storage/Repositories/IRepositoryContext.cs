@@ -1,4 +1,4 @@
-﻿
+﻿using Market.Logic.Storage.Models;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -12,53 +12,42 @@ public interface IRepositoryContext
     /// <summary xml:lang = "ru">
     /// Товары.
     /// </summary>
-    public DbSet<Item> Items { get; set; }
-
-    /// <summary xml:lang = "ru">
-    /// Описания товаров.
-    /// </summary>
-    public DbSet<ItemDescription> ItemDescriptions { get; set; }
+    public DbSet<Item> Items { get; }
 
     /// <summary xml:lang = "ru">
     /// Свойства товаров.
     /// </summary>
-    public DbSet<ItemProperty> ItemProperties { get; set; }
+    public DbSet<ItemProperty> ItemProperties { get; }
 
     /// <summary xml:lang = "ru">
     /// Тпиы пользователей.
     /// </summary>
-    public DbSet<ItemType> ItemTypes { get; set; }
+    public DbSet<ItemType> ItemTypes { get; }
 
     /// <summary xml:lang = "ru">
     /// Продукты.
     /// </summary>
-    public DbSet<Product> Products { get; set; }
+    public DbSet<Product> Products { get; }
 
     /// <summary xml:lang = "ru">
     /// Группы свойств.
     /// </summary>
-    public DbSet<PropertyGroup> PropertyGroups { get; set; }
+    public DbSet<PropertyGroup> PropertyGroups { get; }
 
     /// <summary xml:lang = "ru">
     /// Поставщики.
     /// </summary>
-    public DbSet<Provider> Providers { get; set; }
+    public DbSet<Provider> Providers { get; }
 
     /// <summary xml:lang = "ru">
     /// Пользователи.
     /// </summary>
-    public DbSet<User> Users { get; set; }
+    public DbSet<User> Users { get; }
 
     /// <summary xml:lang = "ru">
     /// Типы пользователей.
     /// </summary>
-    public DbSet<UserType> UserTypes { get; set; }
-
-    /// <summary xml:lang = "ru">
-    /// Представители поставщиков.
-    /// </summary>
-    public DbSet<ProviderAgent> ProviderAgents { get; set; }
-
+    public DbSet<UserType> UserTypes { get; }
 
     /// <summary xml:lang = "ru">
     /// Сохраняет текущие изменения.
