@@ -3,8 +3,10 @@
 /// <summary xml:lang = "ru">
 /// Представляет описание товара.
 /// </summary>
-public sealed class Item: IEquatable<Item>
+public sealed class Item : IEquatable<Item>
 {
+    private readonly long? _id;
+
     /// <summary xml:lang = "ru">
     /// Создает экземпляр типа <see cref="Item"/>.
     /// </summary>
@@ -17,7 +19,7 @@ public sealed class Item: IEquatable<Item>
     /// <exception cref="ArgumentException" xml:lang = "ru">
     ///  Если <paramref name="name"/> - состоит из пробелов, явялется пустой строкой или <see langword="null"/>.
     /// </exception>
-    public Item(ItemType type, string name, IReadOnlyCollection<ItemProperty> properties)
+    public Item(ItemType type, string name, IReadOnlyCollection<ItemProperty> properties, long? id = null)
     {
         Type = type ?? throw new ArgumentNullException(nameof(type));
 
@@ -26,6 +28,7 @@ public sealed class Item: IEquatable<Item>
 
         Name = name;
         Properties = properties ?? throw new ArgumentNullException(nameof(type));
+        _id = id;
     }
 
     /// <summary xml:lang = "ru">
@@ -42,6 +45,11 @@ public sealed class Item: IEquatable<Item>
     /// Характеристики товара.
     /// </summary>
     public IReadOnlyCollection<ItemProperty> Properties { get; }
+
+    /// <summary xml:lang = "ru">
+    /// Индетификатор товара.
+    /// </summary>
+    public long Id => _id ?? throw new InvalidOperationException($"Key for {nameof(Item)} is not defined");
 
     /// <inheritdoc/>
     public override int GetHashCode() => HashCode.Combine(Type, Name, Properties);
