@@ -75,7 +75,7 @@ public sealed class MarketContext : DbContext
                 entity.ToTable("items");
 
                 entity.HasKey(e => e.Id)
-                    .HasName("item_description_pkey");
+                    .HasName("items_pkey");
 
                 entity.Property(e => e.Id).HasColumnName("id");
 

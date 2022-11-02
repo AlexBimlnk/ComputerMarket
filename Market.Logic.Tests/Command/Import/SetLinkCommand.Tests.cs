@@ -19,6 +19,7 @@ public class SetLinkCommandTests
         var externalItemId = new InternalID(2);
 
         var provider = new Provider(
+            new InternalID(1),
             "some name",
             new Margin(2),
             new PaymentTransactionsInformation(
@@ -50,6 +51,7 @@ public class SetLinkCommandTests
         var externalItemId = new InternalID(2);
 
         var provider = new Provider(
+            new InternalID(1),
             "some name",
             new Margin(2),
             new PaymentTransactionsInformation(

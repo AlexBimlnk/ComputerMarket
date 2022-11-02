@@ -11,7 +11,8 @@ public class ItemTests
         // Arrange
         Item item = null!;
         var type = new ItemType("some_type");
-        var name = "name"; ;
+        var name = "name";
+        var id = new InternalID(1);
         var properties = new ItemProperty[]
         {
             new ItemProperty("Prop1", "Val1"),
@@ -21,12 +22,14 @@ public class ItemTests
 
         // Act
         var exception = Record.Exception(() => item = new Item(
+            id,
             type,
             name,
             properties));
 
         // Assert
         exception.Should().BeNull();
+        item.Key.Should().Be(id);
         item.Type.Should().Be(type);
         item.Name.Should().Be(name);
         item.Properties.Should().BeEquivalentTo(properties, opt => opt.WithStrictOrdering());
@@ -46,6 +49,7 @@ public class ItemTests
 
         // Act
         var exception = Record.Exception(() => _ = new Item(
+            id: new InternalID(1),
             type: null!,
             name: "name",
             properties));
@@ -60,6 +64,7 @@ public class ItemTests
     {
         // Act
         var exception = Record.Exception(() => _ = new Item(
+            id: new InternalID(1),
             type: new ItemType("some_type"),
             name: "name",
             properties: null!));
@@ -86,6 +91,7 @@ public class ItemTests
 
         // Act
         var exception = Record.Exception(() => _ = new Item(
+            id: new InternalID(1),
             type: new ItemType("some_type"),
             name,
             properties));
