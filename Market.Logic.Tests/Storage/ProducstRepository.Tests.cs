@@ -94,17 +94,17 @@ public class ProductsRepositoryTests
 
         var inputProduct = new Product(
             new Item(
+                id: new InternalID(1),
                 new ItemType("type1"),
                 name: "Name 1",
-                Array.Empty<ItemProperty>(),
-                id: 1),
+                Array.Empty<ItemProperty>()),
             new Provider(
+                id: new InternalID(1),
                 name: "Provider1",
                 new Margin(1.20m),
                 new PaymentTransactionsInformation(
                     "1234512345",
-                    "12345123451234512345"),
-                id: 1),
+                    "12345123451234512345")),
             new Price(100.00m),
             quantity: 2);
 
@@ -153,17 +153,17 @@ public class ProductsRepositoryTests
 
         var inputProduct = new Product(
             new Item(
+                id: new InternalID(1),
                 new ItemType("type1"),
                 name: "Name 1",
-                Array.Empty<ItemProperty>(),
-                id: 1),
+                Array.Empty<ItemProperty>()),
             new Provider(
+                id: new InternalID(1),
                 name: "Provider1",
                 new Margin(1.20m),
                 new PaymentTransactionsInformation(
                     "1234512345",
-                    "12345123451234512345"),
-                id: 1),
+                    "12345123451234512345")),
             new Price(100.00m),
             quantity: 2);
 
@@ -212,17 +212,17 @@ public class ProductsRepositoryTests
 
         var inputProduct = new Product(
             new Item(
+                id: new InternalID(1),
                 new ItemType("type1"),
                 name: "Name 1",
-                Array.Empty<ItemProperty>(),
-                id: 1),
+                Array.Empty<ItemProperty>()),
             new Provider(
+                id: new InternalID(1),
                 name: "Provider1",
                 new Margin(1.20m),
                 new PaymentTransactionsInformation(
                     "1234512345",
-                    "12345123451234512345"),
-                id: 1),
+                    "12345123451234512345")),
             new Price(100.00m),
             quantity: 2);
 
@@ -262,17 +262,17 @@ public class ProductsRepositoryTests
 
         var containsProduct = new Product(
             new Item(
+                id: new InternalID(1),
                 new ItemType("type1"),
                 name: "Name 1",
-                Array.Empty<ItemProperty>(),
-                id: 1),
+                Array.Empty<ItemProperty>()),
             new Provider(
+                id: new InternalID(1),
                 name: "Provider1",
                 new Margin(1.20m),
                 new PaymentTransactionsInformation(
                     "1234512345",
-                    "12345123451234512345"),
-                id: 1),
+                    "12345123451234512345")),
             new Price(100.00m),
             quantity: 2);
 
@@ -380,17 +380,17 @@ public class ProductsRepositoryTests
 
         var expectedResult = new Product(
             new Item(
+                id: new InternalID(1),
                 new ItemType("Type1"),
                 name: "Name 1",
-                Array.Empty<ItemProperty>(),
-                id: 1),
+                Array.Empty<ItemProperty>()),
             new Provider(
+                id: new InternalID(1),
                 name: "Provider1",
                 new Margin(1.20m),
                 new PaymentTransactionsInformation(
                     "1234512345",
-                    "12345123451234512345"),
-                id: 1),
+                    "12345123451234512345")),
             new Price(100.00m),
             quantity: 2);
 
@@ -473,17 +473,17 @@ public class ProductsRepositoryTests
         {
             new Product(
                 new Item(
+                    id: new InternalID(1),
                     new ItemType("Type1"),
                     name: "Name 1",
-                    Array.Empty<ItemProperty>(),
-                    id: 1),
+                    Array.Empty<ItemProperty>()),
                 new Provider(
+                    id: new InternalID(1),
                     name: "Provider1",
                     new Margin(1.20m),
                     new PaymentTransactionsInformation(
                         "1234512345",
-                        "12345123451234512345"),
-                    id: 1),
+                        "12345123451234512345")),
                 new Price(100.00m),
                 quantity: 2)
         };

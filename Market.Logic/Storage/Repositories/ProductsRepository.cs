@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 
 using TProduct = Market.Logic.Storage.Models.Product;
 
+
 namespace Market.Logic.Storage.Repositories;
 
 public sealed class ProductsRepository : IKeyableRepository<Product, (long, long)>
@@ -24,28 +25,28 @@ public sealed class ProductsRepository : IKeyableRepository<Product, (long, long
     {
         ProviderCost = product.ProviderCost,
         Quantity = product.Quantity,
-        ItemId = product.Item.Id,
-        ProviderId = product.Provider.Id
+        ItemId = product.Item.Key.Value,
+        ProviderId = product.Provider.Key.Value,
     };
 
     private static Product ConvertFromStorage(TProduct product)
       => new Product(
           new Item(
+              new InternalID(product.ItemId),
               new ItemType(product.Item.Type.Name),
               product.Item.Name,
               product.Item.Description
                 .Select(x => new ItemProperty(
                     x.Property.Name,
                     x.PropertyValue ?? string.Empty))
-                .ToArray(),
-              product.ItemId),
+                .ToArray()),
           new Provider(
+              new InternalID(product.ProviderId),
               product.Provider.Name,
               new Margin(product.Provider.Margin),
               new PaymentTransactionsInformation(
                   product.Provider.Inn,
-                  product.Provider.BankAccount),
-              product.Provider.Id),
+                  product.Provider.BankAccount)),
           new Price(product.ProviderCost),
           product.Quantity);
 

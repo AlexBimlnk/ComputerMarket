@@ -59,6 +59,7 @@ public class ImportCommandSerializerTests
                 internalItemId: new(1),
                 externalItemId: new(2),
                 new Provider(
+                    id: new InternalID(1),
                     "Some Provider Name",
                     new Margin(2),
                     new PaymentTransactionsInformation(

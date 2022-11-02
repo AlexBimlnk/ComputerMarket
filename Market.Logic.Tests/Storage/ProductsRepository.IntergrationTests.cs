@@ -31,21 +31,21 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
             .Returns(_marketContext.Products);
 
         var provider1 = new Provider(
-                "name1",
-                new Margin(1.3m),
-                new PaymentTransactionsInformation(
-                    inn: "1234512345",
-                    bankAccount: "12345123451234512345"),
-                id: 1);
+            id: new InternalID(1),
+            "name1",
+            new Margin(1.3m),
+            new PaymentTransactionsInformation(
+                inn: "1234512345",
+                bankAccount: "12345123451234512345"));
 
 
         var type1 = new ItemType("Type1", id: 1);
 
         var item1 = new Item(
-                type1,
-                "Name 1",
-                Array.Empty<ItemProperty>(),
-                id: 1);
+            id: new InternalID(1),
+            type1,
+            "Name 1",
+            Array.Empty<ItemProperty>());
 
         await AddProviderAsync(provider1);
 
@@ -110,34 +110,34 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
             .Returns(_marketContext.Products);
 
         var provider1 = new Provider(
-                "name1",
-                new Margin(1.3m),
-                new PaymentTransactionsInformation(
-                    inn: "1234512345",
-                    bankAccount: "12345123451234512345"),
-                id: 1);
+            id: new InternalID(1),
+            "name1",
+            new Margin(1.3m),
+            new PaymentTransactionsInformation(
+                inn: "1234512345",
+                bankAccount: "12345123451234512345"));
 
         var provider2 = new Provider(
-                "name2",
-                new Margin(1.2m),
-                new PaymentTransactionsInformation(
-                    inn: "1234512344",
-                    bankAccount: "12345123451234512344"),
-                id: 2);
+            id: new InternalID(2),
+            "name2",
+            new Margin(1.2m),    
+            new PaymentTransactionsInformation(
+                inn: "1234512344",
+                bankAccount: "12345123451234512344"));
 
         var type1 = new ItemType("Type1", id: 1);
 
         var item1 = new Item(
-                type1,
-                "Name 1",
-                Array.Empty<ItemProperty>(),
-                id: 1);
+            id: new InternalID(1),
+            type1,
+            "Name 1",
+            Array.Empty<ItemProperty>());
 
         var item2 = new Item(
-                type1,
-                "Name 2",
-                Array.Empty<ItemProperty>(),
-                id: 2);
+            id: new InternalID(2),
+            type1,
+            "Name 2",
+            Array.Empty<ItemProperty>());
 
         await AddProviderAsync(provider1);
         await AddProviderAsync(provider2);
@@ -177,26 +177,26 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
             .Callback(() => _marketContext.SaveChanges());
 
         var provider = new Provider(
-                "name1",
-                new Margin(1.3m),
-                new PaymentTransactionsInformation(
-                    inn: "1234512345",
-                    bankAccount: "12345123451234512345"),
-                id: 1);
+            id: new InternalID(1),
+            "name1",
+            new Margin(1.3m),
+            new PaymentTransactionsInformation(
+                inn: "1234512345",
+                bankAccount: "12345123451234512345"));
 
         var type1 = new ItemType("Type1", id: 1);
 
         var item1 = new Item(
-                type1,
-                "Name 1",
-                Array.Empty<ItemProperty>(),
-                id: 1);
+            id: new InternalID(1),
+            type1,
+            "Name 1",
+            Array.Empty<ItemProperty>());
 
         var item2 = new Item(
-                type1,
-                "Name 2",
-                Array.Empty<ItemProperty>(),
-                id: 2);
+            id: new InternalID(2),
+            type1,
+            "Name 2",
+            Array.Empty<ItemProperty>());
 
         await AddProviderAsync(provider);
 
@@ -214,17 +214,17 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
 
         var inputProduct = new Product(
             new Item(
+                id: new InternalID(2),
                 new ItemType("Type1", id: 1),
                 "Name 2",
-                Array.Empty<ItemProperty>(),
-                id: 2),
+                Array.Empty<ItemProperty>()),
             new Provider(
+                id: new InternalID(1),
                 "name1",
                 new Margin(1.3m),
                 new PaymentTransactionsInformation(
                     inn: "1234512345",
-                    bankAccount: "12345123451234512345"),
-                id: 1), 
+                    bankAccount: "12345123451234512345")), 
             new Price(120.00m),
             quantity: 4);
 
@@ -251,10 +251,10 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
     {
         var fromQuery = "products (item_id, provider_cost, quantity, provider_id)";
         var valuesQuery = 
-            $"({product.Item.Id}, " +
+            $"({product.Item.Key.Value}, " +
             $"{product.ProviderCost.ToString(System.Globalization.CultureInfo.InvariantCulture)}, " +
             $"{product.Quantity}, " +
-            $"{product.Provider.Id})";
+            $"{product.Provider.Key.Value})";
 
         await AddAsync(fromQuery, valuesQuery);
     }
@@ -263,7 +263,7 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
     {
         var fromQuery = "providers (id, name, margin, bank_account, inn)";
         var valuesQuery = 
-            $"({provider.Id}, " +
+            $"({provider.Key.Value}, " +
             $"'{provider.Name}', " +
             $"{provider.Margin.Value.ToString(System.Globalization.CultureInfo.InvariantCulture)}, " +
             $"'{provider.PaymentTransactionsInformation.BankAccount}', " +
@@ -275,7 +275,7 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
     private async Task AddItemAsync(Item item)
     {
         var fromQuery = "items (id, name, type_id)";
-        var valuesQuery = $"({item.Id}, '{item.Name}', {item.Type.Id})";
+        var valuesQuery = $"({item.Key.Value}, '{item.Name}', {item.Type.Id})";
 
         await AddAsync(fromQuery, valuesQuery);
     }
@@ -292,34 +292,34 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
     {
         {
             new(new Item(
+                    id: new InternalID(1), 
                     new ItemType("Type1", id: 1),
                     "Name 2",
-                    Array.Empty<ItemProperty>(),
-                    id: 2), 
+                    Array.Empty<ItemProperty>()), 
                 new Provider(
+                    id: new InternalID(1),
                     "name1",
                     new Margin(1.3m),
                     new PaymentTransactionsInformation(
                         inn: "1234512345",
-                        bankAccount: "12345123451234512345"),
-                    id: 1), 
+                        bankAccount: "12345123451234512345")), 
                 new Price(120.00m), 
                 quantity: 4),
             true
         },
         {
             new(new Item(
+                    id: new InternalID(4),
                     new ItemType("Type1", id: 1),
                     "Name 4",
-                    Array.Empty<ItemProperty>(),
-                    id: 4),
+                    Array.Empty<ItemProperty>()),
                 new Provider(
+                    id: new InternalID(4),
                     "name4",
                     new Margin(1.3m),
                     new PaymentTransactionsInformation(
                         inn: "1234512345",
-                        bankAccount: "12345123451234512345"),
-                    id: 4),
+                        bankAccount: "12345123451234512345")),
                 new Price(320.00m),
                 quantity: 2),
             false

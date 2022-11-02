@@ -1,15 +1,16 @@
-﻿namespace Market.Logic.Models;
+﻿using General.Models;
+
+namespace Market.Logic.Models;
 
 /// <summary xml:lang = "ru">
 /// Модель поставщика.
 /// </summary>
-public sealed class Provider : IEquatable<Provider>
+public sealed class Provider : IEquatable<Provider>, IKeyable<InternalID>
 {
-    private readonly long? _id;
-
     /// <summary xml:lang = "ru">
     /// Создает экземпляр типа <see cref="Provider"/>.
     /// </summary>
+    /// <param name="id"xml:lang = "ru">Индетифкатор првайдера.</param>
     /// <param name="name" xml:lang = "ru">Название поставщика.</param>
     /// <param name="margin" xml:lang = "ru">Маржа поставщика.</param>
     /// <param name="paymentTransactionsInformation" xml:lang = "ru">Дполнительная информация об поставщике.</param>
@@ -20,10 +21,10 @@ public sealed class Provider : IEquatable<Provider>
     /// Если <paramref name="name"/> не соответсвует уставновленному формату.
     /// </exception>
     public Provider(
+        InternalID id,
         string name,
         Margin margin,
-        PaymentTransactionsInformation paymentTransactionsInformation,
-        long? id = null)
+        PaymentTransactionsInformation paymentTransactionsInformation)
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new ArgumentException("Name can't be null or empty or contains only whitespaces", nameof(name));
@@ -33,13 +34,8 @@ public sealed class Provider : IEquatable<Provider>
 
         PaymentTransactionsInformation = paymentTransactionsInformation ?? throw new ArgumentNullException(nameof(paymentTransactionsInformation));
 
-        _id = id;
+        Key = id;
     }
-
-    /// <summary xml:lang = "ru">
-    /// Индетификатор поставщика.
-    /// </summary>
-    public long Id => _id ?? throw new InvalidOperationException($"Key for {nameof(Provider)} is not defined");
 
     /// <summary xml:lang = "ru">
     ///  Название поставщика.
@@ -57,13 +53,17 @@ public sealed class Provider : IEquatable<Provider>
     public PaymentTransactionsInformation PaymentTransactionsInformation { get; private set; }
 
     /// <inheritdoc/>
-    public override int GetHashCode() => HashCode.Combine(PaymentTransactionsInformation, Name, Margin);
+    public InternalID Key { get; }
+
+    /// <inheritdoc/>
+    public override int GetHashCode() => HashCode.Combine(Key ,PaymentTransactionsInformation, Name, Margin);
 
     /// <inheritdoc/>
     public override bool Equals(object? obj) => obj is Provider provider && Equals(provider);
 
     /// <inheritdoc/>
     public bool Equals(Provider? other) =>
+        Key.Equals(other?.Key) &&
         Margin.Equals(other?.Margin) &&
         Name.Equals(other?.Name) &&
         PaymentTransactionsInformation.Equals(other?.PaymentTransactionsInformation);

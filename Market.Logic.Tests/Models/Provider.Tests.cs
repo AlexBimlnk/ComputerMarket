@@ -10,18 +10,21 @@ public class ProviderTests
     {
         // Arrange
         Provider provider = null!;
+        var id = new InternalID(1);
         var name = "Company Name";
         var margin = new Margin(1m);
         var information = new PaymentTransactionsInformation("1234567890", "01234012340123401234");
 
         // Act
         var exception = Record.Exception(() => provider = new Provider(
+            id,
             name,
             margin,
             information));
 
         // Assert
         exception.Should().BeNull();
+        provider.Key.Should().Be(id);
         provider.Name.Should().Be(name);
         provider.Margin.Should().Be(margin);
         provider.PaymentTransactionsInformation.Should().Be(information);
@@ -33,6 +36,7 @@ public class ProviderTests
     {
         // Act
         var exception = Record.Exception(() => _ = new Provider(
+            id: new InternalID(1),
             name: "Name",
             margin: new Margin(1m),
             paymentTransactionsInformation: null!));
@@ -51,6 +55,7 @@ public class ProviderTests
     {
         // Act
         var exception = Record.Exception(() => _ = new Provider(
+            id: new InternalID(1),
             name: name,
             margin: new Margin(1m),
             paymentTransactionsInformation: new PaymentTransactionsInformation("1234567890", "01234012340123401234")));

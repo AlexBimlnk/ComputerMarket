@@ -1,9 +1,11 @@
-﻿namespace Market.Logic.Models;
+﻿using General.Models;
+
+namespace Market.Logic.Models;
 
 /// <summary xml:lang = "ru">
 /// Продукт.
 /// </summary>
-public sealed class Product: IEquatable<Product>
+public sealed class Product: IEquatable<Product>, IKeyable<(long, long)>
 {
     /// <summary xml:lang = "ru">
     /// Создает экземпляр типа <see cref="Product"/>.
@@ -56,6 +58,9 @@ public sealed class Product: IEquatable<Product>
     /// Количестов продукта.
     /// </summary>
     public int Quantity { get; }
+
+    /// <inheritdoc/>
+    public (long, long) Key => (Item.Key.Value, Provider.Key.Value);
 
     /// <inheritdoc/>
     public override int GetHashCode() =>
