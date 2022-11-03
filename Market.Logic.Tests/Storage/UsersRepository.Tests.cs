@@ -9,11 +9,7 @@ using Moq;
 
 namespace Market.Logic.Tests.Storage;
 
-using ItemDescription = Logic.Storage.Models.ItemDescription;
-using TItem = Logic.Storage.Models.Item;
-using TItemType = Logic.Storage.Models.ItemType;
 using TUser = Logic.Storage.Models.User;
-using TProvider = Logic.Storage.Models.Provider;
 
 public class UsersRepositoryTests
 {
@@ -79,7 +75,7 @@ public class UsersRepositoryTests
             .AddAsync(
                 It.Is<TUser>(p =>
                     p.Id == storageUser.Id &&
-                    p.UserTypeId== storageUser.UserTypeId&&
+                    p.UserTypeId == storageUser.UserTypeId &&
                     p.Login == storageUser.Login &&
                     p.Email == storageUser.Email &&
                     p.Password == storageUser.Password),

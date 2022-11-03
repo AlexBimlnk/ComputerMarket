@@ -1,14 +1,9 @@
-﻿using System;
-
-using Market.Logic.Models;
+﻿using Market.Logic.Models;
 using Market.Logic.Storage.Repositories;
 
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 using Moq;
-
-using Xunit.Abstractions;
 
 namespace Market.Logic.Tests.Storage;
 
@@ -106,7 +101,7 @@ public class UsersRepositoryIntegrationTests : DBIntegrationTestBase
         await AddUserTypeAsync(UserType.Customer);
 
         await AddUserAsync(user);
-        
+
         var repository = new UsersRepository(
             context.Object,
             logger);

@@ -1,10 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-using General.Storage;
+﻿using General.Storage;
 
 using Market.Logic.Models;
-
-using Market.Logic.Storage.Repositories;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -63,9 +59,9 @@ public sealed class UsersRepository : IKeyableRepository<User, InternalID>
 
         return new User(
             id: new InternalID(user.Id),
-            user.Login, 
+            user.Login,
             new Password(user.Password),
-            email: "mail@mail.ru", 
+            email: "mail@mail.ru",
             (UserType)user.UserTypeId);
     }
 
@@ -110,7 +106,7 @@ public sealed class UsersRepository : IKeyableRepository<User, InternalID>
     public void Save() => _context.SaveChanges();
 
     /// <inheritdoc/>
-    public User? GetByKey(InternalID key) => 
+    public User? GetByKey(InternalID key) =>
         _context.Users
             .Where(x => x.Id == key.Value)
             .Select(x => ConvertFromStorageModel(x))
