@@ -288,6 +288,10 @@ public sealed class MarketContext : DbContext
                     .HasMaxLength(20)
                     .HasColumnName("login");
 
+                entity.Property(e => e.Email)
+                    .HasMaxLength(256)
+                    .HasColumnName("email");
+
                 entity.Property(e => e.Password)
                     .HasMaxLength(20)
                     .HasColumnName("password");

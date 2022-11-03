@@ -16,6 +16,11 @@ public class User
     public string Login { get; set; } = null!;
 
     /// <summary xml:lang = "ru">
+    /// Адрес электронной почты пользователя.
+    /// </summary>
+    public string Email { get; set; } = null!;
+
+    /// <summary xml:lang = "ru">
     /// Пароль пользователя.
     /// </summary>
     public string Password { get; set; } = null!;
