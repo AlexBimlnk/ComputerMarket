@@ -10,6 +10,7 @@ public class UserTests
     {
         // Arrange
         User user = null!;
+        var id = new InternalID(1);
         var login = "login";
         var password = new Password("password");
         var type = UserType.Customer;
@@ -17,6 +18,7 @@ public class UserTests
 
         // Act
         var exception = Record.Exception(() => user = new User(
+            id,
             login,
             password,
             email,
@@ -24,6 +26,7 @@ public class UserTests
 
         // Assert
         exception.Should().BeNull();
+        user.Key.Should().Be(id);
         user.Login.Should().Be(login);
         user.Password.Should().Be(password);
         user.Type.Should().Be(type);
@@ -36,6 +39,7 @@ public class UserTests
     {
         // Act
         var exception = Record.Exception(() => _ = new User(
+            id: new InternalID(1),
             login: "login",
             password: null!,
             email: "mail@mail.ru",
@@ -51,6 +55,7 @@ public class UserTests
     {
         // Act
         var exception = Record.Exception(() => _ = new User(
+            id: new InternalID(1),
             login: "login",
             password: new Password("12345"),
             email: "mail@mail.ru",
@@ -70,6 +75,7 @@ public class UserTests
     {
         // Act
         var exception = Record.Exception(() => _ = new User(
+            id: new InternalID(1),
             login: login,
             password: new Password("12345"),
             email: "mail@mail.ru",
@@ -95,6 +101,7 @@ public class UserTests
     {
         // Act
         var exception = Record.Exception(() => _ = new User(
+            id: new InternalID(1),
             login: "login",
             password: new Password("12345"),
             email,

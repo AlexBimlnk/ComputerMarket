@@ -15,7 +15,7 @@ public class ProviderAgentTests
             "Company Name",
             new Margin(1.1m),
             new PaymentTransactionsInformation("1234567890", "01234012340123401234"));
-        var user = new User("login", new Password("12345"), "mail@mail.ru", UserType.Agent);
+        var user = new User(id: new InternalID(1), "login", new Password("12345"), "mail@mail.ru", UserType.Agent);
 
         // Act
         var exception = Record.Exception(() => providerAgent = new ProviderAgent(
@@ -38,7 +38,7 @@ public class ProviderAgentTests
             "Company Name",
             new Margin(1.1m),
             new PaymentTransactionsInformation("1234567890", "01234012340123401234"));
-        var user = new User("login", new Password("12345"), "mail@mail.ru", UserType.Customer);
+        var user = new User(id: new InternalID(1), "login", new Password("12345"), "mail@mail.ru", UserType.Customer);
 
         // Act
         var exception = Record.Exception(() => _ = new ProviderAgent(
@@ -75,7 +75,7 @@ public class ProviderAgentTests
     {
         // Act
         var exception = Record.Exception(() => _ = new ProviderAgent(
-            agent: new User("login", new Password("12345"), "mail@mail.ru", UserType.Agent),
+            agent: new User(id: new InternalID(1), "login", new Password("12345"), "mail@mail.ru", UserType.Agent),
             provider: null!));
 
         // Assert

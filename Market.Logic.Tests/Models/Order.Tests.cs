@@ -11,6 +11,7 @@ public class OrderTests
         // Arrange
         Order order = null!;
         var user = new User(
+            id: new InternalID(1),
             login: "login",
             new Password("12345"),
             email: "mail@mail.ru",
@@ -87,6 +88,7 @@ public class OrderTests
     {
         // Arrange       
         var user = new User(
+            id: new InternalID(1),
             login: "login",
             new Password("12345"),
             email: "mail@mail.ru",
@@ -106,6 +108,7 @@ public class OrderTests
     {
         // Arrange       
         var user = new User(
+            id: new InternalID(1),
             login: "login",
             new Password("12345"),
             email: "mail@mail.ru",
@@ -148,6 +151,7 @@ public class OrderTests
     {
         // Arrange
         var user = new User(
+            id: new InternalID(1),
             login: "login",
             new Password("12345"),
             email: "mail@mail.ru",
