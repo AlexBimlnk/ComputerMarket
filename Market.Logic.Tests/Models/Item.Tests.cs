@@ -49,7 +49,7 @@ public class ItemTests
 
         // Act
         var exception = Record.Exception(() => _ = new Item(
-            id: new InternalID(1),
+            new InternalID(1),
             type: null!,
             name: "name",
             properties));
@@ -64,7 +64,7 @@ public class ItemTests
     {
         // Act
         var exception = Record.Exception(() => _ = new Item(
-            id: new InternalID(1),
+            new InternalID(1),
             type: new ItemType("some_type"),
             name: "name",
             properties: null!));
@@ -91,7 +91,7 @@ public class ItemTests
 
         // Act
         var exception = Record.Exception(() => _ = new Item(
-            id: new InternalID(1),
+            new InternalID(1),
             type: new ItemType("some_type"),
             name,
             properties));

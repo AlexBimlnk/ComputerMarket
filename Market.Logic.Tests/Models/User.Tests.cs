@@ -39,7 +39,7 @@ public class UserTests
     {
         // Act
         var exception = Record.Exception(() => _ = new User(
-            id: new InternalID(1),
+            new InternalID(1),
             login: "login",
             password: null!,
             email: "mail@mail.ru",
@@ -55,7 +55,7 @@ public class UserTests
     {
         // Act
         var exception = Record.Exception(() => _ = new User(
-            id: new InternalID(1),
+            new InternalID(1),
             login: "login",
             password: new Password("12345"),
             email: "mail@mail.ru",
@@ -75,7 +75,7 @@ public class UserTests
     {
         // Act
         var exception = Record.Exception(() => _ = new User(
-            id: new InternalID(1),
+            new InternalID(1),
             login: login,
             password: new Password("12345"),
             email: "mail@mail.ru",
@@ -101,7 +101,7 @@ public class UserTests
     {
         // Act
         var exception = Record.Exception(() => _ = new User(
-            id: new InternalID(1),
+            new InternalID(1),
             login: "login",
             password: new Password("12345"),
             email,

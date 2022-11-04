@@ -36,7 +36,7 @@ public class ProviderTests
     {
         // Act
         var exception = Record.Exception(() => _ = new Provider(
-            id: new InternalID(1),
+            new InternalID(1),
             name: "Name",
             margin: new Margin(1m),
             paymentTransactionsInformation: null!));
@@ -55,7 +55,7 @@ public class ProviderTests
     {
         // Act
         var exception = Record.Exception(() => _ = new Provider(
-            id: new InternalID(1),
+            new InternalID(1),
             name: name,
             margin: new Margin(1m),
             paymentTransactionsInformation: new PaymentTransactionsInformation("1234567890", "01234012340123401234")));

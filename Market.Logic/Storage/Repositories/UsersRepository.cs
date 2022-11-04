@@ -7,10 +7,10 @@ using Microsoft.Extensions.Logging;
 
 namespace Market.Logic.Storage.Repositories;
 
-using TUser = Logic.Storage.Models.User;
+using TUser = Models.User;
 
 /// <summary xml:lang = "ru">
-/// Репозиторий связей.
+/// Репозиторий пользователей.
 /// </summary>
 public sealed class UsersRepository : IKeyableRepository<User, InternalID>
 {

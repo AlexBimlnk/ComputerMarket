@@ -54,7 +54,7 @@ public class ProductTests
     {
         // Arrange
         var provider = new Provider(
-            id: new InternalID(1),
+            new InternalID(1),
             "provider_name",
             new Margin(1.1m),
             new PaymentTransactionsInformation(
@@ -62,7 +62,7 @@ public class ProductTests
                 "01234012340123401234"));
 
         var item = new Item(
-            id: new InternalID(1),
+            new InternalID(1),
             new ItemType("some_type"),
             "some_name",
             properties: Array.Empty<ItemProperty>());
@@ -84,7 +84,7 @@ public class ProductTests
     {
         // Arrange
         var provider = new Provider(
-            id: new InternalID(1),
+            new InternalID(1),
             "provider_name",
             new Margin(1.1m),
             new PaymentTransactionsInformation(
@@ -108,7 +108,7 @@ public class ProductTests
     {
         // Arrange
         var item = new Item(
-            id: new InternalID(1),
+            new InternalID(1),
             new ItemType("some_type"),
             "some_name",
             properties: Array.Empty<ItemProperty>());
