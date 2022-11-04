@@ -1,14 +1,9 @@
-﻿using System;
-
-using Market.Logic.Models;
+﻿using Market.Logic.Models;
 using Market.Logic.Storage.Repositories;
 
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 using Moq;
-
-using Xunit.Abstractions;
 
 namespace Market.Logic.Tests.Storage;
 
@@ -120,7 +115,7 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
         var provider2 = new Provider(
             id: new InternalID(2),
             "name2",
-            new Margin(1.2m),    
+            new Margin(1.2m),
             new PaymentTransactionsInformation(
                 inn: "1234512344",
                 bankAccount: "12345123451234512344"));
@@ -150,7 +145,7 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
         await AddProductAsync(new(item1, provider1, new Price(100.00m), quantity: 3));
         await AddProductAsync(new(item2, provider1, new Price(120.00m), quantity: 4));
         await AddProductAsync(new(item2, provider2, new Price(1000.00m), quantity: 5));
-        
+
         var repository = new ProductsRepository(
             context.Object,
             logger);
@@ -224,7 +219,7 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
                 new Margin(1.3m),
                 new PaymentTransactionsInformation(
                     inn: "1234512345",
-                    bankAccount: "12345123451234512345")), 
+                    bankAccount: "12345123451234512345")),
             new Price(120.00m),
             quantity: 4);
 
@@ -250,7 +245,7 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
     private async Task AddProductAsync(Product product)
     {
         var fromQuery = "products (item_id, provider_cost, quantity, provider_id)";
-        var valuesQuery = 
+        var valuesQuery =
             $"({product.Item.Key.Value}, " +
             $"{product.ProviderCost.ToString(System.Globalization.CultureInfo.InvariantCulture)}, " +
             $"{product.Quantity}, " +
@@ -262,7 +257,7 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
     private async Task AddProviderAsync(Provider provider)
     {
         var fromQuery = "providers (id, name, margin, bank_account, inn)";
-        var valuesQuery = 
+        var valuesQuery =
             $"({provider.Key.Value}, " +
             $"'{provider.Name}', " +
             $"{provider.Margin.Value.ToString(System.Globalization.CultureInfo.InvariantCulture)}, " +
@@ -292,18 +287,18 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
     {
         {
             new(new Item(
-                    id: new InternalID(1), 
+                    id: new InternalID(1),
                     new ItemType("Type1", id: 1),
                     "Name 2",
-                    Array.Empty<ItemProperty>()), 
+                    Array.Empty<ItemProperty>()),
                 new Provider(
                     id: new InternalID(1),
                     "name1",
                     new Margin(1.3m),
                     new PaymentTransactionsInformation(
                         inn: "1234512345",
-                        bankAccount: "12345123451234512345")), 
-                new Price(120.00m), 
+                        bankAccount: "12345123451234512345")),
+                new Price(120.00m),
                 quantity: 4),
             true
         },

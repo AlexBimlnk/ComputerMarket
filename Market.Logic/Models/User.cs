@@ -1,24 +1,27 @@
 ﻿using System.Text.RegularExpressions;
 
+using General.Models;
+
 namespace Market.Logic.Models;
 
 /// <summary xml:lang = "ru">
 /// Пользователь системы.
 /// </summary>
-public class User
+public class User : IKeyable<InternalID>
 {
     private const string EMAIL_PATTERN = @"^\w+@\w+\.\w+$";
 
     /// <summary xml:lang = "ru">
     /// Создает экземпляр типа <see cref="User"/>.
     /// </summary>
+    /// <param name="id">Индетификатор пользователя.</param>
     /// <param name="login" xml:lang = "ru">Логин пользователя.</param>
     /// <param name="password" xml:lang = "ru">Пароль пользователя.</param>
     /// <param name="type" xml:lang = "ru">Тип пользователя.</param>
     /// <param name="email" xml:lang = "ru">Email пользователя.</param>
     /// <exception cref="ArgumentException">Если <paramref name="login"/> или  <paramref name="email"/> имеют неверный формат или <paramref name="type"/> - значение.</exception>
     /// <exception cref="ArgumentNullException" xml:lang = "ru">Если <paramref name="password"/> равен <see langword="null"/>.</exception>
-    public User(string login, Password password, string email, UserType type)
+    public User(InternalID id, string login, Password password, string email, UserType type)
     {
         if (string.IsNullOrWhiteSpace(login))
             throw new ArgumentException($"Login can't be null or empty or contains only whitespaces", nameof(login));
@@ -36,6 +39,7 @@ public class User
             throw new ArgumentException($"Given user type is not mathc with enum values");
 
         Type = type;
+        Key = id;
     }
 
     /// <summary xml:lang = "ru">
@@ -58,4 +62,6 @@ public class User
     /// </summary>
     public UserType Type { get; private set; }
 
+    /// <inheritdoc/>
+    public InternalID Key { get; }
 }
