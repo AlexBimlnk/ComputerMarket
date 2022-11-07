@@ -43,7 +43,7 @@ public sealed class Transaction
         if (heldBalance < 0)
             throw new ArgumentOutOfRangeException(nameof(heldBalance));
 
-        TransferBalance = heldBalance;
+        HeldBalance = heldBalance;
     }
 
     /// <summary xml:lang = "ru">
