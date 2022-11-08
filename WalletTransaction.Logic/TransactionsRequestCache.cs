@@ -2,6 +2,9 @@
 
 namespace WalletTransaction.Logic;
 
+/// <summary xml:lang = "ru">
+/// Кэш запросов на проведение транзакций.
+/// </summary>
 public sealed class TransactionsRequestCache : ITransactionRequestCache
 {
     private readonly ConcurrentDictionary<InternalID, (TransactionRequest, CancellationTokenSource)> _requests = new();

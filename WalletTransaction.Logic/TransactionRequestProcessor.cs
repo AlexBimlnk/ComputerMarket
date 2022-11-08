@@ -1,5 +1,8 @@
 ﻿namespace WalletTransaction.Logic;
 
+/// <summary xml:lang = "ru">
+/// Обработчик запросов на проведение транзакций.
+/// </summary>
 public sealed class TransactionRequestProcessor : ITransactionsRequestProcessor
 {
     private static async Task ProcessTransactionAsync(Transaction transaction, CancellationToken token)
@@ -21,5 +24,13 @@ public sealed class TransactionRequestProcessor : ITransactionsRequestProcessor
     }
 
     /// <inheritdoc/>
-    public Task RefundAsync(ITransactionsRequest transactionRequest, CancellationToken token) => throw new NotImplementedException();
+    public async Task RefundAsync(ITransactionsRequest transactionRequest, CancellationToken token)
+    {
+        ArgumentNullException.ThrowIfNull(transactionRequest);
+
+        // some other logic
+
+        await Task.WhenAll(transactionRequest.Transactions
+            .Select(x => ProcessTransactionAsync(x, token)));
+    }
 }
