@@ -76,4 +76,16 @@ public sealed class TransactionsRequestCache : ITransactionRequestCache
 
         return request.Item1;
     }
+
+    /// <inheritdoc/>
+    public CancellationToken GetCancellationTokenByRequest(InternalID requestId)
+    {
+        if (!_requests.TryGetValue(requestId, out var request))
+        {
+            throw new InvalidOperationException(
+                $"Request with id: {requestId} not exsisting");
+        }
+
+        return request.Item2.Token;
+    }
 }
