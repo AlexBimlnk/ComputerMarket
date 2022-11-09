@@ -1,4 +1,6 @@
-﻿using General.Storage;
+﻿using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
+
+using General.Storage;
 
 using Market.Logic.Models;
 
@@ -12,7 +14,7 @@ using TUser = Models.User;
 /// <summary xml:lang = "ru">
 /// Репозиторий пользователей.
 /// </summary>
-public sealed class UsersRepository : IKeyableRepository<User, InternalID>, IKeyableRepository<User, string>
+public sealed class UsersRepository : IUsersRepository
 {
     private readonly IRepositoryContext _context;
     private readonly ILogger<UsersRepository> _logger;
@@ -39,6 +41,7 @@ public sealed class UsersRepository : IKeyableRepository<User, InternalID>, IKey
 
     private static TUser ConvertToStorageModel(User user) => new()
     {
+        Id = user.Key.Value,
         Login = user.Login,
         Email = user.Email,
         Password = user.Password.Value,
@@ -60,7 +63,7 @@ public sealed class UsersRepository : IKeyableRepository<User, InternalID>, IKey
             id: new InternalID(user.Id),
             user.Login,
             new Password(user.Password),
-            email: "mail@mail.ru",
+            email: user.Email,
             (UserType)user.UserTypeId);
     }
 
@@ -112,15 +115,28 @@ public sealed class UsersRepository : IKeyableRepository<User, InternalID>, IKey
             .SingleOrDefault();
 
     /// <inheritdoc/>
-    public User? GetByKey(string key)
+    public User? GetByEmail(string email)
     {
         var user = _context.Users
-            .Where(x => x.Email == key)
+            .Where(x => x.Email == email)
             .SingleOrDefault();
 
         if (user is null)
             return null;
 
         return ConvertFromStorageModel(user);
+    }
+
+    /// <inheritdoc/>
+    public bool IsCanAuthenticate(string email, string password, out User user)
+    {
+        user = null!;
+        var foundUser = GetByEmail(email)!;
+
+        if (foundUser is null || password != foundUser.Password.Value)
+            return false;
+
+        user = foundUser;
+        return true;
     }
 }

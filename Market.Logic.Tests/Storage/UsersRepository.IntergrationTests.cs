@@ -30,8 +30,8 @@ public class UsersRepositoryIntegrationTests : DBIntegrationTestBase
         var inputUser = new User(
             id: new InternalID(1),
             login: "Login1",
-            new Password("12345"),
-            email: "mail@mail.ru",
+            new Password("12345678"),
+            email: "mmail@mail.ru",
             UserType.Customer);
 
 
@@ -40,10 +40,10 @@ public class UsersRepositoryIntegrationTests : DBIntegrationTestBase
             new TUser
             {
                 Id = 1,
-                UserTypeId = 0,
+                UserTypeId = 1,
                 Login = "Login1",
-                Email = "mail@mail.ru",
-                Password = "12345"
+                Email = "mmail@mail.ru",
+                Password = "12345678"
             }
         };
 
@@ -94,8 +94,8 @@ public class UsersRepositoryIntegrationTests : DBIntegrationTestBase
         var user = new User(
             id: new InternalID(1),
             login: "Login1",
-            new Password("12345"),
-            email: "mail@mail.ru",
+            new Password("12345678"),
+            email: "mmail1@mail.ru",
             UserType.Customer);
 
         await AddUserTypeAsync(UserType.Customer);
@@ -130,15 +130,15 @@ public class UsersRepositoryIntegrationTests : DBIntegrationTestBase
         var user1 = new User(
             id: new InternalID(1),
             login: "Login1",
-            new Password("12345"),
-            email: "mail@mail.ru",
+            new Password("12345678"),
+            email: "mmail1@mail.ru",
             UserType.Customer);
 
         var user2 = new User(
             id: new InternalID(4),
             login: "Login2",
-            new Password("12345"),
-            email: "mail@mail.ru",
+            new Password("12345679"),
+            email: "smail@mail.ru",
             UserType.Customer);
 
 
@@ -154,8 +154,8 @@ public class UsersRepositoryIntegrationTests : DBIntegrationTestBase
         var inputUser = new User(
             id: new InternalID(1),
             login: "Login1",
-            new Password("12345"),
-            email: "mail@mail.ru",
+            new Password("12345678"),
+            email: "mmail@mail.ru",
             UserType.Customer);
 
         // Act
@@ -205,7 +205,7 @@ public class UsersRepositoryIntegrationTests : DBIntegrationTestBase
                 id: new InternalID(1),
                 login: "Login1",
                 new Password("12345678"),
-                email: "mail1@mail.ru",
+                email: "mmail1@mail.ru",
                 UserType.Customer),
             true
         },
@@ -214,7 +214,7 @@ public class UsersRepositoryIntegrationTests : DBIntegrationTestBase
                 id: new InternalID(4),
                 login: "Login2",
                 new Password("12345012"),
-                email: "mail2@mail.ru",
+                email: "tmail2@mail.ru",
                 UserType.Customer),
             false
         },
