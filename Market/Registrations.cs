@@ -16,5 +16,5 @@ public static class Registrations
     private static IServiceCollection AddStorage(this IServiceCollection services)
         => services
             .AddScoped<IRepositoryContext, RepositoryContext>()
-            .AddScoped<IKeyableRepository<User, string>, UsersRepository>();
+            .AddScoped<IUsersRepository, UsersRepository>();
 }
