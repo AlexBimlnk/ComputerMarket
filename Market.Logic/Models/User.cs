@@ -9,7 +9,14 @@ namespace Market.Logic.Models;
 /// </summary>
 public class User : IKeyable<InternalID>, IKeyable<string>
 {
-    private const string EMAIL_PATTERN = @"^\w+@\w+\.\w+$";
+    public const string EMAIL_PATTERN = @"^\w+@\w+\.\w+$";
+    public const string ONLY_LETTERS_AND_NUMBERS_PATTERN = @"^[a-zA-Z0-9_.-]*$";
+    public const int LOGIN_MAX_LENGTH = 20; 
+    public const int LOGIN_MIN_LENGTH = 6; 
+    public const int PASSWORD_MIN_LENGTH = 8; 
+    public const int PASSWORD_MAX_LENGTH = 20; 
+    public const int EMAIL_MAX_LENGTH = 256; 
+    public const int EMAIL_MIN_LENGTH = 3; 
 
     /// <summary xml:lang = "ru">
     /// Создает экземпляр типа <see cref="User"/>.
