@@ -7,7 +7,7 @@ namespace Market.Logic.Models;
 /// <summary xml:lang = "ru">
 /// Пользователь системы.
 /// </summary>
-public class User : IKeyable<InternalID>
+public class User : IKeyable<InternalID>, IKeyable<string>
 {
     private const string EMAIL_PATTERN = @"^\w+@\w+\.\w+$";
 
@@ -64,4 +64,7 @@ public class User : IKeyable<InternalID>
 
     /// <inheritdoc/>
     public InternalID Key { get; }
+
+    /// <inheritdoc/>
+    string IKeyable<string>.Key => Email;
 }

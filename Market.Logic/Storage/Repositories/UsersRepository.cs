@@ -12,7 +12,7 @@ using TUser = Models.User;
 /// <summary xml:lang = "ru">
 /// Репозиторий пользователей.
 /// </summary>
-public sealed class UsersRepository : IKeyableRepository<User, InternalID>
+public sealed class UsersRepository : IKeyableRepository<User, InternalID>, IKeyableRepository<User, string>
 {
     private readonly IRepositoryContext _context;
     private readonly ILogger<UsersRepository> _logger;
@@ -39,7 +39,6 @@ public sealed class UsersRepository : IKeyableRepository<User, InternalID>
 
     private static TUser ConvertToStorageModel(User user) => new()
     {
-        Id = user.Key.Value,
         Login = user.Login,
         Email = user.Email,
         Password = user.Password.Value,
@@ -111,4 +110,17 @@ public sealed class UsersRepository : IKeyableRepository<User, InternalID>
             .Where(x => x.Id == key.Value)
             .Select(x => ConvertFromStorageModel(x))
             .SingleOrDefault();
+
+    /// <inheritdoc/>
+    public User? GetByKey(string key)
+    {
+        var user = _context.Users
+            .Where(x => x.Email == key)
+            .SingleOrDefault();
+
+        if (user is null)
+            return null;
+
+        return ConvertFromStorageModel(user);
+    }
 }
