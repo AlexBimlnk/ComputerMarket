@@ -3,6 +3,7 @@
 using Market.Logic.Storage;
 using Market.Models;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,9 +22,17 @@ public class HomeController : Controller
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public IActionResult Index() => View();
 
+    [Authorize]
     public IActionResult Privacy() => View();
+
+    [Authorize(Policy = "OnlyForAgents")]
+    public IActionResult Provider() => View();
+
+    [Authorize(Policy = "OnlyForManager")]  
+    public IActionResult Manager() => View();
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error() => 

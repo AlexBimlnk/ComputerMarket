@@ -11,15 +11,16 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Market.Logic.Storage.Repositories;
 
 namespace Market.Controllers;
 
 public class AccountController : Controller
 {
     private readonly ILogger<HomeController> _logger;
-    private readonly IKeyableRepository<User, string> _usersRepository;
+    private readonly IUsersRepository _usersRepository;
 
-    public AccountController(IKeyableRepository<User, string> usersRepository, ILogger<HomeController> logger)
+    public AccountController(IUsersRepository usersRepository, ILogger<HomeController> logger)
     {
         _usersRepository = usersRepository;
         _logger = logger;
@@ -39,10 +40,9 @@ public class AccountController : Controller
     {
         if (ModelState.IsValid)
         {
-            User? user = _usersRepository.GetByKey(model.Email);
-            if (user is not null)
+            if (_usersRepository.IsCanAuthenticate(model.Email, model.Password, out var user))
             {
-                await AuthenticateAsync(model.Email);
+                await AuthenticateAsync(user);
 
                 return RedirectToAction("Index", "Home");
             }
@@ -57,14 +57,14 @@ public class AccountController : Controller
     {
         if (ModelState.IsValid)
         {
-            User? user = _usersRepository.GetByKey(model.Email);
+            User? user = _usersRepository.GetByEmail(model.Email);
             if (user is null)
             {
-
-                await _usersRepository.AddAsync(new User(new InternalID(-1), model.Login, new Password(model.Password), model.Email, UserType.Customer));
+                user = new User(default, model.Login, new Password(model.Password), model.Email, UserType.Customer);
+                await _usersRepository.AddAsync(user);
                 _usersRepository.Save();
 
-                await AuthenticateAsync(model.Email);
+                await AuthenticateAsync(user);
 
                 return RedirectToAction("Index", "Home");
             }
@@ -74,11 +74,14 @@ public class AccountController : Controller
         return View(model);
     }
 
-    private async Task AuthenticateAsync(string userName)
+    private async Task AuthenticateAsync(User user)
     {
+        var role = user.Type.ToString();
+
         var claims = new List<Claim>
             {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, userName),
+                new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email),
+                new Claim("role", role)
             };
 
         var id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);

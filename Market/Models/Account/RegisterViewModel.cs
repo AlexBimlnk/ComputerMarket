@@ -2,6 +2,8 @@
 
 using Market.Logic.Models;
 
+using PasswordClass = Market.Logic.Models.Password;
+
 namespace Market.Models.Account;
 
 public class RegisterModel
@@ -25,7 +27,7 @@ public class RegisterModel
     [DataType(DataType.Password)]
     [RegularExpression(User.ONLY_LETTERS_AND_NUMBERS_PATTERN,
          ErrorMessage = "Пароль не может содержать специальные символы.")]
-    [StringLength(User.PASSWORD_MAX_LENGTH, MinimumLength = User.PASSWORD_MIN_LENGTH,
+    [StringLength(PasswordClass.PASSWORD_MAX_LENGTH, MinimumLength = PasswordClass.PASSWORD_MIN_LENGTH,
         ErrorMessage = "Пароль может быть длиной от 8 до 20 символов")]
     public string Password { get; set; } = default!;
 

@@ -1,4 +1,5 @@
 using Market;
+using Market.Logic.Models;
 using Market.Logic.Storage;
 
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -15,7 +16,17 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
                 .AddCookie(options => 
                 {
                     options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
+                    options.AccessDeniedPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
                 });
+
+builder.Services.AddAuthorization(opts => {
+    opts.AddPolicy("OnlyForAgents", policy => {
+        policy.RequireClaim("role", UserType.Agent.ToString());
+    });
+    opts.AddPolicy("OnlyForManager", policy => {
+        policy.RequireClaim("role", UserType.Manager.ToString());
+    });
+});
 
 builder.Services.AddMarketServices(builder.Configuration);
 

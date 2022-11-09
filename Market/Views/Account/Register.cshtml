@@ -5,7 +5,7 @@
 <div class="row">
     <div class="col-md-4">
         <form method="post" asp-controller="Account" asp-action="Register">
-            <h2>Create a new account.</h2>
+            <h2>Создание нового аккаунта.</h2>
             <hr />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-floating">
@@ -28,7 +28,14 @@
                 <label asp-for="ConfirmPassword"></label>
                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>
-            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+            <div>
+                <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+            </div>
+            <div>
+                <p>
+                    <a asp-action="ProviderRegister">Зарегистрироваться как постацщик</a>
+                </p>
+            </div>
         </form>
     </div>
 </div>
