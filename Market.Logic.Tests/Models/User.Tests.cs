@@ -11,7 +11,7 @@ public class UserTests
         // Arrange
         User user = null!;
         var id = new InternalID(1);
-        var login = "login";
+        var login = "login1";
         var password = new Password("password");
         var type = UserType.Customer;
         var email = "mAiL33@mail.ru";
@@ -40,7 +40,7 @@ public class UserTests
         // Act
         var exception = Record.Exception(() => _ = new User(
             new InternalID(1),
-            login: "login",
+            login: "login1",
             password: null!,
             email: "mail@mail.ru",
             type: UserType.Customer));
@@ -71,6 +71,10 @@ public class UserTests
     [InlineData("")]
     [InlineData("     ")]
     [InlineData("\t \n\r ")]
+    [InlineData("ab123")]
+    [InlineData("abcde123456abcde123456abcde123456abcde123456123")]
+    [InlineData("abcd1234^$@#0)")]
+    [InlineData("{}//^6786996")]
     public void CanNotCreateWhenLoginIncorrect(string login)
     {
         // Act
@@ -91,7 +95,8 @@ public class UserTests
     [InlineData("")]
     [InlineData("     ")]
     [InlineData("\t \n\r ")]
-    [InlineData("asdavasdasd")]
+    [InlineData("@r")]
+    [InlineData("1234567812345678123456781234567812345678123456781234567812345678123456781234567812345678123456781234567812345678123456781234567812345678123456781234567812345678123456781234567812345678123456781234567812345678123456781234567812345678123456781234567812345678@mail.ru")]
     [InlineData("mailmail.ru")]
     [InlineData("mail@mailru")]
     [InlineData("@mail.ru")]
