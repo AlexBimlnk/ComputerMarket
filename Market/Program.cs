@@ -13,17 +13,20 @@ builder.Services.AddDbContext<MarketContext>(opt =>
     opt.UseNpgsql(builder.Configuration.GetSection("ConnectionString").Value));
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(options => 
-                {
-                    options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
-                    options.AccessDeniedPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
-                });
+    .AddCookie(options => 
+        {
+            options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
+            options.AccessDeniedPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
+        });
 
-builder.Services.AddAuthorization(opts => {
-    opts.AddPolicy("OnlyForAgents", policy => {
+builder.Services.AddAuthorization(opts => 
+{
+    opts.AddPolicy("OnlyForAgents", policy => 
+    {
         policy.RequireClaim("role", UserType.Agent.ToString());
     });
-    opts.AddPolicy("OnlyForManager", policy => {
+    opts.AddPolicy("OnlyForManager", policy => 
+    {
         policy.RequireClaim("role", UserType.Manager.ToString());
     });
 });
