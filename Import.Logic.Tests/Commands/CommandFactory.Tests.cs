@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using General.Logic.Commands;
 
-using Import.Logic.Abstractions.Commands;
 using Import.Logic.Commands;
 using Import.Logic.Models;
 
@@ -48,12 +43,12 @@ public class CommandFactoryTests
         setLink.Setup(x => x.Invoke(setParameters))
             .Returns(command)
             .Callback(() => setLinkInvokeCount++);
-        
+
         var factory = new CommandFactory(setLink.Object, deleteLink);
 
         // Act
         ICommand result = null!;
-        
+
         var exception = Record.Exception(() =>
             result = factory.Create(setParameters));
 
@@ -77,7 +72,7 @@ public class CommandFactoryTests
 
         var setLink = Mock.Of<Func<SetLinkCommandParameters, ICommand>>();
         var deleteLink = new Mock<Func<DeleteLinkCommandParameters, ICommand>>(MockBehavior.Strict);
-        
+
         var deleteLinkInvokeCount = 0;
         deleteLink.Setup(x => x.Invoke(deleteParameters))
             .Returns(command)

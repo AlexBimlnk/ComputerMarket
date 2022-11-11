@@ -1,4 +1,5 @@
-using Import.Logic.Abstractions.Commands;
+using General.Logic.Commands;
+
 using Import.Logic.Commands;
 
 using Microsoft.AspNetCore.Mvc;
@@ -48,7 +49,7 @@ public class CommandsController : ControllerBase
     /// Результат выполнения команды типа <see cref="CommandResult"/>.
     /// </returns>
     [HttpGet]
-    public async Task<CommandResult> ExecuteCommandAsync()
+    public async Task<ICommandResult> ExecuteCommandAsync()
     {
         var body = await ReadRequestBodyAsync();
 

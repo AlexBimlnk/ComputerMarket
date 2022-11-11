@@ -1,4 +1,6 @@
-﻿using Import.Logic.Commands;
+﻿using General.Logic.Commands;
+
+using Import.Logic.Commands;
 
 namespace Import.Logic.Tests.Commands;
 public class CommandResultTests

@@ -1,6 +1,8 @@
-﻿using Import.Logic.Commands;
+﻿using General.Logic.Commands;
 
-namespace Import.Logic.Abstractions.Commands;
+using Import.Logic.Commands;
+
+namespace Import.Logic.Abstractions;
 
 /// <summary xml:lang = "ru">
 /// Абстрактная команда создания связей.
@@ -16,7 +18,7 @@ public abstract class CommandBase : ICommand
     protected abstract Task ExecuteCoreAsync();
 
     /// <inheritdoc/>
-    public async Task<CommandResult> ExecuteAsync()
+    public async Task<ICommandResult> ExecuteAsync()
     {
         try
         {

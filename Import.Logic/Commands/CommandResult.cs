@@ -1,33 +1,25 @@
-﻿namespace Import.Logic.Commands;
+﻿using General.Logic.Commands;
+
+namespace Import.Logic.Commands;
 
 /// <summary xml:lang = "ru">
 /// Результат выполнения команды.
 /// </summary>
-public sealed class CommandResult
+public sealed class CommandResult : ICommandResult
 {
-    private CommandResult(CommandID id)
+    private CommandResult(CommandID id, string? errorMessge = null)
     {
         Id = id;
-    }
-
-    private CommandResult(CommandID id, string errorMessge) : this(id)
-    {
         ErrorMessage = errorMessge;
     }
 
-    /// <summary xml:lang = "ru">
-    /// Идентификатор команды.
-    /// </summary>
+    /// <inheritdoc/>
     public CommandID Id { get; }
 
-    /// <summary xml:lang = "ru">
-    /// Флаг, указывающий является ли результат успешным.
-    /// </summary>
+    /// <inheritdoc/>
     public bool IsSuccess => ErrorMessage is null;
 
-    /// <summary xml:lang = "ru">
-    /// Сообщение содержащие описание ошибки.
-    /// </summary>
+    /// <inheritdoc/>
     public string? ErrorMessage { get; }
 
     /// <summary xml:lang = "ru">

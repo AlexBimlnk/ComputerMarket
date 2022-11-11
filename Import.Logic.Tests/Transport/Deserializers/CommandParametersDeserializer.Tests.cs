@@ -1,4 +1,5 @@
-﻿using Import.Logic.Abstractions.Commands;
+﻿using General.Logic.Commands;
+
 using Import.Logic.Commands;
 using Import.Logic.Models;
 using Import.Logic.Transport.Deserializers;

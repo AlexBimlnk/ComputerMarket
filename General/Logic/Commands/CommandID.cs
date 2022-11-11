@@ -1,4 +1,4 @@
-﻿namespace Import.Logic.Commands;
+﻿namespace General.Logic.Commands;
 
 /// <summary xml:lang = "ru">
 /// Идентификатор команды.

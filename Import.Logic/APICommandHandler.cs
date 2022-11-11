@@ -1,8 +1,5 @@
-﻿using General.Transport;
-
-using Import.Logic.Abstractions;
-using Import.Logic.Abstractions.Commands;
-using Import.Logic.Commands;
+﻿using General.Logic.Commands;
+using General.Transport;
 
 using Microsoft.Extensions.Logging;
 
@@ -43,7 +40,7 @@ public sealed class APICommandHandler : IAPICommandHandler
     }
 
     /// <inheritdoc/>
-    public async Task<CommandResult> HandleAsync(string request, CancellationToken token = default)
+    public async Task<ICommandResult> HandleAsync(string request, CancellationToken token = default)
     {
         if (string.IsNullOrWhiteSpace(request))
             throw new ArgumentException(

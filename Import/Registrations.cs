@@ -1,10 +1,10 @@
 ﻿using General.Logic;
+using General.Logic.Commands;
 using General.Storage;
 using General.Transport;
 
 using Import.Logic;
 using Import.Logic.Abstractions;
-using Import.Logic.Abstractions.Commands;
 using Import.Logic.Commands;
 using Import.Logic.Models;
 using Import.Logic.Storage.Repositories;

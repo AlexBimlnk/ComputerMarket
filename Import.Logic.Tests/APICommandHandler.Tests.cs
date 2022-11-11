@@ -1,6 +1,6 @@
-﻿using General.Transport;
+﻿using General.Logic.Commands;
+using General.Transport;
 
-using Import.Logic.Abstractions.Commands;
 using Import.Logic.Commands;
 
 using Microsoft.Extensions.Logging;
