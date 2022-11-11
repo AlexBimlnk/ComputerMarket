@@ -12,9 +12,10 @@ public class OrderTests
         Order order = null!;
         var user = new User(
             new InternalID(1),
-            login: "login1",
-            new Password("12345678"),
-            email: "mail@mail.ru",
+            new AuthenticationData(
+                login: "login1",
+                email: "mail@mail.ru",
+                new Password("12345678")),
             UserType.Customer);
         var quantity = 2;
         var product = new Product(
@@ -89,9 +90,10 @@ public class OrderTests
         // Arrange       
         var user = new User(
             new InternalID(1),
-            login: "login1",
-            new Password("12345678"),
-            email: "mail@mail.ru",
+            new AuthenticationData(
+                login: "login1",
+                email: "mail@mail.ru",
+                new Password("12345678")),
             UserType.Customer);
 
         // Act
@@ -109,9 +111,10 @@ public class OrderTests
         // Arrange       
         var user = new User(
             new InternalID(1),
-            login: "login1",
-            new Password("12345678"),
-            email: "mail@mail.ru",
+            new AuthenticationData(
+                login: "login1",
+                email: "mail@mail.ru",
+                new Password("12345678")),
             UserType.Customer);
         var quantity = 2;
         var product = new Product(
@@ -152,9 +155,10 @@ public class OrderTests
         // Arrange
         var user = new User(
             new InternalID(1),
-            login: "login1",
-            new Password("12345678"),
-            email: "mail@mail.ru",
+            new AuthenticationData(
+                login: "login1",
+                email: "mail@mail.ru",
+                new Password("12345678")),
             UserType.Customer);
         var provider1 = new Provider(
             new InternalID(1),

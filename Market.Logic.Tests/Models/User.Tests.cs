@@ -11,38 +11,33 @@ public class UserTests
         // Arrange
         User user = null!;
         var id = new InternalID(1);
-        var login = "login1";
-        var password = new Password("password");
+        var data = new AuthenticationData(
+            login: "login1",
+            email: "mAiL33@mail.ru",
+            new Password("password"));
         var type = UserType.Customer;
-        var email = "mAiL33@mail.ru";
-
+        
         // Act
         var exception = Record.Exception(() => user = new User(
             id,
-            login,
-            password,
-            email,
+            data,
             type));
 
         // Assert
         exception.Should().BeNull();
         user.Key.Should().Be(id);
-        user.Login.Should().Be(login);
-        user.Password.Should().Be(password);
+        user.AuthenticationData.Should().Be(data);
         user.Type.Should().Be(type);
-        user.Email.Should().Be(email);
     }
 
-    [Fact(DisplayName = $"The {nameof(User)} cannot be created without password.")]
+    [Fact(DisplayName = $"The {nameof(User)} cannot be created without authentication data.")]
     [Trait("Category", "Unit")]
     public void CanNotCreateWithoutPassword()
     {
         // Act
         var exception = Record.Exception(() => _ = new User(
             new InternalID(1),
-            login: "login1",
-            password: null!,
-            email: "mail@mail.ru",
+            authenticationData: null!,
             type: UserType.Customer));
 
         // Assert
@@ -56,61 +51,11 @@ public class UserTests
         // Act
         var exception = Record.Exception(() => _ = new User(
             new InternalID(1),
-            login: "login",
-            password: new Password("12345"),
-            email: "mail@mail.ru",
+            new AuthenticationData(
+                login: "login1",
+                email: "mAiL33@mail.ru",
+                new Password("password")),
             type: (UserType)1234));
-
-        // Assert
-        exception.Should().BeOfType<ArgumentException>();
-    }
-
-    [Theory(DisplayName = $"The {nameof(User)} cannot be created when given login has incorrect format.")]
-    [Trait("Category", "Unit")]
-    [InlineData(null!)]
-    [InlineData("")]
-    [InlineData("     ")]
-    [InlineData("\t \n\r ")]
-    [InlineData("ab123")]
-    [InlineData("abcde123456abcde123456abcde123456abcde123456123")]
-    [InlineData("abcd1234^$@#0)")]
-    [InlineData("{}//^6786996")]
-    public void CanNotCreateWhenLoginIncorrect(string login)
-    {
-        // Act
-        var exception = Record.Exception(() => _ = new User(
-            new InternalID(1),
-            login: login,
-            password: new Password("12345"),
-            email: "mail@mail.ru",
-            type: UserType.Customer));
-
-        // Assert
-        exception.Should().BeOfType<ArgumentException>();
-    }
-
-    [Theory(DisplayName = $"The {nameof(User)} cannot be created when given email has incorrect format.")]
-    [Trait("Category", "Unit")]
-    [InlineData(null!)]
-    [InlineData("")]
-    [InlineData("     ")]
-    [InlineData("\t \n\r ")]
-    [InlineData("@r")]
-    [InlineData("1234567812345678123456781234567812345678123456781234567812345678123456781234567812345678123456781234567812345678123456781234567812345678123456781234567812345678123456781234567812345678123456781234567812345678123456781234567812345678123456781234567812345678@mail.ru")]
-    [InlineData("mailmail.ru")]
-    [InlineData("mail@mailru")]
-    [InlineData("@mail.ru")]
-    [InlineData("mail@mail.ru.ru")]
-    [InlineData("mail@mail.")]
-    public void CanNotCreateWhenEmailIncorrect(string email)
-    {
-        // Act
-        var exception = Record.Exception(() => _ = new User(
-            new InternalID(1),
-            login: "login",
-            password: new Password("12345"),
-            email,
-            type: UserType.Customer));
 
         // Assert
         exception.Should().BeOfType<ArgumentException>();

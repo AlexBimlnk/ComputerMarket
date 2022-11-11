@@ -42,9 +42,9 @@ public sealed class UsersRepository : IUsersRepository
     private static TUser ConvertToStorageModel(User user) => new()
     {
         Id = user.Key.Value,
-        Login = user.Login,
-        Email = user.Email,
-        Password = user.Password.Value,
+        Login = user.AuthenticationData.Login,
+        Email = user.AuthenticationData.Email,
+        Password = user.AuthenticationData.Password.Value,
         UserTypeId = (short)user.Type
     };
 
@@ -61,9 +61,10 @@ public sealed class UsersRepository : IUsersRepository
 
         return new User(
             id: new InternalID(user.Id),
-            user.Login,
-            new Password(user.Password),
-            email: user.Email,
+            new AuthenticationData(
+                user.Login,
+                user.Email,
+                new Password(user.Password)),
             (UserType)user.UserTypeId);
     }
 
@@ -133,7 +134,7 @@ public sealed class UsersRepository : IUsersRepository
         user = null!;
         var foundUser = GetByEmail(email)!;
 
-        if (foundUser is null || password != foundUser.Password.Value)
+        if (foundUser is null || password != foundUser.AuthenticationData.Password.Value)
             return false;
 
         user = foundUser;

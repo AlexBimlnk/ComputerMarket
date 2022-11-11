@@ -90,10 +90,11 @@ public class UsersRepositoryTests
             logger);
 
         var inputUser = new User(
-            id: new InternalID(1),
-            login: "Login1",
-            new Password("12345678"),
-            email: "mmail@mail.ru",
+            new InternalID(1),
+            new AuthenticationData(
+                login: "Login1",
+                email: "mmail@mail.ru",
+                new Password("12345678")),
             UserType.Customer);
 
         // Act
@@ -140,10 +141,11 @@ public class UsersRepositoryTests
             logger);
 
         var inputUser = new User(
-            id: new InternalID(1),
-            login: "Login1",
-            new Password("12345678"),
-            email: "mail@mail.ru",
+            new InternalID(1),
+            new AuthenticationData(
+                login: "Login1",
+                email: "mail@mail.ru",
+                new Password("12345678")),
             UserType.Customer);
 
         // Act
@@ -190,10 +192,11 @@ public class UsersRepositoryTests
             logger);
 
         var inputUser = new User(
-            id: new InternalID(1),
-            login: "Login1",
-            new Password("12345678"),
-            email: "mail@mail.ru",
+            new InternalID(1),
+            new AuthenticationData(
+                login: "Login1",
+                email: "mail@mail.ru",
+                new Password("12345678")),
             UserType.Customer);
 
         // Act
@@ -231,10 +234,11 @@ public class UsersRepositoryTests
             logger);
 
         var containsUser = new User(
-            id: new InternalID(1),
-            login: "Login1",
-            new Password("12345678"),
-            email: "mail@mail.ru",
+            new InternalID(1),
+            new AuthenticationData(
+                login: "Login1",
+                email: "mail@mail.ru",
+                new Password("12345678")),
             UserType.Customer);
 
         // Act
@@ -321,10 +325,11 @@ public class UsersRepositoryTests
             logger);
 
         var expectedResult = new User(
-            id: new InternalID(1),
-            login: "Login1",
-            new Password("12345678"),
-            email: "mmail@mail.ru",
+            new InternalID(1),
+            new AuthenticationData(
+                login: "Login1",
+                email: "mmail@mail.ru",
+                new Password("12345678")),
             UserType.Customer);
 
         // Act
@@ -387,10 +392,11 @@ public class UsersRepositoryTests
             logger);
 
         var expectedResult = new User(
-            id: new InternalID(1),
-            login: "Login1",
-            new Password("12345678"),
-            email: userEmail,
+            new InternalID(1),
+            new AuthenticationData(
+                login: "Login1",
+                email: userEmail,
+                new Password("12345678")),
             UserType.Customer);
 
         // Act
@@ -398,8 +404,7 @@ public class UsersRepositoryTests
         var result2 = userRepository.GetByEmail(notExsistingUserEmail);
 
         // Assert
-        result1.Should().NotBeNull();
-        result1.Should().BeEquivalentTo(expectedResult);
+        result1.Should().NotBeNull().And.BeEquivalentTo(expectedResult);
         result2.Should().BeNull();
     }
 
@@ -455,10 +460,11 @@ public class UsersRepositoryTests
             logger);
 
         var expectedResult = new User(
-            id: new InternalID(1),
-            login: "Login1",
-            new Password(userPassword),
-            email: userEmail,
+            new InternalID(1),
+            new AuthenticationData(
+                login: "Login1",
+                email: userEmail,
+                new Password(userPassword)),
             UserType.Customer);
 
         // Act
@@ -528,10 +534,11 @@ public class UsersRepositoryTests
         var expectedResult = new List<User>()
         {
             new User(
-                id: new InternalID(1),
-                login: "Login1",
-                new Password("12345678"),
-                email: "mmail@mail.ru",
+                new InternalID(1),
+                new AuthenticationData(
+                    login: "Login1",
+                    email: "mmail@mail.ru",
+                    new Password("12345678")),
                 UserType.Customer)
         };
 

@@ -28,7 +28,7 @@ public class Password
         if (value.Length < PASSWORD_MIN_LENGTH || value.Length > PASSWORD_MAX_LENGTH)
             throw new ArgumentException($"Password must have length between {PASSWORD_MIN_LENGTH} and {PASSWORD_MAX_LENGTH}", nameof(value));
 
-        if (!Regex.IsMatch(value, User.ONLY_LETTERS_AND_NUMBERS_PATTERN))
+        if (!Regex.IsMatch(value, AuthenticationData.ONLY_LETTERS_AND_NUMBERS_PATTERN))
             throw new ArgumentException($"Password must contains only letters and numbers", nameof(value));
 
         Value = value;
