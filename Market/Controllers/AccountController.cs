@@ -40,7 +40,7 @@ public class AccountController : Controller
     {
         if (ModelState.IsValid)
         {
-            if (_usersRepository.IsCanAuthenticate(model.Email, model.Password, out var user))
+            if (_usersRepository.IsCanAuthenticate(new AuthenticationData(model.Email, new Password(model.Password)), out var user))
             {
                 await AuthenticateAsync(user);
 
@@ -57,10 +57,12 @@ public class AccountController : Controller
     {
         if (ModelState.IsValid)
         {
-            User? user = _usersRepository.GetByEmail(model.Email);
-            if (user is null)
+            var data = new AuthenticationData(model.Email, new Password(model.Password), model.Login);
+            User user;
+            if (!_usersRepository.IsCanAuthenticate(data, out user))
             {
-                user = new User(default, new AuthenticationData(model.Login, model.Email, new Password(model.Password)), UserType.Customer);
+                user = new User(default, data, UserType.Customer);
+
                 await _usersRepository.AddAsync(user);
                 _usersRepository.Save();
 

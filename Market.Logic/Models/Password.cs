@@ -7,8 +7,7 @@ namespace Market.Logic.Models;
 /// </summary>
 public class Password
 {
-    public const int PASSWORD_MIN_LENGTH = 8;
-    public const int PASSWORD_MAX_LENGTH = 20;
+    public const string PASSWORD_PATTERN = @"^[a-zA-Z0-9_.-]{8,20}$";
 
     /// <summary xml:lang = "ru">
     /// Значение.
@@ -25,10 +24,7 @@ public class Password
         if (string.IsNullOrWhiteSpace(value))
             throw new ArgumentException("Password can't be null or empty or contains only whitespaces", nameof(value));
         
-        if (value.Length < PASSWORD_MIN_LENGTH || value.Length > PASSWORD_MAX_LENGTH)
-            throw new ArgumentException($"Password must have length between {PASSWORD_MIN_LENGTH} and {PASSWORD_MAX_LENGTH}", nameof(value));
-
-        if (!Regex.IsMatch(value, AuthenticationData.ONLY_LETTERS_AND_NUMBERS_PATTERN))
+        if (!Regex.IsMatch(value, PASSWORD_PATTERN))
             throw new ArgumentException($"Password must contains only letters and numbers", nameof(value));
 
         Value = value;

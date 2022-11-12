@@ -18,42 +18,47 @@ public class AuthenticationDataTests
         AuthenticationData data = null!;
         var login = "login1";
         var email = "mAiL33@mail.ru";
-        var password = new Password("password");
-        
+        var password = new Password("12345678");
+
         // Act
         var exception = Record.Exception(() => data = new AuthenticationData(
-            login,
+            email,
+            password,
+            login));
+
+        // Assert
+        exception.Should().BeNull();
+        data.Email.Should().Be(email);
+        data.Password.Should().Be(password);
+        data.Login.Should().Be(login);
+    }
+
+    [Fact(DisplayName = $"The {nameof(AuthenticationData)} can be created without login.")]
+    [Trait("Category", "Unit")]
+    public void CanBeCreatedWithoutLogin()
+    {
+        // Arrange
+        AuthenticationData data = null!;
+        var email = "mAiL33@mail.ru";
+        var password = new Password("12345678");
+
+        // Act
+        var exception = Record.Exception(() => data = new AuthenticationData(
             email,
             password));
 
         // Assert
         exception.Should().BeNull();
         data.Email.Should().Be(email);
-        data.Login.Should().Be(login);
         data.Password.Should().Be(password);
     }
 
-    [Fact(DisplayName = $"The {nameof(AuthenticationData)} cannot be created without password.")]
+    [Fact(DisplayName = $"The {nameof(AuthenticationData)} can not be created without password.")]
     [Trait("Category", "Unit")]
-    public void CanNotCreateWithoutPassword()
+    public void CanNotBeCreatedWithoutPassword()
     {
         // Act
         var exception = Record.Exception(() => _ = new AuthenticationData(
-            login: "Login1",
-            email: "mmail@mail.ru",
-            password: null!));
-
-        // Assert
-        exception.Should().BeOfType<ArgumentNullException>();
-    }
-
-    [Fact(DisplayName = $"The {nameof(AuthenticationData)} cannot be created with incorrect data type enum value.")]
-    [Trait("Category", "Unit")]
-    public void CanNotCreateWithWrongAuthenticationDataTypeValue()
-    {
-        // Act
-        var exception = Record.Exception(() => _ = new AuthenticationData(
-            login: "login1",
             email: "mAiL33@mail.ru",
             password: null!));
 
@@ -63,7 +68,6 @@ public class AuthenticationDataTests
 
     [Theory(DisplayName = $"The {nameof(AuthenticationData)} cannot be created when given login has incorrect format.")]
     [Trait("Category", "Unit")]
-    [InlineData(null!)]
     [InlineData("")]
     [InlineData("     ")]
     [InlineData("\t \n\r ")]
@@ -75,9 +79,9 @@ public class AuthenticationDataTests
     {
         // Act
         var exception = Record.Exception(() => _ = new AuthenticationData(
-            login,
             email: "mAiL33@mail.ru",
-            new Password("password")));
+            new Password("12345678"),
+            login));
 
         // Assert
         exception.Should().BeOfType<ArgumentException>();
@@ -85,7 +89,6 @@ public class AuthenticationDataTests
 
     [Theory(DisplayName = $"The {nameof(AuthenticationData)} cannot be created when given email has incorrect format.")]
     [Trait("Category", "Unit")]
-    [InlineData(null!)]
     [InlineData("")]
     [InlineData("     ")]
     [InlineData("\t \n\r ")]
@@ -100,11 +103,52 @@ public class AuthenticationDataTests
     {
         // Act
         var exception = Record.Exception(() => _ = new AuthenticationData(
-            login: "login1",
             email,
-            new Password("password")));
+            new Password("12345678"),
+            login: "login1"));
 
         // Assert
         exception.Should().BeOfType<ArgumentException>();
+    }
+
+    [Theory(DisplayName = $"The {nameof(AuthenticationData)} cannot be created when given login has incorrect format.")]
+    [Trait("Category", "Unit")]
+    [InlineData(null!)]
+    [InlineData("")]
+    [InlineData("     ")]
+    [InlineData("\t \n\r ")]
+    [InlineData("ab123")]
+    [InlineData("abcde123456abcde123456abcde123456abcde123456123")]
+    [InlineData("abcd1234^$@#0)")]
+    [InlineData("{}//^6786996")]
+    public void CanNotSetIncorrectLogin(string login)
+    {
+        // Arrange
+        var data = new AuthenticationData(
+            email: "mAiL33@mail.ru",
+            new Password("12345678"));
+
+        // Act
+        var exception = Record.Exception(() => data.Login = login);
+
+        // Assert
+        exception.Should().BeOfType<ArgumentException>();
+    }
+
+    [Fact(DisplayName = $"The {nameof(AuthenticationData)} can get not setted login.")]
+    [Trait("Category", "Unit")]
+    public void CanNotGetLoginWhenHeIsNotSet()
+    {
+        // Arrange
+        var email = "mAiL33@mail.ru";
+        var data = new AuthenticationData(
+            email,
+            new Password("12345678"));
+
+        // Act
+        var exception = Record.Exception(() => _ =  data.Login);
+
+        // Assert
+        exception.Should().BeOfType<InvalidOperationException>();
     }
 }

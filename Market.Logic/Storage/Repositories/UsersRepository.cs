@@ -62,9 +62,9 @@ public sealed class UsersRepository : IUsersRepository
         return new User(
             id: new InternalID(user.Id),
             new AuthenticationData(
-                user.Login,
                 user.Email,
-                new Password(user.Password)),
+                new Password(user.Password),
+                user.Login),
             (UserType)user.UserTypeId);
     }
 
@@ -74,7 +74,7 @@ public sealed class UsersRepository : IUsersRepository
         ArgumentNullException.ThrowIfNull(entity);
 
         token.ThrowIfCancellationRequested();
-
+        
         await _context.Users.AddAsync(ConvertToStorageModel(entity), token)
             .ConfigureAwait(false);
     }
@@ -129,15 +129,27 @@ public sealed class UsersRepository : IUsersRepository
     }
 
     /// <inheritdoc/>
-    public bool IsCanAuthenticate(string email, string password, out User user)
+    public bool IsCanAuthenticate(AuthenticationData data, out User user)
     {
         user = null!;
-        var foundUser = GetByEmail(email)!;
+        var foundUser = GetByEmail(data.Email);
 
-        if (foundUser is null || password != foundUser.AuthenticationData.Password.Value)
+        if (foundUser is null || !IsPasswordMatch(foundUser.Key, data.Password))
+        {
             return false;
+        }
 
         user = foundUser;
         return true;
     }
+
+    /// <inheritdoc/>
+    public bool IsPasswordMatch(InternalID id, Password password) =>
+        _context.Users
+            .Where(x => x.Id == id.Value)
+            .SingleOrDefault() switch
+        {
+            null => false,
+            var user => user.Password == password.Value
+        };
 }

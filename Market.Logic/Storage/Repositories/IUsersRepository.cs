@@ -20,8 +20,8 @@ public interface IUsersRepository : IKeyableRepository<User, InternalID>
     /// <summary xml:lang = "ru">
     /// Проверяет можно ли аунтефицировать пользователя по указанным учетным данным.
     /// </summary>
-    /// <param name="email" xml:lang = "ru">
-    /// Почта пользователя.
+    /// <param name="data" xml:lang = "ru">
+    ///  Данные для аутенфикации пользователя.
     /// </param>
     /// <param name="password" xml:lang = "ru">
     /// Пароль пользователя.
@@ -32,5 +32,13 @@ public interface IUsersRepository : IKeyableRepository<User, InternalID>
     /// <returns xml:lang = "ru">
     /// <see langword="true"/> - если есть пользователь с такими учетными данными, иначе - <see langword="false"/>.
     /// </returns>
-    public bool IsCanAuthenticate(string email, string password, out User user);
+    public bool IsCanAuthenticate(AuthenticationData data, out User user);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="data"></param>
+    /// <param name="password"></param>
+    /// <returns></returns>
+    public bool IsPasswordMatch(InternalID id, Password password);
 }

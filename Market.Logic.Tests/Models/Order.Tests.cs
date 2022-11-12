@@ -13,9 +13,9 @@ public class OrderTests
         var user = new User(
             new InternalID(1),
             new AuthenticationData(
-                login: "login1",
                 email: "mail@mail.ru",
-                new Password("12345678")),
+                new Password("12345678"),
+                login: "login1"),
             UserType.Customer);
         var quantity = 2;
         var product = new Product(
@@ -91,9 +91,9 @@ public class OrderTests
         var user = new User(
             new InternalID(1),
             new AuthenticationData(
-                login: "login1",
                 email: "mail@mail.ru",
-                new Password("12345678")),
+                new Password("12345678"),
+                login: "login1"),
             UserType.Customer);
 
         // Act
@@ -112,9 +112,9 @@ public class OrderTests
         var user = new User(
             new InternalID(1),
             new AuthenticationData(
-                login: "login1",
                 email: "mail@mail.ru",
-                new Password("12345678")),
+                new Password("12345678"),
+                login: "login1"),
             UserType.Customer);
         var quantity = 2;
         var product = new Product(
@@ -156,9 +156,9 @@ public class OrderTests
         var user = new User(
             new InternalID(1),
             new AuthenticationData(
-                login: "login1",
                 email: "mail@mail.ru",
-                new Password("12345678")),
+                new Password("12345678"),
+                login: "login1"),
             UserType.Customer);
         var provider1 = new Provider(
             new InternalID(1),
