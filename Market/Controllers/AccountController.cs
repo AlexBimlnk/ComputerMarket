@@ -15,25 +15,49 @@ using Market.Logic.Storage.Repositories;
 
 namespace Market.Controllers;
 
+/// <summary xml:lang = "ru">
+/// Контроллер для управления учётными записями пользователей.
+/// </summary>
 public class AccountController : Controller
 {
     private readonly ILogger<HomeController> _logger;
     private readonly IUsersRepository _usersRepository;
 
+    /// <summary xml:lang = "ru">
+    /// Создаёт экземпляр класса <see cref="AccountController"/>.
+    /// </summary>
+    /// <param name="usersRepository" xml:lang = "ru">Репозиторий пользователей.</param>
+    /// <param name="logger" xml:lang = "ru">Логгер.</param>
+    /// <exception cref="ArgumentNullException" xml:lang = "ru">
+    /// Если один из параметров - <see langword="null"/>.
+    /// </exception>
     public AccountController(IUsersRepository usersRepository, ILogger<HomeController> logger)
     {
-        _usersRepository = usersRepository;
-        _logger = logger;
+        _usersRepository = usersRepository ?? throw new ArgumentNullException(nameof(usersRepository));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
+    /// <summary xml:lang = "ru">
+    /// Запрос возврашающий форму для регитсрации.
+    /// </summary>
+    /// <returns xml:lang = "ru">Представление с формой для регистрации.</returns>
     [HttpGet]
     public IActionResult Register() => View();
 
-
+    /// <summary xml:lang = "ru">
+    /// Запрос вовзращающий форму для входа.
+    /// </summary>
+    /// <returns xml:lang = "ru">Представление с формой для входа в систему.</returns>
     [HttpGet]
     public IActionResult Login() => View();
 
-
+    /// <summary xml:lang = "ru">
+    /// Запрос на вход в систему.
+    /// </summary>
+    /// <param name="model">Модель с данными для входа пользователя в систему.</param>
+    /// <returns xml:lang = "ru">
+    /// <see cref="Task"/>.
+    /// </returns>
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> LoginAsync(LoginViewModel model)
@@ -51,6 +75,13 @@ public class AccountController : Controller
         return View(model);
     }
 
+    /// <summary xml:lang = "ru">
+    /// Запрос на регистрацию в системе.
+    /// </summary>
+    /// <param name="model">Модель с данными для регистрации пользователя в системе.</param>
+    /// <returns xml:lang = "ru">
+    /// <see cref="Task"/>.
+    /// </returns>
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> RegisterAsync(RegisterViewModel model)
@@ -90,6 +121,12 @@ public class AccountController : Controller
         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
     }
 
+    /// <summary xml:lang = "ru">
+    /// Запрос на выход из системы.
+    /// </summary>
+    /// <returns xml:lang = "ru">
+    /// <see cref="Task"/>.
+    /// </returns>
     public async Task<IActionResult> LogoutAsync()
     {
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
