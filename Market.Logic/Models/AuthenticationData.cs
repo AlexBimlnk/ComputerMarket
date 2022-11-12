@@ -6,13 +6,42 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Market.Logic.Models;
+
+/// <summary xml:lang = "ru">
+///  Данные для ауентификации пользователя в системе.
+/// </summary>
 public sealed class AuthenticationData
 {
+    /// <summary xml:lang = "ru">
+    /// Шабон для электронной почты полльзователя.
+    /// </summary>
     public const string EMAIL_PATTERN = @"^(?=.{3,256}$)\w+@\w+\.\w+$";
+
+    /// <summary xml:lang = "ru">
+    /// Шаблон для логина пользователя.
+    /// </summary>
     public const string LOGIN_PATTERN = @"^[a-zA-Z0-9_.-]{6,20}$";
     
     private string? _login;
-    
+
+    /// <summary xml:lang = "ru">
+    /// Создаёт экземпляр класса <see cref="AuthenticationData"/>.
+    /// </summary>
+    /// <param name="email" xml:lang = "ru">
+    /// Электронная почта пользователя.
+    /// </param>
+    /// <param name="password" xml:lang = "ru">
+    /// Пароль пользователя.
+    /// </param>
+    /// <param name="login" xml:lang = "ru">
+    /// Логин пользователя.
+    /// </param>
+    /// <exception cref="ArgumentException" xml:lang = "ru">
+    /// Если <paramref name="email"/> или <paramref name="login"/> не соотвествуют формату.
+    /// </exception>
+    /// <exception cref="ArgumentNullException" xml:lang = "ru">
+    /// Если <paramref name="password"/> - <see langword="null"/>/
+    /// </exception>
     public AuthenticationData(string email, Password password, string? login = null)
     {
         if (login is not null)
@@ -31,7 +60,7 @@ public sealed class AuthenticationData
     }
 
     /// <summary xml:lang = "ru">
-    /// Логин.
+    /// Логин пользователя.
     /// </summary>
     public string Login 
     {
