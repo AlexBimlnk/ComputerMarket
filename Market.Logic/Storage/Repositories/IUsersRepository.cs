@@ -23,9 +23,6 @@ public interface IUsersRepository : IKeyableRepository<User, InternalID>
     /// <param name="data" xml:lang = "ru">
     ///  Данные для аутенфикации пользователя.
     /// </param>
-    /// <param name="password" xml:lang = "ru">
-    /// Пароль пользователя.
-    /// </param>
     /// <param name="user">
     /// Пользователь с указанными учетныйми данными.
     /// </param>
@@ -35,10 +32,14 @@ public interface IUsersRepository : IKeyableRepository<User, InternalID>
     public bool IsCanAuthenticate(AuthenticationData data, out User user);
 
     /// <summary>
-    /// 
+    /// Проверяет соответвует ли введенный пароль, паролю пользователя в репозитории.
     /// </summary>
-    /// <param name="data"></param>
-    /// <param name="password"></param>
-    /// <returns></returns>
+    /// <param name="id">Индетификатор пользователя.</param>
+    /// <param name="password">Введенный пароль.</param>
+    /// <returns>
+    ///  <see langword="false"/> - если пользователя с таким <paramref name="id"/> - нет, 
+    ///  введенный пароль не совпадает с пользовательским, 
+    ///  а иначе - <see langword="true"/>.
+    /// </returns>
     public bool IsPasswordMatch(InternalID id, Password password);
 }

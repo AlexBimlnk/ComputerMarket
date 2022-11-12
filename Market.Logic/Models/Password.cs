@@ -7,6 +7,9 @@ namespace Market.Logic.Models;
 /// </summary>
 public class Password
 {
+    /// <summary xml:lang = "ru">
+    /// Шабон для строки пароля.
+    /// </summary>
     public const string PASSWORD_PATTERN = @"^[a-zA-Z0-9_.-]{8,20}$";
 
     /// <summary xml:lang = "ru">

@@ -131,6 +131,8 @@ public sealed class UsersRepository : IUsersRepository
     /// <inheritdoc/>
     public bool IsCanAuthenticate(AuthenticationData data, out User user)
     {
+        ArgumentNullException.ThrowIfNull(data);
+
         user = null!;
         var foundUser = GetByEmail(data.Email);
 
