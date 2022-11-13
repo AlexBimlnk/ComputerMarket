@@ -1,17 +1,12 @@
 ﻿using System.Security.Claims;
 
-using General.Storage;
-
-using Market.Logic;
 using Market.Logic.Models;
-using Market.Logic.Storage;
+using Market.Logic.Storage.Repositories;
 using Market.Models.Account;
 
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Market.Logic.Storage.Repositories;
 
 namespace Market.Controllers;
 

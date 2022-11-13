@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Market.Logic.Models;
+﻿using Market.Logic.Models;
 
 namespace Market.Logic.Tests.Models;
 
@@ -146,7 +140,7 @@ public class AuthenticationDataTests
             new Password("12345678"));
 
         // Act
-        var exception = Record.Exception(() => _ =  data.Login);
+        var exception = Record.Exception(() => _ = data.Login);
 
         // Assert
         exception.Should().BeOfType<InvalidOperationException>();

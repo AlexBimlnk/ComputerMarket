@@ -1,6 +1,4 @@
-﻿using System.Text.RegularExpressions;
-
-using General.Models;
+﻿using General.Models;
 
 namespace Market.Logic.Models;
 

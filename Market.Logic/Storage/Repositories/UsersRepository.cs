@@ -1,8 +1,4 @@
-﻿using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
-
-using General.Storage;
-
-using Market.Logic.Models;
+﻿using Market.Logic.Models;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -74,7 +70,7 @@ public sealed class UsersRepository : IUsersRepository
         ArgumentNullException.ThrowIfNull(entity);
 
         token.ThrowIfCancellationRequested();
-        
+
         await _context.Users.AddAsync(ConvertToStorageModel(entity), token)
             .ConfigureAwait(false);
     }

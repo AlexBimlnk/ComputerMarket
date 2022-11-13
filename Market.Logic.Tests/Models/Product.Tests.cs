@@ -1,6 +1,4 @@
-﻿using System.Net.WebSockets;
-
-using Market.Logic.Models;
+﻿using Market.Logic.Models;
 
 namespace Market.Logic.Tests.Models;
 
@@ -11,7 +9,7 @@ public class ProductTests
     public void CanBeCreated()
     {
         // Arrange
-        var providerId = new InternalID(2); 
+        var providerId = new InternalID(2);
         var itemId = new InternalID(1);
         Product product = null!;
         var provider = new Provider(

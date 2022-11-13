@@ -16,11 +16,11 @@ public class ProviderAgentTests
             new Margin(1.1m),
             new PaymentTransactionsInformation("1234567890", "01234012340123401234"));
         var user = new User(
-            new InternalID(1), 
+            new InternalID(1),
             new AuthenticationData(
-                email: "mmail@mail.ru", 
-                new Password("12345678"), 
-                login: "login1"), 
+                email: "mmail@mail.ru",
+                new Password("12345678"),
+                login: "login1"),
             UserType.Agent);
 
         // Act
@@ -45,11 +45,11 @@ public class ProviderAgentTests
             new Margin(1.1m),
             new PaymentTransactionsInformation("1234567890", "01234012340123401234"));
         var user = new User(
-            new InternalID(1), 
+            new InternalID(1),
             new AuthenticationData(
-                email: "mmail@mail.ru", 
-                new Password("12345678"), 
-                login: "login1"), 
+                email: "mmail@mail.ru",
+                new Password("12345678"),
+                login: "login1"),
             UserType.Customer);
 
         // Act
@@ -88,11 +88,11 @@ public class ProviderAgentTests
         // Act
         var exception = Record.Exception(() => _ = new ProviderAgent(
             agent: new User(
-                new InternalID(1), 
+                new InternalID(1),
                 new AuthenticationData(
-                    email: "mmail@mail.ru", 
-                    new Password("12345678"), 
-                    login: "login1"), 
+                    email: "mmail@mail.ru",
+                    new Password("12345678"),
+                    login: "login1"),
                 UserType.Agent),
             provider: null!));
 

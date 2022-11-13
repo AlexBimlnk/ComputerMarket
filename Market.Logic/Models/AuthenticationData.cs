@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+﻿using System.Text.RegularExpressions;
 
 namespace Market.Logic.Models;
 
@@ -21,7 +16,7 @@ public sealed class AuthenticationData
     /// Шаблон для логина пользователя.
     /// </summary>
     public const string LOGIN_PATTERN = @"^[a-zA-Z0-9_.-]{6,20}$";
-    
+
     private string? _login;
 
     /// <summary xml:lang = "ru">
@@ -53,7 +48,7 @@ public sealed class AuthenticationData
             throw new ArgumentException($"Email can't be null or empty or contains only whitespaces", nameof(email));
         if (!Regex.IsMatch(email, EMAIL_PATTERN))
             throw new ArgumentException($"Given email is not match with email pattern", nameof(email));
-        
+
         Email = email;
 
         Password = password ?? throw new ArgumentNullException(nameof(password));
@@ -62,10 +57,10 @@ public sealed class AuthenticationData
     /// <summary xml:lang = "ru">
     /// Логин пользователя.
     /// </summary>
-    public string Login 
+    public string Login
     {
         get => _login ?? throw new InvalidOperationException("");
-            
+
         set
         {
             if (string.IsNullOrWhiteSpace(value))
@@ -76,7 +71,7 @@ public sealed class AuthenticationData
 
             _login = value;
         }
-    
+
     }
 
     /// <summary xml:lang = "ru">

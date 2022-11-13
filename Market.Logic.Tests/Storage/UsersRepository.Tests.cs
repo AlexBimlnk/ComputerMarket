@@ -472,7 +472,7 @@ public class UsersRepositoryTests
         var result2 = userRepository.IsCanAuthenticate(new AuthenticationData(userEmail, new Password(inccorectUserPassword)), out var user2);
         var result3 = userRepository.IsCanAuthenticate(new AuthenticationData(notExsistingUserEmail, new Password(userPassword)), out var user3);
         var result4 = userRepository.IsCanAuthenticate(new AuthenticationData(notExsistingUserEmail, new Password(inccorectUserPassword)), out var user4);
-        
+
 
         // Assert
         result1.Should().BeTrue();

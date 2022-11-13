@@ -26,7 +26,7 @@ public class Password
     {
         if (string.IsNullOrWhiteSpace(value))
             throw new ArgumentException("Password can't be null or empty or contains only whitespaces", nameof(value));
-        
+
         if (!Regex.IsMatch(value, PASSWORD_PATTERN))
             throw new ArgumentException($"Password must contains only letters and numbers", nameof(value));
 

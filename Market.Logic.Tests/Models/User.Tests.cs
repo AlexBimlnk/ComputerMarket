@@ -12,11 +12,11 @@ public class UserTests
         User user = null!;
         var id = new InternalID(1);
         var data = new AuthenticationData(
-            email: "mAiL33@mail.ru", 
-            new Password("12345678"), 
+            email: "mAiL33@mail.ru",
+            new Password("12345678"),
             login: "login1");
         var type = UserType.Customer;
-        
+
         // Act
         var exception = Record.Exception(() => user = new User(
             id,
@@ -52,7 +52,7 @@ public class UserTests
         var exception = Record.Exception(() => _ = new User(
             new InternalID(1),
             new AuthenticationData(
-                email: "mAiL33@mail.ru", 
+                email: "mAiL33@mail.ru",
                 new Password("12345678"),
                 login: "login1"),
             type: (UserType)1234));

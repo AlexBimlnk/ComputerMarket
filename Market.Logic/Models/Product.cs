@@ -5,7 +5,7 @@ namespace Market.Logic.Models;
 /// <summary xml:lang = "ru">
 /// Продукт.
 /// </summary>
-public sealed class Product: IEquatable<Product>, IKeyable<(long, long)>
+public sealed class Product : IEquatable<Product>, IKeyable<(long, long)>
 {
     /// <summary xml:lang = "ru">
     /// Создает экземпляр типа <see cref="Product"/>.

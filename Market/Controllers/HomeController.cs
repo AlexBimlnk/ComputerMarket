@@ -5,9 +5,6 @@ using Market.Models;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Market.Controllers;
 public class HomeController : Controller
@@ -31,10 +28,10 @@ public class HomeController : Controller
     [Authorize(Policy = "OnlyForAgents")]
     public IActionResult Provider() => View();
 
-    [Authorize(Policy = "OnlyForManager")]  
+    [Authorize(Policy = "OnlyForManager")]
     public IActionResult Manager() => View();
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error() => 
+    public IActionResult Error() =>
         View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
 }

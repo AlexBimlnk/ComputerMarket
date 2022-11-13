@@ -20,7 +20,7 @@ public sealed class Item : IEquatable<Item>, IKeyable<InternalID>
     /// <exception cref="ArgumentException" xml:lang = "ru">
     ///  Если <paramref name="name"/> - состоит из пробелов, явялется пустой строкой или <see langword="null"/>.
     /// </exception>
-    public Item(InternalID id ,ItemType type, string name, IReadOnlyCollection<ItemProperty> properties)
+    public Item(InternalID id, ItemType type, string name, IReadOnlyCollection<ItemProperty> properties)
     {
         Type = type ?? throw new ArgumentNullException(nameof(type));
 
@@ -51,7 +51,7 @@ public sealed class Item : IEquatable<Item>, IKeyable<InternalID>
     public InternalID Key { get; }
 
     /// <inheritdoc/>
-    public override int GetHashCode() => HashCode.Combine(Key,Type, Name, Properties);
+    public override int GetHashCode() => HashCode.Combine(Key, Type, Name, Properties);
 
     /// <inheritdoc/>
     public override bool Equals(object? obj) => obj is Item item && Equals(item);
