@@ -4,6 +4,9 @@ using Market.Logic.Models;
 
 namespace Market.Logic.Storage.Repositories;
 
+/// <summary xml:lang = "ru">
+/// Интерфейс репозитория пользователей.
+/// </summary>
 public interface IUsersRepository : IKeyableRepository<User, InternalID>
 {
     /// <summary xml:lang = "ru">

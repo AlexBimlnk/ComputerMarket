@@ -115,8 +115,7 @@ public sealed class UsersRepository : IUsersRepository
     public User? GetByEmail(string email)
     {
         var user = _context.Users
-            .Where(x => x.Email == email)
-            .SingleOrDefault();
+            .SingleOrDefault(x => x.Email == email);
 
         if (user is null)
             return null;
@@ -144,8 +143,7 @@ public sealed class UsersRepository : IUsersRepository
     /// <inheritdoc/>
     public bool IsPasswordMatch(InternalID id, Password password) =>
         _context.Users
-            .Where(x => x.Id == id.Value)
-            .SingleOrDefault() switch
+            .SingleOrDefault(x => x.Id == id.Value) switch
         {
             null => false,
             var user => user.Password == password.Value

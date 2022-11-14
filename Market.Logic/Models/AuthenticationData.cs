@@ -59,7 +59,7 @@ public sealed class AuthenticationData
     /// </summary>
     public string Login
     {
-        get => _login ?? throw new InvalidOperationException("");
+        get => _login ?? throw new InvalidOperationException("Login not set.");
 
         set
         {

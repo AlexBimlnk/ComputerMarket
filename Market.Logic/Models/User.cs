@@ -34,8 +34,8 @@ public class User : IKeyable<InternalID>
     /// <inheritdoc/>
     public InternalID Key { get; }
 
-    /// <summary>
-    /// 
+    /// <summary xml:lang = "ru">
+    /// Данные для ауентификации пользователя.
     /// </summary>
     public AuthenticationData AuthenticationData { get; }
 }

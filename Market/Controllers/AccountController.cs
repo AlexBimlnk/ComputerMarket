@@ -15,7 +15,7 @@ namespace Market.Controllers;
 /// </summary>
 public class AccountController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
+    private readonly ILogger<AccountController> _logger;
     private readonly IUsersRepository _usersRepository;
 
     /// <summary xml:lang = "ru">
@@ -26,7 +26,7 @@ public class AccountController : Controller
     /// <exception cref="ArgumentNullException" xml:lang = "ru">
     /// Если один из параметров - <see langword="null"/>.
     /// </exception>
-    public AccountController(IUsersRepository usersRepository, ILogger<HomeController> logger)
+    public AccountController(IUsersRepository usersRepository, ILogger<AccountController> logger)
     {
         _usersRepository = usersRepository ?? throw new ArgumentNullException(nameof(usersRepository));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -84,8 +84,7 @@ public class AccountController : Controller
         if (ModelState.IsValid)
         {
             var data = new AuthenticationData(model.Email, new Password(model.Password), model.Login);
-            User user;
-            if (!_usersRepository.IsCanAuthenticate(data, out user))
+            if (!_usersRepository.IsCanAuthenticate(data, out var user))
             {
                 user = new User(default, data, UserType.Customer);
 

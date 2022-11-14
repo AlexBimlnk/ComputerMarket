@@ -51,7 +51,7 @@ public sealed class Item : IEquatable<Item>, IKeyable<InternalID>
     public InternalID Key { get; }
 
     /// <inheritdoc/>
-    public override int GetHashCode() => HashCode.Combine(Key, Type, Name, Properties);
+    public override int GetHashCode() => HashCode.Combine(Key, Type, Name);
 
     /// <inheritdoc/>
     public override bool Equals(object? obj) => obj is Item item && Equals(item);
@@ -60,6 +60,5 @@ public sealed class Item : IEquatable<Item>, IKeyable<InternalID>
     public bool Equals(Item? other) =>
         Key.Equals(other?.Key) &&
         Name.Equals(other?.Name) &&
-        Type.Equals(other?.Type) &&
-        Properties.Equals(other?.Properties);
+        Type.Equals(other?.Type);
 }
