@@ -98,7 +98,7 @@ public class SetLinkCommandTests
             id,
             new(1),
             new(1, Provider.Ivanov));
-        var link = new Link(parameters.ExternalID, parameters.InternalID);
+        var link = new Link(parameters.InternalID, parameters.ExternalID);
 
         var cache = new Mock<ICache<Link>>();
         var cacheInvokeCount = 0;
@@ -138,7 +138,7 @@ public class SetLinkCommandTests
             id,
             new(1),
             new(1, Provider.Ivanov));
-        var link = new Link(parameters.ExternalID, parameters.InternalID);
+        var link = new Link(parameters.InternalID, parameters.ExternalID);
 
         var repository = new Mock<IRepository<Link>>(MockBehavior.Strict);
 

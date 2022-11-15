@@ -117,6 +117,7 @@ public class CommandParametersDeserializerTests
             }",
             new DeleteLinkCommandParameters(
                 new("some id"),
+                new(3),
                 new(4, Provider.HornsAndHooves))
         },
     };

@@ -20,11 +20,6 @@ public sealed class Cache : IKeyableCache<Link, ExternalID>
     public void Add(Link entity)
     {
         ArgumentNullException.ThrowIfNull(entity, nameof(entity));
-        if (entity.InternalID == default)
-        {
-            throw new InvalidOperationException($"Attempt to add incorrect {nameof(Link)} to collection");
-        }
-        
         if (!_dictionaryCache.TryAdd(entity.ExternalID, entity))
         {
             throw new InvalidOperationException($"Attempt to add exsisting {nameof(Link)} to collection");

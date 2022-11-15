@@ -7,7 +7,7 @@ namespace Import.Logic.Models;
 /// </summary>
 public sealed record class Link : IEquatable<Link>, IKeyable<ExternalID>
 {
-    public Link(ExternalID externalID, InternalID internalID = default)
+    public Link(InternalID internalID, ExternalID externalID)
     {
         InternalID = internalID;
         ExternalID = externalID;

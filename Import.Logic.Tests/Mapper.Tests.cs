@@ -76,7 +76,7 @@ public class MapperTests
 
         var product = new Product(externalId, new Price(1), 1);
 
-        var link = new Link(externalId, internalId);
+        var link = new Link(internalId, externalId);
 
         var cache = new Mock<IKeyableCache<Link, ExternalID>>(MockBehavior.Strict);
         var logger = Mock.Of<ILogger<Mapper>>();
@@ -168,8 +168,8 @@ public class MapperTests
         // Arrange
         var links = new Link[2]
         {
-            new Link(new ExternalID(1,Provider.Ivanov), new InternalID(1)),
-            new Link(new ExternalID(2,Provider.HornsAndHooves), new InternalID(2))
+            new Link(new InternalID(1), new ExternalID(1,Provider.Ivanov)),
+            new Link(new InternalID(2), new ExternalID(2,Provider.HornsAndHooves))
         };
 
         var mappableProducts = new Product[2]

@@ -16,6 +16,12 @@ public sealed class DeleteLinkCommand : CommandBase
     public DeleteLinkCommand(CommandType type, string id) : base(type, id) { }
 
     /// <summary xml:lang = "ru">
+    /// Внутренний идентификатор.
+    /// </summary>
+    [JsonProperty("internal_id")]
+    public long InternalID { get; set; }
+
+    /// <summary xml:lang = "ru">
     /// Внешний идентификатор.
     /// </summary>
     [JsonProperty("external_id")]

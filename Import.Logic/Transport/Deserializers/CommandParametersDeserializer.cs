@@ -50,6 +50,7 @@ public sealed class CommandParametersDeserializer : IDeserializer<string, Comman
 
             TDeleteLinkCommand deleteLinkCommand => new DeleteLinkCommandParameters(
                 new(deleteLinkCommand.Id),
+                new(deleteLinkCommand.InternalID),
                 new(deleteLinkCommand.ExternalID, (Provider)deleteLinkCommand.ProviderID)),
 
             var unknownCommandType =>

@@ -29,7 +29,7 @@ public class LinkRepositoryIntegrationTests : DBIntegrationTestBase
         await AddProviderAsync(Provider.Ivanov);
         await AddProviderAsync(Provider.HornsAndHooves);
 
-        var inputLink = new Link(new(4, Provider.HornsAndHooves), new(2));
+        var inputLink = new Link(new(2), new(4, Provider.HornsAndHooves));
 
         var expectedLink = new TLink[]
         {
@@ -86,9 +86,9 @@ public class LinkRepositoryIntegrationTests : DBIntegrationTestBase
         await AddProviderAsync(Provider.Ivanov);
         await AddProviderAsync(Provider.HornsAndHooves);
 
-        await AddLinkAsync(new(new(1, Provider.Ivanov), new(1)));
-        await AddLinkAsync(new(new(4, Provider.Ivanov), new(2)));
-        await AddLinkAsync(new(new(1, Provider.HornsAndHooves), new(1)));
+        await AddLinkAsync(new(new(1), new(1, Provider.Ivanov)));
+        await AddLinkAsync(new(new(2), new(4, Provider.Ivanov)));
+        await AddLinkAsync(new(new(1), new(1, Provider.HornsAndHooves)));
 
         var repository = new LinkRepository(
             context.Object,
@@ -118,15 +118,15 @@ public class LinkRepositoryIntegrationTests : DBIntegrationTestBase
         await AddProviderAsync(Provider.Ivanov);
         await AddProviderAsync(Provider.HornsAndHooves);
 
-        await AddLinkAsync(new(new(1, Provider.Ivanov), new(1)));
-        await AddLinkAsync(new(new(4, Provider.Ivanov), new(2)));
-        await AddLinkAsync(new(new(1, Provider.HornsAndHooves), new(1)));
+        await AddLinkAsync(new(new(1), new(1, Provider.Ivanov)));
+        await AddLinkAsync(new(new(2), new(4, Provider.Ivanov)));
+        await AddLinkAsync(new(new(1), new(1, Provider.HornsAndHooves)));
 
         var repository = new LinkRepository(
             context.Object,
             logger);
 
-        var inputLink = new Link(new(1, Provider.Ivanov), new(1));
+        var inputLink = new Link(new(1), new(1, Provider.Ivanov));
 
         // Act
         var beforeContains = await repository.ContainsAsync(inputLink)
@@ -166,11 +166,11 @@ public class LinkRepositoryIntegrationTests : DBIntegrationTestBase
     public static readonly TheoryData<Link, bool> ContainsData = new()
     {
         {
-            new(new(1, Provider.Ivanov), new(1)),
+            new(new(1), new(1, Provider.Ivanov)),
             true
         },
         {
-            new(new(4, Provider.HornsAndHooves), new(2)),
+            new(new(2), new(4, Provider.HornsAndHooves)),
             false
         },
     };
