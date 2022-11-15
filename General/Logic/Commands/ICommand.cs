@@ -1,7 +1,7 @@
 ﻿namespace General.Logic.Commands;
 
 /// <summary xml:lang = "ru">
-/// Описывает команду для создания связей.
+/// Описывает команду.
 /// </summary>
 public interface ICommand
 {

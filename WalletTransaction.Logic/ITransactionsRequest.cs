@@ -14,4 +14,9 @@ public interface ITransactionsRequest
     /// Коллекция транзакций, которые нужно выполнить в рамках запроса.
     /// </summary>
     public IReadOnlyCollection<Transaction> Transactions { get; }
+
+    /// <summary xml:lang = "ru">
+    /// Флаг, указывающий на то, что запрос был отменён.
+    /// </summary>
+    public bool IsCancelled { get; }
 }
