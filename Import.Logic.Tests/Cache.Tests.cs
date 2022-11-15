@@ -66,22 +66,6 @@ public class CacheTests
         exception.Should().BeOfType<InvalidOperationException>();
     }
 
-    [Fact(DisplayName = $"The {nameof(Cache)} can't add {nameof(Link)} with default value.")]
-    [Trait("Category", "Unit")]
-    public void CantAddLinkWithDefaultValue()
-    {
-        // Arrange
-        var link = new Link(new ExternalID(1, Provider.Ivanov));
-        var cache = new Cache();
-
-        // Act
-        var exception = Record.Exception(() =>
-            cache.Add(link));
-
-        // Assert
-        exception.Should().BeOfType<InvalidOperationException>();
-    }
-
     [Fact(DisplayName = $"The {nameof(Cache)} can add {nameof(Link)} range.")]
     [Trait("Category", "Unit")]
     public void CanAddLinkRange()
@@ -321,6 +305,8 @@ public class CacheTests
         // Assert
         result.Should().BeEquivalentTo(expectedResult, opt => opt.WithoutStrictOrdering());
     }
+
+
 
     [Fact(DisplayName = $"The {nameof(Cache)} can provide thread safe add.")]
     [Trait("Category", "Unit")]
