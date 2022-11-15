@@ -155,6 +155,8 @@ public class CreateTransactionRequestCommandTests
 
         var request = new TransactionRequest(id, transactions);
 
+        var proxy = new MarketProxyTransactionRequest(request);
+
         var commandId = new CommandID("some id");
         var parameters = new CreateTransactionRequestCommandParameters(
             commandId,
@@ -178,7 +180,10 @@ public class CreateTransactionRequestCommandTests
         cache.Verify(x => x.Add(parameters.TransactionRequest), Times.Once);
         sender.Verify(x =>
             x.SendAsync(
-                parameters.TransactionRequest,
+                It.Is<ITransactionsRequest>(x =>
+                    x.Id == proxy.Id &&
+                    x.Transactions.Count == proxy.Transactions.Count &&
+                    x.IsCancelled == proxy.IsCancelled),
                 It.IsAny<CancellationToken>()),
             Times.Once);
     }

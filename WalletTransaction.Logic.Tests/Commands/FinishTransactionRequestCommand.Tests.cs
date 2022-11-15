@@ -1,5 +1,4 @@
 ﻿using General.Logic.Commands;
-using General.Storage;
 using General.Transport;
 
 using Moq;
@@ -9,57 +8,57 @@ using WalletTransaction.Logic.Transport;
 
 namespace WalletTransaction.Logic.Tests.Commands;
 
-public class CancelTransactionRequestCommandTests
+public class FinishTransactionRequestCommandTests
 {
-    [Fact(DisplayName = $"The {nameof(CancelTransactionRequestCommand)} can create.")]
+    [Fact(DisplayName = $"The {nameof(FinishTransactionRequestCommand)} can create.")]
     [Trait("Category", "Unit")]
     public void CanBeCreated()
     {
         // Arrange
-        CancelTransactionRequestCommand command = null!;
-        
+        FinishTransactionRequestCommand command = null!;
         var requestId = new InternalID(1);
         var commandId = new CommandID("some id");
-        
-        var parameters = new CancelTransactionRequestCommandParameters(
+        var parameters = new FinishTransactionRequestCommandParameters(
             commandId,
             requestId);
 
         var cache = Mock.Of<ITransactionRequestCache>();
+        var sender = Mock.Of<ISender<TransactionSenderConfiguration, ITransactionsRequest>>();
 
         // Act
         var exception = Record.Exception(() =>
-            command = new CancelTransactionRequestCommand(parameters, cache));
+            command = new FinishTransactionRequestCommand(parameters, sender, cache));
 
         // Assert
         exception.Should().BeNull();
         command.Id.Should().Be(commandId);
     }
 
-    [Fact(DisplayName = $"The {nameof(CancelTransactionRequestCommand)} can't create without parameters.")]
+    [Fact(DisplayName = $"The {nameof(FinishTransactionRequestCommand)} can't create without parameters.")]
     [Trait("Category", "Unit")]
     public void CanNotBeCreatedWithoutParameters()
     {
         // Arrange
         var cache = Mock.Of<ITransactionRequestCache>();
+        var sender = Mock.Of<ISender<TransactionSenderConfiguration, ITransactionsRequest>>();
 
         // Act
         var exception = Record.Exception(() =>
-            _ = new CancelTransactionRequestCommand(parameters: null!, cache));
+            _ = new FinishTransactionRequestCommand(parameters: null!, sender, cache));
 
         // Assert
         exception.Should().NotBeNull().And.BeOfType<ArgumentNullException>();
     }
 
-    [Fact(DisplayName = $"The {nameof(CancelTransactionRequestCommand)} can't create without cache.")]
+    [Fact(DisplayName = $"The {nameof(FinishTransactionRequestCommand)} can't create without sender.")]
     [Trait("Category", "Unit")]
-    public void CanNotBeCreatedWithoutCache()
+    public void CanNotBeCreatedWithoutSender()
     {
         // Arrange
         var requestId = new InternalID(1);
-        var commandId = new CommandID("some id");
 
-        var parameters = new CancelTransactionRequestCommandParameters(
+        var commandId = new CommandID("some id");
+        var parameters = new FinishTransactionRequestCommandParameters(
             commandId,
             requestId);
 
@@ -67,23 +66,41 @@ public class CancelTransactionRequestCommandTests
 
         // Act
         var exception = Record.Exception(() =>
-            _ = new CancelTransactionRequestCommand(parameters, requestCache: null!));
+            _ = new FinishTransactionRequestCommand(parameters, sender: null!, cache));
 
         // Assert
         exception.Should().NotBeNull().And.BeOfType<ArgumentNullException>();
     }
 
-    [Fact(DisplayName = $"The {nameof(CancelTransactionRequestCommand)} can execute.")]
+    [Fact(DisplayName = $"The {nameof(FinishTransactionRequestCommand)} can't create without cache.")]
+    [Trait("Category", "Unit")]
+    public void CanNotBeCreatedWithoutCache()
+    {
+        // Arrange
+        var requestId = new InternalID(1);
+
+        var commandId = new CommandID("some id");
+        var parameters = new FinishTransactionRequestCommandParameters(
+            commandId,
+            requestId);
+
+        var cache = Mock.Of<ITransactionRequestCache>();
+        var sender = Mock.Of<ISender<TransactionSenderConfiguration, ITransactionsRequest>>();
+
+        // Act
+        var exception = Record.Exception(() =>
+            _ = new FinishTransactionRequestCommand(parameters, sender, requestCache: null!));
+
+        // Assert
+        exception.Should().NotBeNull().And.BeOfType<ArgumentNullException>();
+    }
+
+    [Fact(DisplayName = $"The {nameof(FinishTransactionRequestCommand)} can execute.")]
     [Trait("Category", "Unit")]
     public async void CanExecuteAsync()
     {
         // Arrange
         var requestId = new InternalID(1);
-        var commandId = new CommandID("some id");
-
-        var parameters = new CancelTransactionRequestCommandParameters(
-            commandId,
-            requestId);
 
         var fromAccount = new BankAccount("01234012340123401234");
         var toAccount = new BankAccount("01234012340123401234");
@@ -98,6 +115,13 @@ public class CancelTransactionRequestCommandTests
 
         var request = new TransactionRequest(requestId, transactions);
 
+        var commandId = new CommandID("some id");
+        var parameters = new FinishTransactionRequestCommandParameters(
+            commandId,
+            requestId);
+
+        var sender = new Mock<ISender<TransactionSenderConfiguration, ITransactionsRequest>>();
+
         var cache = new Mock<ITransactionRequestCache>(MockBehavior.Strict);
 
         cache.Setup(x => x.GetByKey(requestId))
@@ -107,8 +131,9 @@ public class CancelTransactionRequestCommandTests
         cache.Setup(x => x.Delete(request))
             .Callback(() => deleteInvokeCount++);
 
-        var command = new CancelTransactionRequestCommand(
+        var command = new FinishTransactionRequestCommand(
             parameters,
+            sender.Object,
             cache.Object);
 
         var expectedResult = CommandResult.Success(commandId);
@@ -118,11 +143,18 @@ public class CancelTransactionRequestCommandTests
 
         // Assert
         expectedResult.Should().BeEquivalentTo(result);
-        request.IsCancelled.Should().BeTrue();
         deleteInvokeCount.Should().Be(1);
+        sender.Verify(x =>
+            x.SendAsync(
+                It.Is<ITransactionsRequest>(x =>
+                    x.Id == request.Id &&
+                    x.Transactions.Count == request.Transactions.Count &&
+                    x.IsCancelled == request.IsCancelled),
+                It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
-    [Fact(DisplayName = $"The {nameof(CancelTransactionRequestCommand)} can execute when request is not exists.")]
+    [Fact(DisplayName = $"The {nameof(FinishTransactionRequestCommand)} can execute when request is not exists.")]
     [Trait("Category", "Unit")]
     public async void CanExecuteWhenRequestIsNotExistsAsync()
     {
@@ -130,17 +162,20 @@ public class CancelTransactionRequestCommandTests
         var requestId = new InternalID(1);
         var commandId = new CommandID("some id");
 
-        var parameters = new CancelTransactionRequestCommandParameters(
+        var parameters = new FinishTransactionRequestCommandParameters(
             commandId,
             requestId);
+
+        var sender = new Mock<ISender<TransactionSenderConfiguration, ITransactionsRequest>>(MockBehavior.Strict);
 
         var cache = new Mock<ITransactionRequestCache>(MockBehavior.Strict);
 
         cache.Setup(x => x.GetByKey(requestId))
             .Returns((TransactionRequest)null!);
 
-        var command = new CancelTransactionRequestCommand(
+        var command = new FinishTransactionRequestCommand(
             parameters,
+            sender.Object,
             cache.Object);
 
         var expectedResult = CommandResult.Fail(commandId, "some error message");

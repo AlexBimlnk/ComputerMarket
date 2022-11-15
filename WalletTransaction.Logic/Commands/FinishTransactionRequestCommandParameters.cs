@@ -3,9 +3,9 @@
 namespace WalletTransaction.Logic.Commands;
 
 /// <summary xml:lang = "ru">
-/// Параметры команды для отмены запроса на проведение транзакций.
+/// Параметры команды для завершения запроса на проведение транзакций.
 /// </summary>
-public sealed class CancelTransactionRequestCommandParameters : CommandParametersBase
+public sealed class FinishTransactionRequestCommandParameters : CommandParametersBase
 {
     /// <summary xml:lang = "ru"> 
     /// Создает новый экземпляр типа <see cref="CancelTransactionRequestCommandParameters"/>.
@@ -16,7 +16,7 @@ public sealed class CancelTransactionRequestCommandParameters : CommandParameter
     /// <param name="requestId"> 
     /// Идентификатор запроса который необходимо отменить. 
     /// </param>
-    public CancelTransactionRequestCommandParameters(
+    public FinishTransactionRequestCommandParameters(
         CommandID id,
         InternalID requestId) : base(id)
     {
