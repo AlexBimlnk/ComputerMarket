@@ -24,7 +24,7 @@ public sealed class DeleteLinkCommand : ImportCommand
     /// </exception>
     public DeleteLinkCommand(
         CommandId id,
-        InternalID externalItemId,
+        ID externalItemId,
         Provider provider)
         : base(id, CommandType.DeleteLink)
     {
@@ -35,7 +35,7 @@ public sealed class DeleteLinkCommand : ImportCommand
     /// <summary xml:lang = "ru">
     /// Идентификатор продукта у постащика.
     /// </summary>
-    public InternalID ExternalItemId { get; }
+    public ID ExternalItemId { get; }
 
     /// <summary xml:lang = "ru">
     /// Поставщик.

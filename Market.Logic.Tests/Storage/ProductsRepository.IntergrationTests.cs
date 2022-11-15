@@ -31,7 +31,7 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
             .Returns(_marketContext.Products);
 
         var provider1 = new Provider(
-            id: new InternalID(1),
+            id: new ID(1),
             "name1",
             new Margin(1.3m),
             new PaymentTransactionsInformation(
@@ -42,7 +42,7 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
         var type1 = new ItemType("Type1", id: 1);
 
         var item1 = new Item(
-            id: new InternalID(1),
+            id: new ID(1),
             type1,
             "Name 1",
             Array.Empty<ItemProperty>());
@@ -110,7 +110,7 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
             .Returns(_marketContext.Products);
 
         var provider1 = new Provider(
-            id: new InternalID(1),
+            id: new ID(1),
             "name1",
             new Margin(1.3m),
             new PaymentTransactionsInformation(
@@ -118,7 +118,7 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
                 bankAccount: "12345123451234512345"));
 
         var provider2 = new Provider(
-            id: new InternalID(2),
+            id: new ID(2),
             "name2",
             new Margin(1.2m),    
             new PaymentTransactionsInformation(
@@ -128,13 +128,13 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
         var type1 = new ItemType("Type1", id: 1);
 
         var item1 = new Item(
-            id: new InternalID(1),
+            id: new ID(1),
             type1,
             "Name 1",
             Array.Empty<ItemProperty>());
 
         var item2 = new Item(
-            id: new InternalID(2),
+            id: new ID(2),
             type1,
             "Name 2",
             Array.Empty<ItemProperty>());
@@ -177,7 +177,7 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
             .Callback(() => _marketContext.SaveChanges());
 
         var provider = new Provider(
-            id: new InternalID(1),
+            id: new ID(1),
             "name1",
             new Margin(1.3m),
             new PaymentTransactionsInformation(
@@ -187,13 +187,13 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
         var type1 = new ItemType("Type1", id: 1);
 
         var item1 = new Item(
-            id: new InternalID(1),
+            id: new ID(1),
             type1,
             "Name 1",
             Array.Empty<ItemProperty>());
 
         var item2 = new Item(
-            id: new InternalID(2),
+            id: new ID(2),
             type1,
             "Name 2",
             Array.Empty<ItemProperty>());
@@ -214,12 +214,12 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
 
         var inputProduct = new Product(
             new Item(
-                id: new InternalID(2),
+                id: new ID(2),
                 new ItemType("Type1", id: 1),
                 "Name 2",
                 Array.Empty<ItemProperty>()),
             new Provider(
-                id: new InternalID(1),
+                id: new ID(1),
                 "name1",
                 new Margin(1.3m),
                 new PaymentTransactionsInformation(
@@ -292,12 +292,12 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
     {
         {
             new(new Item(
-                    id: new InternalID(1), 
+                    id: new ID(1), 
                     new ItemType("Type1", id: 1),
                     "Name 2",
                     Array.Empty<ItemProperty>()), 
                 new Provider(
-                    id: new InternalID(1),
+                    id: new ID(1),
                     "name1",
                     new Margin(1.3m),
                     new PaymentTransactionsInformation(
@@ -309,12 +309,12 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
         },
         {
             new(new Item(
-                    id: new InternalID(4),
+                    id: new ID(4),
                     new ItemType("Type1", id: 1),
                     "Name 4",
                     Array.Empty<ItemProperty>()),
                 new Provider(
-                    id: new InternalID(4),
+                    id: new ID(4),
                     "name4",
                     new Margin(1.3m),
                     new PaymentTransactionsInformation(

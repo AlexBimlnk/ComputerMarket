@@ -27,8 +27,8 @@ public sealed class SetLinkCommand : ImportCommand
     /// </exception>
     public SetLinkCommand(
         CommandId id,
-        InternalID internalItemId,
-        InternalID externalItemId,
+        ID internalItemId,
+        ID externalItemId,
         Provider provider) 
         : base(id, CommandType.SetLink)
     {
@@ -40,12 +40,12 @@ public sealed class SetLinkCommand : ImportCommand
     /// <summary xml:lang = "ru">
     /// Идентификатор внутреннего продукта.
     /// </summary>
-    public InternalID InternalItemId { get; }
+    public ID InternalItemId { get; }
 
     /// <summary xml:lang = "ru">
     /// Идентификатор продукта у постащика.
     /// </summary>
-    public InternalID ExternalItemId { get; }
+    public ID ExternalItemId { get; }
 
     /// <summary xml:lang = "ru">
     /// Поставщик.

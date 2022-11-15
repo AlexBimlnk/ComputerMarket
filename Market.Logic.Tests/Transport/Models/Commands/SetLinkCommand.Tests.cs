@@ -10,7 +10,7 @@ public class SetLinkCommandTests
     {
         // Arrange
         var provider = new Provider(
-            id: new InternalID(1),
+            id: new ID(1),
             "Some Provider Name",
             new Margin(2),
             new PaymentTransactionsInformation(

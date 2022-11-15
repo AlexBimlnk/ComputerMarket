@@ -15,10 +15,10 @@ public class DeleteLinkCommandTests
 
         var id = new CommandId("some id");
 
-        var externalItemId = new InternalID(2);
+        var externalItemId = new ID(2);
 
         var provider = new Provider(
-            new InternalID(1),
+            new ID(1),
             "some name",
             new Margin(2),
             new PaymentTransactionsInformation(
@@ -44,10 +44,10 @@ public class DeleteLinkCommandTests
     public void CanNotBeCreatedWithoutId()
     {
         // Arrange
-        var externalItemId = new InternalID(2);
+        var externalItemId = new ID(2);
 
         var provider = new Provider(
-            new InternalID(1),
+            new ID(1),
             "some name",
             new Margin(2),
             new PaymentTransactionsInformation(
@@ -72,7 +72,7 @@ public class DeleteLinkCommandTests
         // Arrange
         var id = new CommandId("some id");
 
-        var externalItemId = new InternalID(2);
+        var externalItemId = new ID(2);
 
         // Act
         var exception = Record.Exception(() =>

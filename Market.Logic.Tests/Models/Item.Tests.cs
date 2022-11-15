@@ -12,7 +12,7 @@ public class ItemTests
         Item item = null!;
         var type = new ItemType("some_type");
         var name = "name";
-        var id = new InternalID(1);
+        var id = new ID(1);
         var properties = new ItemProperty[]
         {
             new ItemProperty("Prop1", "Val1"),
@@ -49,7 +49,7 @@ public class ItemTests
 
         // Act
         var exception = Record.Exception(() => _ = new Item(
-            id: new InternalID(1),
+            id: new ID(1),
             type: null!,
             name: "name",
             properties));
@@ -64,7 +64,7 @@ public class ItemTests
     {
         // Act
         var exception = Record.Exception(() => _ = new Item(
-            id: new InternalID(1),
+            id: new ID(1),
             type: new ItemType("some_type"),
             name: "name",
             properties: null!));
@@ -91,7 +91,7 @@ public class ItemTests
 
         // Act
         var exception = Record.Exception(() => _ = new Item(
-            id: new InternalID(1),
+            id: new ID(1),
             type: new ItemType("some_type"),
             name,
             properties));

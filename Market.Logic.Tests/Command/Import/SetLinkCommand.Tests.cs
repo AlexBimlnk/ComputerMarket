@@ -15,11 +15,11 @@ public class SetLinkCommandTests
 
         var id = new CommandId("some id");
 
-        var internalItemId = new InternalID(1);
-        var externalItemId = new InternalID(2);
+        var internalItemId = new ID(1);
+        var externalItemId = new ID(2);
 
         var provider = new Provider(
-            new InternalID(1),
+            new ID(1),
             "some name",
             new Margin(2),
             new PaymentTransactionsInformation(
@@ -47,11 +47,11 @@ public class SetLinkCommandTests
     public void CanNotBeCreatedWithoutId()
     {
         // Arrange
-        var internalItemId = new InternalID(1);
-        var externalItemId = new InternalID(2);
+        var internalItemId = new ID(1);
+        var externalItemId = new ID(2);
 
         var provider = new Provider(
-            new InternalID(1),
+            new ID(1),
             "some name",
             new Margin(2),
             new PaymentTransactionsInformation(
@@ -77,8 +77,8 @@ public class SetLinkCommandTests
         // Arrange
         var id = new CommandId("some id");
 
-        var internalItemId = new InternalID(1);
-        var externalItemId = new InternalID(2);
+        var internalItemId = new ID(1);
+        var externalItemId = new ID(2);
 
         // Act
         var exception = Record.Exception(() =>

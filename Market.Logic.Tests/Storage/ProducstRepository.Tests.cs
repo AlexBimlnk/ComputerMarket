@@ -94,12 +94,12 @@ public class ProductsRepositoryTests
 
         var inputProduct = new Product(
             new Item(
-                id: new InternalID(1),
+                id: new ID(1),
                 new ItemType("type1"),
                 name: "Name 1",
                 Array.Empty<ItemProperty>()),
             new Provider(
-                id: new InternalID(1),
+                id: new ID(1),
                 name: "Provider1",
                 new Margin(1.20m),
                 new PaymentTransactionsInformation(
@@ -153,12 +153,12 @@ public class ProductsRepositoryTests
 
         var inputProduct = new Product(
             new Item(
-                id: new InternalID(1),
+                id: new ID(1),
                 new ItemType("type1"),
                 name: "Name 1",
                 Array.Empty<ItemProperty>()),
             new Provider(
-                id: new InternalID(1),
+                id: new ID(1),
                 name: "Provider1",
                 new Margin(1.20m),
                 new PaymentTransactionsInformation(
@@ -212,12 +212,12 @@ public class ProductsRepositoryTests
 
         var inputProduct = new Product(
             new Item(
-                id: new InternalID(1),
+                id: new ID(1),
                 new ItemType("type1"),
                 name: "Name 1",
                 Array.Empty<ItemProperty>()),
             new Provider(
-                id: new InternalID(1),
+                id: new ID(1),
                 name: "Provider1",
                 new Margin(1.20m),
                 new PaymentTransactionsInformation(
@@ -262,12 +262,12 @@ public class ProductsRepositoryTests
 
         var containsProduct = new Product(
             new Item(
-                id: new InternalID(1),
+                id: new ID(1),
                 new ItemType("type1"),
                 name: "Name 1",
                 Array.Empty<ItemProperty>()),
             new Provider(
-                id: new InternalID(1),
+                id: new ID(1),
                 name: "Provider1",
                 new Margin(1.20m),
                 new PaymentTransactionsInformation(
@@ -380,12 +380,12 @@ public class ProductsRepositoryTests
 
         var expectedResult = new Product(
             new Item(
-                id: new InternalID(1),
+                id: new ID(1),
                 new ItemType("Type1"),
                 name: "Name 1",
                 Array.Empty<ItemProperty>()),
             new Provider(
-                id: new InternalID(1),
+                id: new ID(1),
                 name: "Provider1",
                 new Margin(1.20m),
                 new PaymentTransactionsInformation(
@@ -473,12 +473,12 @@ public class ProductsRepositoryTests
         {
             new Product(
                 new Item(
-                    id: new InternalID(1),
+                    id: new ID(1),
                     new ItemType("Type1"),
                     name: "Name 1",
                     Array.Empty<ItemProperty>()),
                 new Provider(
-                    id: new InternalID(1),
+                    id: new ID(1),
                     name: "Provider1",
                     new Margin(1.20m),
                     new PaymentTransactionsInformation(

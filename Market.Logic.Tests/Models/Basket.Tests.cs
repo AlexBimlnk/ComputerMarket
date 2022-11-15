@@ -28,12 +28,12 @@ public class BasketTests
         var basket = new Basket();
         var product = new Product(
             new Item(
-                id: new InternalID(1),
+                id: new ID(1),
                 new ItemType("some_type"),
                 "some_name",
                 properties: Array.Empty<ItemProperty>()),
             new Provider(
-                id: new InternalID(1),
+                id: new ID(1),
                 "provider_name",
                 new Margin(1.1m),
                 new PaymentTransactionsInformation(
@@ -74,12 +74,12 @@ public class BasketTests
         var quantity = 1;
         var product = new Product(
             new Item(
-                id: new InternalID(1),
+                id: new ID(1),
                 new ItemType("some_type"),
                 "some_name",
                 properties: Array.Empty<ItemProperty>()),
             new Provider(
-                id: new InternalID(1),
+                id: new ID(1),
                 "provider_name",
                 new Margin(1.1m),
                 new PaymentTransactionsInformation(
@@ -124,12 +124,12 @@ public class BasketTests
         var basket = new Basket();
         var product = new Product(
             new Item(
-                id: new InternalID(1),
+                id: new ID(1),
                 new ItemType("some_type"),
                 "some_name",
                 properties: Array.Empty<ItemProperty>()),
             new Provider(
-                id: new InternalID(1),
+                id: new ID(1),
                 "provider_name",
                 new Margin(1.1m),
                 new PaymentTransactionsInformation(
@@ -152,13 +152,13 @@ public class BasketTests
     {
         // Arrange
         var item = new Item(
-            id: new InternalID(1),
+            id: new ID(1),
             new ItemType("some_type"),
             "some_name",
             properties: Array.Empty<ItemProperty>());
 
         var prodvider = new Provider(
-            id: new InternalID(1),
+            id: new ID(1),
             "provider_name",
             new Margin(1.1m),
             new PaymentTransactionsInformation(
@@ -192,12 +192,12 @@ public class BasketTests
         // Arrange
         var product = new Product(
             new Item(
-                id: new InternalID(1),
+                id: new ID(1),
                 new ItemType("some_type"),
                 "some_name",
                 properties: Array.Empty<ItemProperty>()),
             new Provider(
-                id: new InternalID(1),
+                id: new ID(1),
                 "provider_name",
                 new Margin(1.1m),
                 new PaymentTransactionsInformation(

@@ -5,7 +5,7 @@ namespace Market.Logic.Models;
 /// <summary xml:lang = "ru">
 /// Представляет описание товара.
 /// </summary>
-public sealed class Item : IEquatable<Item>, IKeyable<InternalID>
+public sealed class Item : IEquatable<Item>, IKeyable<ID>
 {
     /// <summary xml:lang = "ru">
     /// Создает экземпляр типа <see cref="Item"/>.
@@ -20,7 +20,7 @@ public sealed class Item : IEquatable<Item>, IKeyable<InternalID>
     /// <exception cref="ArgumentException" xml:lang = "ru">
     ///  Если <paramref name="name"/> - состоит из пробелов, явялется пустой строкой или <see langword="null"/>.
     /// </exception>
-    public Item(InternalID id ,ItemType type, string name, IReadOnlyCollection<ItemProperty> properties)
+    public Item(ID id ,ItemType type, string name, IReadOnlyCollection<ItemProperty> properties)
     {
         Type = type ?? throw new ArgumentNullException(nameof(type));
 
@@ -48,7 +48,7 @@ public sealed class Item : IEquatable<Item>, IKeyable<InternalID>
     public IReadOnlyCollection<ItemProperty> Properties { get; }
 
     /// <inheritdoc/>
-    public InternalID Key { get; }
+    public ID Key { get; }
 
     /// <inheritdoc/>
     public override int GetHashCode() => HashCode.Combine(Key,Type, Name, Properties);
