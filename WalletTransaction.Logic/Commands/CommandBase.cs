@@ -1,8 +1,6 @@
 ﻿using General.Logic.Commands;
 
-using Import.Logic.Commands;
-
-namespace Import.Logic.Abstractions;
+namespace WalletTransaction.Logic.Commands;
 
 /// <summary xml:lang = "ru">
 /// Абстрактная команда.
