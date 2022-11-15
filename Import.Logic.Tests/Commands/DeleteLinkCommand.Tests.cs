@@ -96,7 +96,7 @@ public class DeleteLinkCommandTests
         var parameters = new DeleteLinkCommandParameters(
             id,
             new(1, Provider.Ivanov));
-        
+
         var cache = new Mock<IKeyableCache<Link, ExternalID>>();
         var cacheInvokeCount = 0;
         cache.Setup(x => x.GetByKey(parameters.ExternalID))
@@ -127,16 +127,16 @@ public class DeleteLinkCommandTests
 
     [Fact(DisplayName = $"The {nameof(DeleteLinkCommand)} can't execute when link not exists.")]
     [Trait("Category", "Unit")]
-    public async void CanExecuteWhenLinkAlreadyExistsAsync()
+    public async void CantExecuteWhenLinkNotExistsAsync()
     {
         // Arrange
         Link link = null!;
 
         var id = new CommandID("some id");
         var parameters = new DeleteLinkCommandParameters(
-            id,            
+            id,
             new(1, Provider.Ivanov));
-        
+
         var repository = new Mock<IRepository<Link>>(MockBehavior.Strict);
 
         var cache = new Mock<IKeyableCache<Link, ExternalID>>();
