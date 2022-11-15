@@ -35,7 +35,7 @@ public sealed class Order
     /// <summary xml:lang = "ru">
     /// Позиции в заказе.
     /// </summary>
-    public  IReadOnlySet<PurchasableEntity> Items { get; }
+    public IReadOnlySet<PurchasableEntity> Items { get; }
 
     /// <summary xml:lang = "ru">
     /// Пользователь создавший заказ.

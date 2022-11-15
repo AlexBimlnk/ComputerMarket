@@ -1,6 +1,4 @@
-﻿using General.Storage;
-
-using Market.Logic.Models;
+﻿using Market.Logic.Models;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -12,7 +10,7 @@ using TUser = Models.User;
 /// <summary xml:lang = "ru">
 /// Репозиторий пользователей.
 /// </summary>
-public sealed class UsersRepository : IKeyableRepository<User, InternalID>
+public sealed class UsersRepository : IUsersRepository
 {
     private readonly IRepositoryContext _context;
     private readonly ILogger<UsersRepository> _logger;
@@ -40,9 +38,9 @@ public sealed class UsersRepository : IKeyableRepository<User, InternalID>
     private static TUser ConvertToStorageModel(User user) => new()
     {
         Id = user.Key.Value,
-        Login = user.Login,
-        Email = user.Email,
-        Password = user.Password.Value,
+        Login = user.AuthenticationData.Login,
+        Email = user.AuthenticationData.Email,
+        Password = user.AuthenticationData.Password.Value,
         UserTypeId = (short)user.Type
     };
 
@@ -59,9 +57,10 @@ public sealed class UsersRepository : IKeyableRepository<User, InternalID>
 
         return new User(
             id: new InternalID(user.Id),
-            user.Login,
-            new Password(user.Password),
-            email: "mail@mail.ru",
+            new AuthenticationData(
+                user.Email,
+                new Password(user.Password),
+                user.Login),
             (UserType)user.UserTypeId);
     }
 
@@ -111,4 +110,42 @@ public sealed class UsersRepository : IKeyableRepository<User, InternalID>
             .Where(x => x.Id == key.Value)
             .Select(x => ConvertFromStorageModel(x))
             .SingleOrDefault();
+
+    /// <inheritdoc/>
+    public User? GetByEmail(string email)
+    {
+        var user = _context.Users
+            .SingleOrDefault(x => x.Email == email);
+
+        if (user is null)
+            return null;
+
+        return ConvertFromStorageModel(user);
+    }
+
+    /// <inheritdoc/>
+    public bool IsCanAuthenticate(AuthenticationData data, out User user)
+    {
+        ArgumentNullException.ThrowIfNull(data);
+
+        user = null!;
+        var foundUser = GetByEmail(data.Email);
+
+        if (foundUser is null || !IsPasswordMatch(foundUser.Key, data.Password))
+        {
+            return false;
+        }
+
+        user = foundUser;
+        return true;
+    }
+
+    /// <inheritdoc/>
+    public bool IsPasswordMatch(InternalID id, Password password) =>
+        _context.Users
+            .SingleOrDefault(x => x.Id == id.Value) switch
+        {
+            null => false,
+            var user => user.Password == password.Value
+        };
 }

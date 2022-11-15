@@ -29,9 +29,10 @@ public class UsersRepositoryIntegrationTests : DBIntegrationTestBase
 
         var inputUser = new User(
             id: new InternalID(1),
-            login: "Login1",
-            new Password("12345"),
-            email: "mail@mail.ru",
+            new AuthenticationData(
+                email: "mmail@mail.ru",
+                new Password("12345678"),
+                login: "Login1"),
             UserType.Customer);
 
 
@@ -40,10 +41,10 @@ public class UsersRepositoryIntegrationTests : DBIntegrationTestBase
             new TUser
             {
                 Id = 1,
-                UserTypeId = 0,
+                UserTypeId = 1,
                 Login = "Login1",
-                Email = "mail@mail.ru",
-                Password = "12345"
+                Email = "mmail@mail.ru",
+                Password = "12345678"
             }
         };
 
@@ -93,9 +94,10 @@ public class UsersRepositoryIntegrationTests : DBIntegrationTestBase
 
         var user = new User(
             id: new InternalID(1),
-            login: "Login1",
-            new Password("12345"),
-            email: "mail@mail.ru",
+            new AuthenticationData(
+                email: "mmail1@mail.ru",
+                new Password("12345678"),
+                login: "Login1"),
             UserType.Customer);
 
         await AddUserTypeAsync(UserType.Customer);
@@ -129,16 +131,18 @@ public class UsersRepositoryIntegrationTests : DBIntegrationTestBase
 
         var user1 = new User(
             id: new InternalID(1),
-            login: "Login1",
-            new Password("12345"),
-            email: "mail@mail.ru",
+            new AuthenticationData(
+                email: "mmail1@mail.ru",
+                new Password("12345678"),
+                login: "Login1"),
             UserType.Customer);
 
         var user2 = new User(
             id: new InternalID(4),
-            login: "Login2",
-            new Password("12345"),
-            email: "mail@mail.ru",
+            new AuthenticationData(
+                email: "smail@mail.ru",
+                new Password("12345679"),
+                login: "Login2"),
             UserType.Customer);
 
 
@@ -153,9 +157,10 @@ public class UsersRepositoryIntegrationTests : DBIntegrationTestBase
 
         var inputUser = new User(
             id: new InternalID(1),
-            login: "Login1",
-            new Password("12345"),
-            email: "mail@mail.ru",
+            new AuthenticationData(
+                email: "mmail@mail.ru",
+                new Password("12345678"),
+                login: "Login1"),
             UserType.Customer);
 
         // Act
@@ -182,9 +187,9 @@ public class UsersRepositoryIntegrationTests : DBIntegrationTestBase
         var fromQuery = "users (id, login, password, email, user_type_id)";
         var valuesQuery =
             $"({user.Key.Value}, " +
-            $"'{user.Login}', " +
-            $"'{user.Password.Value}', " +
-            $"'{user.Email}', " +
+            $"'{user.AuthenticationData.Login}', " +
+            $"'{user.AuthenticationData.Password.Value}', " +
+            $"'{user.AuthenticationData.Email}', " +
             $"{(short)user.Type})";
 
         await AddAsync(fromQuery, valuesQuery);
@@ -203,18 +208,20 @@ public class UsersRepositoryIntegrationTests : DBIntegrationTestBase
         {
             new(
                 id: new InternalID(1),
-                login: "Login1",
-                new Password("12345678"),
-                email: "mail1@mail.ru",
+                new AuthenticationData(
+                    email: "mmail1@mail.ru",
+                    new Password("12345678"),
+                    login: "Login1"),
                 UserType.Customer),
             true
         },
         {
             new(
                 id: new InternalID(4),
-                login: "Login2",
-                new Password("12345012"),
-                email: "mail2@mail.ru",
+                new AuthenticationData(
+                    email: "tmail2@mail.ru",
+                    new Password("12345678"),
+                    login: "Login2"),
                 UserType.Customer),
             false
         },

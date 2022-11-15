@@ -63,10 +63,10 @@ public class UsersRepositoryTests
         var storageUser = new TUser()
         {
             Id = 1,
-            UserTypeId = 0,
+            UserTypeId = 1,
             Login = "Login1",
-            Email = "mail@mail.ru",
-            Password = "12345"
+            Email = "mmail@mail.ru",
+            Password = "12345678"
         };
 
         var users = new Mock<DbSet<TUser>>(MockBehavior.Strict);
@@ -74,7 +74,6 @@ public class UsersRepositoryTests
         users.Setup(x => x
             .AddAsync(
                 It.Is<TUser>(p =>
-                    p.Id == storageUser.Id &&
                     p.UserTypeId == storageUser.UserTypeId &&
                     p.Login == storageUser.Login &&
                     p.Email == storageUser.Email &&
@@ -91,10 +90,11 @@ public class UsersRepositoryTests
             logger);
 
         var inputUser = new User(
-            id: new InternalID(1),
-            login: "Login1",
-            new Password("12345"),
-            email: "mail@mail.ru",
+            new InternalID(1),
+            new AuthenticationData(
+                email: "mmail@mail.ru",
+                new Password("12345678"),
+                login: "Login1"),
             UserType.Customer);
 
         // Act
@@ -141,10 +141,11 @@ public class UsersRepositoryTests
             logger);
 
         var inputUser = new User(
-            id: new InternalID(1),
-            login: "Login1",
-            new Password("12345"),
-            email: "mail@mail.ru",
+            new InternalID(1),
+            new AuthenticationData(
+                email: "mail@mail.ru",
+                new Password("12345678"),
+                login: "Login1"),
             UserType.Customer);
 
         // Act
@@ -191,10 +192,11 @@ public class UsersRepositoryTests
             logger);
 
         var inputUser = new User(
-            id: new InternalID(1),
-            login: "Login1",
-            new Password("12345"),
-            email: "mail@mail.ru",
+            new InternalID(1),
+            new AuthenticationData(
+                email: "mail@mail.ru",
+                new Password("12345678"),
+                login: "Login1"),
             UserType.Customer);
 
         // Act
@@ -216,11 +218,10 @@ public class UsersRepositoryTests
 
         var storageUser = new TUser()
         {
-            Id = 1,
-            UserTypeId = 0,
+            UserTypeId = 1,
             Login = "Login1",
             Email = "mail@mail.ru",
-            Password = "12345"
+            Password = "12345678"
         };
 
         var users = new Mock<DbSet<TUser>>(MockBehavior.Loose);
@@ -233,10 +234,11 @@ public class UsersRepositoryTests
             logger);
 
         var containsUser = new User(
-            id: new InternalID(1),
-            login: "Login1",
-            new Password("12345"),
-            email: "mail@mail.ru",
+            new InternalID(1),
+            new AuthenticationData(
+                email: "mail@mail.ru",
+                new Password("12345678"),
+                login: "Login1"),
             UserType.Customer);
 
         // Act
@@ -249,7 +251,6 @@ public class UsersRepositoryTests
         users.Verify(x =>
             x.Remove(
                 It.Is<TUser>(p =>
-                    p.Id == storageUser.Id &&
                     p.UserTypeId == storageUser.UserTypeId &&
                     p.Login == storageUser.Login &&
                     p.Email == storageUser.Email &&
@@ -290,10 +291,10 @@ public class UsersRepositoryTests
             new TUser()
             {
                 Id = 1,
-                UserTypeId = 0,
+                UserTypeId = 1,
                 Login = "Login1",
-                Email = "mail@mail.ru",
-                Password = "12345"
+                Email = "mmail@mail.ru",
+                Password = "12345678"
             }
         }.AsQueryable();
 
@@ -324,10 +325,11 @@ public class UsersRepositoryTests
             logger);
 
         var expectedResult = new User(
-            id: new InternalID(1),
-            login: "Login1",
-            new Password("12345"),
-            email: "mail@mail.ru",
+            new InternalID(1),
+            new AuthenticationData(
+                email: "mmail@mail.ru",
+                new Password("12345678"),
+                login: "Login1"),
             UserType.Customer);
 
         // Act
@@ -338,6 +340,212 @@ public class UsersRepositoryTests
         result1.Should().NotBeNull();
         result1.Should().BeEquivalentTo(expectedResult);
         result2.Should().BeNull();
+    }
+
+    [Fact(DisplayName = $"The {nameof(UsersRepository)} can get user by email.")]
+    [Trait("Category", "Unit")]
+    public void CanGetByEmail()
+    {
+        // Arrange
+        var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
+        var logger = Mock.Of<ILogger<UsersRepository>>();
+
+        var userEmail = "mmail@mail.ru";
+        var notExsistingUserEmail = "amail@mail.ru";
+
+        var data = new List<TUser>
+        {
+            new TUser()
+            {
+                Id = 1,
+                UserTypeId = 1,
+                Login = "Login1",
+                Email = userEmail,
+                Password = "12345678"
+            }
+        }.AsQueryable();
+
+        var users = new Mock<DbSet<TUser>>(MockBehavior.Strict);
+
+        users
+            .As<IQueryable<TUser>>()
+            .Setup(m => m.Provider)
+            .Returns(data.Provider);
+        users
+            .As<IQueryable<TUser>>()
+            .Setup(m => m.Expression)
+            .Returns(data.Expression);
+        users
+            .As<IQueryable<TUser>>()
+            .Setup(m => m.ElementType)
+            .Returns(data.ElementType);
+        users
+            .As<IQueryable<TUser>>()
+            .Setup(m => m.GetEnumerator())
+            .Returns(() => data.GetEnumerator());
+
+        context.Setup(x => x.Users)
+            .Returns(users.Object);
+
+        var userRepository = new UsersRepository(
+            context.Object,
+            logger);
+
+        var expectedResult = new User(
+            new InternalID(1),
+            new AuthenticationData(
+                email: userEmail,
+                new Password("12345678"),
+                login: "Login1"),
+            UserType.Customer);
+
+        // Act
+        var result1 = userRepository.GetByEmail(userEmail);
+        var result2 = userRepository.GetByEmail(notExsistingUserEmail);
+
+        // Assert
+        result1.Should().NotBeNull().And.BeEquivalentTo(expectedResult);
+        result2.Should().BeNull();
+    }
+
+    [Fact(DisplayName = $"The {nameof(UsersRepository)} can authenticate user by login data.")]
+    [Trait("Category", "Unit")]
+    public void CanAuthenticateUserByLoginData()
+    {
+        // Arrange
+        var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
+        var logger = Mock.Of<ILogger<UsersRepository>>();
+
+        var userEmail = "mmail@mail.ru";
+        var userPassword = "12345678";
+        var inccorectUserPassword = "abcdefgk";
+        var notExsistingUserEmail = "amail@mail.ru";
+
+        var data = new List<TUser>
+        {
+            new TUser()
+            {
+                Id = 1,
+                UserTypeId = 1,
+                Login = "Login1",
+                Email = userEmail,
+                Password = userPassword
+            }
+        }.AsQueryable();
+
+        var users = new Mock<DbSet<TUser>>(MockBehavior.Strict);
+
+        users
+            .As<IQueryable<TUser>>()
+            .Setup(m => m.Provider)
+            .Returns(data.Provider);
+        users
+            .As<IQueryable<TUser>>()
+            .Setup(m => m.Expression)
+            .Returns(data.Expression);
+        users
+            .As<IQueryable<TUser>>()
+            .Setup(m => m.ElementType)
+            .Returns(data.ElementType);
+        users
+            .As<IQueryable<TUser>>()
+            .Setup(m => m.GetEnumerator())
+            .Returns(() => data.GetEnumerator());
+
+        context.Setup(x => x.Users)
+            .Returns(users.Object);
+
+        var userRepository = new UsersRepository(
+            context.Object,
+            logger);
+
+        var expectedResult = new User(
+            new InternalID(1),
+            new AuthenticationData(
+                email: userEmail,
+                new Password(userPassword),
+                login: "Login1"),
+            UserType.Customer);
+
+        // Act
+        var result1 = userRepository.IsCanAuthenticate(new AuthenticationData(userEmail, new Password(userPassword)), out var user1);
+        var result2 = userRepository.IsCanAuthenticate(new AuthenticationData(userEmail, new Password(inccorectUserPassword)), out var user2);
+        var result3 = userRepository.IsCanAuthenticate(new AuthenticationData(notExsistingUserEmail, new Password(userPassword)), out var user3);
+        var result4 = userRepository.IsCanAuthenticate(new AuthenticationData(notExsistingUserEmail, new Password(inccorectUserPassword)), out var user4);
+
+
+        // Assert
+        result1.Should().BeTrue();
+        user1.Should().BeEquivalentTo(expectedResult);
+        result2.Should().BeFalse();
+        user2.Should().BeNull();
+        result3.Should().BeFalse();
+        user3.Should().BeNull();
+        result4.Should().BeFalse();
+        user4.Should().BeNull();
+    }
+
+    [Fact(DisplayName = $"The {nameof(UsersRepository)} can define matching of password.")]
+    [Trait("Category", "Unit")]
+    public void CanDefineMatchingPassword()
+    {
+        // Arrange
+        var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
+        var logger = Mock.Of<ILogger<UsersRepository>>();
+
+        var userPassword = "12345678";
+        var inccorectUserPassword = "abcdefgk";
+        var userId = new InternalID(1);
+        var notExsistingUserId = new InternalID(3);
+
+
+        var data = new List<TUser>
+        {
+            new TUser()
+            {
+                Id = 1,
+                UserTypeId = 1,
+                Login = "Login1",
+                Email = "mmail@mail.ru",
+                Password = userPassword
+            }
+        }.AsQueryable();
+
+        var users = new Mock<DbSet<TUser>>(MockBehavior.Strict);
+
+        users
+            .As<IQueryable<TUser>>()
+            .Setup(m => m.Provider)
+            .Returns(data.Provider);
+        users
+            .As<IQueryable<TUser>>()
+            .Setup(m => m.Expression)
+            .Returns(data.Expression);
+        users
+            .As<IQueryable<TUser>>()
+            .Setup(m => m.ElementType)
+            .Returns(data.ElementType);
+        users
+            .As<IQueryable<TUser>>()
+            .Setup(m => m.GetEnumerator())
+            .Returns(() => data.GetEnumerator());
+
+        context.Setup(x => x.Users)
+            .Returns(users.Object);
+
+        var userRepository = new UsersRepository(
+            context.Object,
+            logger);
+
+        // Act
+        var result1 = userRepository.IsPasswordMatch(userId, new Password(userPassword));
+        var result2 = userRepository.IsPasswordMatch(userId, new Password(inccorectUserPassword));
+        var result3 = userRepository.IsPasswordMatch(notExsistingUserId, new Password(userPassword));
+
+        // Assert
+        result1.Should().BeTrue();
+        result2.Should().BeFalse();
+        result3.Should().BeFalse();
     }
 
     [Fact(DisplayName = $"The {nameof(UsersRepository)} can get all users.")]
@@ -353,10 +561,10 @@ public class UsersRepositoryTests
             new TUser()
             {
                 Id = 1,
-                UserTypeId = 0,
+                UserTypeId = 1,
                 Login = "Login1",
-                Email = "mail@mail.ru",
-                Password = "12345"
+                Email = "mmail@mail.ru",
+                Password = "12345678"
             }
         }.AsQueryable();
 
@@ -389,10 +597,11 @@ public class UsersRepositoryTests
         var expectedResult = new List<User>()
         {
             new User(
-                id: new InternalID(1),
-                login: "Login1",
-                new Password("12345"),
-                email: "mail@mail.ru",
+                new InternalID(1),
+                new AuthenticationData(
+                    email: "mmail@mail.ru",
+                    new Password("12345678"),
+                    login: "Login1"),
                 UserType.Customer)
         };
 
@@ -415,10 +624,10 @@ public class UsersRepositoryTests
         var storageUser = new TUser()
         {
             Id = 1,
-            UserTypeId = 0,
+            UserTypeId = 1,
             Login = "Login1",
-            Email = "mail@mail.ru",
-            Password = "12345"
+            Email = "mmail@mail.ru",
+            Password = "12345678"
         };
 
         var userRepository = new UsersRepository(
