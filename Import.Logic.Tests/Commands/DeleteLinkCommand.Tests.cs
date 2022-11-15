@@ -18,9 +18,8 @@ public class DeleteLinkCommandTests
         var id = new CommandID("some id");
         var parameters = new DeleteLinkCommandParameters(
             id,
-            new(1),
             new(1, Provider.Ivanov));
-        var cache = Mock.Of<ICache<Link>>();
+        var cache = Mock.Of<IKeyableCache<Link, ExternalID>>();
         var repository = Mock.Of<IRepository<Link>>();
 
         // Act
@@ -37,7 +36,7 @@ public class DeleteLinkCommandTests
     public void CanNotBeCreatedWithoutParameters()
     {
         // Arrange
-        var cache = Mock.Of<ICache<Link>>();
+        var cache = Mock.Of<IKeyableCache<Link, ExternalID>>();
         var repository = Mock.Of<IRepository<Link>>();
 
         // Act
@@ -56,7 +55,6 @@ public class DeleteLinkCommandTests
         var id = new CommandID("some id");
         var parameters = new DeleteLinkCommandParameters(
             id,
-            new(1),
             new(1, Provider.Ivanov));
         var repository = Mock.Of<IRepository<Link>>();
 
@@ -76,9 +74,8 @@ public class DeleteLinkCommandTests
         var id = new CommandID("some id");
         var parameters = new DeleteLinkCommandParameters(
             id,
-            new(1),
             new(1, Provider.Ivanov));
-        var cache = Mock.Of<ICache<Link>>();
+        var cache = Mock.Of<IKeyableCache<Link, ExternalID>>();
 
         // Act
         var exception = Record.Exception(() =>
@@ -93,17 +90,17 @@ public class DeleteLinkCommandTests
     public async void CanExecuteAsync()
     {
         // Arrange
+        var link = new Link(new InternalID(1), new ExternalID(1, Provider.Ivanov));
+
         var id = new CommandID("some id");
         var parameters = new DeleteLinkCommandParameters(
             id,
-            new(1),
             new(1, Provider.Ivanov));
-        var link = new Link(parameters.InternalID, parameters.ExternalID);
-
-        var cache = new Mock<ICache<Link>>();
+        
+        var cache = new Mock<IKeyableCache<Link, ExternalID>>();
         var cacheInvokeCount = 0;
-        cache.Setup(x => x.Contains(link))
-            .Returns(true)
+        cache.Setup(x => x.GetByKey(parameters.ExternalID))
+            .Returns(link)
             .Callback(() => cacheInvokeCount++);
 
         var repository = new Mock<IRepository<Link>>();
@@ -128,24 +125,24 @@ public class DeleteLinkCommandTests
         repository.Verify(x => x.Save(), Times.Once);
     }
 
-    [Fact(DisplayName = $"The {nameof(DeleteLinkCommand)} can execute when link already exists.")]
+    [Fact(DisplayName = $"The {nameof(DeleteLinkCommand)} can't execute when link not exists.")]
     [Trait("Category", "Unit")]
     public async void CanExecuteWhenLinkAlreadyExistsAsync()
     {
         // Arrange
+        Link link = null!;
+
         var id = new CommandID("some id");
         var parameters = new DeleteLinkCommandParameters(
-            id,
-            new(1),
+            id,            
             new(1, Provider.Ivanov));
-        var link = new Link(parameters.InternalID, parameters.ExternalID);
-
+        
         var repository = new Mock<IRepository<Link>>(MockBehavior.Strict);
 
-        var cache = new Mock<ICache<Link>>();
+        var cache = new Mock<IKeyableCache<Link, ExternalID>>();
         var cacheInvokeCount = 0;
-        cache.Setup(x => x.Contains(link))
-            .Returns(false)
+        cache.Setup(x => x.GetByKey(parameters.ExternalID))
+            .Returns(link)
             .Callback(() => cacheInvokeCount++);
 
         var command = new DeleteLinkCommand(
