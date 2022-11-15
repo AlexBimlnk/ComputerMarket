@@ -45,7 +45,7 @@ public sealed class DeleteLinkCommand : CommandBase
     /// <inheritdoc/>
     protected override Task ExecuteCoreAsync()
     {
-        var link = new Link(_parameters.InternalID, _parameters.ExternalID);
+        var link = new Link(_parameters.ExternalID);
 
         if (!_cacheLinks.Contains(link))
             throw new InvalidOperationException("Such a link doesn't exist.");
