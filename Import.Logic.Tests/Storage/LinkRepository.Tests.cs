@@ -120,6 +120,27 @@ public class LinkRepositoryTests
         exception.Should().BeOfType<ArgumentNullException>();
     }
 
+    [Fact(DisplayName = $"The {nameof(LinkRepository)} cannot add link with default value.")]
+    [Trait("Category", "Unit")]
+    public async void CanNotAddLinkWithDefaultValueAsync()
+    {
+        // Arrange
+        var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
+        var logger = Mock.Of<ILogger<LinkRepository>>();
+        var link = new Link(new ExternalID(1, Provider.Ivanov));
+
+        var linkRepository = new LinkRepository(
+            context.Object,
+            logger);
+
+        // Act
+        var exception = await Record.ExceptionAsync(async () =>
+            await linkRepository.AddAsync(link));
+
+        // Assert
+        exception.Should().BeOfType<ArgumentException>();
+    }
+
     [Fact(DisplayName = $"The {nameof(LinkRepository)} can cancel add link.")]
     [Trait("Category", "Unit")]
     public async void CanCancelAddLinkAsync()

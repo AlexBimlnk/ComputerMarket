@@ -61,9 +61,17 @@ public sealed class LinkRepository : IRepository<Link>
     }
 
     /// <inheritdoc/>
+    /// <exception cref="ArgumentException" xml:lang = "ru">
+    /// Если <see cref="InternalID"/> у <see cref="Link"/> имеент значением default.
+    /// </exception>
     public async Task AddAsync(Link entity, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(entity);
+
+        if (entity.InternalID == default)
+        {
+            throw new ArgumentException($"Can't incorrect add {nameof(Link)} in repository");
+        }
 
         token.ThrowIfCancellationRequested();
 

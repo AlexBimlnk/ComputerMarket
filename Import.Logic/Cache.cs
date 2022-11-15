@@ -17,6 +17,9 @@ public sealed class Cache : IKeyableCache<Link, ExternalID>
     /// <exception cref="ArgumentNullException" xml:lang = "ru">
     /// Если <paramref name="entity"/> - <see langword="null"/>.
     /// </exception>
+    /// <exception cref="InvalidOperationException" xml:lang = "ru">
+    /// Если <see cref="InternalID"/> у <see cref="Link"/> имеент значением default.
+    /// </exception>
     public void Add(Link entity)
     {
         ArgumentNullException.ThrowIfNull(entity, nameof(entity));
