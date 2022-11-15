@@ -44,7 +44,7 @@ public sealed class SetLinkCommand : CommandBase
 
     protected override async Task ExecuteCoreAsync()
     {
-        var link = new Link(_parameters.ExternalID, _parameters.InternalID);
+        var link = new Link(_parameters.InternalID, _parameters.ExternalID);
 
         if (_cacheLinks.Contains(link))
             throw new InvalidOperationException("Such a link already exists.");
