@@ -18,7 +18,6 @@ public class DeleteLinkCommandTests
         var id = new CommandID("some id");
         var parameters = new DeleteLinkCommandParameters(
             id,
-            new(1),
             new(1, Provider.Ivanov));
         var cache = Mock.Of<ICache<Link>>();
         var repository = Mock.Of<IRepository<Link>>();
@@ -56,7 +55,6 @@ public class DeleteLinkCommandTests
         var id = new CommandID("some id");
         var parameters = new DeleteLinkCommandParameters(
             id,
-            new(1),
             new(1, Provider.Ivanov));
         var repository = Mock.Of<IRepository<Link>>();
 
@@ -76,7 +74,6 @@ public class DeleteLinkCommandTests
         var id = new CommandID("some id");
         var parameters = new DeleteLinkCommandParameters(
             id,
-            new(1),
             new(1, Provider.Ivanov));
         var cache = Mock.Of<ICache<Link>>();
 
@@ -96,9 +93,8 @@ public class DeleteLinkCommandTests
         var id = new CommandID("some id");
         var parameters = new DeleteLinkCommandParameters(
             id,
-            new(1),
             new(1, Provider.Ivanov));
-        var link = new Link(parameters.InternalID, parameters.ExternalID);
+        var link = new Link(parameters.ExternalID);
 
         var cache = new Mock<ICache<Link>>();
         var cacheInvokeCount = 0;
@@ -136,9 +132,8 @@ public class DeleteLinkCommandTests
         var id = new CommandID("some id");
         var parameters = new DeleteLinkCommandParameters(
             id,
-            new(1),
             new(1, Provider.Ivanov));
-        var link = new Link(parameters.InternalID, parameters.ExternalID);
+        var link = new Link(parameters.ExternalID);
 
         var repository = new Mock<IRepository<Link>>(MockBehavior.Strict);
 

@@ -88,8 +88,8 @@ public class LinkRepositoryTests
             logger);
 
         var inputLink = new Link(
-            new(1),
-            new(1, Provider.Ivanov));
+            new(1, Provider.Ivanov),
+            new(1));
 
         // Act
         var exception = await Record.ExceptionAsync(async () =>
@@ -135,8 +135,8 @@ public class LinkRepositoryTests
             logger);
 
         var inputLink = new Link(
-            new(1),
-            new(1, Provider.Ivanov));
+            new(1, Provider.Ivanov), 
+            new(1));
 
         // Act
         cts.Cancel();
@@ -182,8 +182,8 @@ public class LinkRepositoryTests
             logger);
 
         var inputLink = new Link(
-            new(1),
-            new(1, Provider.Ivanov));
+            new(1, Provider.Ivanov),
+            new(1));
 
         // Act
         cts.Cancel();
@@ -219,8 +219,8 @@ public class LinkRepositoryTests
             logger);
 
         var containsLink = new Link(
-            new(1),
-            new(1, Provider.Ivanov));
+            new(1, Provider.Ivanov),
+            new(1));
 
         // Act
         var exception = Record.Exception(() =>

@@ -56,8 +56,8 @@ public sealed class LinkRepository : IRepository<Link>
         }
 
         return new(
-            new(link.InternalId),
-            new(link.ExternalId, (Provider)link.ProviderId));
+            new(link.ExternalId, (Provider)link.ProviderId),
+            new(link.InternalId));
     }
 
     /// <inheritdoc/>

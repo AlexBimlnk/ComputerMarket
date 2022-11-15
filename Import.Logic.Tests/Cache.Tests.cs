@@ -22,7 +22,7 @@ public class CacheTests
     public void CanAddSingleLink()
     {
         // Arrange
-        var link = new Link(new InternalID(2), new ExternalID(1, Provider.Ivanov));
+        var link = new Link(new ExternalID(1, Provider.Ivanov), new InternalID(2));
         var cache = new Cache();
 
         // Act
@@ -53,8 +53,8 @@ public class CacheTests
     public void CanNotAddExsistingLink()
     {
         // Arrange
-        var link1 = new Link(new InternalID(1), new ExternalID(2, Provider.Ivanov));
-        var link2 = new Link(new InternalID(1), new ExternalID(2, Provider.Ivanov));
+        var link1 = new Link(new ExternalID(2, Provider.Ivanov), new InternalID(1));
+        var link2 = new Link(new ExternalID(2, Provider.Ivanov), new InternalID(1));
         var cache = new Cache();
         cache.Add(link1);
 
@@ -73,9 +73,9 @@ public class CacheTests
         // Arrange
         var links = new Link[] 
         {
-            new Link(new InternalID(2), new ExternalID(1, Provider.Ivanov)),
-            new Link(new InternalID(3), new ExternalID(2, Provider.Ivanov)),
-            new Link(new InternalID(4), new ExternalID(3, Provider.Ivanov))
+            new Link(new ExternalID(2, Provider.Ivanov), new InternalID(3)),
+            new Link(new ExternalID(1, Provider.Ivanov), new InternalID(2)),
+            new Link(new ExternalID(3, Provider.Ivanov), new InternalID(4))
         };
 
         var cache = new Cache();
@@ -123,9 +123,9 @@ public class CacheTests
 
         var links = new Link[]
         {
-            new Link(new InternalID(5), keys[0]),
-            new Link(new InternalID(6), keys[1]),
-            new Link(new InternalID(7), keys[2])
+            new Link(keys[0], new InternalID(5)),
+            new Link(keys[1], new InternalID(6)),
+            new Link(keys[2], new InternalID(7))
         };
         var cache = new Cache();
         cache.AddRange(links);
@@ -146,14 +146,14 @@ public class CacheTests
         // Arrange
         var links = new Link[]
         {
-            new Link(new InternalID(5), new ExternalID(1, Provider.Ivanov)),
-            new Link(new InternalID(6), new ExternalID(1, Provider.HornsAndHooves)),
-            new Link(new InternalID(7), new ExternalID(4, Provider.HornsAndHooves))
+            new Link(new ExternalID(1, Provider.Ivanov), new InternalID(5)),
+            new Link(new ExternalID(1, Provider.HornsAndHooves), new InternalID(6)),
+            new Link(new ExternalID(4, Provider.HornsAndHooves), new InternalID(7))
         };
         var badlinks = new Link[]
         {
-            new Link(new InternalID(5), new ExternalID(4, Provider.Ivanov)),
-            new Link(new InternalID(6), new ExternalID(5, Provider.HornsAndHooves)),
+            new Link(new ExternalID(4, Provider.Ivanov), new InternalID(5)),
+            new Link(new ExternalID(5, Provider.HornsAndHooves), new InternalID(6)),
         };
 
         var cache = new Cache();
@@ -175,9 +175,9 @@ public class CacheTests
         // Arrange
         var links = new Link[]
         {
-            new Link(new InternalID(5), new ExternalID(1, Provider.Ivanov)),
-            new Link(new InternalID(6), new ExternalID(1, Provider.HornsAndHooves)),
-            new Link(new InternalID(7), new ExternalID(4, Provider.HornsAndHooves))
+            new Link(new ExternalID(1, Provider.Ivanov), new InternalID(5)),
+            new Link(new ExternalID(1, Provider.HornsAndHooves), new InternalID(6)),
+            new Link(new ExternalID(4, Provider.HornsAndHooves), new InternalID(7))
         };
 
         Link linkFind = null!;
@@ -199,14 +199,14 @@ public class CacheTests
         // Arrange
         var links = new Link[]
         {
-            new Link(new InternalID(3), new ExternalID(5,Provider.HornsAndHooves)),
-            new Link(new InternalID(4), new ExternalID(4,Provider.HornsAndHooves))
+            new Link(new ExternalID(5,Provider.HornsAndHooves), new InternalID(3)),
+            new Link(new ExternalID(4,Provider.HornsAndHooves), new InternalID(4))
         };
 
         var deletableLinks = new Link[]
         {
-            new Link(new InternalID(1), new ExternalID(1,Provider.Ivanov)),
-            new Link(new InternalID(2), new ExternalID(2,Provider.HornsAndHooves))
+            new Link(new ExternalID(1,Provider.Ivanov), new InternalID(1)),
+            new Link(new ExternalID(2,Provider.HornsAndHooves), new InternalID(2))
         };
 
         var cache = new Cache();
@@ -228,9 +228,9 @@ public class CacheTests
         // Arrange
         var links = new Link[]
         {
-            new Link(new InternalID(5), new ExternalID(1, Provider.Ivanov)),
-            new Link(new InternalID(6), new ExternalID(1, Provider.HornsAndHooves)),
-            new Link(new InternalID(7), new ExternalID(4, Provider.HornsAndHooves))
+            new Link(new ExternalID(1, Provider.Ivanov), new InternalID(5)),
+            new Link(new ExternalID(1, Provider.HornsAndHooves), new InternalID(6)),
+            new Link(new ExternalID(4, Provider.HornsAndHooves), new InternalID(7))
         };
 
         Link linkFind = null!;
@@ -252,12 +252,12 @@ public class CacheTests
         // Arrange
         var links = new Link[]
         {
-            new Link(new InternalID(5), new ExternalID(1, Provider.Ivanov)),
-            new Link(new InternalID(6), new ExternalID(1, Provider.HornsAndHooves)),
-            new Link(new InternalID(7), new ExternalID(4, Provider.HornsAndHooves))
+            new Link(new ExternalID(1, Provider.Ivanov), new InternalID(5)),
+            new Link(new ExternalID(1, Provider.HornsAndHooves), new InternalID(6)),
+            new Link(new ExternalID(4, Provider.HornsAndHooves), new InternalID(7))
         };
 
-        var link = new Link(new InternalID(9), new ExternalID(2, Provider.Ivanov));
+        var link = new Link(new ExternalID(2, Provider.Ivanov), new InternalID(9));
         var cache = new Cache();
         cache.AddRange(links);
 
@@ -276,8 +276,8 @@ public class CacheTests
         // Arrange
         var links = new Link[]
         {
-            new Link(new InternalID(3), new ExternalID(5,Provider.HornsAndHooves)),
-            new Link(new InternalID(4), new ExternalID(4,Provider.HornsAndHooves))
+            new Link(new ExternalID(5,Provider.HornsAndHooves), new InternalID(3)),
+            new Link(new ExternalID(4,Provider.HornsAndHooves), new InternalID(4))
         };
 
         var keys = new ExternalID[]
@@ -292,7 +292,7 @@ public class CacheTests
         {
             links[0],
             null!,
-            new Link(new InternalID(4), new ExternalID(4,Provider.HornsAndHooves)),
+            new Link(new ExternalID(4,Provider.HornsAndHooves), new InternalID(4)),
             null!
         };
 
@@ -314,9 +314,9 @@ public class CacheTests
     {
         // Arrange
         var provider1Links = Enumerable.Range(1, 100)
-            .Select(x => new Link(new InternalID(x), new ExternalID(x, Provider.Ivanov)));
+            .Select(x => new Link(new ExternalID(x, Provider.Ivanov), new InternalID(x)));
         var provider2Links = Enumerable.Range(2, 101)
-            .Select(x => new Link(new InternalID(x), new ExternalID(x, Provider.HornsAndHooves)));
+            .Select(x => new Link(new ExternalID(x, Provider.HornsAndHooves), new InternalID(x)));
 
         var cache = new Cache();
         var mres = new ManualResetEventSlim();

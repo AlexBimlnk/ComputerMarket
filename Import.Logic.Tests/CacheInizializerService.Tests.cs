@@ -96,8 +96,8 @@ public class CacheInizializerServiceTests
 
         var links = new[]
         {
-            new Link(new (1), new(2, Provider.Ivanov)),
-            new Link(new (1), new(2, Provider.HornsAndHooves)),
+            new Link(new(2, Provider.Ivanov), new (1)),
+            new Link(new(2, Provider.HornsAndHooves), new (1)),
         };
 
         var cacheAddRangeInvokeCount = 0;
