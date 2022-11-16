@@ -70,7 +70,6 @@ public class CommandFactoryTests
         // Arrange
         var deleteParameters = new DeleteLinkCommandParameters(
             new("some id"),
-            new(1),
             new(1, Provider.Ivanov));
 
         var command = Mock.Of<ICommand>(MockBehavior.Strict);

@@ -18,13 +18,11 @@ public class DeleteLinkCommandParametersTests
         // Act
         var exception = Record.Exception(() => parameters = new DeleteLinkCommandParameters(
             id,
-            internalID,
             externalID));
 
         // Assert
         exception.Should().BeNull();
         parameters.Id.Should().Be(id);
-        parameters.InternalID.Should().Be(internalID);
         parameters.ExternalID.Should().Be(externalID);
     }
 
@@ -35,7 +33,6 @@ public class DeleteLinkCommandParametersTests
         // Act
         var exception = Record.Exception(() => _ = new DeleteLinkCommandParameters(
             id: null!,
-            internalID: new(1),
             externalID: new(1, Provider.Ivanov)));
 
         // Assert
