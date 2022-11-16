@@ -5,7 +5,7 @@ namespace WalletTransaction.Logic;
 /// <summary xml:lang = "ru">
 /// Банковский счёт.
 /// </summary>
-public sealed class BankAccount
+public sealed record class BankAccount
 {
     private const string BANK_ACCOUNT_PATTERN = @"^[0-9]{20}$";
 
