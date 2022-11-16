@@ -9,9 +9,6 @@ public sealed class TransactionsRequestCache : ITransactionRequestCache
 {
     private readonly ConcurrentDictionary<InternalID, TransactionRequest> _requests = new();
 
-    private static CancellationTokenSource GenerateCTS() =>
-        new CancellationTokenSource(TimeSpan.FromMinutes(5));
-
     /// <inheritdoc/>
     /// <exception cref="ArgumentNullException" xml:lang = "ru">
     /// Если <paramref name="entity"/> - <see langword="null"/>.
