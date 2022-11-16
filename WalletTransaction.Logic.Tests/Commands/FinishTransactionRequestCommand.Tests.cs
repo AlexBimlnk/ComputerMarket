@@ -5,7 +5,7 @@ using General.Transport;
 using Moq;
 
 using WalletTransaction.Logic.Commands;
-using WalletTransaction.Logic.Transport;
+using WalletTransaction.Logic.Transport.Configurations;
 
 namespace WalletTransaction.Logic.Tests.Commands;
 

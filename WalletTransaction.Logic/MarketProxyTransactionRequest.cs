@@ -23,6 +23,8 @@ public class MarketProxyTransactionRequest : ITransactionsRequest
         _wrappedRequest = transactionRequest ?? throw new ArgumentNullException(nameof(transactionRequest));
     }
 
+    public static BankAccount MarketAccount => s_marketAccount;
+
     /// <inheritdoc/>
     public InternalID Id => _wrappedRequest.Id;
 
@@ -31,6 +33,21 @@ public class MarketProxyTransactionRequest : ITransactionsRequest
 
     /// <inheritdoc/>
     public bool IsCancelled => _wrappedRequest.IsCancelled;
+
+    /// <inheritdoc/>
+    public TransactionRequestState CurrentState
+    {
+        get => _wrappedRequest.CurrentState;
+        set
+        {
+            if (value is TransactionRequestState.Finished)
+                _wrappedRequest.CurrentState = TransactionRequestState.Held;
+            _wrappedRequest.CurrentState = value;
+        }
+    }
+
+    /// <inheritdoc/>
+    public TransactionRequestState OldState => _wrappedRequest.OldState;
 
     private IReadOnlyCollection<Transaction> GetTransactions()
     {
@@ -43,7 +60,7 @@ public class MarketProxyTransactionRequest : ITransactionsRequest
             .Select(x => x.TransferBalance)
             .Sum();
 
-        var transaction = new Transaction(fromAccount, s_marketAccount, transferedBalace);
+        var transaction = new Transaction(fromAccount, MarketAccount, transferedBalace);
 
         return new List<Transaction>(1) { transaction };
     }

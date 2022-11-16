@@ -103,6 +103,7 @@ public class MarketProxyTransactionRequestTests
         actual.From.Should().Be(fromAccount);
         actual.TransferBalance.Should().Be(expectedTransferredBalance);
         actual.HeldBalance.Should().Be(0);
-        transactions.Select(x => x.To).Should().NotContain(actual.To);
+        transactions.Select(x => x.To).Should()
+            .AllBeEquivalentTo(MarketProxyTransactionRequest.MarketAccount);
     }
 }

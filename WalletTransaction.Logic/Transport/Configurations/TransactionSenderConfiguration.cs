@@ -1,6 +1,6 @@
 ﻿using General.Transport;
 
-namespace WalletTransaction.Logic.Transport;
+namespace WalletTransaction.Logic.Transport.Configurations;
 
 /// <summary xml:lang = "ru">
 /// Конфигурация отправителя транзакций.
