@@ -7,7 +7,7 @@ using Newtonsoft.Json.Converters;
 
 namespace Market.Logic.Transport.Serializers;
 
-using CommandBase = Models.Commands.Import.CommandBase;
+using TCommandBase = Models.Commands.Import.CommandBase;
 using TDeleteLinkCommand = Models.Commands.Import.DeleteLinkCommand;
 using TSetLinkCommand = Models.Commands.Import.SetLinkCommand;
 
@@ -17,7 +17,7 @@ public sealed class ImportCommandSerializer : ISerializer<ImportCommand, string>
     {
         ArgumentNullException.ThrowIfNull(source, nameof(source));
 
-        CommandBase transportProducts = source switch
+        TCommandBase transportProducts = source switch
         {
             SetLinkCommand setLinkCommand => TSetLinkCommand.ToModel(setLinkCommand),
             DeleteLinkCommand deleteLinkCommand => TDeleteLinkCommand.ToModel(deleteLinkCommand),
