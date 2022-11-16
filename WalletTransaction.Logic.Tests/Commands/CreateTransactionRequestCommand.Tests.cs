@@ -1,4 +1,5 @@
 ﻿using General.Logic.Commands;
+using General.Storage;
 using General.Transport;
 
 using Moq;
@@ -36,7 +37,7 @@ public class CreateTransactionRequestCommandTests
             commandId,
             request);
 
-        var cache = Mock.Of<ITransactionRequestCache>();
+        var cache = Mock.Of<IKeyableCache<TransactionRequest, InternalID>>();
         var sender = Mock.Of<ISender<TransactionSenderConfiguration, ITransactionsRequest>>();
 
         // Act
@@ -53,7 +54,7 @@ public class CreateTransactionRequestCommandTests
     public void CanNotBeCreatedWithoutParameters()
     {
         // Arrange
-        var cache = Mock.Of<ITransactionRequestCache>();
+        var cache = Mock.Of<IKeyableCache<TransactionRequest, InternalID>>();
         var sender = Mock.Of<ISender<TransactionSenderConfiguration, ITransactionsRequest>>();
 
         // Act
@@ -89,7 +90,7 @@ public class CreateTransactionRequestCommandTests
             commandId,
             request);
 
-        var cache = Mock.Of<ITransactionRequestCache>();
+        var cache = Mock.Of<IKeyableCache<TransactionRequest, InternalID>>();
 
         // Act
         var exception = Record.Exception(() =>
@@ -124,7 +125,7 @@ public class CreateTransactionRequestCommandTests
             commandId,
             request);
 
-        var cache = Mock.Of<ITransactionRequestCache>();
+        var cache = Mock.Of<IKeyableCache<TransactionRequest, InternalID>>();
         var sender = Mock.Of<ISender<TransactionSenderConfiguration, ITransactionsRequest>>();
 
         // Act
@@ -162,7 +163,7 @@ public class CreateTransactionRequestCommandTests
             commandId,
             request);
 
-        var cache = new Mock<ITransactionRequestCache>(MockBehavior.Strict);
+        var cache = new Mock<IKeyableCache<TransactionRequest, InternalID>>(MockBehavior.Strict);
         var cacheAddInvokeCount = 0;
         cache.Setup(x => x.Add(request))
             .Callback(() => cacheAddInvokeCount++);

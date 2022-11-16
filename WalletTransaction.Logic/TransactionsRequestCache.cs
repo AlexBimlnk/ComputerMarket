@@ -1,11 +1,13 @@
 ﻿using System.Collections.Concurrent;
 
+using General.Storage;
+
 namespace WalletTransaction.Logic;
 
 /// <summary xml:lang = "ru">
 /// Кэш запросов на проведение транзакций.
 /// </summary>
-public sealed class TransactionsRequestCache : ITransactionRequestCache
+public sealed class TransactionsRequestCache : IKeyableCache<TransactionRequest, InternalID>
 {
     private readonly ConcurrentDictionary<InternalID, TransactionRequest> _requests = new();
 
@@ -34,10 +36,6 @@ public sealed class TransactionsRequestCache : ITransactionRequestCache
             Add(entity);
         }
     }
-
-    /// <inheritdoc/>
-    public void CancelRequest(InternalID requestId) =>
-        _requests[requestId].IsCancelled = true;
 
     /// <inheritdoc/>
     public bool Contains(InternalID key) => _requests.ContainsKey(key);

@@ -25,7 +25,7 @@ public class CancelTransactionRequestCommandTests
             commandId,
             requestId);
 
-        var cache = Mock.Of<ITransactionRequestCache>();
+        var cache = Mock.Of<IKeyableCache<TransactionRequest, InternalID>>();
 
         // Act
         var exception = Record.Exception(() =>
@@ -41,7 +41,7 @@ public class CancelTransactionRequestCommandTests
     public void CanNotBeCreatedWithoutParameters()
     {
         // Arrange
-        var cache = Mock.Of<ITransactionRequestCache>();
+        var cache = Mock.Of<IKeyableCache<TransactionRequest, InternalID>>();
 
         // Act
         var exception = Record.Exception(() =>
@@ -63,7 +63,7 @@ public class CancelTransactionRequestCommandTests
             commandId,
             requestId);
 
-        var cache = Mock.Of<ITransactionRequestCache>();
+        var cache = Mock.Of<IKeyableCache<TransactionRequest, InternalID>>();
 
         // Act
         var exception = Record.Exception(() =>
@@ -98,7 +98,7 @@ public class CancelTransactionRequestCommandTests
 
         var request = new TransactionRequest(requestId, transactions);
 
-        var cache = new Mock<ITransactionRequestCache>(MockBehavior.Strict);
+        var cache = new Mock<IKeyableCache<TransactionRequest, InternalID>>(MockBehavior.Strict);
 
         cache.Setup(x => x.GetByKey(requestId))
             .Returns(request);
@@ -134,7 +134,7 @@ public class CancelTransactionRequestCommandTests
             commandId,
             requestId);
 
-        var cache = new Mock<ITransactionRequestCache>(MockBehavior.Strict);
+        var cache = new Mock<IKeyableCache<TransactionRequest, InternalID>>(MockBehavior.Strict);
 
         cache.Setup(x => x.GetByKey(requestId))
             .Returns((TransactionRequest)null!);

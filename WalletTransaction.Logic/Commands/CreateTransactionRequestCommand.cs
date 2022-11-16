@@ -1,4 +1,5 @@
 ﻿using General.Logic.Commands;
+using General.Storage;
 using General.Transport;
 
 using WalletTransaction.Logic.Transport;
@@ -11,7 +12,7 @@ namespace WalletTransaction.Logic.Commands;
 public sealed class CreateTransactionRequestCommand : CommandBase, ICommand
 {
     private readonly ISender<TransactionSenderConfiguration, ITransactionsRequest> _sender;
-    private readonly ITransactionRequestCache _requestCache;
+    private readonly IKeyableCache<TransactionRequest, InternalID> _requestCache;
     private readonly CreateTransactionRequestCommandParameters _parameters;
 
     /// <summary xml:lang = "ru">
@@ -32,7 +33,7 @@ public sealed class CreateTransactionRequestCommand : CommandBase, ICommand
     public CreateTransactionRequestCommand(
         CreateTransactionRequestCommandParameters parameters,
         ISender<TransactionSenderConfiguration, ITransactionsRequest> sender,
-        ITransactionRequestCache requestCache)
+        IKeyableCache<TransactionRequest, InternalID> requestCache)
     {
         _parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
         _sender = sender ?? throw new ArgumentNullException(nameof(sender));

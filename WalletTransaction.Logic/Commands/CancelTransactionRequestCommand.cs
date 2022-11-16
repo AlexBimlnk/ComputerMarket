@@ -1,4 +1,5 @@
 ﻿using General.Logic.Commands;
+using General.Storage;
 
 namespace WalletTransaction.Logic.Commands;
 
@@ -7,7 +8,7 @@ namespace WalletTransaction.Logic.Commands;
 /// </summary>
 public sealed class CancelTransactionRequestCommand : CommandBase, ICommand
 {
-    private readonly ITransactionRequestCache _requestCache;
+    private readonly IKeyableCache<TransactionRequest, InternalID> _requestCache;
     private readonly CancelTransactionRequestCommandParameters _parameters;
 
     /// <summary xml:lang = "ru">
@@ -24,7 +25,7 @@ public sealed class CancelTransactionRequestCommand : CommandBase, ICommand
     /// </exception>
     public CancelTransactionRequestCommand(
         CancelTransactionRequestCommandParameters parameters,
-        ITransactionRequestCache requestCache)
+        IKeyableCache<TransactionRequest, InternalID> requestCache)
     {
         _parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
         _requestCache = requestCache ?? throw new ArgumentNullException(nameof(requestCache));

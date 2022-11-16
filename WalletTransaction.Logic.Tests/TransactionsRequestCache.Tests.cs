@@ -304,29 +304,6 @@ public class TransactionsRequestCacheTests
         result.Should().BeEquivalentTo(expectedResult, opt => opt.WithoutStrictOrdering());
     }
 
-    [Fact(DisplayName = $"The {nameof(TransactionsRequestCache)} can cancel {nameof(TransactionRequest)} by key.")]
-    [Trait("Category", "Unit")]
-    public void CanCancelRequest()
-    {
-        // Arrange
-        var requests = new TransactionRequest[]
-        {
-            CreateStubRequest(5),
-            CreateStubRequest(4),
-        };
-
-        var transactionsRequestCache = new TransactionsRequestCache();
-        transactionsRequestCache.AddRange(requests);
-
-        // Act
-        transactionsRequestCache.CancelRequest(new InternalID(5));
-        var cancelledRequest = transactionsRequestCache.GetByKey(new InternalID(5))!;
-
-        // Assert
-        requests.Select(x => transactionsRequestCache.Contains(x)).Should().AllBeEquivalentTo(true);
-        cancelledRequest.IsCancelled.Should().BeTrue();
-    }
-
     [Fact(DisplayName = $"The {nameof(TransactionsRequestCache)} can provide thread safe add.")]
     [Trait("Category", "Unit")]
     public async void CanProvideThreadSafeAddAsync()
