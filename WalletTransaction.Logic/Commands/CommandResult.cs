@@ -1,6 +1,6 @@
 ﻿using General.Logic.Commands;
 
-namespace Import.Logic.Commands;
+namespace WalletTransaction.Logic.Commands;
 
 /// <summary xml:lang = "ru">
 /// Результат выполнения команды.

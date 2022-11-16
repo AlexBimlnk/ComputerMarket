@@ -1,6 +1,6 @@
 ﻿using General.Logic.Commands;
 
-using Import.Logic.Commands;
+using WalletTransaction.Logic.Commands;
 
 namespace Import.Logic.Tests.Commands;
 public class CommandResultTests

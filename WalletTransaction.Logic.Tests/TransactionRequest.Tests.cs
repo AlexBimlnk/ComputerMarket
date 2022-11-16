@@ -31,6 +31,7 @@ public class TransactionRequestTests
         transactionRequest.Key.Should().Be(id);
         transactionRequest.Transactions.Should().BeEquivalentTo(transactions, opt =>
             opt.WithStrictOrdering());
+        transactionRequest.IsCancelled.Should().BeFalse();
     }
 
     [Fact(DisplayName = $"The {nameof(TransactionRequest)} can't be created without transactions.")]
@@ -61,5 +62,62 @@ public class TransactionRequestTests
 
         // Assert
         exception.Should().BeOfType<ArgumentException>();
+    }
+
+    [Fact(DisplayName = $"The {nameof(TransactionRequest)} can be cancelled.")]
+    [Trait("Category", "Unit")]
+    public void CanBeCancelled()
+    {
+        // Arrange
+        var id = new InternalID(1);
+
+        var fromAccount = new BankAccount("01234012340123401234");
+        var toAccount = new BankAccount("01234012340123401234");
+        var transferredBalance = 121.4m;
+        var transactions = new List<Transaction>()
+        {
+            new Transaction(
+                fromAccount,
+                toAccount,
+                transferredBalance)
+        };
+
+        var request = new TransactionRequest(id, transactions);
+
+        // Act
+        var exception = Record.Exception(() => request.IsCancelled = true);
+
+        // Assert
+        exception.Should().BeNull();
+        request.IsCancelled.Should().BeTrue();
+    }
+
+    [Fact(DisplayName = $"The {nameof(TransactionRequest)} can't be cancelled if request already have been cancelled.")]
+    [Trait("Category", "Unit")]
+    public void CanNotBeCancelledWhenAlreadyCancelled()
+    {
+        // Arrange
+        var id = new InternalID(1);
+
+        var fromAccount = new BankAccount("01234012340123401234");
+        var toAccount = new BankAccount("01234012340123401234");
+        var transferredBalance = 121.4m;
+        var transactions = new List<Transaction>()
+        {
+            new Transaction(
+                fromAccount,
+                toAccount,
+                transferredBalance)
+        };
+
+        var request = new TransactionRequest(id, transactions);
+        request.IsCancelled = true;
+
+        // Act
+        var exception = Record.Exception(() => request.IsCancelled = true);
+
+        // Assert
+        exception.Should().BeOfType<InvalidOperationException>();
+        request.IsCancelled.Should().BeTrue();
     }
 }

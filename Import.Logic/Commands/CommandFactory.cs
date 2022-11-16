@@ -1,4 +1,4 @@
-﻿using Import.Logic.Abstractions.Commands;
+﻿using General.Logic.Commands;
 
 namespace Import.Logic.Commands;
 
@@ -22,7 +22,7 @@ public sealed class CommandFactory : ICommandFactory
     /// команду типа <see cref="ICommand"/>.
     /// </param>
     public CommandFactory(
-        Func<SetLinkCommandParameters, ICommand> setLinkCommandFactory, 
+        Func<SetLinkCommandParameters, ICommand> setLinkCommandFactory,
         Func<DeleteLinkCommandParameters, ICommand> deleteLinkCommandFactory)
     {
         _setLinkCommandFactory = setLinkCommandFactory;

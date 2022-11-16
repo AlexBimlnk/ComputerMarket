@@ -1,9 +1,7 @@
-﻿using Import.Logic.Commands;
-
-namespace Import.Logic.Abstractions.Commands;
+﻿namespace General.Logic.Commands;
 
 /// <summary xml:lang = "ru">
-/// Описывает команду для создания связей.
+/// Описывает команду.
 /// </summary>
 public interface ICommand
 {
@@ -13,5 +11,5 @@ public interface ICommand
     /// <returns xml:lang = "ru">
     /// <see cref="Task{TResult}>"/>.
     /// </returns>
-    public Task<CommandResult> ExecuteAsync();
+    public Task<ICommandResult> ExecuteAsync();
 }

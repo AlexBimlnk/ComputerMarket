@@ -1,6 +1,4 @@
-﻿using Import.Logic.Commands;
-
-namespace Import.Logic.Abstractions.Commands;
+﻿namespace General.Logic.Commands;
 
 /// <summary xml:lang = "ru">
 /// Описывает обработчика команд, получаемых по HTTP.
@@ -25,5 +23,5 @@ public interface IAPICommandHandler
     /// <exception cref="OperationCanceledException" xml:lang = "ru">
     /// Если операция была отменена.
     /// </exception>
-    public Task<CommandResult> HandleAsync(string request, CancellationToken token = default);
+    public Task<ICommandResult> HandleAsync(string request, CancellationToken token = default);
 }

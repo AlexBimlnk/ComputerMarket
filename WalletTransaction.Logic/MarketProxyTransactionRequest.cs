@@ -29,6 +29,9 @@ public class MarketProxyTransactionRequest : ITransactionsRequest
     /// <inheritdoc/>
     public IReadOnlyCollection<Transaction> Transactions => GetTransactions();
 
+    /// <inheritdoc/>
+    public bool IsCancelled => _wrappedRequest.IsCancelled;
+
     private IReadOnlyCollection<Transaction> GetTransactions()
     {
         var fromAccount = _wrappedRequest.Transactions

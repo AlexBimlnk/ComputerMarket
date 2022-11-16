@@ -5,8 +5,10 @@ namespace WalletTransaction.Logic;
 /// <summary xml:lang = "ru">
 /// Запрос на проведение транзаций.
 /// </summary>
-public sealed class TransactionRequest : IKeyable<InternalID>
+public sealed class TransactionRequest : IKeyable<InternalID>, ITransactionsRequest
 {
+    private bool _isCancelled;
+
     /// <summary xml:lang = "ru">
     /// Создает новый объект типа <see cref="TransactionRequest"/>.
     /// </summary>
@@ -43,4 +45,19 @@ public sealed class TransactionRequest : IKeyable<InternalID>
 
     /// <inheritdoc/>
     public IReadOnlyCollection<Transaction> Transactions { get; }
+
+    /// <inheritdoc/>
+    /// <exception cref="InvalidOperationException" xml:lang = "ru">
+    /// Если произошла попытка установки значения, когда флаг был <see langword="true"/>.
+    /// </exception>
+    public bool IsCancelled
+    {
+        get => _isCancelled;
+        set
+        {
+            if (_isCancelled)
+                throw new InvalidOperationException("The transaction request already have been cancelled.");
+            _isCancelled = value;
+        }
+    }
 }

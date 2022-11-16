@@ -1,13 +1,12 @@
-﻿using Import.Logic.Commands;
+﻿using General.Logic.Commands;
 
-namespace Import.Logic.Abstractions.Commands;
+namespace WalletTransaction.Logic.Commands;
 
 /// <summary xml:lang = "ru">
-/// Абстрактная команда создания связей.
+/// Абстрактная команда.
 /// </summary>
 public abstract class CommandBase : ICommand
 {
-
     /// <summary xml:lang = "ru">
     /// Идентификатор команды.
     /// </summary>
@@ -16,7 +15,7 @@ public abstract class CommandBase : ICommand
     protected abstract Task ExecuteCoreAsync();
 
     /// <inheritdoc/>
-    public async Task<CommandResult> ExecuteAsync()
+    public async Task<ICommandResult> ExecuteAsync()
     {
         try
         {

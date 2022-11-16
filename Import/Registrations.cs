@@ -1,10 +1,10 @@
 ﻿using General.Logic;
+using General.Logic.Commands;
 using General.Storage;
 using General.Transport;
 
 using Import.Logic;
 using Import.Logic.Abstractions;
-using Import.Logic.Abstractions.Commands;
 using Import.Logic.Commands;
 using Import.Logic.Models;
 using Import.Logic.Storage.Repositories;
@@ -40,8 +40,7 @@ public static class Registrations
             .AddSingleton<IHistoryRecorder, HistoryRecorder>()
 
             .AddScoped<IAPICommandHandler, APICommandHandler>()
-            .AddScoped<IAPIRequestHandler<ExternalProduct>, APIExternalProductsHandler<ExternalProduct>>()
-            .AddScoped<IAPIRequestHandler<HornsAndHoovesProduct>, APIExternalProductsHandler<HornsAndHoovesProduct>>()
+            .AddScoped(typeof(IAPIRequestHandler<>), typeof(APIExternalProductsHandler<>))
 
             .AddSingleton<ProductsConverter>()
             .AddSingleton<IConverter<ExternalProduct, Product>>(sp =>
@@ -63,8 +62,7 @@ public static class Registrations
 
             .AddSingleton<ISerializer<IReadOnlyCollection<Product>, string>, ProductsSerializer>()
 
-            .AddSingleton<IAPIProductFetcher<ExternalProduct>, APIProductFetcher<ExternalProduct>>()
-            .AddSingleton<IAPIProductFetcher<HornsAndHoovesProduct>, APIProductFetcher<HornsAndHoovesProduct>>()
+            .AddSingleton(typeof(IAPIProductFetcher<>), typeof(APIProductFetcher<>))
 
             .AddSingleton<ISender<InternalProductSenderConfiguration, IReadOnlyCollection<Product>>, APIInternalProductSender>();
 

@@ -1,4 +1,4 @@
-﻿namespace Import.Logic.Abstractions.Commands;
+﻿namespace General.Logic.Commands;
 
 /// <summary xml:lang = "ru">
 /// Описывает фабрику команд.
