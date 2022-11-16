@@ -26,6 +26,10 @@ public class PasswordTests
     [InlineData("")]
     [InlineData("     ")]
     [InlineData("\t \n\r ")]
+    [InlineData("abc123")]
+    [InlineData("abcde123456abcde123456abcde123456abcde123456")]
+    [InlineData("abcd1234^$@#0)")]
+    [InlineData("{}//^6786996")]
     public void CanNotCreateWhenPasswordIncorrect(string passwordString)
     {
         // Act

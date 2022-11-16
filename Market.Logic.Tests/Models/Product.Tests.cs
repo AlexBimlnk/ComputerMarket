@@ -1,6 +1,4 @@
-﻿using System.Net.WebSockets;
-
-using Market.Logic.Models;
+﻿using Market.Logic.Models;
 
 namespace Market.Logic.Tests.Models;
 

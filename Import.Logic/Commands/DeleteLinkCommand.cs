@@ -11,7 +11,7 @@ namespace Import.Logic.Commands;
 public sealed class DeleteLinkCommand : CommandBase
 {
     private readonly DeleteLinkCommandParameters _parameters;
-    private readonly ICache<Link> _cacheLinks;
+    private readonly IKeyableCache<Link, ExternalID> _cacheLinks;
     private readonly IRepository<Link> _repository;
 
     /// <summary>
@@ -31,7 +31,7 @@ public sealed class DeleteLinkCommand : CommandBase
     /// </exception>
     public DeleteLinkCommand(
         DeleteLinkCommandParameters parameters,
-        ICache<Link> cacheLinks,
+        IKeyableCache<Link, ExternalID> cacheLinks,
         IRepository<Link> repository)
     {
         _parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
@@ -45,9 +45,9 @@ public sealed class DeleteLinkCommand : CommandBase
     /// <inheritdoc/>
     protected override Task ExecuteCoreAsync()
     {
-        var link = new Link(_parameters.InternalID, _parameters.ExternalID);
+        var link = _cacheLinks.GetByKey(_parameters.ExternalID);
 
-        if (!_cacheLinks.Contains(link))
+        if (link is null)
             throw new InvalidOperationException("Such a link doesn't exist.");
 
         _repository.Delete(link);

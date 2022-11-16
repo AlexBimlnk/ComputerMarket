@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-
-using Market.Logic.Models;
+﻿using Market.Logic.Models;
 
 namespace Market.Logic.Tests.Models;
 

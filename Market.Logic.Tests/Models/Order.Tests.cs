@@ -11,9 +11,11 @@ public class OrderTests
         // Arrange
         Order order = null!;
         var user = new User(
-            login: "login",
-            new Password("12345"),
-            email: "mail@mail.ru",
+            new ID(1),
+            new AuthenticationData(
+                email: "mail@mail.ru",
+                new Password("12345678"),
+                login: "login1"),
             UserType.Customer);
         var quantity = 2;
         var product = new Product(
@@ -87,9 +89,11 @@ public class OrderTests
     {
         // Arrange       
         var user = new User(
-            login: "login",
-            new Password("12345"),
-            email: "mail@mail.ru",
+            new ID(1),
+            new AuthenticationData(
+                email: "mail@mail.ru",
+                new Password("12345678"),
+                login: "login1"),
             UserType.Customer);
 
         // Act
@@ -106,9 +110,11 @@ public class OrderTests
     {
         // Arrange       
         var user = new User(
-            login: "login",
-            new Password("12345"),
-            email: "mail@mail.ru",
+            new ID(1),
+            new AuthenticationData(
+                email: "mail@mail.ru",
+                new Password("12345678"),
+                login: "login1"),
             UserType.Customer);
         var quantity = 2;
         var product = new Product(
@@ -133,7 +139,7 @@ public class OrderTests
             {
                 Selected = false
             }
-        }; 
+        };
 
         // Act
         var exception = Record.Exception(() => _ = new Order(user, entities));
@@ -148,9 +154,11 @@ public class OrderTests
     {
         // Arrange
         var user = new User(
-            login: "login",
-            new Password("12345"),
-            email: "mail@mail.ru",
+            new ID(1),
+            new AuthenticationData(
+                email: "mail@mail.ru",
+                new Password("12345678"),
+                login: "login1"),
             UserType.Customer);
         var provider1 = new Provider(
             id: new ID(1),
@@ -164,8 +172,8 @@ public class OrderTests
             "provider_name",
             new Margin(1.6m),
             new PaymentTransactionsInformation(
-                inn: "0123456789", 
-                bankAccount:"01234012340123401234"));
+                inn: "0123456789",
+                bankAccount: "01234012340123401234"));
         var quantity1 = 2;
         var quantity2 = 4;
         var price1 = 100m;
@@ -199,7 +207,7 @@ public class OrderTests
             new PurchasableEntity(product2, quantity2)
 
         };
-       
+
         var order = new Order(user, entities);
         var expectedResult = quantity1 * provider1.Margin.Value * price1 + quantity2 * provider2.Margin.Value * price2;
 

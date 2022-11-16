@@ -56,7 +56,7 @@ public sealed class Provider : IEquatable<Provider>, IKeyable<ID>
     public ID Key { get; }
 
     /// <inheritdoc/>
-    public override int GetHashCode() => HashCode.Combine(Key ,PaymentTransactionsInformation, Name, Margin);
+    public override int GetHashCode() => HashCode.Combine(Key, PaymentTransactionsInformation, Name, Margin);
 
     /// <inheritdoc/>
     public override bool Equals(object? obj) => obj is Provider provider && Equals(provider);

@@ -111,13 +111,11 @@ public class CommandParametersDeserializerTests
             {
                 ""type"": ""delete_link"",
                 ""id"": ""some id"",
-                ""internal_id"": 3,
                 ""external_id"": 4,
                 ""provider_id"": 2
             }",
             new DeleteLinkCommandParameters(
                 new("some id"),
-                new(3),
                 new(4, Provider.HornsAndHooves))
         },
     };

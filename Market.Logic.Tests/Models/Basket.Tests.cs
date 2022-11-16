@@ -163,7 +163,7 @@ public class BasketTests
             new Margin(1.1m),
             new PaymentTransactionsInformation(
                 inn: "0123456789",
-                bankAccount:"01234012340123401234"));
+                bankAccount: "01234012340123401234"));
 
         var product1 = new Product(item, prodvider, new Price(100m), 5);
         var product2 = new Product(item, prodvider, new Price(100m), 5);
