@@ -162,7 +162,11 @@ public class CreateTransactionRequestCommandTests
             commandId,
             request);
 
-        var cache = new Mock<ITransactionRequestCache>();
+        var cache = new Mock<ITransactionRequestCache>(MockBehavior.Strict);
+        var cacheAddInvokeCount = 0;
+        cache.Setup(x => x.Add(request))
+            .Callback(() => cacheAddInvokeCount++);
+
         var sender = new Mock<ISender<TransactionSenderConfiguration, ITransactionsRequest>>();
 
         var command = new CreateTransactionRequestCommand(
@@ -177,7 +181,7 @@ public class CreateTransactionRequestCommandTests
 
         // Assert
         expectedResult.Should().BeEquivalentTo(result);
-        cache.Verify(x => x.Add(parameters.TransactionRequest), Times.Once);
+        cacheAddInvokeCount.Should().Be(1);
         sender.Verify(x =>
             x.SendAsync(
                 It.Is<ITransactionsRequest>(x =>
