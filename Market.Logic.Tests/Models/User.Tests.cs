@@ -10,7 +10,7 @@ public class UserTests
     {
         // Arrange
         User user = null!;
-        var id = new InternalID(1);
+        var id = new ID(1);
         var data = new AuthenticationData(
             email: "mAiL33@mail.ru",
             new Password("12345678"),
@@ -36,7 +36,7 @@ public class UserTests
     {
         // Act
         var exception = Record.Exception(() => _ = new User(
-            new InternalID(1),
+            new ID(1),
             authenticationData: null!,
             type: UserType.Customer));
 
@@ -50,7 +50,7 @@ public class UserTests
     {
         // Act
         var exception = Record.Exception(() => _ = new User(
-            new InternalID(1),
+            new ID(1),
             new AuthenticationData(
                 email: "mAiL33@mail.ru",
                 new Password("12345678"),

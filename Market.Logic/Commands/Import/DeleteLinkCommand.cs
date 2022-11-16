@@ -3,18 +3,15 @@
 namespace Market.Logic.Commands.Import;
 
 /// <summary xml:lang = "ru">
-/// Команда установка связи.
+/// Комманда на удаление связи.
 /// </summary>
-public sealed class SetLinkCommand : ImportCommand
+public sealed class DeleteLinkCommand : ImportCommand
 {
     /// <summary xml:lang = "ru">
-    /// Создает новый экземпляр типа <see cref="SetLinkCommand"/>.
+    /// Создает новый экземпляр типа <see cref="DeleteLinkCommand"/>.
     /// </summary>
     /// <param name="id" xml:lang = "ru">
     /// Идентификатор команды.
-    /// </param>
-    /// <param name="internalItemId" xml:lang = "ru">
-    /// Внутренний идентификатор продукта.
     /// </param>
     /// <param name="externalItemId" xml:lang = "ru">
     /// Идентификатор продукта поставщика.
@@ -25,22 +22,15 @@ public sealed class SetLinkCommand : ImportCommand
     /// <exception cref="ArgumentNullException" xml:lang = "ru">
     /// Если <paramref name="provider"/> оказался <see langword="null"/>.
     /// </exception>
-    public SetLinkCommand(
+    public DeleteLinkCommand(
         CommandId id,
-        ID internalItemId,
         ID externalItemId,
-        Provider provider) 
-        : base(id, CommandType.SetLink)
+        Provider provider)
+        : base(id, CommandType.DeleteLink)
     {
-        InternalItemId = internalItemId;
         ExternalItemId = externalItemId;
         Provider = provider ?? throw new ArgumentNullException(nameof(provider));
     }
-
-    /// <summary xml:lang = "ru">
-    /// Идентификатор внутреннего продукта.
-    /// </summary>
-    public ID InternalItemId { get; }
 
     /// <summary xml:lang = "ru">
     /// Идентификатор продукта у постащика.

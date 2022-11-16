@@ -32,7 +32,7 @@ public sealed class ProductsRepository : IKeyableRepository<Product, (long, long
     private static Product ConvertFromStorage(TProduct product)
       => new Product(
           new Item(
-              new InternalID(product.ItemId),
+              new ID(product.ItemId),
               new ItemType(product.Item.Type.Name),
               product.Item.Name,
               product.Item.Description
@@ -41,7 +41,7 @@ public sealed class ProductsRepository : IKeyableRepository<Product, (long, long
                     x.PropertyValue ?? string.Empty))
                 .ToArray()),
           new Provider(
-              new InternalID(product.ProviderId),
+              new ID(product.ProviderId),
               product.Provider.Name,
               new Margin(product.Provider.Margin),
               new PaymentTransactionsInformation(

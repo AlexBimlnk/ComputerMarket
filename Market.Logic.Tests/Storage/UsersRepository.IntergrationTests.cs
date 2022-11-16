@@ -28,7 +28,7 @@ public class UsersRepositoryIntegrationTests : DBIntegrationTestBase
         await AddUserTypeAsync(UserType.Customer);
 
         var inputUser = new User(
-            id: new InternalID(1),
+            id: new ID(1),
             new AuthenticationData(
                 email: "mmail@mail.ru",
                 new Password("12345678"),
@@ -93,7 +93,7 @@ public class UsersRepositoryIntegrationTests : DBIntegrationTestBase
             .Returns(_marketContext.Users);
 
         var user = new User(
-            id: new InternalID(1),
+            id: new ID(1),
             new AuthenticationData(
                 email: "mmail1@mail.ru",
                 new Password("12345678"),
@@ -130,7 +130,7 @@ public class UsersRepositoryIntegrationTests : DBIntegrationTestBase
             .Callback(() => _marketContext.SaveChanges());
 
         var user1 = new User(
-            id: new InternalID(1),
+            id: new ID(1),
             new AuthenticationData(
                 email: "mmail1@mail.ru",
                 new Password("12345678"),
@@ -138,7 +138,7 @@ public class UsersRepositoryIntegrationTests : DBIntegrationTestBase
             UserType.Customer);
 
         var user2 = new User(
-            id: new InternalID(4),
+            id: new ID(4),
             new AuthenticationData(
                 email: "smail@mail.ru",
                 new Password("12345679"),
@@ -156,7 +156,7 @@ public class UsersRepositoryIntegrationTests : DBIntegrationTestBase
             logger);
 
         var inputUser = new User(
-            id: new InternalID(1),
+            id: new ID(1),
             new AuthenticationData(
                 email: "mmail@mail.ru",
                 new Password("12345678"),
@@ -207,7 +207,7 @@ public class UsersRepositoryIntegrationTests : DBIntegrationTestBase
     {
         {
             new(
-                id: new InternalID(1),
+                id: new ID(1),
                 new AuthenticationData(
                     email: "mmail1@mail.ru",
                     new Password("12345678"),
@@ -217,7 +217,7 @@ public class UsersRepositoryIntegrationTests : DBIntegrationTestBase
         },
         {
             new(
-                id: new InternalID(4),
+                id: new ID(4),
                 new AuthenticationData(
                     email: "tmail2@mail.ru",
                     new Password("12345678"),

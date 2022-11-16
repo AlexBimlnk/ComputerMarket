@@ -5,7 +5,7 @@ namespace Market.Logic.Models;
 /// <summary xml:lang = "ru">
 /// Модель поставщика.
 /// </summary>
-public sealed class Provider : IEquatable<Provider>, IKeyable<InternalID>
+public sealed class Provider : IEquatable<Provider>, IKeyable<ID>
 {
     /// <summary xml:lang = "ru">
     /// Создает экземпляр типа <see cref="Provider"/>.
@@ -21,7 +21,7 @@ public sealed class Provider : IEquatable<Provider>, IKeyable<InternalID>
     /// Если <paramref name="name"/> не соответсвует уставновленному формату.
     /// </exception>
     public Provider(
-        InternalID id,
+        ID id,
         string name,
         Margin margin,
         PaymentTransactionsInformation paymentTransactionsInformation)
@@ -53,7 +53,7 @@ public sealed class Provider : IEquatable<Provider>, IKeyable<InternalID>
     public PaymentTransactionsInformation PaymentTransactionsInformation { get; private set; }
 
     /// <inheritdoc/>
-    public InternalID Key { get; }
+    public ID Key { get; }
 
     /// <inheritdoc/>
     public override int GetHashCode() => HashCode.Combine(Key, PaymentTransactionsInformation, Name, Margin);
