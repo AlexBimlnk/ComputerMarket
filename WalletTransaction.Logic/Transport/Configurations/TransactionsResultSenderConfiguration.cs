@@ -7,8 +7,6 @@ namespace WalletTransaction.Logic.Transport.Configurations;
 /// </summary>
 public sealed class TransactionsResultSenderConfiguration : ITransportSenderConfiguration
 {
-    private TransactionsResultSenderConfiguration() { }
-
     /// <inheritdoc/>
     public string Destination { get; set; } = null!;
 }
