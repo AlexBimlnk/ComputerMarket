@@ -64,7 +64,6 @@ public class MarketProxyTransactionRequestTests
     {
         // Arrange
         var fromAccount = new BankAccount("01234012340123401111");
-        var toAccount = new BankAccount("01234012340123401999");
         var transferredBalance = 121.4m;
         var heldBalance = 21.4m;
 
@@ -72,17 +71,17 @@ public class MarketProxyTransactionRequestTests
         {
             new Transaction(
                 fromAccount,
-                new BankAccount("01234012340123401999"),
+                new BankAccount("01234012340123401997"),
                 transferredBalance,
                 heldBalance),
             new Transaction(
                 fromAccount,
-                new BankAccount("11234012340123401999"),
+                new BankAccount("11234012340123401996"),
                 transferredBalance,
                 heldBalance),
             new Transaction(
                 fromAccount,
-                new BankAccount("31234012340123401999"),
+                new BankAccount("31234012340123401995"),
                 transferredBalance,
                 heldBalance)
         };
@@ -103,8 +102,7 @@ public class MarketProxyTransactionRequestTests
         actual.From.Should().Be(fromAccount);
         actual.TransferBalance.Should().Be(expectedTransferredBalance);
         actual.HeldBalance.Should().Be(0);
-        transactions.Select(x => x.To).Should()
-            .AllBeEquivalentTo(MarketProxyTransactionRequest.MarketAccount);
+        actual.To.Should().BeEquivalentTo(MarketProxyTransactionRequest.MarketAccount);
     }
 
     [Fact(DisplayName = $"The {nameof(MarketProxyTransactionRequest)} capture finished status as held status.")]
