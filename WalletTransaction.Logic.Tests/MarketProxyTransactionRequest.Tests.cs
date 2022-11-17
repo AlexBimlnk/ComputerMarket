@@ -106,4 +106,34 @@ public class MarketProxyTransactionRequestTests
         transactions.Select(x => x.To).Should()
             .AllBeEquivalentTo(MarketProxyTransactionRequest.MarketAccount);
     }
+
+    [Fact(DisplayName = $"The {nameof(MarketProxyTransactionRequest)} capture finished status as held status.")]
+    [Trait("Category", "Unit")]
+    public void CaptureFinishedStatusAsHeld()
+    {
+        // Arrange
+        var fromAccount = new BankAccount("01234012340123401111");
+        var toAccount = new BankAccount("01234012340123401999");
+        var transferredBalance = 121.4m;
+        var heldBalance = 21.4m;
+
+        var transactions = new List<Transaction>()
+        {
+            new Transaction(
+                fromAccount,
+                new BankAccount("01234012340123401999"),
+                transferredBalance,
+                heldBalance)
+        };
+
+        var request = new Mock<ITransactionsRequest>();
+
+        var proxy = new MarketProxyTransactionRequest(request.Object);
+
+        // Act
+        proxy.CurrentState = TransactionRequestState.Finished;
+
+        // Assert
+        request.VerifySet(x => x.CurrentState = TransactionRequestState.Held, Times.Once());
+    }
 }
