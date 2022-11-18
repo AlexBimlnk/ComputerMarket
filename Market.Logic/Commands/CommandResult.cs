@@ -7,12 +7,16 @@ namespace Market.Logic.Commands;
 /// </summary>
 public sealed class CommandResult : ICommandResult
 {
-    /// <summary>
+    /// <summary xml:lang = "ru">
     /// Создает экземляр класса <see cref="CommandResult"/>/
     /// </summary>
-    /// <param name="id">Идентификатор команды.</param>
-    /// <param name="errorMessge">Сообщение об ошибке.</param>
-    /// <exception cref="ArgumentNullException">
+    /// <param name="id" xml:lang = "ru">
+    /// Идентификатор команды.
+    /// </param>
+    /// <param name="errorMessge" xml:lang = "ru">
+    /// Сообщение об ошибке.
+    /// </param>
+    /// <exception cref="ArgumentNullException" xml:lang = "ru">
     /// Если <paramref name="id"/> - <see langword="null"/>.
     /// </exception>
     public CommandResult(CommandID id, string? errorMessge)

@@ -13,7 +13,7 @@ using Newtonsoft.Json;
 
 namespace Market.Logic.Transport.Deserializers;
 
-/// <summary>
+/// <summary xml:lang = "ru">
 /// Десериализатор результат выполнения команд.
 /// </summary>
 public sealed class CommandResultDeserializer : IDeserializer<string, CommandResult>
@@ -21,10 +21,10 @@ public sealed class CommandResultDeserializer : IDeserializer<string, CommandRes
     private JsonSerializer _serializer = JsonSerializer.CreateDefault();
 
     /// <inheritdoc/>
-    /// <exception cref="ArgumentException">
+    /// <exception cref="ArgumentException" xml:lang = "ru">
     /// Если <paramref name="source"/> имеет некоректный формат.
     /// </exception>
-    /// <exception cref="InvalidOperationException">
+    /// <exception cref="InvalidOperationException" xml:lang = "ru">
     /// Если json структура в <paramref name="source"/> имееет неверную структуру.
     /// </exception>
     public CommandResult Deserialize(string source)
