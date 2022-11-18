@@ -14,14 +14,19 @@ using Newtonsoft.Json;
 namespace Market.Logic.Transport.Deserializers;
 
 /// <summary>
-/// 
+/// Десериализатор результат выполнения команд.
 /// </summary>
 public sealed class CommandResultDeserializer : IDeserializer<string, CommandResult>
 {
     private JsonSerializer _serializer = JsonSerializer.CreateDefault();
 
     /// <inheritdoc/>
-    /// <exception cref="ArgumentException"></exception>
+    /// <exception cref="ArgumentException">
+    /// Если <paramref name="source"/> имеет некоректный формат.
+    /// </exception>
+    /// <exception cref="InvalidOperationException">
+    /// Если json структура в <paramref name="source"/> имееет неверную структуру.
+    /// </exception>
     public CommandResult Deserialize(string source)
     {
         if (string.IsNullOrWhiteSpace(source))
