@@ -2,7 +2,7 @@
 using General.Storage;
 using General.Transport;
 
-using WalletTransaction.Logic.Transport;
+using WalletTransaction.Logic.Transport.Configurations;
 
 namespace WalletTransaction.Logic.Commands;
 
@@ -47,8 +47,16 @@ public sealed class CreateTransactionRequestCommand : CommandBase, ICommand
     {
         _requestCache.Add(_parameters.TransactionRequest);
 
-        var proxy = new MarketProxyTransactionRequest(_parameters.TransactionRequest);
+        var hasOtherProvider = _parameters.TransactionRequest.Transactions
+            .Any(x => x.To != MarketProxyTransactionRequest.MarketAccount);
 
-        await _sender.SendAsync(proxy);
+        if (hasOtherProvider)
+        {
+            await _sender.SendAsync(new MarketProxyTransactionRequest(_parameters.TransactionRequest));
+        }
+        else
+        {
+            await _sender.SendAsync(_parameters.TransactionRequest);
+        }
     }
 }
