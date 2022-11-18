@@ -1,3 +1,5 @@
+using System.Xml;
+
 namespace WalletTransaction.Logic.Tests;
 
 public class TransactionRequestTests
@@ -32,6 +34,8 @@ public class TransactionRequestTests
         transactionRequest.Transactions.Should().BeEquivalentTo(transactions, opt =>
             opt.WithStrictOrdering());
         transactionRequest.IsCancelled.Should().BeFalse();
+        transactionRequest.CurrentState.Should().Be(TransactionRequestState.WaitHandle);
+        transactionRequest.OldState.Should().Be(TransactionRequestState.WaitHandle);
     }
 
     [Fact(DisplayName = $"The {nameof(TransactionRequest)} can't be created without transactions.")]
@@ -90,6 +94,41 @@ public class TransactionRequestTests
         // Assert
         exception.Should().BeNull();
         request.IsCancelled.Should().BeTrue();
+    }
+
+    [Theory(DisplayName = $"The {nameof(TransactionRequest)} can change state.")]
+    [InlineData(TransactionRequestState.WaitHandle, TransactionRequestState.WaitHandle)]
+    [InlineData(TransactionRequestState.Aborted, TransactionRequestState.Aborted)]
+    [InlineData(TransactionRequestState.Refunded, TransactionRequestState.Refunded)]
+    [InlineData(TransactionRequestState.Held, TransactionRequestState.Held)]
+    [Trait("Category", "Unit")]
+    public void CanChangeState(
+        TransactionRequestState changeState, 
+        TransactionRequestState expectedCurrentStatee)
+    {
+        // Arrange
+        var id = new InternalID(1);
+
+        var fromAccount = new BankAccount("01234012340123401234");
+        var toAccount = new BankAccount("01234012340123401234");
+        var transferredBalance = 121.4m;
+        var transactions = new List<Transaction>()
+        {
+            new Transaction(
+                fromAccount,
+                toAccount,
+                transferredBalance)
+        };
+
+        var request = new TransactionRequest(id, transactions);
+
+        // Act
+        var exception = Record.Exception(() => request.CurrentState = changeState);
+
+        // Assert
+        exception.Should().BeNull();
+        request.CurrentState.Should().Be(expectedCurrentStatee);
+        request.OldState.Should().Be(TransactionRequestState.WaitHandle);
     }
 
     [Fact(DisplayName = $"The {nameof(TransactionRequest)} can't be cancelled if request already have been cancelled.")]

@@ -2,6 +2,8 @@
 
 using General.Transport;
 
+using WalletTransaction.Logic.Transport.Configurations;
+
 namespace WalletTransaction.Logic.Transport;
 
 /// <summary xml:lang = "ru">

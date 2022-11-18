@@ -19,4 +19,14 @@ public interface ITransactionsRequest
     /// Флаг, указывающий на то, что запрос был отменён.
     /// </summary>
     public bool IsCancelled { get; }
+
+    /// <summary xml:lang = "ru">
+    /// Текущие состояние запроса.
+    /// </summary>
+    public TransactionRequestState CurrentState { get; set; }
+
+    /// <summary xml:lang = "ru">
+    /// Предыдущие состояние запроса.
+    /// </summary>
+    public TransactionRequestState OldState { get; }
 }

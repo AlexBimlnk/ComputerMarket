@@ -2,7 +2,7 @@
 using General.Storage;
 using General.Transport;
 
-using WalletTransaction.Logic.Transport;
+using WalletTransaction.Logic.Transport.Configurations;
 
 namespace WalletTransaction.Logic.Commands;
 
@@ -51,7 +51,7 @@ public sealed class FinishTransactionRequestCommand : CommandBase, ICommand
             throw new InvalidOperationException(
                 $"Transaction request with id {_parameters.TransactionRequestId} is not exists.");
 
-        await _sender.SendAsync(request);
+       await _sender.SendAsync(request);
 
         _requestCache.Delete(request);
     }

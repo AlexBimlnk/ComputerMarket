@@ -8,6 +8,7 @@ namespace WalletTransaction.Logic;
 public sealed class TransactionRequest : IKeyable<InternalID>, ITransactionsRequest
 {
     private bool _isCancelled;
+    private TransactionRequestState _state = TransactionRequestState.WaitHandle;
 
     /// <summary xml:lang = "ru">
     /// Создает новый объект типа <see cref="TransactionRequest"/>.
@@ -60,4 +61,18 @@ public sealed class TransactionRequest : IKeyable<InternalID>, ITransactionsRequ
             _isCancelled = value;
         }
     }
+
+    /// <inheritdoc/>
+    public TransactionRequestState CurrentState
+    {
+        get => _state;
+        set
+        {
+            OldState = CurrentState;
+            _state = value;
+        }
+    }
+
+    /// <inheritdoc/>
+    public TransactionRequestState OldState { get; private set; } = TransactionRequestState.WaitHandle;
 }
