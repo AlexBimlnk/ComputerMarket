@@ -21,12 +21,15 @@ public sealed class CommandFactory : ICommandFactory
     /// Делегат, создающий на основе <see cref="CommandID"/> и <see cref="DeleteLinkCommandParameters"/>
     /// команду типа <see cref="ICommand"/>.
     /// </param>
+    /// <exception cref="ArgumentNullException" xml:lang = "ru">
+    /// Если любой из аргументов оказался <see langword="null"/>.
+    /// </exception>
     public CommandFactory(
         Func<SetLinkCommandParameters, ICommand> setLinkCommandFactory,
         Func<DeleteLinkCommandParameters, ICommand> deleteLinkCommandFactory)
     {
-        _setLinkCommandFactory = setLinkCommandFactory;
-        _deleteLinkCommandFactory = deleteLinkCommandFactory;
+        _setLinkCommandFactory = setLinkCommandFactory ?? throw new ArgumentNullException(nameof(setLinkCommandFactory));
+        _deleteLinkCommandFactory = deleteLinkCommandFactory ?? throw new ArgumentNullException(nameof(deleteLinkCommandFactory));
     }
 
     /// <inheritdoc/>
