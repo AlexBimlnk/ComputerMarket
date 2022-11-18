@@ -92,8 +92,8 @@ public class ImportProductsHandlerTests
 
         var repositoryCallBack = 0;
         repository.Setup(x => x.AddAsync(
-            It.Is<Product>(x => addedProducts.Contains(x)),
-            It.IsAny<CancellationToken>()))
+                It.Is<Product>(x => addedProducts.Contains(x)),
+                It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask)
             .Callback(() => repositoryCallBack++);
 
