@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using General.Logic;
+﻿using General.Logic;
 using General.Storage;
 using General.Transport;
 
@@ -13,14 +7,27 @@ using Market.Logic.Models;
 using Microsoft.Extensions.Logging;
 
 namespace Market.Logic.Receivers;
+
+/// <summary xml:lang = "ru">
+/// Обработчки приема новых продукто от сервиса импорта.
+/// </summary>
 public sealed class ImportProductsHandler : IAPIRequestHandler<IReadOnlyCollection<Product>>
 {
     private readonly ILogger<ImportProductsHandler> _logger;
     private readonly IDeserializer<string, IReadOnlyCollection<Product>> _deserializer;
     private readonly IRepository<Product> _repositoryProduct;
 
+    /// <summary xml:lang = "ru">
+    /// Создаёт экземлпяр класса <see cref="ImportProductsHandler"/>.
+    /// </summary>
+    /// <param name="deserializer" xml:lang = "ru">Десериализатор продуктов.</param>
+    /// <param name="repositoryProduct" xml:lang = "ru">Репозиторий продуктов.</param>
+    /// <param name="logger" xml:lang = "ru">Логгер.</param>
+    /// <exception cref="ArgumentNullException">
+    /// Если один из параметров - <see langword="null"/>.
+    /// </exception>
     public ImportProductsHandler(
-        IDeserializer<string, IReadOnlyCollection<Product>> deserializer, 
+        IDeserializer<string, IReadOnlyCollection<Product>> deserializer,
         IRepository<Product> repositoryProduct,
         ILogger<ImportProductsHandler> logger)
     {
@@ -29,6 +36,7 @@ public sealed class ImportProductsHandler : IAPIRequestHandler<IReadOnlyCollecti
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
+    /// <inheritdoc/>
     public async Task HandleAsync(string request, CancellationToken token = default)
     {
         if (string.IsNullOrWhiteSpace(request))
@@ -41,9 +49,9 @@ public sealed class ImportProductsHandler : IAPIRequestHandler<IReadOnlyCollecti
         _logger.LogInformation("Processing new request");
 
         var products = _deserializer.Deserialize(request);
-        
+
         _logger.LogDebug("Deserialize {Sourse} to Products comlete", request);
-        
+
         foreach (var product in products)
         {
             await _repositoryProduct.AddAsync(product);
