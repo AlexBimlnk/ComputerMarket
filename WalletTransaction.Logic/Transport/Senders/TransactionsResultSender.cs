@@ -42,6 +42,7 @@ public sealed class TransactionsResultSender :
         _serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
     }
 
+    /// <inheritdoc/>
     public async Task SendAsync(ITransactionsRequest entity, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(entity);

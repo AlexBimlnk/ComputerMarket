@@ -34,6 +34,7 @@ public sealed class TransactionRequestExecuter : ITransactionRequestExecuter
         else
             transactionRequest.CurrentState = TransactionRequestState.Aborted;
     }
+
     /// <inheritdoc/>
     public async Task RefundAsync(ITransactionsRequest transactionRequest, CancellationToken token)
     {
