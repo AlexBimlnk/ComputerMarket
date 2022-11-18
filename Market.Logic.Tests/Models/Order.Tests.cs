@@ -11,7 +11,7 @@ public class OrderTests
         // Arrange
         Order order = null!;
         var user = new User(
-            new InternalID(1),
+            new ID(1),
             new AuthenticationData(
                 email: "mail@mail.ru",
                 new Password("12345678"),
@@ -20,12 +20,12 @@ public class OrderTests
         var quantity = 2;
         var product = new Product(
             new Item(
-                new InternalID(1),
+                id: new ID(1),
                 new ItemType("some_type"),
                 "some_name",
                 properties: Array.Empty<ItemProperty>()),
             new Provider(
-                new InternalID(1),
+                id: new ID(1),
                 "provider_name",
                 new Margin(1.1m),
                 new PaymentTransactionsInformation(
@@ -57,12 +57,12 @@ public class OrderTests
         var quantity = 2;
         var product = new Product(
             new Item(
-                new InternalID(1),
+                id: new ID(1),
                 new ItemType("some_type"),
                 "some_name",
                 properties: Array.Empty<ItemProperty>()),
             new Provider(
-                new InternalID(1),
+                id: new ID(1),
                 "provider_name",
                 new Margin(1.1m),
                 new PaymentTransactionsInformation(
@@ -89,7 +89,7 @@ public class OrderTests
     {
         // Arrange       
         var user = new User(
-            new InternalID(1),
+            new ID(1),
             new AuthenticationData(
                 email: "mail@mail.ru",
                 new Password("12345678"),
@@ -110,7 +110,7 @@ public class OrderTests
     {
         // Arrange       
         var user = new User(
-            new InternalID(1),
+            new ID(1),
             new AuthenticationData(
                 email: "mail@mail.ru",
                 new Password("12345678"),
@@ -119,12 +119,12 @@ public class OrderTests
         var quantity = 2;
         var product = new Product(
             new Item(
-                new InternalID(1),
+                id: new ID(1),
                 new ItemType("some_type"),
                 "some_name",
                 properties: Array.Empty<ItemProperty>()),
             new Provider(
-                new InternalID(1),
+                id: new ID(1),
                 "provider_name",
                 new Margin(1.1m),
                 new PaymentTransactionsInformation(
@@ -154,21 +154,21 @@ public class OrderTests
     {
         // Arrange
         var user = new User(
-            new InternalID(1),
+            new ID(1),
             new AuthenticationData(
                 email: "mail@mail.ru",
                 new Password("12345678"),
                 login: "login1"),
             UserType.Customer);
         var provider1 = new Provider(
-            new InternalID(1),
+            id: new ID(1),
             "provider_name",
             new Margin(1.1m),
             new PaymentTransactionsInformation(
                 inn: "0123456789",
                 bankAccount: "01234012340123401234"));
         var provider2 = new Provider(
-            new InternalID(2),
+            id: new ID(2),
             "provider_name",
             new Margin(1.6m),
             new PaymentTransactionsInformation(
@@ -179,12 +179,12 @@ public class OrderTests
         var price1 = 100m;
         var price2 = 400m;
         var item1 = new Item(
-            new InternalID(1),
+            id: new ID(1),
             new ItemType("some_type"),
             "some_name1",
             properties: Array.Empty<ItemProperty>());
         var item2 = new Item(
-            new InternalID(2),
+            id: new ID(2),
             new ItemType("some_type"),
             "some_name2",
             properties: Array.Empty<ItemProperty>());

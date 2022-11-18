@@ -7,7 +7,7 @@ namespace Market.Logic.Storage.Repositories;
 /// <summary xml:lang = "ru">
 /// Интерфейс репозитория пользователей.
 /// </summary>
-public interface IUsersRepository : IKeyableRepository<User, InternalID>
+public interface IUsersRepository : IKeyableRepository<User, ID>
 {
     /// <summary xml:lang = "ru">
     /// Метод возвращающий пользователя с соответсвующим адресом электронной почты.
@@ -44,5 +44,5 @@ public interface IUsersRepository : IKeyableRepository<User, InternalID>
     ///  введенный пароль не совпадает с пользовательским, 
     ///  а иначе - <see langword="true"/>.
     /// </returns>
-    public bool IsPasswordMatch(InternalID id, Password password);
+    public bool IsPasswordMatch(ID id, Password password);
 }

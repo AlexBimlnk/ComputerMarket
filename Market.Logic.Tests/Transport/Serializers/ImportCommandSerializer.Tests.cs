@@ -59,7 +59,7 @@ public class ImportCommandSerializerTests
                 internalItemId: new(1),
                 externalItemId: new(2),
                 new Provider(
-                    id: new InternalID(1),
+                    id: new ID(1),
                     "Some Provider Name",
                     new Margin(2),
                     new PaymentTransactionsInformation(
@@ -67,6 +67,20 @@ public class ImportCommandSerializerTests
                         bankAccount: "01234012340123401234"))),
             
             /*lang=json,strict*/@"{""internal_id"":1,""external_id"":2,""provider"":""some_provider_name"",""type"":""set_link"",""id"":""some id""}"
+        },
+        {
+            new DeleteLinkCommand(
+                new("some id"),
+                externalItemId: new(2),
+                new Provider(
+                    id: new ID(1),
+                    "Some Provider Name",
+                    new Margin(2),
+                    new PaymentTransactionsInformation(
+                        inn: "0123456789",
+                        bankAccount: "01234012340123401234"))),
+            
+            /*lang=json,strict*/@"{""external_id"":2,""provider_id"":1,""type"":""delete_link"",""id"":""some id""}"
         }
     };
 }

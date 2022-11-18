@@ -56,7 +56,7 @@ public sealed class UsersRepository : IUsersRepository
         }
 
         return new User(
-            id: new InternalID(user.Id),
+            id: new ID(user.Id),
             new AuthenticationData(
                 user.Email,
                 new Password(user.Password),
@@ -105,7 +105,7 @@ public sealed class UsersRepository : IUsersRepository
     public void Save() => _context.SaveChanges();
 
     /// <inheritdoc/>
-    public User? GetByKey(InternalID key) =>
+    public User? GetByKey(ID key) =>
         _context.Users
             .Where(x => x.Id == key.Value)
             .Select(x => ConvertFromStorageModel(x))
@@ -141,7 +141,7 @@ public sealed class UsersRepository : IUsersRepository
     }
 
     /// <inheritdoc/>
-    public bool IsPasswordMatch(InternalID id, Password password) =>
+    public bool IsPasswordMatch(ID id, Password password) =>
         _context.Users
             .SingleOrDefault(x => x.Id == id.Value) switch
         {

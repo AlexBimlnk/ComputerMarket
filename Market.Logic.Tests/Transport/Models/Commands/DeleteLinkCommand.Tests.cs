@@ -2,9 +2,10 @@
 using Market.Logic.Transport.Models.Commands.Import;
 
 namespace Market.Logic.Tests.Transport.Models.Commands;
-public class SetLinkCommandTests
+
+public class DeleteLinkCommandTests
 {
-    [Fact(DisplayName = $"The {nameof(SetLinkCommand)} can convert domain models.")]
+    [Fact(DisplayName = $"The {nameof(DeleteLinkCommand)} can convert domain models.")]
     [Trait("Category", "Unit")]
     public void CanConvertDomainModel()
     {
@@ -17,37 +18,35 @@ public class SetLinkCommandTests
                 inn: "0123456789",
                 bankAccount: "01234012340123401234"));
 
-        var domainCommand = new Logic.Commands.Import.SetLinkCommand(
+        var domainCommand = new Logic.Commands.Import.DeleteLinkCommand(
             new("some id"),
-            internalItemId: new(1),
             externalItemId: new(2),
             provider);
 
-        var expectedResult = new SetLinkCommand("some id", Logic.Commands.CommandType.SetLink)
+        var expectedResult = new DeleteLinkCommand("some id", Logic.Commands.CommandType.DeleteLink)
         {
-            InternalID = 1,
             ExternalID = 2,
-            Provider = "some_provider_name"
+            ProviderID = 1
         };
 
-        SetLinkCommand actual = null!;
+        DeleteLinkCommand actual = null!;
 
         // Act
         var exception = Record.Exception(() =>
-            actual = SetLinkCommand.ToModel(domainCommand));
+            actual = DeleteLinkCommand.ToModel(domainCommand));
 
         // Assert
         exception.Should().BeNull();
         actual.Should().BeEquivalentTo(expectedResult);
     }
 
-    [Fact(DisplayName = $"The {nameof(SetLinkCommand)} can't convert null.")]
+    [Fact(DisplayName = $"The {nameof(DeleteLinkCommand)} can't convert null.")]
     [Trait("Category", "Unit")]
     public void CanNotConvertNull()
     {
         // Act
         var exception = Record.Exception(() =>
-            _ = SetLinkCommand.ToModel(null!));
+            _ = DeleteLinkCommand.ToModel(null!));
 
         // Assert
         exception.Should().NotBeNull().And.BeOfType<ArgumentNullException>();

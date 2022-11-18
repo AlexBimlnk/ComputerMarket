@@ -5,7 +5,7 @@ namespace Market.Logic.Models;
 /// <summary xml:lang = "ru">
 /// Пользователь системы.
 /// </summary>
-public class User : IKeyable<InternalID>
+public class User : IKeyable<ID>
 {
     /// <summary xml:lang = "ru">
     /// Создает экземпляр типа <see cref="User"/>.
@@ -15,7 +15,7 @@ public class User : IKeyable<InternalID>
     /// <param name="type" xml:lang = "ru">Тип пользователя.</param>
     /// <exception cref="ArgumentException">Если <paramref name="login"/> или  <paramref name="email"/> имеют неверный формат или <paramref name="type"/> - значение.</exception>
     /// <exception cref="ArgumentNullException" xml:lang = "ru">Если <paramref name="password"/> равен <see langword="null"/>.</exception>
-    public User(InternalID id, AuthenticationData authenticationData, UserType type)
+    public User(ID id, AuthenticationData authenticationData, UserType type)
     {
         AuthenticationData = authenticationData ?? throw new ArgumentNullException(nameof(authenticationData));
 
@@ -32,7 +32,7 @@ public class User : IKeyable<InternalID>
     public UserType Type { get; private set; }
 
     /// <inheritdoc/>
-    public InternalID Key { get; }
+    public ID Key { get; }
 
     /// <summary xml:lang = "ru">
     /// Данные для ауентификации пользователя.

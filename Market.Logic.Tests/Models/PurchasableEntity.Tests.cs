@@ -13,12 +13,12 @@ public class PurchasableEntityTests
         var quantity = 10;
         var product = new Product(
             item: new Item(
-                new InternalID(1),
+                id: new ID(1),
                 new ItemType("some_type"),
                 "some_name",
                 properties: Array.Empty<ItemProperty>()),
             provider: new Provider(
-                new InternalID(1),
+                id: new ID(1),
                 "provider_name",
                 new Margin(1.1m),
                 new PaymentTransactionsInformation(
@@ -58,12 +58,12 @@ public class PurchasableEntityTests
         // Arrange
         var product = new Product(
             item: new Item(
-                new InternalID(1),
+                id: new ID(1),
                 new ItemType("some_type"),
                 "some_name",
                 properties: Array.Empty<ItemProperty>()),
             provider: new Provider(
-                new InternalID(1),
+                id: new ID(1),
                 "provider_name",
                 new Margin(1.1m),
                 new PaymentTransactionsInformation(
@@ -87,12 +87,12 @@ public class PurchasableEntityTests
         var quantity = 1;
         var product = new Product(
             item: new Item(
-                new InternalID(1),
+                id: new ID(1),
                 new ItemType("some_type"),
                 "some_name",
                 properties: Array.Empty<ItemProperty>()),
             provider: new Provider(
-                new InternalID(1),
+                id: new ID(1),
                 "provider_name",
                 new Margin(1.1m),
                 new PaymentTransactionsInformation(
@@ -126,12 +126,12 @@ public class PurchasableEntityTests
         var quantity = 4;
         var product = new Product(
             item: new Item(
-                new InternalID(1),
+                id: new ID(1),
                 new ItemType("some_type"),
                 "some_name",
                 properties: Array.Empty<ItemProperty>()),
             provider: new Provider(
-                new InternalID(1),
+                id: new ID(1),
                 "provider_name",
                 new Margin(1.1m),
                 new PaymentTransactionsInformation(

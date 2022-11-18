@@ -90,7 +90,7 @@ public class UsersRepositoryTests
             logger);
 
         var inputUser = new User(
-            new InternalID(1),
+            new ID(1),
             new AuthenticationData(
                 email: "mmail@mail.ru",
                 new Password("12345678"),
@@ -141,7 +141,7 @@ public class UsersRepositoryTests
             logger);
 
         var inputUser = new User(
-            new InternalID(1),
+            new ID(1),
             new AuthenticationData(
                 email: "mail@mail.ru",
                 new Password("12345678"),
@@ -192,7 +192,7 @@ public class UsersRepositoryTests
             logger);
 
         var inputUser = new User(
-            new InternalID(1),
+            new ID(1),
             new AuthenticationData(
                 email: "mail@mail.ru",
                 new Password("12345678"),
@@ -234,7 +234,7 @@ public class UsersRepositoryTests
             logger);
 
         var containsUser = new User(
-            new InternalID(1),
+            new ID(1),
             new AuthenticationData(
                 email: "mail@mail.ru",
                 new Password("12345678"),
@@ -325,7 +325,7 @@ public class UsersRepositoryTests
             logger);
 
         var expectedResult = new User(
-            new InternalID(1),
+            new ID(1),
             new AuthenticationData(
                 email: "mmail@mail.ru",
                 new Password("12345678"),
@@ -333,8 +333,8 @@ public class UsersRepositoryTests
             UserType.Customer);
 
         // Act
-        var result1 = userRepository.GetByKey(new InternalID(1));
-        var result2 = userRepository.GetByKey(new InternalID(2));
+        var result1 = userRepository.GetByKey(new ID(1));
+        var result2 = userRepository.GetByKey(new ID(2));
 
         // Assert
         result1.Should().NotBeNull();
@@ -392,7 +392,7 @@ public class UsersRepositoryTests
             logger);
 
         var expectedResult = new User(
-            new InternalID(1),
+            new ID(1),
             new AuthenticationData(
                 email: userEmail,
                 new Password("12345678"),
@@ -460,7 +460,7 @@ public class UsersRepositoryTests
             logger);
 
         var expectedResult = new User(
-            new InternalID(1),
+            new ID(1),
             new AuthenticationData(
                 email: userEmail,
                 new Password(userPassword),
@@ -495,8 +495,8 @@ public class UsersRepositoryTests
 
         var userPassword = "12345678";
         var inccorectUserPassword = "abcdefgk";
-        var userId = new InternalID(1);
-        var notExsistingUserId = new InternalID(3);
+        var userId = new ID(1);
+        var notExsistingUserId = new ID(3);
 
 
         var data = new List<TUser>
@@ -597,7 +597,7 @@ public class UsersRepositoryTests
         var expectedResult = new List<User>()
         {
             new User(
-                new InternalID(1),
+                new ID(1),
                 new AuthenticationData(
                     email: "mmail@mail.ru",
                     new Password("12345678"),

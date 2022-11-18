@@ -4,18 +4,17 @@ using Market.Logic.Models;
 
 namespace Market.Logic.Tests.Commands;
 
-public class SetLinkCommandTests
+public class DeleteLinkCommandTests
 {
-    [Fact(DisplayName = $"The {nameof(SetLinkCommand)} can create.")]
+    [Fact(DisplayName = $"The {nameof(DeleteLinkCommand)} can create.")]
     [Trait("Category", "Unit")]
     public void CanBeCreated()
     {
         // Arrange
-        SetLinkCommand command = null!;
+        DeleteLinkCommand command = null!;
 
         var id = new CommandId("some id");
 
-        var internalItemId = new ID(1);
         var externalItemId = new ID(2);
 
         var provider = new Provider(
@@ -28,26 +27,23 @@ public class SetLinkCommandTests
 
         // Act
         var exception = Record.Exception(() => command =
-            new SetLinkCommand(
+            new DeleteLinkCommand(
                 id,
-                internalItemId,
                 externalItemId,
                 provider));
 
         // Assert
         exception.Should().BeNull();
         command.Id.Should().Be(id);
-        command.InternalItemId.Should().Be(internalItemId);
         command.ExternalItemId.Should().Be(externalItemId);
         command.Provider.Should().Be(provider);
     }
 
-    [Fact(DisplayName = $"The {nameof(SetLinkCommand)} can't create without id.")]
+    [Fact(DisplayName = $"The {nameof(DeleteLinkCommand)} can't create without id.")]
     [Trait("Category", "Unit")]
     public void CanNotBeCreatedWithoutId()
     {
         // Arrange
-        var internalItemId = new ID(1);
         var externalItemId = new ID(2);
 
         var provider = new Provider(
@@ -60,9 +56,8 @@ public class SetLinkCommandTests
 
         // Act
         var exception = Record.Exception(() =>
-            _ = new SetLinkCommand(
+            _ = new DeleteLinkCommand(
                 id: null!,
-                internalItemId,
                 externalItemId,
                 provider));
 
@@ -70,21 +65,19 @@ public class SetLinkCommandTests
         exception.Should().NotBeNull().And.BeOfType<ArgumentNullException>();
     }
 
-    [Fact(DisplayName = $"The {nameof(SetLinkCommand)} can't create without id.")]
+    [Fact(DisplayName = $"The {nameof(DeleteLinkCommand)} can't create without id.")]
     [Trait("Category", "Unit")]
     public void CanNotBeCreatedWithoutProvider()
     {
         // Arrange
         var id = new CommandId("some id");
 
-        var internalItemId = new ID(1);
         var externalItemId = new ID(2);
 
         // Act
         var exception = Record.Exception(() =>
-            _ = new SetLinkCommand(
+            _ = new DeleteLinkCommand(
                 id,
-                internalItemId,
                 externalItemId,
                 provider: null!));
 

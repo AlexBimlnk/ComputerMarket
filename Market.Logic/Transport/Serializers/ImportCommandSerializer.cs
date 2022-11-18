@@ -7,7 +7,9 @@ using Newtonsoft.Json.Converters;
 
 namespace Market.Logic.Transport.Serializers;
 
-using TSetLinkCommand = Transport.Models.Commands.Import.SetLinkCommand;
+using TCommandBase = Models.Commands.Import.CommandBase;
+using TDeleteLinkCommand = Models.Commands.Import.DeleteLinkCommand;
+using TSetLinkCommand = Models.Commands.Import.SetLinkCommand;
 
 public sealed class ImportCommandSerializer : ISerializer<ImportCommand, string>
 {
@@ -15,10 +17,10 @@ public sealed class ImportCommandSerializer : ISerializer<ImportCommand, string>
     {
         ArgumentNullException.ThrowIfNull(source, nameof(source));
 
-        var transportProducts = source switch
+        TCommandBase transportProducts = source switch
         {
             SetLinkCommand setLinkCommand => TSetLinkCommand.ToModel(setLinkCommand),
-
+            DeleteLinkCommand deleteLinkCommand => TDeleteLinkCommand.ToModel(deleteLinkCommand),
             var unknownCommandType =>
                 throw new InvalidOperationException($"The source contains unknown command '{unknownCommandType?.GetType().Name}'. ")
         };
