@@ -1,4 +1,6 @@
-﻿using Market.Logic.Models;
+﻿using General.Logic.Commands;
+
+using Market.Logic.Models;
 
 namespace Market.Logic.Commands.Import;
 
@@ -23,7 +25,7 @@ public sealed class DeleteLinkCommand : ImportCommand
     /// Если <paramref name="provider"/> оказался <see langword="null"/>.
     /// </exception>
     public DeleteLinkCommand(
-        CommandId id,
+        CommandID id,
         ID externalItemId,
         Provider provider)
         : base(id, CommandType.DeleteLink)

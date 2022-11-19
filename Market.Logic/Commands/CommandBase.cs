@@ -1,4 +1,6 @@
-﻿namespace Market.Logic.Commands;
+﻿using General.Logic.Commands;
+
+namespace Market.Logic.Commands;
 
 /// <summary xml:lang = "ru">
 /// Абстрактная базовая команда.
@@ -14,11 +16,11 @@ public abstract class CommandBase
     /// <exception cref="ArgumentNullException" xml:lang = "ru">
     /// Если <paramref name="id"/> оказался <see langword="null"/>.
     /// </exception>
-    protected CommandBase(CommandId id, CommandType type)
+    protected CommandBase(CommandID id, CommandType type)
     {
         Id = id ?? throw new ArgumentNullException(nameof(id));
 
-        if (!Enum.IsDefined(typeof(CommandType), type)) 
+        if (!Enum.IsDefined(typeof(CommandType), type))
             throw new ArgumentException("Given unknown command type", nameof(type));
         Type = type;
     }
@@ -26,7 +28,7 @@ public abstract class CommandBase
     /// <summary xml:lang = "ru">
     /// Идентификатор команды.
     /// </summary>
-    public CommandId Id { get; }
+    public CommandID Id { get; }
 
     /// <summary xml:lang = "ru">
     /// Тип команды.

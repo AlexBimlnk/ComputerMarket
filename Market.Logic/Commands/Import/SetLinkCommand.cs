@@ -1,4 +1,6 @@
-﻿using Market.Logic.Models;
+﻿using General.Logic.Commands;
+
+using Market.Logic.Models;
 
 namespace Market.Logic.Commands.Import;
 
@@ -26,10 +28,10 @@ public sealed class SetLinkCommand : ImportCommand
     /// Если <paramref name="provider"/> оказался <see langword="null"/>.
     /// </exception>
     public SetLinkCommand(
-        CommandId id,
+        CommandID id,
         ID internalItemId,
         ID externalItemId,
-        Provider provider) 
+        Provider provider)
         : base(id, CommandType.SetLink)
     {
         InternalItemId = internalItemId;
