@@ -9,6 +9,7 @@ public sealed class CommandFactory : ICommandFactory
 {
     private readonly Func<SetLinkCommandParameters, ICommand> _setLinkCommandFactory;
     private readonly Func<DeleteLinkCommandParameters, ICommand> _deleteLinkCommandFactory;
+    private readonly Func<GetLinksCommandParameters, ICommand> _getLinkskCommandFactory;
 
     /// <summary xml:lang = "ru">
     /// Создает новый экземпляр типа <see cref="CommandFactory"/>.
@@ -21,15 +22,21 @@ public sealed class CommandFactory : ICommandFactory
     /// Делегат, создающий на основе <see cref="CommandID"/> и <see cref="DeleteLinkCommandParameters"/>
     /// команду типа <see cref="ICommand"/>.
     /// </param>
+    /// <param name="getLinkskCommandFactory" xml:lang = "ru">
+    /// Делегат, создающий на основе <see cref="CommandID"/> и <see cref="GetLinksCommandParameters"/>
+    /// команду типа <see cref="ICommand"/>.
+    /// </param>
     /// <exception cref="ArgumentNullException" xml:lang = "ru">
     /// Если любой из аргументов оказался <see langword="null"/>.
     /// </exception>
     public CommandFactory(
         Func<SetLinkCommandParameters, ICommand> setLinkCommandFactory,
-        Func<DeleteLinkCommandParameters, ICommand> deleteLinkCommandFactory)
+        Func<DeleteLinkCommandParameters, ICommand> deleteLinkCommandFactory,
+        Func<GetLinksCommandParameters, ICommand> getLinkskCommandFactory)
     {
         _setLinkCommandFactory = setLinkCommandFactory ?? throw new ArgumentNullException(nameof(setLinkCommandFactory));
         _deleteLinkCommandFactory = deleteLinkCommandFactory ?? throw new ArgumentNullException(nameof(deleteLinkCommandFactory));
+        _getLinkskCommandFactory = getLinkskCommandFactory ?? throw new ArgumentNullException(nameof(deleteLinkCommandFactory));
     }
 
     /// <inheritdoc/>
@@ -43,6 +50,8 @@ public sealed class CommandFactory : ICommandFactory
                 _setLinkCommandFactory(setLinkCommandParameters),
             DeleteLinkCommandParameters deleteLinkCommandParameters =>
                 _deleteLinkCommandFactory(deleteLinkCommandParameters),
+            GetLinksCommandParameters getLinksCommandParameters =>
+                _getLinkskCommandFactory(getLinksCommandParameters),
             _ => throw new ArgumentException(
                 $"The command parameters type is unknown {parameters.GetType().Name}",
                 nameof(parameters))
