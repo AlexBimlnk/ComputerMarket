@@ -1,5 +1,4 @@
 ﻿using Market.Logic.Commands;
-using Market.Logic.Commands.Import;
 
 using Newtonsoft.Json;
 
@@ -21,20 +20,20 @@ public sealed class SetLinkCommand : CommandBase
     /// <summary xml:lang = "ru">
     /// Внутренний идентификатор.
     /// </summary>
-    [JsonProperty("internal_id")]
+    [JsonProperty("internal_id", Required = Required.Always)]
     public long InternalID { get; set; }
 
     /// <summary xml:lang = "ru">
     /// Внешний идентификатор.
     /// </summary>
-    [JsonProperty("external_id")]
+    [JsonProperty("external_id", Required = Required.Always)]
     public long ExternalID { get; set; }
 
     /// <summary xml:lang = "ru">
-    /// Имя провайдера.
+    /// Идентификатор провайдера.
     /// </summary>
-    [JsonProperty("provider")]
-    public string Provider { get; set; } = default!;
+    [JsonProperty("provider_id", Required = Required.Always)]
+    public long ProviderID { get; set; }
 
     /// <summary xml:lang = "ru">
     /// Конвертирует доменную модель в транспортную.
@@ -53,7 +52,7 @@ public sealed class SetLinkCommand : CommandBase
         {
             InternalID = command.InternalItemId.Value,
             ExternalID = command.ExternalItemId.Value,
-            Provider = ToSnakeCase(command.Provider.Name)
+            ProviderID = command.Provider.Key.Value
         };
     }
 

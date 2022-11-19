@@ -18,18 +18,18 @@ public sealed class SetLinkCommand : CommandBase
     /// <summary xml:lang = "ru">
     /// Внутренний идентификатор.
     /// </summary>
-    [JsonProperty("internal_id")]
+    [JsonProperty("internal_id", Required = Required.Always)]
     public long InternalID { get; set; }
 
     /// <summary xml:lang = "ru">
     /// Внешний идентификатор.
     /// </summary>
-    [JsonProperty("external_id")]
+    [JsonProperty("external_id", Required = Required.Always)]
     public long ExternalID { get; set; }
 
     /// <summary xml:lang = "ru">
     /// Идентификатор провайдера.
     /// </summary>
-    [JsonProperty("provider_id")]
+    [JsonProperty("provider_id", Required = Required.Always)]
     public long ProviderID { get; set; } = default!;
 }
