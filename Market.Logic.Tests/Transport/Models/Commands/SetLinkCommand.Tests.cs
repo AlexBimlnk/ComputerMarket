@@ -27,7 +27,7 @@ public class SetLinkCommandTests
         {
             InternalID = 1,
             ExternalID = 2,
-            Provider = "some_provider_name"
+            ProviderID = 1
         };
 
         SetLinkCommand actual = null!;

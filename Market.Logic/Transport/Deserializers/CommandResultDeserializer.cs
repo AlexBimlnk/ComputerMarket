@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using General.Logic.Commands;
+﻿using General.Logic.Commands;
 using General.Transport;
 
 using Market.Logic.Commands;
@@ -48,19 +42,19 @@ public sealed class CommandResultDeserializer : IDeserializer<string, CommandRes
 
     private sealed class TCommandResult
     {
-        [JsonProperty("id")]
+        [JsonProperty("id", Required = Required.Always)]
         public TCommandId Id { get; set; } = default!;
 
-        [JsonProperty("isSuccess")]
+        [JsonProperty("isSuccess", Required = Required.Always)]
         public bool IsSuccess { get; set; }
 
-        [JsonProperty("errorMessage")]
+        [JsonProperty("errorMessage", Required = Required.AllowNull)]
         public string? ErrorMessage { get; set; }
     }
 
     private sealed class TCommandId
     {
-        [JsonProperty("value")]
+        [JsonProperty("value", Required = Required.Always)]
         public string Value { get; set; } = default!;
     }
 }

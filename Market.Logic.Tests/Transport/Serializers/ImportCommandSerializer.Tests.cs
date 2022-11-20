@@ -66,7 +66,7 @@ public class ImportCommandSerializerTests
                         inn: "0123456789",
                         bankAccount: "01234012340123401234"))),
             
-            /*lang=json,strict*/@"{""internal_id"":1,""external_id"":2,""provider"":""some_provider_name"",""type"":""set_link"",""id"":""some id""}"
+            /*lang=json,strict*/@"{""internal_id"":1,""external_id"":2,""provider_id"":1,""type"":""set_link"",""id"":""some id""}"
         },
         {
             new DeleteLinkCommand(
