@@ -1,9 +1,14 @@
-﻿namespace WalletTransaction.Logic;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
+
+namespace WalletTransaction.Logic;
 
 /// <summary xml:lang = "ru">
 /// Описывает состояния, в которых может 
 /// находится запрос на проведение транзакций.
 /// </summary>
+[JsonConverter(typeof(StringEnumConverter), typeof(SnakeCaseNamingStrategy))]
 public enum TransactionRequestState
 {
     /// <summary xml:lang = "ru">
