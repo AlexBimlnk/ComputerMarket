@@ -8,6 +8,7 @@ public class MarketProxyTransactionRequest : ITransactionsRequest
     private static readonly BankAccount s_marketAccount = new("01234012340123401234");
 
     private readonly ITransactionsRequest _wrappedRequest;
+    private readonly IReadOnlyCollection<Transaction> _proxyTransactions;
 
     /// <summary xml:lang = "ru">
     /// Создаёт новый экземпляр типа <see cref="MarketProxyTransactionRequest"/>.
@@ -21,6 +22,7 @@ public class MarketProxyTransactionRequest : ITransactionsRequest
     public MarketProxyTransactionRequest(ITransactionsRequest transactionRequest)
     {
         _wrappedRequest = transactionRequest ?? throw new ArgumentNullException(nameof(transactionRequest));
+        _proxyTransactions = GetTransactions();
     }
 
     public static BankAccount MarketAccount => s_marketAccount;
@@ -29,7 +31,7 @@ public class MarketProxyTransactionRequest : ITransactionsRequest
     public InternalID Id => _wrappedRequest.Id;
 
     /// <inheritdoc/>
-    public IReadOnlyCollection<Transaction> Transactions => GetTransactions();
+    public IReadOnlyCollection<Transaction> Transactions => _proxyTransactions;
 
     /// <inheritdoc/>
     public bool IsCancelled => _wrappedRequest.IsCancelled;

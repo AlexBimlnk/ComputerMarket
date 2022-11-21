@@ -59,11 +59,17 @@ public sealed class TransactionRequestProcessor : ITransactionsRequestProcessor
 
             _logger.LogDebug("Received new request");
 
-            if (request.CurrentState is TransactionRequestState.Finished)
+            if (request.OldState is TransactionRequestState.Finished)
+            {
                 _logger.LogWarning("Request already finished! Skip");
+                return;
+            }
 
-            if (request.CurrentState is TransactionRequestState.Aborted)
+            if (request.OldState is TransactionRequestState.Aborted)
+            {
                 _logger.LogWarning("Request has aborted status");
+                return;
+            }
 
             await _transactionRequestExecuter.ExecuteAsync(request, token);
 

@@ -2,6 +2,7 @@
 using General.Storage;
 using General.Transport;
 
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
 using WalletTransaction.Logic;
@@ -50,9 +51,13 @@ public static class Registrations
             .AddSingleton<IDeserializer<string, CommandParametersBase>, CommandParametersDeserializer>()
             .AddSingleton<ISerializer<ITransactionsRequest, string>, TransactionRequestResultSerializer>()
 
-            .AddSingleton<IReceiver<ITransactionsRequest>, ProcessingTransactionsChannel>()
+            .AddSingleton<ProcessingTransactionsChannel>()
 
-            .AddSingleton<ISender<TransactionSenderConfiguration, ITransactionsRequest>, ProcessingTransactionsChannel>()
+            .AddSingleton<IReceiver<ITransactionsRequest>>(sp => 
+                sp.GetRequiredService<ProcessingTransactionsChannel>())
+            .AddSingleton<ISender<TransactionSenderConfiguration, ITransactionsRequest>>(sp =>
+                sp.GetRequiredService<ProcessingTransactionsChannel>())
+
             .AddSingleton<ISender<TransactionsResultSenderConfiguration, ITransactionsRequest>, TransactionsResultSender>();
 
     private static IServiceCollection AddStorage(this IServiceCollection services)
