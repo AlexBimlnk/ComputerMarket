@@ -1,16 +1,14 @@
 using General.Logic.Commands;
 
-using Import.Logic.Commands;
-
 using Microsoft.AspNetCore.Mvc;
 
-namespace Import.Controllers;
+namespace WalletTransaction.Controllers;
 
 /// <summary xml:lang = "ru">
 /// Контроллер команд.
 /// </summary>
 [ApiController]
-[Route("import/[controller]")]
+[Route("wt/[controller]")]
 public class CommandsController : ControllerBase
 {
     private readonly ILogger<CommandsController> _logger;
