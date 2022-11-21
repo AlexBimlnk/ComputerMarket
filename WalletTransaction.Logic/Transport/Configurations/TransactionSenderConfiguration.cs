@@ -8,5 +8,5 @@ namespace WalletTransaction.Logic.Transport.Configurations;
 public sealed class TransactionSenderConfiguration : ITransportSenderConfiguration
 {
     /// <inheritdoc/>
-    public string Destination => throw new NotImplementedException();
+    public string Destination { get; set; } = default!;
 }
