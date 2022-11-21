@@ -7,7 +7,6 @@ namespace WalletTransaction;
 /// </summary>
 public sealed class RequestService : BackgroundService
 {
-    private readonly ILogger<RequestService> _logger;
     private readonly IHostApplicationLifetime _applicationLifetime;
     private readonly ITransactionsRequestProcessor _processor;
 
@@ -27,11 +26,9 @@ public sealed class RequestService : BackgroundService
     /// Если любой из входных параметров оказался <see langword="null"/>.
     /// </exception>
     public RequestService(
-        ILogger<RequestService> logger,
         IHostApplicationLifetime applicationLifetime,
         ITransactionsRequestProcessor processor)
     {
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _applicationLifetime = applicationLifetime ?? throw new ArgumentNullException(nameof(applicationLifetime));
         _processor = processor ?? throw new ArgumentNullException(nameof(processor));
     }
