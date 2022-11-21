@@ -156,7 +156,7 @@ public class CreateTransactionRequestCommandTests
 
         var request = new TransactionRequest(id, transactions);
 
-        var proxy = new MarketProxyTransactionRequest(request);
+        var proxy = new ToMarketProxyTransactionRequest(request);
 
         var commandId = new CommandID("some id");
         var parameters = new CreateTransactionRequestCommandParameters(
@@ -206,7 +206,7 @@ public class CreateTransactionRequestCommandTests
         {
             new Transaction(
                 fromAccount,
-                MarketProxyTransactionRequest.MarketAccount,
+                ToMarketProxyTransactionRequest.MarketAccount,
                 transferredBalance)
         };
 

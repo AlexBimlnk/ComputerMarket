@@ -121,7 +121,7 @@ public class TransactionRequestProcessorTests
         var executer = new Mock<ITransactionRequestExecuter>(MockBehavior.Strict);
 
         var request = new Mock<ITransactionsRequest>(MockBehavior.Strict);
-        request.SetupGet(x => x.CurrentState)
+        request.SetupGet(x => x.OldState)
             .Returns(TransactionRequestState.WaitHandle);
 
         var receiverCallbackCount = 0;

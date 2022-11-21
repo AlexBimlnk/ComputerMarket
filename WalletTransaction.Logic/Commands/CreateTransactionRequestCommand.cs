@@ -48,11 +48,11 @@ public sealed class CreateTransactionRequestCommand : CommandBase, ICommand
         _requestCache.Add(_parameters.TransactionRequest);
 
         var hasOtherProvider = _parameters.TransactionRequest.Transactions
-            .Any(x => x.To != MarketProxyTransactionRequest.MarketAccount);
+            .Any(x => x.To != ToMarketProxyTransactionRequest.MarketAccount);
 
         if (hasOtherProvider)
         {
-            await _sender.SendAsync(new MarketProxyTransactionRequest(_parameters.TransactionRequest));
+            await _sender.SendAsync(new ToMarketProxyTransactionRequest(_parameters.TransactionRequest));
         }
         else
         {
