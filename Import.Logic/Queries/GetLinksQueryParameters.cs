@@ -1,21 +1,22 @@
 ﻿using General.Logic.Commands;
+using General.Logic.Queries;
 
 using Import.Logic.Models;
 
-namespace Import.Logic.Commands;
+namespace Import.Logic.Queries;
 
 /// <summary xml:lang = "ru">
 /// Параметры для команды на полуение всех связей.
 /// </summary>
-public sealed class GetLinksCommandParameters : CommandParametersBase
+public sealed class GetLinksQueryParameters : QueryParametersBase
 {
     /// <summary xml:lang = "ru">
-    /// Создает новый экземпляр типа <see cref="GetLinksCommandParameters"/>.
+    /// Создает новый экземпляр типа <see cref="GetLinksQueryParameters"/>.
     /// </summary>
     /// <param name="id" xml:lang = "ru">
     /// Идентификатор команды.
     /// </param>
-    public GetLinksCommandParameters(CommandID id)
+    public GetLinksQueryParameters(QueryID id)
         : base(id)
-    { } 
+    { }
 }

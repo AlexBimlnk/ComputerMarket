@@ -3,6 +3,7 @@ using General.Storage;
 
 using Import.Logic.Commands;
 using Import.Logic.Models;
+using Import.Logic.Queries;
 
 using Moq;
 
@@ -10,26 +11,26 @@ namespace Import.Logic.Tests.Commands;
 
 public class GetLinksCommandTests
 {
-    [Fact(DisplayName = $"The {nameof(GetLinksCommand)} can create.")]
+    [Fact(DisplayName = $"The {nameof(GetLinksQuery)} can create.")]
     [Trait("Category", "Unit")]
     public void CanBeCreated()
     {
         // Arrange
-        GetLinksCommand command = null!;
+        GetLinksQuery command = null!;
         var id = new CommandID("some id");
-        var parameters = new GetLinksCommandParameters(id);
+        var parameters = new GetLinksQueryParameters(id);
         var repository = Mock.Of<IRepository<Link>>();
 
         // Act
         var exception = Record.Exception(() =>
-            command = new GetLinksCommand(parameters, repository));
+            command = new GetLinksQuery(parameters, repository));
 
         // Assert
         exception.Should().BeNull();
         command.Id.Should().Be(id);
     }
 
-    [Fact(DisplayName = $"The {nameof(GetLinksCommand)} can't create without parameters.")]
+    [Fact(DisplayName = $"The {nameof(GetLinksQuery)} can't create without parameters.")]
     [Trait("Category", "Unit")]
     public void CanNotBeCreatedWithoutParameters()
     {
@@ -38,35 +39,35 @@ public class GetLinksCommandTests
 
         // Act
         var exception = Record.Exception(() =>
-            _ = new GetLinksCommand(parameters: null!, repository));
+            _ = new GetLinksQuery(parameters: null!, repository));
 
         // Assert
         exception.Should().NotBeNull().And.BeOfType<ArgumentNullException>();
     }
 
-    [Fact(DisplayName = $"The {nameof(GetLinksCommand)} can't create without repository.")]
+    [Fact(DisplayName = $"The {nameof(GetLinksQuery)} can't create without repository.")]
     [Trait("Category", "Unit")]
     public void CanNotBeCreatedWithoutRepository()
     {
         // Arrange
         var id = new CommandID("some id");
-        var parameters = new GetLinksCommandParameters(id);
+        var parameters = new GetLinksQueryParameters(id);
 
         // Act
         var exception = Record.Exception(() =>
-            _ = new GetLinksCommand(parameters, repository: null!));
+            _ = new GetLinksQuery(parameters, repository: null!));
 
         // Assert
         exception.Should().NotBeNull().And.BeOfType<ArgumentNullException>();
     }
 
-    [Fact(DisplayName = $"The {nameof(GetLinksCommand)} can execute.")]
+    [Fact(DisplayName = $"The {nameof(GetLinksQuery)} can execute.")]
     [Trait("Category", "Unit")]
     public async void CanExecuteAsync()
     {
         // Arrange
         var id = new CommandID("some id");
-        var parameters = new GetLinksCommandParameters(id);
+        var parameters = new GetLinksQueryParameters(id);
         var links = new Link[]
         {
             new Link(new InternalID(1), new ExternalID(1, Provider.Ivanov)),
@@ -84,11 +85,11 @@ public class GetLinksCommandTests
             .Returns(() => links)
             .Callback(() => repositoryCallBack++);
 
-        var command = new GetLinksCommand(
+        var command = new GetLinksQuery(
             parameters,
             repository.Object);
 
-        var expectedResult = CommandCallbackResult<IReadOnlyCollection<Link>>.Success(id, links);
+        var expectedResult = QueryResult<IReadOnlyCollection<Link>>.Success(id, links);
 
         // Act
         var result = await command.ExecuteAsync();

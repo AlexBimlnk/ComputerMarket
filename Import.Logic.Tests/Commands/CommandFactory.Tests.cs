@@ -2,6 +2,7 @@
 
 using Import.Logic.Commands;
 using Import.Logic.Models;
+using Import.Logic.Queries;
 
 using Moq;
 
@@ -15,7 +16,7 @@ public class CommandFactoryTests
         // Arrange
         var setLink = Mock.Of<Func<SetLinkCommandParameters, ICommand>>();
         var deleteLink = Mock.Of<Func<DeleteLinkCommandParameters, ICommand>>();
-        var getLinks = Mock.Of<Func<GetLinksCommandParameters, ICommand>>();
+        var getLinks = Mock.Of<Func<GetLinksQueryParameters, ICommand>>();
 
         // Act
         var exception = Record.Exception(() =>
@@ -39,7 +40,7 @@ public class CommandFactoryTests
 
         var setLink = new Mock<Func<SetLinkCommandParameters, ICommand>>(MockBehavior.Strict);
         var deleteLink = Mock.Of<Func<DeleteLinkCommandParameters, ICommand>>();
-        var getLinks = Mock.Of<Func<GetLinksCommandParameters, ICommand>>();
+        var getLinks = Mock.Of<Func<GetLinksQueryParameters, ICommand>>();
 
         var setLinkInvokeCount = 0;
         setLink.Setup(x => x.Invoke(setParameters))
@@ -73,7 +74,7 @@ public class CommandFactoryTests
 
         var setLink = Mock.Of<Func<SetLinkCommandParameters, ICommand>>();
         var deleteLink = new Mock<Func<DeleteLinkCommandParameters, ICommand>>(MockBehavior.Strict);
-        var getLinks = Mock.Of<Func<GetLinksCommandParameters, ICommand>>();
+        var getLinks = Mock.Of<Func<GetLinksQueryParameters, ICommand>>();
 
         var deleteLinkInvokeCount = 0;
         deleteLink.Setup(x => x.Invoke(deleteParameters))
@@ -100,14 +101,14 @@ public class CommandFactoryTests
     public void CanCreateGetLinksCommand()
     {
         // Arrange
-        var deleteParameters = new GetLinksCommandParameters(
+        var deleteParameters = new GetLinksQueryParameters(
             new("some id"));
 
         var command = Mock.Of<ICommand>(MockBehavior.Strict);
 
         var setLink = Mock.Of<Func<SetLinkCommandParameters, ICommand>>();
         var deleteLink = Mock.Of<Func<DeleteLinkCommandParameters, ICommand>>();
-        var getLinks = new Mock<Func<GetLinksCommandParameters, ICommand>>(MockBehavior.Strict);
+        var getLinks = new Mock<Func<GetLinksQueryParameters, ICommand>>(MockBehavior.Strict);
 
         var getLinksInvokeCount = 0;
         getLinks.Setup(x => x.Invoke(deleteParameters))
@@ -135,7 +136,7 @@ public class CommandFactoryTests
         // Arrange
         var setLink = Mock.Of<Func<SetLinkCommandParameters, ICommand>>(MockBehavior.Strict);
         var deleteLink = Mock.Of<Func<DeleteLinkCommandParameters, ICommand>>();
-        var getLinks = Mock.Of<Func<GetLinksCommandParameters, ICommand>>();
+        var getLinks = Mock.Of<Func<GetLinksQueryParameters, ICommand>>();
 
         var factory = new CommandFactory(setLink, deleteLink, getLinks);
 
@@ -154,7 +155,7 @@ public class CommandFactoryTests
         // Arrange
         var setLink = Mock.Of<Func<SetLinkCommandParameters, ICommand>>(MockBehavior.Strict);
         var deleteLink = Mock.Of<Func<DeleteLinkCommandParameters, ICommand>>();
-        var getLinks = Mock.Of<Func<GetLinksCommandParameters, ICommand>>();
+        var getLinks = Mock.Of<Func<GetLinksQueryParameters, ICommand>>();
         var unknownParameters = new UnknownParameters(new("some id"));
 
         var factory = new CommandFactory(setLink, deleteLink, getLinks);

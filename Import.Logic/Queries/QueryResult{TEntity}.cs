@@ -1,8 +1,10 @@
 ﻿using General.Logic.Commands;
+using General.Logic.Queries;
 
 using Import.Logic.Abstractions;
+using Import.Logic.Commands;
 
-namespace Import.Logic.Commands;
+namespace Import.Logic.Queries;
 
 /// <summary xml:lang="ru">
 /// Результат выполнения комманды с вернувшимся значением.
@@ -10,15 +12,15 @@ namespace Import.Logic.Commands;
 /// <typeparam name="TEntity" xml:lang="ru">
 /// Тип данных который возвращется вместе с результатом команды.
 /// </typeparam>
-public sealed class CommandCallbackResult<TEntity> : ICommandCallbackResult<TEntity> where TEntity : class
+public sealed class QueryResult<TEntity> : IQueryResult where TEntity : class
 {
     /// <summary xml:lang="ru">
-    /// Создаёт экземпляр класса <see cref="CommandCallbackResult{TEntity}"/>.
+    /// Создаёт экземпляр класса <see cref="QueryResult{TEntity}"/>.
     /// </summary>
     /// <param name="id" xml:lang="ru">Идентификатор команды.</param>
     /// <param name="errorMessge" xml:lang="ru">Сообщенеи оь ошибке.</param>
     /// <param name="result" xml:lang="ru">Результат выполнения команды.</param>
-    private CommandCallbackResult(CommandID id, string? errorMessge = null, TEntity? result = null)
+    private QueryResult(QueryID id, string? errorMessge = null, TEntity? result = null)
     {
         Id = id;
         ErrorMessage = errorMessge;
@@ -26,7 +28,7 @@ public sealed class CommandCallbackResult<TEntity> : ICommandCallbackResult<TEnt
     }
 
     /// <inheritdoc/>
-    public CommandID Id { get; }
+    public QueryID Id { get; }
 
     /// <inheritdoc/>
     public bool IsSuccess => ErrorMessage is null;
@@ -34,7 +36,9 @@ public sealed class CommandCallbackResult<TEntity> : ICommandCallbackResult<TEnt
     /// <inheritdoc/>
     public string? ErrorMessage { get; }
 
-    /// <inheritdoc/>
+    /// <summary xml:lang="ru">
+    /// Результат вовзращаемый коммандой.
+    /// </summary>
     public TEntity? Result { get; }
 
     /// <summary xml:lang = "ru">
@@ -55,7 +59,7 @@ public sealed class CommandCallbackResult<TEntity> : ICommandCallbackResult<TEnt
     /// <exception cref="ArgumentException" xml:lang = "ru">
     /// Если <paramref name="errorMessage"/> или пустое или содержит только пробелы или <see langword="null"/>.
     /// </exception>
-    public static CommandCallbackResult<TEntity> Fail(CommandID id, string errorMessage) =>
+    public static QueryResult<TEntity> Fail(QueryID id, string errorMessage) =>
         new(id ?? throw new ArgumentNullException(nameof(id)),
             string.IsNullOrWhiteSpace(errorMessage)
             ? throw new ArgumentException(
@@ -75,6 +79,6 @@ public sealed class CommandCallbackResult<TEntity> : ICommandCallbackResult<TEnt
     /// <exception cref="ArgumentNullException" xml:lang = "ru">
     /// Если один из параметров <see langword="null"/>.
     /// </exception>
-    public static CommandCallbackResult<TEntity> Success(CommandID id, TEntity result) =>
+    public static QueryResult<TEntity> Success(QueryID id, TEntity result) =>
         new(id ?? throw new ArgumentNullException(nameof(id)), result: result ?? throw new ArgumentNullException(nameof(id)));
 }

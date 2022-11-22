@@ -1,4 +1,6 @@
-﻿namespace General.Logic.Commands;
+﻿using General.Logic.Queries;
+
+namespace General.Logic.Commands;
 
 /// <summary xml:lang = "ru">
 /// Описывает фабрику команд.
@@ -21,4 +23,6 @@ public interface ICommandFactory
     /// Если параметры команды имеют неизвестный тип.
     /// </exception>
     public ICommand Create(CommandParametersBase parameters);
+
+    public IQuery Create(QueryParametersBase parameters);
 }
