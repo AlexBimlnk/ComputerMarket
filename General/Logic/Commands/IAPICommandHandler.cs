@@ -3,25 +3,7 @@
 /// <summary xml:lang = "ru">
 /// Описывает обработчика команд, получаемых по HTTP.
 /// </summary>
-public interface IAPICommandHandler
+public interface IAPICommandHandler : IAPIExecutableHandler<ICommandResult>
 {
-    /// <summary xml:lang = "ru">
-    /// Обрабатывает запрос, содержащий команду.
-    /// </summary>
-    /// <param name="request" xml:lang = "ru">
-    /// Запрос.
-    /// </param>
-    /// <returns xml:lang = "ru">
-    /// <see cref="Task{TResult}"/>.
-    /// </returns>
-    /// <param name="token" xml:lang = "ru">
-    /// Токен отмены операции.
-    /// </param>
-    /// <exception cref="ArgumentException" xml:lang = "ru">
-    /// Когда <paramref name="request"/> имел неверный формат.
-    /// </exception>
-    /// <exception cref="OperationCanceledException" xml:lang = "ru">
-    /// Если операция была отменена.
-    /// </exception>
-    public Task<ICommandResult> HandleAsync(string request, CancellationToken token = default);
+
 }

@@ -1,15 +1,11 @@
-﻿namespace General.Logic.Commands;
+﻿using General.Logic.Executables;
+
+namespace General.Logic.Commands;
 
 /// <summary xml:lang = "ru">
 /// Описывает команду.
 /// </summary>
-public interface ICommand
+public interface ICommand : IExecutable<ICommandResult>
 {
-    /// <summary xml:lang = "ru">
-    /// Асинхронно выполняет команду.
-    /// </summary>
-    /// <returns xml:lang = "ru">
-    /// <see cref="Task{TResult}>"/>.
-    /// </returns>
-    public Task<ICommandResult> ExecuteAsync();
+
 }

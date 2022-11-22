@@ -4,5 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using General.Logic.Commands;
+
 namespace General.Logic.Queries;
-public sealed record class QueryID(string Value);
+public interface IAPIQueryHandler<TResult> : IAPIExecutableHandler<IQueryResult<TResult>>
+{
+}

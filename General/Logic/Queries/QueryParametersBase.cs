@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using General.Logic.Executables;
+
 namespace General.Logic.Queries;
-public abstract class QueryParametersBase
+public abstract class QueryParametersBase : ExecutableParametersBase
 {
     /// <summary xml:lang = "ru">
-    /// Создает новый экземпляр типа <see cref="CommandParametersBase"/>.
+    /// Создает новый экземпляр типа <see cref="QueryParametersBase"/>.
     /// </summary>
     /// <param name="id" xml:lang = "ru">
     /// Идентификатор команды.
@@ -16,13 +18,8 @@ public abstract class QueryParametersBase
     /// <exception cref="ArgumentNullException" xml:lang = "ru">
     /// Когда <paramref name="id"/> оказался <see langword="null"/>.
     /// </exception>
-    protected QueryParametersBase(QueryID id)
+    protected QueryParametersBase(ExecutableID id) : base(id)
     {
-        Id = id ?? throw new ArgumentNullException(nameof(id));
-    }
 
-    /// <summary xml:lang = "ru">
-    /// Идентификатор команды.
-    /// </summary>
-    public QueryID Id { get; }
+    }
 }

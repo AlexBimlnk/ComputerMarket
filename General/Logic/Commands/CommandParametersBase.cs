@@ -1,9 +1,8 @@
-﻿namespace General.Logic.Commands;
+﻿using General.Logic.Executables;
 
-/// <summary xml:lang = "ru">
-/// Базовый тип параметров команд.
-/// </summary>
-public abstract class CommandParametersBase
+namespace General.Logic.Commands;
+
+public abstract class CommandParametersBase : ExecutableParametersBase
 {
     /// <summary xml:lang = "ru">
     /// Создает новый экземпляр типа <see cref="CommandParametersBase"/>.
@@ -14,13 +13,6 @@ public abstract class CommandParametersBase
     /// <exception cref="ArgumentNullException" xml:lang = "ru">
     /// Когда <paramref name="id"/> оказался <see langword="null"/>.
     /// </exception>
-    protected CommandParametersBase(CommandID id)
-    {
-        Id = id ?? throw new ArgumentNullException(nameof(id));
-    }
-
-    /// <summary xml:lang = "ru">
-    /// Идентификатор команды.
-    /// </summary>
-    public CommandID Id { get; }
+    protected CommandParametersBase(ExecutableID id) : base(id)
+    { }
 }

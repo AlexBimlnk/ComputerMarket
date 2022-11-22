@@ -5,16 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 using General.Logic.Commands;
+using General.Logic.Executables;
 
 namespace General.Logic.Queries;
 
-public interface IQuery
+public interface IQuery<TEntity> : IExecutable<IQueryResult<TEntity>>
 {
-    /// <summary xml:lang = "ru">
-    /// Асинхронно выполняет команду.
-    /// </summary>
-    /// <returns xml:lang = "ru">
-    /// <see cref="Task{TResult}>"/>.
-    /// </returns>
-    public Task<IQueryResult> ExecuteAsync();
+    
 }
