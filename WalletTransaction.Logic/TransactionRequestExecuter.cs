@@ -9,7 +9,7 @@ public sealed class TransactionRequestExecuter : ITransactionRequestExecuter
     {
         token.ThrowIfCancellationRequested();
 
-        await Task.Delay(TimeSpan.FromMinutes(2), token);
+        await Task.Delay(TimeSpan.FromSeconds(10), token);
 
         // Симулирование ошибки транзакции (транзакция не выполнена)
         if (Random.Shared.NextInt64() % 5 == 0)

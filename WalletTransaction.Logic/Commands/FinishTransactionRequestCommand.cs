@@ -51,7 +51,7 @@ public sealed class FinishTransactionRequestCommand : CommandBase, ICommand
             throw new InvalidOperationException(
                 $"Transaction request with id {_parameters.TransactionRequestId} is not exists.");
 
-       await _sender.SendAsync(request);
+       await _sender.SendAsync(new FromMarketProxyTransactionRequest(request));
 
         _requestCache.Delete(request);
     }
