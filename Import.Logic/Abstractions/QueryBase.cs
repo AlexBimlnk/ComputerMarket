@@ -1,4 +1,5 @@
 ﻿using General.Logic.Commands;
+using General.Logic.Executables;
 using General.Logic.Queries;
 
 using Import.Logic.Queries;
@@ -8,19 +9,19 @@ namespace Import.Logic.Abstractions;
 /// <summary xml:lang = "ru">
 /// Абстрактная команда возвращающая результат.
 /// </summary>
-public abstract class QueryBase<TEntity> : IQuery where TEntity : class
+public abstract class QueryBase<TEntity> : IQuery<TEntity> where TEntity : class
 {
     protected TEntity? Result { get; set; }
 
     /// <summary xml:lang = "ru">
     /// Идентификатор команды.
     /// </summary>
-    public abstract QueryID Id { get; }
+    public abstract ExecutableID Id { get; }
 
     protected abstract Task ExecuteCoreAsync();
 
     /// <inheritdoc/>
-    public async Task<IQueryResult> ExecuteAsync()
+    public async Task<IQueryResult<TEntity>> ExecuteAsync()
     {
         try
         {

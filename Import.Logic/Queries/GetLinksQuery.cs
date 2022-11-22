@@ -1,4 +1,4 @@
-﻿using General.Logic.Commands;
+﻿using General.Logic.Executables;
 using General.Logic.Queries;
 using General.Storage;
 
@@ -36,7 +36,7 @@ public sealed class GetLinksQuery : QueryBase<IReadOnlyCollection<Link>>
     }
 
     /// <inheritdoc/>
-    public override QueryID Id => _parameters.Id;
+    public override ExecutableID Id => _parameters.Id;
 
     protected override Task ExecuteCoreAsync()
     {

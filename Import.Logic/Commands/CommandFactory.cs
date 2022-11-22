@@ -1,4 +1,7 @@
-﻿using General.Logic.Commands;
+﻿using System.Runtime.InteropServices;
+
+using General.Logic.Commands;
+using General.Logic.Executables;
 
 using Import.Logic.Queries;
 
@@ -17,15 +20,15 @@ public sealed class CommandFactory : ICommandFactory
     /// Создает новый экземпляр типа <see cref="CommandFactory"/>.
     /// </summary>
     /// <param name="setLinkCommandFactory" xml:lang = "ru">
-    /// Делегат, создающий на основе <see cref="CommandID"/> и <see cref="SetLinkCommandParameters"/>
+    /// Делегат, создающий на основе <see cref="ExecutableID"/> и <see cref="SetLinkCommandParameters"/>
     /// команду типа <see cref="ICommand"/>.
     /// </param>
     /// <param name="deleteLinkCommandFactory" xml:lang = "ru">
-    /// Делегат, создающий на основе <see cref="CommandID"/> и <see cref="DeleteLinkCommandParameters"/>
+    /// Делегат, создающий на основе <see cref="ExecutableID"/> и <see cref="DeleteLinkCommandParameters"/>
     /// команду типа <see cref="ICommand"/>.
     /// </param>
     /// <param name="getLinkskCommandFactory" xml:lang = "ru">
-    /// Делегат, создающий на основе <see cref="CommandID"/> и <see cref="GetLinksQueryParameters"/>
+    /// Делегат, создающий на основе <see cref="ExecutableID"/> и <see cref="GetLinksQueryParameters"/>
     /// команду типа <see cref="ICommand"/>.
     /// </param>
     /// <exception cref="ArgumentNullException" xml:lang = "ru">
@@ -52,9 +55,9 @@ public sealed class CommandFactory : ICommandFactory
                 _setLinkCommandFactory(setLinkCommandParameters),
             DeleteLinkCommandParameters deleteLinkCommandParameters =>
                 _deleteLinkCommandFactory(deleteLinkCommandParameters),
-            GetLinksQueryParameters getLinksCommandParameters =>
+            /*GetLinksQueryParameters getLinksCommandParameters =>
                 _getLinkskCommandFactory(getLinksCommandParameters),
-            _ => throw new ArgumentException(
+   */         _ => throw new ArgumentException(
                 $"The command parameters type is unknown {parameters.GetType().Name}",
                 nameof(parameters))
         };

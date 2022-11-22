@@ -1,4 +1,5 @@
 ﻿using General.Logic.Commands;
+using General.Logic.Executables;
 using General.Storage;
 
 using Import.Logic.Commands;
@@ -16,7 +17,7 @@ public class SetLinkCommandTests
     {
         // Arrange
         SetLinkCommand command = null!;
-        var id = new CommandID("some id");
+        var id = new ExecutableID("some id");
         var parameters = new SetLinkCommandParameters(
             id,
             new(1),
@@ -54,7 +55,7 @@ public class SetLinkCommandTests
     public void CanNotBeCreatedWithoutCache()
     {
         // Arrange
-        var id = new CommandID("some id");
+        var id = new ExecutableID("some id");
         var parameters = new SetLinkCommandParameters(
             id,
             new(1),
@@ -74,7 +75,7 @@ public class SetLinkCommandTests
     public void CanNotBeCreatedWithoutRepository()
     {
         // Arrange
-        var id = new CommandID("some id");
+        var id = new ExecutableID("some id");
         var parameters = new SetLinkCommandParameters(
             id,
             new(1),
@@ -94,7 +95,7 @@ public class SetLinkCommandTests
     public async void CanExecuteAsync()
     {
         // Arrange
-        var id = new CommandID("some id");
+        var id = new ExecutableID("some id");
         var parameters = new SetLinkCommandParameters(
             id,
             new(1),
@@ -134,7 +135,7 @@ public class SetLinkCommandTests
     public async void CanExecuteWhenLinkAlreadyExistsAsync()
     {
         // Arrange
-        var id = new CommandID("some id");
+        var id = new ExecutableID("some id");
         var parameters = new SetLinkCommandParameters(
             id,
             new(1),

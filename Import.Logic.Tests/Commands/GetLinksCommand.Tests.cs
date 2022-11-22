@@ -1,4 +1,5 @@
 ﻿using General.Logic.Commands;
+using General.Logic.Executables;
 using General.Storage;
 
 using Import.Logic.Commands;
@@ -17,7 +18,7 @@ public class GetLinksCommandTests
     {
         // Arrange
         GetLinksQuery command = null!;
-        var id = new CommandID("some id");
+        var id = new ExecutableID("some id");
         var parameters = new GetLinksQueryParameters(id);
         var repository = Mock.Of<IRepository<Link>>();
 
@@ -50,7 +51,7 @@ public class GetLinksCommandTests
     public void CanNotBeCreatedWithoutRepository()
     {
         // Arrange
-        var id = new CommandID("some id");
+        var id = new ExecutableID("some id");
         var parameters = new GetLinksQueryParameters(id);
 
         // Act
@@ -66,7 +67,7 @@ public class GetLinksCommandTests
     public async void CanExecuteAsync()
     {
         // Arrange
-        var id = new CommandID("some id");
+        var id = new ExecutableID("some id");
         var parameters = new GetLinksQueryParameters(id);
         var links = new Link[]
         {

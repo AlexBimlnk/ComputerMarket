@@ -1,4 +1,5 @@
 ﻿using General.Logic.Commands;
+using General.Logic.Executables;
 
 using Import.Logic.Queries;
 
@@ -11,7 +12,7 @@ public class CommandCallbackResultTests
     {
         // Arrange
         QueryResult<FakeCallbackEntity> commandResult = null!;
-        var id = new CommandID("some id");
+        var id = new ExecutableID("some id");
         var errorMessage = "some error message";
 
         // Act
@@ -22,7 +23,6 @@ public class CommandCallbackResultTests
         exception.Should().BeNull();
         commandResult.Id.Should().Be(id);
         commandResult.ErrorMessage.Should().Be(errorMessage);
-        commandResult.IsSuccess.Should().Be(false);
         commandResult.Result.Should().BeNull();
     }
 
@@ -52,7 +52,7 @@ public class CommandCallbackResultTests
     {
         // Arrange
         QueryResult<FakeCallbackEntity> commandResult = null!;
-        var id = new CommandID("some id");
+        var id = new ExecutableID("some id");
 
         // Act
         var exception = Record.Exception(() =>
@@ -69,7 +69,7 @@ public class CommandCallbackResultTests
         // Arrange
         QueryResult<FakeCallbackEntity> commandResult = null!;
         var entityResult = new FakeCallbackEntity();
-        var id = new CommandID("some id");
+        var id = new ExecutableID("some id");
 
         // Act
         var exception = Record.Exception(() =>
@@ -79,7 +79,6 @@ public class CommandCallbackResultTests
         exception.Should().BeNull();
         commandResult.Id.Should().Be(id);
         commandResult.ErrorMessage.Should().Be(null);
-        commandResult.IsSuccess.Should().Be(true);
         commandResult.Result.Should().Be(entityResult);
     }
 
@@ -105,7 +104,7 @@ public class CommandCallbackResultTests
     {
         // Arrange
         QueryResult<FakeCallbackEntity> commandResult = null!;
-        var id = new CommandID("some id");
+        var id = new ExecutableID("some id");
 
         // Act
         var exception = Record.Exception(() =>

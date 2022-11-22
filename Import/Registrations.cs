@@ -1,5 +1,6 @@
 ﻿using General.Logic;
 using General.Logic.Commands;
+using General.Logic.Executables;
 using General.Storage;
 using General.Transport;
 
@@ -56,7 +57,7 @@ public static class Registrations
 
     private static IServiceCollection AddTransport(this IServiceCollection services)
         => services
-            .AddSingleton<IDeserializer<string, CommandParametersBase>, CommandParametersDeserializer>()
+            .AddSingleton<IDeserializer<string, ExecutableParametersBase>, CommandParametersDeserializer>()
             .AddSingleton<IDeserializer<string, IReadOnlyCollection<ExternalProduct>>, IvanovProductsDeserializer>()
             .AddSingleton<IDeserializer<string, IReadOnlyCollection<HornsAndHoovesProduct>>, HornsAndHoovesProductsDeserializer>()
 

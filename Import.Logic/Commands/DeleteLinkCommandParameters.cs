@@ -1,4 +1,5 @@
 ﻿using General.Logic.Commands;
+using General.Logic.Executables;
 
 using Import.Logic.Models;
 
@@ -19,7 +20,7 @@ public sealed class DeleteLinkCommandParameters : CommandParametersBase
     /// Внешний идентификатор.
     /// </param>
     public DeleteLinkCommandParameters(
-        CommandID id,
+        ExecutableID id,
         ExternalID externalID)
         : base(id)
     {

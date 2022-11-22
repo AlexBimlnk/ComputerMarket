@@ -1,4 +1,4 @@
-﻿using General.Logic.Commands;
+﻿using General.Logic.Executables;
 using General.Logic.Queries;
 
 using Import.Logic.Models;
@@ -16,7 +16,7 @@ public sealed class GetLinksQueryParameters : QueryParametersBase
     /// <param name="id" xml:lang = "ru">
     /// Идентификатор команды.
     /// </param>
-    public GetLinksQueryParameters(QueryID id)
+    public GetLinksQueryParameters(ExecutableID id)
         : base(id)
     { }
 }

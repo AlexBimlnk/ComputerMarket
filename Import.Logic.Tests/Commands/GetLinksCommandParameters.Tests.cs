@@ -1,4 +1,5 @@
 ﻿using General.Logic.Commands;
+using General.Logic.Executables;
 
 using Import.Logic.Models;
 using Import.Logic.Queries;
@@ -12,7 +13,7 @@ public class GetLinksCommandParametersTests
     {
         // Arrange
         GetLinksQueryParameters parameters = null!;
-        var id = new CommandID("some id");
+        var id = new ExecutableID("some id");
         var internalID = new InternalID(1);
         var externalID = new ExternalID(1, Provider.Ivanov);
 
