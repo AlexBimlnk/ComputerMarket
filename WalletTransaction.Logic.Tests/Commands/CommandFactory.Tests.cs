@@ -1,4 +1,5 @@
 ﻿using General.Logic.Commands;
+using General.Logic.Executables;
 
 using Moq;
 
@@ -44,7 +45,7 @@ public class CommandFactoryTests
         };
 
         var createParameters = new CreateTransactionRequestCommandParameters(
-            new CommandID("some id"),
+            new ExecutableID("some id"),
             new TransactionRequest(id, transactions));
 
         var command = Mock.Of<ICommand>(MockBehavior.Strict);
@@ -197,7 +198,7 @@ public class CommandFactoryTests
 
     private class UnknownParameters : CommandParametersBase
     {
-        public UnknownParameters(CommandID id) : base(id)
+        public UnknownParameters(ExecutableID id) : base(id)
         {
         }
     }

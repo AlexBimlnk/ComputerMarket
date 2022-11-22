@@ -1,4 +1,5 @@
 ﻿using General.Logic.Commands;
+using General.Logic.Executables;
 using General.Storage;
 using General.Transport;
 
@@ -41,7 +42,7 @@ public sealed class CreateTransactionRequestCommand : CommandBase, ICommand
     }
 
     /// <inheritdoc/>
-    public override CommandID Id => _parameters.Id;
+    public override ExecutableID Id => _parameters.Id;
 
     protected override async Task ExecuteCoreAsync()
     {

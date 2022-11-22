@@ -1,4 +1,5 @@
 ﻿using General.Logic.Commands;
+using General.Logic.Executables;
 
 using WalletTransaction.Logic.Commands;
 
@@ -11,7 +12,7 @@ public class CreateTransactionRequestCommandParametersTests
     {
         // Arrange
         CreateTransactionRequestCommandParameters parameters = null!;
-        var commandId = new CommandID("some id");
+        var commandId = new ExecutableID("some id");
         var id = new InternalID(1);
 
         var fromAccount = new BankAccount("01234012340123401234");
@@ -72,7 +73,7 @@ public class CreateTransactionRequestCommandParametersTests
     {
         // Act
         var exception = Record.Exception(() => _ = new CreateTransactionRequestCommandParameters(
-            new CommandID("some id"),
+            new ExecutableID("some id"),
             transactionRequest: null!));
 
         // Assert

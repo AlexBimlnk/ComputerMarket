@@ -1,4 +1,5 @@
 ﻿using General.Logic.Commands;
+using General.Logic.Executables;
 using General.Storage;
 using General.Transport;
 
@@ -19,7 +20,7 @@ public class CancelTransactionRequestCommandTests
         CancelTransactionRequestCommand command = null!;
         
         var requestId = new InternalID(1);
-        var commandId = new CommandID("some id");
+        var commandId = new ExecutableID("some id");
         
         var parameters = new CancelTransactionRequestCommandParameters(
             commandId,
@@ -57,7 +58,7 @@ public class CancelTransactionRequestCommandTests
     {
         // Arrange
         var requestId = new InternalID(1);
-        var commandId = new CommandID("some id");
+        var commandId = new ExecutableID("some id");
 
         var parameters = new CancelTransactionRequestCommandParameters(
             commandId,
@@ -79,7 +80,7 @@ public class CancelTransactionRequestCommandTests
     {
         // Arrange
         var requestId = new InternalID(1);
-        var commandId = new CommandID("some id");
+        var commandId = new ExecutableID("some id");
 
         var parameters = new CancelTransactionRequestCommandParameters(
             commandId,
@@ -128,7 +129,7 @@ public class CancelTransactionRequestCommandTests
     {
         // Arrange
         var requestId = new InternalID(1);
-        var commandId = new CommandID("some id");
+        var commandId = new ExecutableID("some id");
 
         var parameters = new CancelTransactionRequestCommandParameters(
             commandId,

@@ -1,4 +1,5 @@
 ﻿using General.Logic.Commands;
+using General.Logic.Executables;
 
 using WalletTransaction.Logic.Commands;
 
@@ -11,7 +12,7 @@ public class CancelTransactionRequestCommandParametersTests
     {
         // Arrange
         CancelTransactionRequestCommandParameters parameters = null!;
-        var commandId = new CommandID("some id");
+        var commandId = new ExecutableID("some id");
         var requestId = new InternalID(1);
 
         // Act
