@@ -2,6 +2,9 @@
 
 namespace General.Logic.Commands;
 
+/// <summary xml:lang = "ru">
+/// Базовый тип для параметров комманд.
+/// </summary>
 public abstract class CommandParametersBase : ExecutableParametersBase
 {
     /// <summary xml:lang = "ru">
