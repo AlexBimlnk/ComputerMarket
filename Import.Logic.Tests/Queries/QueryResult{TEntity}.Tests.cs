@@ -79,7 +79,7 @@ public class CommandCallbackResultTests
         exception.Should().BeNull();
         commandResult.Id.Should().Be(id);
         commandResult.ErrorMessage.Should().Be(null);
-        commandResult.Result.Should().Be(entityResult.ToString());
+        commandResult.Result.Should().Be(entityResult);
     }
 
     [Fact(DisplayName = $"The {nameof(QueryResult<FakeQueryResult>)} can't create success result without id.")]
