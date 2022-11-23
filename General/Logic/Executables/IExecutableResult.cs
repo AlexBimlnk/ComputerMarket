@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace General.Logic.Executables;
 
-namespace General.Logic.Executables;
+/// <summary xml:lang = "ru">
+/// Описвает результат исполяемой сущности.
+/// </summary>
 public interface IExecutableResult
 {
     /// <summary xml:lang = "ru">
-    /// Идентификатор команды.
+    /// Идентификатор сущности.
     /// </summary>
     public ExecutableID Id { get; }
 

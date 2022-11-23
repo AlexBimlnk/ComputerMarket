@@ -1,7 +1,7 @@
 ﻿namespace General.Logic.Executables;
 
 /// <summary xml:lang = "ru">
-/// Идентификатор команды.
+/// Идентификатор исполняемой сущности.
 /// </summary>
 /// <param name="Value" xml:lang = "ru">
 /// Значение идентификатора.

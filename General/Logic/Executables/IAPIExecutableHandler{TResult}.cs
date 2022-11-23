@@ -3,12 +3,15 @@
 namespace General.Logic.Commands;
 
 /// <summary xml:lang = "ru">
-/// Описывает обработчика команд, получаемых по HTTP.
+/// Описывает обработчика исполняемых сущностей, получаемых по HTTP.
 /// </summary>
+/// <typeparam name="TResult" xml:lang = "ru">
+/// Тип результата, который будет возвращён сущностью.
+/// </typeparam>
 public interface IAPIExecutableHandler<TResult> where TResult : IExecutableResult
 {
     /// <summary xml:lang = "ru">
-    /// Обрабатывает запрос, содержащий команду.
+    /// Обрабатывает запрос, содержащий исполняемую сущность.
     /// </summary>
     /// <param name="request" xml:lang = "ru">
     /// Запрос.
