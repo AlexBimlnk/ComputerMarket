@@ -1,6 +1,7 @@
 ﻿using General.Logic.Executables;
 using General.Logic.Queries;
 using General.Storage;
+using General.Transport;
 
 using Import.Logic.Abstractions;
 using Import.Logic.Models;
@@ -8,18 +9,18 @@ using Import.Logic.Models;
 namespace Import.Logic.Queries;
 
 /// <summary xml:lang = "ru">
-/// Команда на получение связей.
+/// Запрос на получение связей.
 /// </summary>
 public sealed class GetLinksQuery : QueryBase<IReadOnlyCollection<Link>>
 {
     private readonly GetLinksQueryParameters _parameters;
     private readonly IRepository<Link> _repository;
-
+    
     /// <summary xml:lang = "ru">
     /// Создает новый экземпляр типа <see cref="GetLinksQuery"/>.
     /// </summary>
     /// <param name="parameters" xml:lang = "ru">
-    /// Параметры команды.
+    /// Параметры запроса.
     /// </param>
     /// <param name="repository" xml:lang = "ru">
     /// Репозиторий связей.

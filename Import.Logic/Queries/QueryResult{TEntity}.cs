@@ -1,27 +1,25 @@
-﻿using General.Logic.Commands;
-using General.Logic.Executables;
+﻿using General.Logic.Executables;
 using General.Logic.Queries;
 
-using Import.Logic.Abstractions;
 using Import.Logic.Commands;
 
 namespace Import.Logic.Queries;
 
 /// <summary xml:lang="ru">
-/// Результат выполнения комманды с вернувшимся значением.
+/// Результат выполнения запроса.
 /// </summary>
 /// <typeparam name="TEntity" xml:lang="ru">
-/// Тип данных который возвращется вместе с результатом команды.
+/// Тип результата запроса.
 /// </typeparam>
-public sealed class QueryResult<TEntity> : IQueryResult<TEntity> where TEntity : class
+public sealed class QueryResult<TEntity> : IQueryResult
 {
     /// <summary xml:lang="ru">
     /// Создаёт экземпляр класса <see cref="QueryResult{TEntity}"/>.
     /// </summary>
     /// <param name="id" xml:lang="ru">Идентификатор команды.</param>
-    /// <param name="errorMessge" xml:lang="ru">Сообщенеи оь ошибке.</param>
+    /// <param name="errorMessge" xml:lang="ru">Сообщение об ошибке.</param>
     /// <param name="result" xml:lang="ru">Результат выполнения команды.</param>
-    private QueryResult(ExecutableID id, string? errorMessge = null, TEntity? result = null)
+    private QueryResult(ExecutableID id, string? errorMessge = null, object? result = null)
     {
         Id = id;
         ErrorMessage = errorMessge;
@@ -35,22 +33,22 @@ public sealed class QueryResult<TEntity> : IQueryResult<TEntity> where TEntity :
     public string? ErrorMessage { get; }
 
     /// <inheritdoc/>
-    public TEntity? Result { get; }
+    public object? Result { get; }
 
     /// <summary xml:lang = "ru">
-    /// Создает провальный результат команды.
+    /// Создает провальный результат запроса.
     /// </summary>
     /// <param name="id" xml:lang = "ru">
-    /// Идентификатор команды.
+    /// Идентификатор запроса.
     /// </param>
     /// <param name="errorMessage" xml:lang = "ru">
     /// Сообщение содержащие описание ошибки.
     /// </param>
     /// <returns xml:lang = "ru">
-    /// Результат неуспешной команды типа <see cref="CommandResult"/>.
+    /// Результат неуспешной запроса типа <see cref="QueryResult{TEntity}"/>.
     /// </returns>
     /// <exception cref="ArgumentNullException" xml:lang = "ru">
-    /// Если идентификатор команды был <see langword="null"/>.
+    /// Если идентификатор запроса  был <see langword="null"/>.
     /// </exception>
     /// <exception cref="ArgumentException" xml:lang = "ru">
     /// Если <paramref name="errorMessage"/> или пустое или содержит только пробелы или <see langword="null"/>.
@@ -64,17 +62,17 @@ public sealed class QueryResult<TEntity> : IQueryResult<TEntity> where TEntity :
             : errorMessage);
 
     /// <summary xml:lang = "ru">
-    /// Создает успешный результат команды.
+    /// Создает успешный результат запроса.
     /// </summary>
     /// <param name="id" xml:lang = "ru">
-    /// Идентификатор команды.
+    /// Идентификатор запроса.
     /// </param>
     /// <returns xml:lang = "ru">
-    /// Результат успешной команды типа <see cref="CommandResult"/>.
+    /// Результат успешного запроса типа <see cref="QueryResult{TEntity}"/>.
     /// </returns>
     /// <exception cref="ArgumentNullException" xml:lang = "ru">
     /// Если один из параметров <see langword="null"/>.
     /// </exception>
-    public static QueryResult<TEntity> Success(ExecutableID id, TEntity result) =>
+    public static QueryResult<TEntity> Success(ExecutableID id, object result) =>
         new(id ?? throw new ArgumentNullException(nameof(id)), result: result ?? throw new ArgumentNullException(nameof(id)));
 }

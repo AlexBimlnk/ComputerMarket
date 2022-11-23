@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using General.Logic.Executables;
+﻿using General.Logic.Executables;
 
 namespace General.Logic.Queries;
-public interface IQueryResult<TEntity> : IExecutableResult
+
+/// <summary xml:lang = "ru">
+/// Описывает результат выполнения запроса.
+/// </summary>
+public interface IQueryResult : IExecutableResult
 {
-    public TEntity? Result { get; }
+    /// <summary xml:lang = "ru">
+    /// Результат выполнения запроса.
+    /// </summary>
+    public object? Result { get; }
 }

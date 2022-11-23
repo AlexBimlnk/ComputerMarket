@@ -1,5 +1,4 @@
-﻿using General.Logic.Commands;
-using General.Logic.Executables;
+﻿using General.Logic.Executables;
 using General.Logic.Queries;
 
 using Import.Logic.Queries;
@@ -9,9 +8,9 @@ namespace Import.Logic.Abstractions;
 /// <summary xml:lang = "ru">
 /// Абстрактная команда возвращающая результат.
 /// </summary>
-public abstract class QueryBase<TEntity> : IQuery<TEntity> where TEntity : class
+public abstract class QueryBase<TEntity> : IQuery
 {
-    protected TEntity? Result { get; set; }
+    protected object? Result { get; set; }
 
     /// <summary xml:lang = "ru">
     /// Идентификатор команды.
@@ -21,7 +20,7 @@ public abstract class QueryBase<TEntity> : IQuery<TEntity> where TEntity : class
     protected abstract Task ExecuteCoreAsync();
 
     /// <inheritdoc/>
-    public async Task<IQueryResult<TEntity>> ExecuteAsync()
+    public async Task<IQueryResult> ExecuteAsync()
     {
         try
         {
