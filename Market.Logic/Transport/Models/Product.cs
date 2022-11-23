@@ -10,30 +10,30 @@ public sealed class Product
     /// <summary xml:lang = "ru">
     /// Внешний индетификатор продукта.
     /// </summary>
-    [JsonProperty("external_id")]
+    [JsonProperty("external_id", Required = Required.Always)]
     public long ExternalID { get; set; }
 
     /// <summary xml:lang = "ru">
     /// Внутрений индетификатор продукта.
     /// </summary>
-    [JsonProperty("internal_id")]
+    [JsonProperty("internal_id", Required = Required.Always)]
     public long? InternalID { get; set; }
 
     /// <summary xml:lang = "ru">
     /// Название поставщика.
     /// </summary>
-    [JsonProperty("provider_id")]
+    [JsonProperty("provider_id", Required = Required.Always)]
     public long? ProviderID { get; set; }
 
     /// <summary xml:lang = "ru">
     /// Цена продукта.
     /// </summary>
-    [JsonProperty("price")]
+    [JsonProperty("price", Required = Required.Always)]
     public decimal Price { get; set; }
 
     /// <summary xml:lang = "ru">
     /// Колличество продукта.
     /// </summary>
-    [JsonProperty("quantity")]
+    [JsonProperty("quantity", Required = Required.Always)]
     public int Quantity { get; set; }
 }

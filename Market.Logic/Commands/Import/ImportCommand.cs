@@ -1,4 +1,6 @@
-﻿namespace Market.Logic.Commands.Import;
+﻿using General.Logic.Commands;
+
+namespace Market.Logic.Commands.Import;
 
 /// <summary xml:lang = "ru">
 /// Маркерный класс команд для сервиса импорта.
@@ -11,7 +13,7 @@ public abstract class ImportCommand : CommandBase
     /// <param name="id" xml:lang = "ru">
     /// Идентификатор команды.
     /// </param>
-    protected ImportCommand(CommandId id, CommandType type)
+    protected ImportCommand(CommandID id, CommandType type)
         : base(id, type)
     {
     }

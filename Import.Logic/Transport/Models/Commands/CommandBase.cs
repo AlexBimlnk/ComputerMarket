@@ -22,12 +22,12 @@ public abstract class CommandBase
     /// <summary xml:lang = "ru">
     /// Тип команды.
     /// </summary>
-    [JsonProperty("type")]
+    [JsonProperty("type", Required = Required.Always)]
     public CommandType Type { get; }
 
     /// <summary xml:lang = "ru">
     /// Идентификатор команды.
     /// </summary>
-    [JsonProperty("id")]
+    [JsonProperty("id", Required = Required.Always)]
     public string Id { get; }
 }

@@ -13,7 +13,7 @@ namespace Import.Controllers;
 [Route("import/[controller]")]
 public class CommandsController : ControllerBase
 {
-    private readonly ILogger<ImportController> _logger;
+    private readonly ILogger<CommandsController> _logger;
     private readonly IAPICommandHandler _commandHandler;
 
     /// <summary xml:lang = "ru">
@@ -29,7 +29,7 @@ public class CommandsController : ControllerBase
     /// Когда любой из входных оказался <see langword="null"/>.
     /// </exception>
     public CommandsController(
-        ILogger<ImportController> logger,
+        ILogger<CommandsController> logger,
         IAPICommandHandler commandHandler)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -48,7 +48,7 @@ public class CommandsController : ControllerBase
     /// <returns xml:lang = "ru">
     /// Результат выполнения команды типа <see cref="CommandResult"/>.
     /// </returns>
-    [HttpGet]
+    [HttpPost]
     public async Task<ICommandResult> ExecuteCommandAsync()
     {
         var body = await ReadRequestBodyAsync();

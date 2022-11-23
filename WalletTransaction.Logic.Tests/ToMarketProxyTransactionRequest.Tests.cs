@@ -2,43 +2,43 @@ using Moq;
 
 namespace WalletTransaction.Logic.Tests;
 
-public class MarketProxyTransactionRequestTests
+public class ToMarketProxyTransactionRequestTests
 {
-    [Fact(DisplayName = $"The {nameof(MarketProxyTransactionRequest)} can be created.")]
+    [Fact(DisplayName = $"The {nameof(ToMarketProxyTransactionRequest)} can be created.")]
     [Trait("Category", "Unit")]
     public void CanBeCreated()
     {
         // Arrange
-        MarketProxyTransactionRequest proxy = null!;
+        ToMarketProxyTransactionRequest proxy = null!;
 
         var request = Mock.Of<ITransactionsRequest>(MockBehavior.Strict);
 
         // Act
         var exception = Record.Exception(() => proxy =
-            new MarketProxyTransactionRequest(request));
+            new ToMarketProxyTransactionRequest(request));
 
         // Assert
         exception.Should().BeNull();
     }
 
-    [Fact(DisplayName = $"The {nameof(MarketProxyTransactionRequest)} can't be created without request.")]
+    [Fact(DisplayName = $"The {nameof(ToMarketProxyTransactionRequest)} can't be created without request.")]
     [Trait("Category", "Unit")]
     public void CanBeCreatedWithoutRequest()
     {
         // Arrange
-        MarketProxyTransactionRequest proxy = null!;
+        ToMarketProxyTransactionRequest proxy = null!;
 
         var request = Mock.Of<ITransactionsRequest>(MockBehavior.Strict);
 
         // Act
         var exception = Record.Exception(() => proxy =
-            new MarketProxyTransactionRequest(null!));
+            new ToMarketProxyTransactionRequest(null!));
 
         // Assert
         exception.Should().BeOfType<ArgumentNullException>();
     }
 
-    [Fact(DisplayName = $"The {nameof(MarketProxyTransactionRequest)} get same id.")]
+    [Fact(DisplayName = $"The {nameof(ToMarketProxyTransactionRequest)} get same id.")]
     [Trait("Category", "Unit")]
     public void ProxyGetSameId()
     {
@@ -49,7 +49,7 @@ public class MarketProxyTransactionRequestTests
         request.SetupGet(x => x.Id)
             .Returns(id);
 
-        var proxy = new MarketProxyTransactionRequest(request.Object);
+        var proxy = new ToMarketProxyTransactionRequest(request.Object);
 
         // Act
         var actual = proxy.Id;
@@ -58,7 +58,7 @@ public class MarketProxyTransactionRequestTests
         actual.Should().Be(id);
     }
 
-    [Fact(DisplayName = $"The {nameof(MarketProxyTransactionRequest)} get same id.")]
+    [Fact(DisplayName = $"The {nameof(ToMarketProxyTransactionRequest)} get same id.")]
     [Trait("Category", "Unit")]
     public void ProxyDirectTransactionsToMarketAccount()
     {
@@ -90,7 +90,7 @@ public class MarketProxyTransactionRequestTests
         request.SetupGet(x => x.Transactions)
             .Returns(transactions);
 
-        var proxy = new MarketProxyTransactionRequest(request.Object);
+        var proxy = new ToMarketProxyTransactionRequest(request.Object);
 
         var expectedTransferredBalance = transactions.Select(x => x.TransferBalance)
             .Sum();
@@ -102,10 +102,10 @@ public class MarketProxyTransactionRequestTests
         actual.From.Should().Be(fromAccount);
         actual.TransferBalance.Should().Be(expectedTransferredBalance);
         actual.HeldBalance.Should().Be(0);
-        actual.To.Should().BeEquivalentTo(MarketProxyTransactionRequest.MarketAccount);
+        actual.To.Should().BeEquivalentTo(ToMarketProxyTransactionRequest.MarketAccount);
     }
 
-    [Fact(DisplayName = $"The {nameof(MarketProxyTransactionRequest)} capture finished status as held status.")]
+    [Fact(DisplayName = $"The {nameof(ToMarketProxyTransactionRequest)} capture finished status as held status.")]
     [Trait("Category", "Unit")]
     public void CaptureFinishedStatusAsHeld()
     {
@@ -126,7 +126,7 @@ public class MarketProxyTransactionRequestTests
 
         var request = new Mock<ITransactionsRequest>();
 
-        var proxy = new MarketProxyTransactionRequest(request.Object);
+        var proxy = new ToMarketProxyTransactionRequest(request.Object);
 
         // Act
         proxy.CurrentState = TransactionRequestState.Finished;

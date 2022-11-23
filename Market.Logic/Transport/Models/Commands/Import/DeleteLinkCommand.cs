@@ -20,14 +20,14 @@ public sealed class DeleteLinkCommand : CommandBase
     /// <summary xml:lang = "ru">
     /// Внешний идентификатор.
     /// </summary>
-    [JsonProperty("external_id")]
+    [JsonProperty("external_id", Required = Required.Always)]
     public long ExternalID { get; set; }
 
     /// <summary xml:lang = "ru">
     /// Идентификатор провайдера.
     /// </summary>
-    [JsonProperty("provider_id")]
-    public long ProviderID { get; set; } = default!;
+    [JsonProperty("provider_id", Required = Required.Always)]
+    public long ProviderID { get; set; }
 
     public static DeleteLinkCommand ToModel(Logic.Commands.Import.DeleteLinkCommand command)
     {

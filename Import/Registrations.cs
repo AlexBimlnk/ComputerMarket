@@ -49,10 +49,10 @@ public static class Registrations
             .AddSingleton<IConverter<HornsAndHoovesProduct, Product>>(sp =>
                 sp.GetRequiredService<ProductsConverter>())
 
-            .AddSingleton<ICommandFactory, CommandFactory>()
-            .AddSingleton<Func<SetLinkCommandParameters, ICommand>>(
+            .AddScoped<ICommandFactory, CommandFactory>()
+            .AddScoped<Func<SetLinkCommandParameters, ICommand>>(
                static provider => (parameters) => ActivatorUtilities.CreateInstance<SetLinkCommand>(provider, parameters))
-            .AddSingleton<Func<DeleteLinkCommandParameters, ICommand>>(
+            .AddScoped<Func<DeleteLinkCommandParameters, ICommand>>(
                static provider => (parameters) => ActivatorUtilities.CreateInstance<DeleteLinkCommand>(provider, parameters));
 
     private static IServiceCollection AddTransport(this IServiceCollection services)
