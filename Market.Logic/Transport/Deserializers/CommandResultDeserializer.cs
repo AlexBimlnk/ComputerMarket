@@ -1,4 +1,4 @@
-﻿using General.Logic.Commands;
+﻿using General.Logic.Executables;
 using General.Transport;
 
 using Market.Logic.Commands;
@@ -37,7 +37,7 @@ public sealed class CommandResultDeserializer : IDeserializer<string, CommandRes
             throw new InvalidOperationException("Give JSON file doesn't have correct structure.");
         }
 
-        return new CommandResult(new CommandID(result.Id.Value), result.ErrorMessage);
+        return new CommandResult(new ExecutableID(result.Id.Value), result.ErrorMessage);
     }
 
     private sealed class TCommandResult

@@ -1,4 +1,4 @@
-﻿using General.Logic.Commands;
+﻿using General.Logic.Executables;
 
 using Market.Logic.Models;
 
@@ -28,7 +28,7 @@ public sealed class SetLinkCommand : ImportCommand
     /// Если <paramref name="provider"/> оказался <see langword="null"/>.
     /// </exception>
     public SetLinkCommand(
-        CommandID id,
+        ExecutableID id,
         ID internalItemId,
         ID externalItemId,
         Provider provider)

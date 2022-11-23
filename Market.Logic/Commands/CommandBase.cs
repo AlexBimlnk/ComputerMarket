@@ -1,4 +1,4 @@
-﻿using General.Logic.Commands;
+﻿using General.Logic.Executables;
 
 namespace Market.Logic.Commands;
 
@@ -16,7 +16,7 @@ public abstract class CommandBase
     /// <exception cref="ArgumentNullException" xml:lang = "ru">
     /// Если <paramref name="id"/> оказался <see langword="null"/>.
     /// </exception>
-    protected CommandBase(CommandID id, CommandType type)
+    protected CommandBase(ExecutableID id, CommandType type)
     {
         Id = id ?? throw new ArgumentNullException(nameof(id));
 
@@ -28,7 +28,7 @@ public abstract class CommandBase
     /// <summary xml:lang = "ru">
     /// Идентификатор команды.
     /// </summary>
-    public CommandID Id { get; }
+    public ExecutableID Id { get; }
 
     /// <summary xml:lang = "ru">
     /// Тип команды.

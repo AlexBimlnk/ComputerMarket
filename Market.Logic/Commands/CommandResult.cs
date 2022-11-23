@@ -1,4 +1,5 @@
 ﻿using General.Logic.Commands;
+using General.Logic.Executables;
 
 namespace Market.Logic.Commands;
 
@@ -19,7 +20,7 @@ public sealed class CommandResult : ICommandResult
     /// <exception cref="ArgumentNullException" xml:lang = "ru">
     /// Если <paramref name="id"/> - <see langword="null"/>.
     /// </exception>
-    public CommandResult(CommandID id, string? errorMessge)
+    public CommandResult(ExecutableID id, string? errorMessge)
     {
         Id = id ?? throw new ArgumentNullException(nameof(id));
 
@@ -27,7 +28,7 @@ public sealed class CommandResult : ICommandResult
     }
 
     /// <inheritdoc/>
-    public CommandID Id { get; }
+    public ExecutableID Id { get; }
 
     /// <inheritdoc/>
     public bool IsSuccess => ErrorMessage is null;

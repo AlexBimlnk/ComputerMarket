@@ -1,4 +1,4 @@
-﻿using General.Logic.Commands;
+﻿using General.Logic.Executables;
 
 using Market.Logic.Commands;
 using Market.Logic.Transport.Deserializers;
@@ -67,7 +67,7 @@ public class CommandResultDeserializerTests
                     ""errorMessage"":null
                 }
             ",
-            new CommandResult(new CommandID("id1"), errorMessge: null!)
+            new CommandResult(new ExecutableID("id1"), errorMessge: null!)
 
         },
         {
@@ -82,7 +82,7 @@ public class CommandResultDeserializerTests
                     ""errorMessage"" : ""Some error was""
                 }
             ",
-            new CommandResult(new CommandID("id2"), errorMessge: "Some error was")
+            new CommandResult(new ExecutableID("id2"), errorMessge: "Some error was")
         }
     };
 }

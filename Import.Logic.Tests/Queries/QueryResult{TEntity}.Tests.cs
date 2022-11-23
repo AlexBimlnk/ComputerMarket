@@ -73,7 +73,7 @@ public class CommandCallbackResultTests
 
         // Act
         var exception = Record.Exception(() =>
-            commandResult = QueryResult<FakeQueryResult>.Success(id, entityResult.ToString()));
+            commandResult = QueryResult<FakeQueryResult>.Success(id, entityResult));
 
         // Assert
         exception.Should().BeNull();
@@ -92,7 +92,7 @@ public class CommandCallbackResultTests
 
         // Act
         var exception = Record.Exception(() =>
-            commandResult = QueryResult<FakeQueryResult>.Success(id: null!, entityResult.ToString()));
+            commandResult = QueryResult<FakeQueryResult>.Success(id: null!, entityResult));
 
         // Assert
         exception.Should().BeOfType<ArgumentNullException>();

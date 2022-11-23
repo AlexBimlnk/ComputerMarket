@@ -28,7 +28,7 @@ public class QueryResultSerializer : ISerializer<IQueryResult, string>
     private sealed class TQueryResult
     {
         [JsonProperty("id")]
-        public string Id { get; set; }
+        public string Id { get; set; } = default!;
 
         [JsonProperty("error_message")]
         public string? ErrorMessage { get; set; }
