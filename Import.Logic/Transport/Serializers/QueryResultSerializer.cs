@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 namespace Import.Logic.Transport.Serializers;
 
 /// <summary xml:lang = "ru">
-/// Сериализатор запросов.
+/// Сериализатор результата запросов.
 /// </summary>
 public class QueryResultSerializer : ISerializer<IQueryResult, string>
 {

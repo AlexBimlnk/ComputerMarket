@@ -1,10 +1,10 @@
-﻿using General.Logic.Commands;
-using General.Logic.Executables;
+﻿using General.Logic.Executables;
 
 using Import.Logic.Queries;
 
 namespace Import.Logic.Tests.Queries;
-public class CommandCallbackResultTests
+
+public class QueryResultTests
 {
     [Fact(DisplayName = $"The {nameof(QueryResult<FakeQueryResult>)} can create fail result.")]
     [Trait("Category", "Unit")]

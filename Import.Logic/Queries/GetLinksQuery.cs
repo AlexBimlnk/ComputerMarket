@@ -41,7 +41,7 @@ public sealed class GetLinksQuery : QueryBase<IReadOnlyCollection<Link>>
 
     protected override Task ExecuteCoreAsync()
     {
-        Result = _repository.GetEntities().ToArray();
+        Result = _repository.GetEntities().ToList();
         return Task.CompletedTask;
     }
 }

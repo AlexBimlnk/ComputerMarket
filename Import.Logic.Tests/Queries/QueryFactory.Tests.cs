@@ -1,5 +1,4 @@
-﻿using General.Logic.Commands;
-using General.Logic.Executables;
+﻿using General.Logic.Executables;
 using General.Logic.Queries;
 
 using Import.Logic.Commands;
@@ -9,6 +8,7 @@ using Import.Logic.Queries;
 using Moq;
 
 namespace Import.Logic.Tests.Commands;
+
 public class QueryFactoryTests
 {
     [Fact(DisplayName = $"The {nameof(QueryFactory)} can create.")]

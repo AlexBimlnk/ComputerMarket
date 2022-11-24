@@ -85,7 +85,7 @@ public class GetLinksCommandTests
         var repositoryCallBack = 0;
         repository
             .Setup(x => x.GetEntities())
-            .Returns(() => links)
+            .Returns(links)
             .Callback(() => repositoryCallBack++);
 
         var command = new GetLinksQuery(
