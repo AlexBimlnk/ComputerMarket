@@ -1,4 +1,4 @@
-﻿using General.Logic.Commands;
+﻿using General.Logic.Executables;
 
 namespace Market.Logic.Commands.Import;
 
@@ -13,7 +13,7 @@ public abstract class ImportCommand : CommandBase
     /// <param name="id" xml:lang = "ru">
     /// Идентификатор команды.
     /// </param>
-    protected ImportCommand(CommandID id, CommandType type)
+    protected ImportCommand(ExecutableID id, CommandType type)
         : base(id, type)
     {
     }

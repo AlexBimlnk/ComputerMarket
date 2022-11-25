@@ -2,6 +2,7 @@
 using Import.Logic.Transport.Serializers;
 
 namespace Import.Logic.Tests.Transport.Serializers;
+
 public class ProductsSerializerTests
 {
     [Fact(DisplayName = $"The instance can create.")]

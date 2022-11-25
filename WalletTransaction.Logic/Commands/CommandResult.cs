@@ -1,4 +1,5 @@
 ﻿using General.Logic.Commands;
+using General.Logic.Executables;
 
 namespace WalletTransaction.Logic.Commands;
 
@@ -7,14 +8,14 @@ namespace WalletTransaction.Logic.Commands;
 /// </summary>
 public sealed class CommandResult : ICommandResult
 {
-    private CommandResult(CommandID id, string? errorMessge = null)
+    private CommandResult(ExecutableID id, string? errorMessge = null)
     {
         Id = id;
         ErrorMessage = errorMessge;
     }
 
     /// <inheritdoc/>
-    public CommandID Id { get; }
+    public ExecutableID Id { get; }
 
     /// <inheritdoc/>
     public bool IsSuccess => ErrorMessage is null;
@@ -38,7 +39,7 @@ public sealed class CommandResult : ICommandResult
     /// Если идентификатор команды был <see langword="null"/>.
     /// </exception>
     /// <exception cref="ArgumentException" xml:lang = "ru"></exception>
-    public static CommandResult Fail(CommandID id, string errorMessage) =>
+    public static CommandResult Fail(ExecutableID id, string errorMessage) =>
         new(id ?? throw new ArgumentNullException(nameof(id)),
             string.IsNullOrWhiteSpace(errorMessage)
             ? throw new ArgumentException(
@@ -58,6 +59,6 @@ public sealed class CommandResult : ICommandResult
     /// <exception cref="ArgumentNullException" xml:lang = "ru">
     /// Если идентификатор команды был <see langword="null"/>.
     /// </exception>
-    public static CommandResult Success(CommandID id) =>
+    public static CommandResult Success(ExecutableID id) =>
         new(id ?? throw new ArgumentNullException(nameof(id)));
 }

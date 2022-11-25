@@ -1,4 +1,4 @@
-﻿using General.Logic.Commands;
+﻿using General.Logic.Executables;
 using General.Transport;
 
 using Market.Logic.Commands;
@@ -201,7 +201,7 @@ public class CommandSenderTests
 
     public sealed class FakeCommand : CommandBase
     {
-        public FakeCommand(CommandID id) 
+        public FakeCommand(ExecutableID id) 
             : base(id, CommandType.SetLink)
         {
         }

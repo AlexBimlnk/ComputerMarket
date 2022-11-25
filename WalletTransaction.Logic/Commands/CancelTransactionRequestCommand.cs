@@ -1,4 +1,5 @@
 ﻿using General.Logic.Commands;
+using General.Logic.Executables;
 using General.Storage;
 
 namespace WalletTransaction.Logic.Commands;
@@ -32,7 +33,7 @@ public sealed class CancelTransactionRequestCommand : CommandBase, ICommand
     }
 
     /// <inheritdoc/>
-    public override CommandID Id => _parameters.Id;
+    public override ExecutableID Id => _parameters.Id;
 
     protected override Task ExecuteCoreAsync()
     {

@@ -1,4 +1,5 @@
 ﻿using General.Logic.Commands;
+using General.Logic.Executables;
 
 using Import.Logic.Models;
 
@@ -21,7 +22,7 @@ public sealed class SetLinkCommandParameters : CommandParametersBase
     /// <param name="externalID" xml:lang = "ru">
     /// Внешний идентификатор.
     /// </param>
-    public SetLinkCommandParameters(CommandID id, InternalID internalID, ExternalID externalID)
+    public SetLinkCommandParameters(ExecutableID id, InternalID internalID, ExternalID externalID)
         : base(id)
     {
         InternalID = internalID;

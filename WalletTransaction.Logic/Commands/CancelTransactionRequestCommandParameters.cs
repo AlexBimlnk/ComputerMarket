@@ -1,4 +1,5 @@
 ﻿using General.Logic.Commands;
+using General.Logic.Executables;
 
 namespace WalletTransaction.Logic.Commands;
 
@@ -17,7 +18,7 @@ public sealed class CancelTransactionRequestCommandParameters : CommandParameter
     /// Идентификатор запроса который необходимо отменить. 
     /// </param>
     public CancelTransactionRequestCommandParameters(
-        CommandID id,
+        ExecutableID id,
         InternalID requestId) : base(id)
     {
         TransactionRequestId = requestId;

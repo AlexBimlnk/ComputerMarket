@@ -1,4 +1,4 @@
-﻿using General.Logic.Commands;
+﻿using General.Logic.Executables;
 using General.Storage;
 
 using Import.Logic.Abstractions;
@@ -41,7 +41,7 @@ public sealed class DeleteLinkCommand : CommandBase
     }
 
     /// <inheritdoc/>
-    public override CommandID Id => _parameters.Id;
+    public override ExecutableID Id => _parameters.Id;
 
     /// <inheritdoc/>
     protected override Task ExecuteCoreAsync()

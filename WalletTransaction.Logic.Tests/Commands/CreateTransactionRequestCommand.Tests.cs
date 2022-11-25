@@ -1,4 +1,5 @@
 ﻿using General.Logic.Commands;
+using General.Logic.Executables;
 using General.Storage;
 using General.Transport;
 
@@ -32,7 +33,7 @@ public class CreateTransactionRequestCommandTests
         var request = new TransactionRequest(id, transactions);
 
         CreateTransactionRequestCommand command = null!;
-        var commandId = new CommandID("some id");
+        var commandId = new ExecutableID("some id");
         var parameters = new CreateTransactionRequestCommandParameters(
             commandId,
             request);
@@ -85,7 +86,7 @@ public class CreateTransactionRequestCommandTests
 
         var request = new TransactionRequest(id, transactions);
 
-        var commandId = new CommandID("some id");
+        var commandId = new ExecutableID("some id");
         var parameters = new CreateTransactionRequestCommandParameters(
             commandId,
             request);
@@ -120,7 +121,7 @@ public class CreateTransactionRequestCommandTests
 
         var request = new TransactionRequest(id, transactions);
 
-        var commandId = new CommandID("some id");
+        var commandId = new ExecutableID("some id");
         var parameters = new CreateTransactionRequestCommandParameters(
             commandId,
             request);
@@ -158,7 +159,7 @@ public class CreateTransactionRequestCommandTests
 
         var proxy = new ToMarketProxyTransactionRequest(request);
 
-        var commandId = new CommandID("some id");
+        var commandId = new ExecutableID("some id");
         var parameters = new CreateTransactionRequestCommandParameters(
             commandId,
             request);
@@ -212,7 +213,7 @@ public class CreateTransactionRequestCommandTests
 
         var request = new TransactionRequest(id, transactions);
 
-        var commandId = new CommandID("some id");
+        var commandId = new ExecutableID("some id");
         var parameters = new CreateTransactionRequestCommandParameters(
             commandId,
             request);

@@ -1,4 +1,5 @@
 ﻿using General.Logic.Commands;
+using General.Logic.Executables;
 
 using Import.Logic.Commands;
 
@@ -11,7 +12,7 @@ public class CommandResultTests
     {
         // Arrange
         CommandResult commandResult = null!;
-        var id = new CommandID("some id");
+        var id = new ExecutableID("some id");
         var errorMessage = "some error message";
 
         // Act
@@ -51,7 +52,7 @@ public class CommandResultTests
     {
         // Arrange
         CommandResult commandResult = null!;
-        var id = new CommandID("some id");
+        var id = new ExecutableID("some id");
 
         // Act
         var exception = Record.Exception(() =>
@@ -67,7 +68,7 @@ public class CommandResultTests
     {
         // Arrange
         CommandResult commandResult = null!;
-        var id = new CommandID("some id");
+        var id = new ExecutableID("some id");
 
         // Act
         var exception = Record.Exception(() =>

@@ -15,7 +15,7 @@ public class LinkRepositoryIntegrationTests : DBIntegrationTestBase
     public LinkRepositoryIntegrationTests()
         : base(nameof(LinkRepositoryIntegrationTests)) { }
 
-    [Fact(DisplayName = $"The {nameof(LinkRepository)} can add link.")]
+    [Fact(DisplayName = $"The {nameof(LinkRepository)} can add link.", Skip = "Integration test")]
     [Trait("Category", "Integration")]
     public async Task CanAddLinkAsync()
     {
@@ -71,7 +71,7 @@ public class LinkRepositoryIntegrationTests : DBIntegrationTestBase
         dbLinks.Should().BeEquivalentTo(expectedLink);
     }
 
-    [Theory(DisplayName = $"The {nameof(LinkRepository)} can contains works.")]
+    [Theory(DisplayName = $"The {nameof(LinkRepository)} can contains works.", Skip = "Integration test")]
     [Trait("Category", "Integration")]
     [MemberData(nameof(ContainsData))]
     public async Task CanContainsWorksAsync(Link inputLink, bool expectedResult)
@@ -102,7 +102,7 @@ public class LinkRepositoryIntegrationTests : DBIntegrationTestBase
         result.Should().Be(expectedResult);
     }
 
-    [Fact(DisplayName = $"The {nameof(LinkRepository)} can delete link.")]
+    [Fact(DisplayName = $"The {nameof(LinkRepository)} can delete link.", Skip = "Integration test")]
     [Trait("Category", "Integration")]
     public async Task CanDeleteLinkAsync()
     {

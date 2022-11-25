@@ -1,4 +1,5 @@
 ﻿using General.Logic.Commands;
+using General.Logic.Executables;
 
 namespace WalletTransaction.Logic.Commands;
 
@@ -20,7 +21,7 @@ public sealed class CreateTransactionRequestCommandParameters : CommandParameter
     /// Когда любой из параметров оказался <see langword="null"/>.
     /// </exception>
     public CreateTransactionRequestCommandParameters(
-        CommandID id,
+        ExecutableID id,
         TransactionRequest transactionRequest) : base(id)
     {
         TransactionRequest = transactionRequest ?? throw new ArgumentNullException(nameof(transactionRequest));

@@ -1,4 +1,5 @@
 ﻿using General.Logic.Commands;
+using General.Logic.Executables;
 
 namespace WalletTransaction.Logic.Commands;
 
@@ -15,15 +16,15 @@ public sealed class CommandFactory : ICommandFactory
     /// Создает новый экземпляр типа <see cref="CommandFactory"/>.
     /// </summary>
     /// <param name="createRequestCommandFactory" xml:lang = "ru">
-    /// Делегат, создающий на основе <see cref="CommandID"/> и <see cref="CreateTransactionRequestCommand"/>
+    /// Делегат, создающий на основе <see cref="ExecutableID"/> и <see cref="CreateTransactionRequestCommand"/>
     /// команду типа <see cref="ICommand"/>.
     /// </param>
     /// <param name="cancelRequestCommandFactory" xml:lang = "ru">
-    /// Делегат, создающий на основе <see cref="CommandID"/> и <see cref="CancelTransactionRequestCommand"/>
+    /// Делегат, создающий на основе <see cref="ExecutableID"/> и <see cref="CancelTransactionRequestCommand"/>
     /// команду типа <see cref="ICommand"/>.
     /// </param>
     /// <param name="cancelRequestCommandFactory" xml:lang = "ru">
-    /// Делегат, создающий на основе <see cref="CommandID"/> и <see cref="FinishTransactionRequestCommand"/>
+    /// Делегат, создающий на основе <see cref="ExecutableID"/> и <see cref="FinishTransactionRequestCommand"/>
     /// команду типа <see cref="ICommand"/>.
     /// </param>
     /// <exception cref="ArgumentNullException" xml:lang = "ru">

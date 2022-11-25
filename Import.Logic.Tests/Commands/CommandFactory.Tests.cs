@@ -1,7 +1,9 @@
 ﻿using General.Logic.Commands;
+using General.Logic.Executables;
 
 using Import.Logic.Commands;
 using Import.Logic.Models;
+using Import.Logic.Queries;
 
 using Moq;
 
@@ -15,7 +17,7 @@ public class CommandFactoryTests
         // Arrange
         var setLink = Mock.Of<Func<SetLinkCommandParameters, ICommand>>();
         var deleteLink = Mock.Of<Func<DeleteLinkCommandParameters, ICommand>>();
-
+        
         // Act
         var exception = Record.Exception(() =>
             _ = new CommandFactory(setLink, deleteLink));
@@ -38,7 +40,7 @@ public class CommandFactoryTests
 
         var setLink = new Mock<Func<SetLinkCommandParameters, ICommand>>(MockBehavior.Strict);
         var deleteLink = Mock.Of<Func<DeleteLinkCommandParameters, ICommand>>();
-
+        
         var setLinkInvokeCount = 0;
         setLink.Setup(x => x.Invoke(setParameters))
             .Returns(command)
@@ -71,7 +73,7 @@ public class CommandFactoryTests
 
         var setLink = Mock.Of<Func<SetLinkCommandParameters, ICommand>>();
         var deleteLink = new Mock<Func<DeleteLinkCommandParameters, ICommand>>(MockBehavior.Strict);
-
+        
         var deleteLinkInvokeCount = 0;
         deleteLink.Setup(x => x.Invoke(deleteParameters))
             .Returns(command)
@@ -99,7 +101,7 @@ public class CommandFactoryTests
         // Arrange
         var setLink = Mock.Of<Func<SetLinkCommandParameters, ICommand>>(MockBehavior.Strict);
         var deleteLink = Mock.Of<Func<DeleteLinkCommandParameters, ICommand>>();
-
+        
         var factory = new CommandFactory(setLink, deleteLink);
 
         // Act
@@ -131,7 +133,7 @@ public class CommandFactoryTests
 
     private class UnknownParameters : CommandParametersBase
     {
-        public UnknownParameters(CommandID id) : base(id)
+        public UnknownParameters(ExecutableID id) : base(id)
         {
         }
     }

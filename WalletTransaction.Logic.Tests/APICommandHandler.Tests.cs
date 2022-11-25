@@ -1,4 +1,5 @@
 ﻿using General.Logic.Commands;
+using General.Logic.Executables;
 using General.Transport;
 
 using Microsoft.Extensions.Logging;
@@ -85,7 +86,7 @@ public class APICommandHandlerTests
         var deserializer = new Mock<IDeserializer<string, CommandParametersBase>>(MockBehavior.Strict);
 
         var request = "Some requst";
-        var commandId = new CommandID("some id");
+        var commandId = new ExecutableID("some id");
 
         var commandParameters = new Mock<CommandParametersBase>(MockBehavior.Strict, commandId);
 

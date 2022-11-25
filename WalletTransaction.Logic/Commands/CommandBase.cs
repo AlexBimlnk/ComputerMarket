@@ -1,4 +1,5 @@
 ﻿using General.Logic.Commands;
+using General.Logic.Executables;
 
 namespace WalletTransaction.Logic.Commands;
 
@@ -10,7 +11,7 @@ public abstract class CommandBase : ICommand
     /// <summary xml:lang = "ru">
     /// Идентификатор команды.
     /// </summary>
-    public abstract CommandID Id { get; }
+    public abstract ExecutableID Id { get; }
 
     protected abstract Task ExecuteCoreAsync();
 

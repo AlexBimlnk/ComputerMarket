@@ -1,4 +1,4 @@
-﻿using General.Logic.Commands;
+﻿using General.Logic.Executables;
 
 using Market.Logic.Commands.Import;
 using Market.Logic.Models;
@@ -14,7 +14,7 @@ public class DeleteLinkCommandTests
         // Arrange
         DeleteLinkCommand command = null!;
 
-        var id = new CommandID("some id");
+        var id = new ExecutableID("some id");
 
         var externalItemId = new ID(2);
 
@@ -71,7 +71,7 @@ public class DeleteLinkCommandTests
     public void CanNotBeCreatedWithoutProvider()
     {
         // Arrange
-        var id = new CommandID("some id");
+        var id = new ExecutableID("some id");
 
         var externalItemId = new ID(2);
 

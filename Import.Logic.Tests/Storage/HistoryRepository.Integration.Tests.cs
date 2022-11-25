@@ -14,7 +14,7 @@ public class HistoryRepositoryIntegrationTests : DBIntegrationTestBase
     public HistoryRepositoryIntegrationTests()
         : base(nameof(HistoryRepositoryIntegrationTests)) { }
 
-    [Fact(DisplayName = $"The {nameof(HistoryRepository)} can add history.")]
+    [Fact(DisplayName = $"The {nameof(HistoryRepository)} can add history.", Skip = "Integration test")]
     [Trait("Category", "Integration")]
     public async Task CanAddHistoryAsync()
     {
@@ -72,7 +72,7 @@ public class HistoryRepositoryIntegrationTests : DBIntegrationTestBase
         dbHistories.Should().BeEquivalentTo(expectedHistory);
     }
 
-    [Fact(DisplayName = $"The {nameof(HistoryRepository)} can add history if already exists.")]
+    [Fact(DisplayName = $"The {nameof(HistoryRepository)} can add history if already exists.", Skip = "Integration test")]
     [Trait("Category", "Integration")]
     public async Task CanAddHistoryIfAlreadyExistsAsync()
     {
@@ -132,7 +132,7 @@ public class HistoryRepositoryIntegrationTests : DBIntegrationTestBase
         dbHistories.Should().BeEquivalentTo(expectedHistory);
     }
 
-    [Theory(DisplayName = $"The {nameof(HistoryRepository)} can contains works.")]
+    [Theory(DisplayName = $"The {nameof(HistoryRepository)} can contains works.", Skip = "Integration test")]
     [Trait("Category", "Integration")]
     [MemberData(nameof(ContainsData))]
     public async Task CanContainsWorksAsync(History inputHistory, bool expectedResult)
@@ -163,7 +163,7 @@ public class HistoryRepositoryIntegrationTests : DBIntegrationTestBase
         result.Should().Be(expectedResult);
     }
 
-    [Fact(DisplayName = $"The {nameof(HistoryRepository)} can delete History.")]
+    [Fact(DisplayName = $"The {nameof(HistoryRepository)} can delete History.", Skip = "Integration test")]
     [Trait("Category", "Integration")]
     public async Task CanDeleteHistoryAsync()
     {

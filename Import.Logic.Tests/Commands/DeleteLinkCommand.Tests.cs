@@ -1,4 +1,5 @@
 ﻿using General.Logic.Commands;
+using General.Logic.Executables;
 using General.Storage;
 
 using Import.Logic.Commands;
@@ -16,7 +17,7 @@ public class DeleteLinkCommandTests
     {
         // Arrange
         DeleteLinkCommand command = null!;
-        var id = new CommandID("some id");
+        var id = new ExecutableID("some id");
         var parameters = new DeleteLinkCommandParameters(
             id,
             new(1, Provider.Ivanov));
@@ -53,7 +54,7 @@ public class DeleteLinkCommandTests
     public void CanNotBeCreatedWithoutCache()
     {
         // Arrange
-        var id = new CommandID("some id");
+        var id = new ExecutableID("some id");
         var parameters = new DeleteLinkCommandParameters(
             id,
             new(1, Provider.Ivanov));
@@ -72,7 +73,7 @@ public class DeleteLinkCommandTests
     public void CanNotBeCreatedWithoutRepository()
     {
         // Arrange
-        var id = new CommandID("some id");
+        var id = new ExecutableID("some id");
         var parameters = new DeleteLinkCommandParameters(
             id,
             new(1, Provider.Ivanov));
@@ -93,7 +94,7 @@ public class DeleteLinkCommandTests
         // Arrange
         var link = new Link(new InternalID(1), new ExternalID(1, Provider.Ivanov));
 
-        var id = new CommandID("some id");
+        var id = new ExecutableID("some id");
         var parameters = new DeleteLinkCommandParameters(
             id,
             new(1, Provider.Ivanov));
@@ -133,7 +134,7 @@ public class DeleteLinkCommandTests
         // Arrange
         Link link = null!;
 
-        var id = new CommandID("some id");
+        var id = new ExecutableID("some id");
         var parameters = new DeleteLinkCommandParameters(
             id,
             new(1, Provider.Ivanov));

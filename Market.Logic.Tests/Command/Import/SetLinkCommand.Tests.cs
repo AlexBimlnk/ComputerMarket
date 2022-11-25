@@ -1,4 +1,4 @@
-﻿using General.Logic.Commands;
+﻿using General.Logic.Executables;
 
 using Market.Logic.Commands.Import;
 using Market.Logic.Models;
@@ -14,7 +14,7 @@ public class SetLinkCommandTests
         // Arrange
         SetLinkCommand command = null!;
 
-        var id = new CommandID("some id");
+        var id = new ExecutableID("some id");
 
         var internalItemId = new ID(1);
         var externalItemId = new ID(2);
@@ -76,7 +76,7 @@ public class SetLinkCommandTests
     public void CanNotBeCreatedWithoutProvider()
     {
         // Arrange
-        var id = new CommandID("some id");
+        var id = new ExecutableID("some id");
 
         var internalItemId = new ID(1);
         var externalItemId = new ID(2);
