@@ -1,6 +1,7 @@
 ﻿using General.Logic;
 using General.Logic.Commands;
 using General.Logic.Executables;
+using General.Logic.Queries;
 using General.Storage;
 using General.Transport;
 
@@ -8,6 +9,7 @@ using Import.Logic;
 using Import.Logic.Abstractions;
 using Import.Logic.Commands;
 using Import.Logic.Models;
+using Import.Logic.Queries;
 using Import.Logic.Storage.Repositories;
 using Import.Logic.Transport.Configuration;
 using Import.Logic.Transport.Deserializers;
@@ -40,6 +42,7 @@ public static class Registrations
             .AddSingleton<IMapper<Product>, Mapper>()
             .AddSingleton<IHistoryRecorder, HistoryRecorder>()
 
+            .AddScoped<IAPIQueryHandler, APIQueryHandler>()
             .AddScoped<IAPICommandHandler, APICommandHandler>()
             .AddScoped(typeof(IAPIRequestHandler<>), typeof(APIExternalProductsHandler<>))
 
@@ -49,6 +52,10 @@ public static class Registrations
             .AddSingleton<IConverter<HornsAndHoovesProduct, Product>>(sp =>
                 sp.GetRequiredService<ProductsConverter>())
 
+            .AddScoped<IQueryFactory, QueryFactory>()
+            .AddScoped<Func<GetLinksQueryParameters, IQuery>>(
+                static provider => (parameters) => ActivatorUtilities.CreateInstance<GetLinksQuery>(provider, parameters))
+
             .AddScoped<ICommandFactory, CommandFactory>()
             .AddScoped<Func<SetLinkCommandParameters, ICommand>>(
                static provider => (parameters) => ActivatorUtilities.CreateInstance<SetLinkCommand>(provider, parameters))
@@ -57,7 +64,8 @@ public static class Registrations
 
     private static IServiceCollection AddTransport(this IServiceCollection services)
         => services
-            .AddSingleton<IDeserializer<string, ExecutableParametersBase>, CommandParametersDeserializer>()
+            .AddSingleton<IDeserializer<string, QueryParametersBase>, QueryParametersDeserializer>()
+            .AddSingleton<IDeserializer<string, CommandParametersBase>, CommandParametersDeserializer>()
             .AddSingleton<IDeserializer<string, IReadOnlyCollection<ExternalProduct>>, IvanovProductsDeserializer>()
             .AddSingleton<IDeserializer<string, IReadOnlyCollection<HornsAndHoovesProduct>>, HornsAndHoovesProductsDeserializer>()
 

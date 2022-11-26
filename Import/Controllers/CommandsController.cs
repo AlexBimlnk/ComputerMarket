@@ -1,6 +1,5 @@
 using General.Logic.Commands;
-
-using Import.Logic.Commands;
+using General.Logic.Queries;
 
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,6 +14,7 @@ public class CommandsController : ControllerBase
 {
     private readonly ILogger<CommandsController> _logger;
     private readonly IAPICommandHandler _commandHandler;
+    private readonly IAPIQueryHandler _queryHandler;
 
     /// <summary xml:lang = "ru">
     /// Создаёт новый экземпляр типа <see cref="CommandsController"/>.
@@ -30,10 +30,12 @@ public class CommandsController : ControllerBase
     /// </exception>
     public CommandsController(
         ILogger<CommandsController> logger,
-        IAPICommandHandler commandHandler)
+        IAPICommandHandler commandHandler,
+        IAPIQueryHandler queryHandler)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _commandHandler = commandHandler ?? throw new ArgumentNullException(nameof(commandHandler));
+        _queryHandler = queryHandler ?? throw new ArgumentNullException(nameof(queryHandler));
     }
 
     private async Task<string> ReadRequestBodyAsync()
@@ -46,7 +48,7 @@ public class CommandsController : ControllerBase
     /// Принимает запрос на выполнение команды.
     /// </summary>
     /// <returns xml:lang = "ru">
-    /// Результат выполнения команды типа <see cref="CommandResult"/>.
+    /// Результат выполнения команды типа <see cref="ICommandResult"/>.
     /// </returns>
     [HttpPost]
     public async Task<ICommandResult> ExecuteCommandAsync()
@@ -56,5 +58,21 @@ public class CommandsController : ControllerBase
         _logger.LogDebug("Given new request");
 
         return await _commandHandler.HandleAsync(body);
+    }
+
+    /// <summary xml:lang = "ru">
+    /// Принимает запрос на выполнение команды.
+    /// </summary>
+    /// <returns xml:lang = "ru">
+    /// Результат выполнения команды типа <see cref="IQueryResult"/>.
+    /// </returns>
+    [HttpGet]
+    public async Task<IQueryResult> ExecuteQueryAsync()
+    {
+        var body = await ReadRequestBodyAsync();
+
+        _logger.LogDebug("Given new request");
+
+        return await _queryHandler.HandleAsync(body);
     }
 }
