@@ -1,5 +1,4 @@
-﻿using Market.Logic.Commands;
-using Market.Logic.Models;
+﻿using Market.Logic.Models;
 using Market.Logic.Queries;
 using Market.Logic.Transport.Deserializers;
 

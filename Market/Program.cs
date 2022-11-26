@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
-
+builder.Host.UseSerilog((ctx, cfg) => cfg.ReadFrom.Configuration(ctx.Configuration));
 builder.Services.AddDbContext<MarketContext>(opt =>
     opt.UseNpgsql(builder.Configuration.GetSection("ConnectionString").Value));
 

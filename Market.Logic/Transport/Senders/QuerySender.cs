@@ -56,15 +56,15 @@ public sealed class QuerySender<TConfiguration, TQuery, TResult> : IQuerySender<
     }
 
     /// <inheritdoc/>
-    public async Task<TResult> SendAsync(TQuery command, CancellationToken token = default)
+    public async Task<TResult> SendAsync(TQuery query, CancellationToken token = default)
     {
-        ArgumentNullException.ThrowIfNull(command, nameof(command));
+        ArgumentNullException.ThrowIfNull(query, nameof(query));
 
         token.ThrowIfCancellationRequested();
 
-        _logger.LogDebug("Sending command of type {CommandType}...", typeof(TQuery));
+        _logger.LogDebug("Sending query of type {CommandType}...", typeof(TQuery));
 
-        var request = _serializer.Serialize(command);
+        var request = _serializer.Serialize(query);
         using var content = new StringContent(request);
 
         using var client = new HttpClient();
@@ -73,24 +73,31 @@ public sealed class QuerySender<TConfiguration, TQuery, TResult> : IQuerySender<
 
         try
         {
-            response = await client.PostAsync(_configuration.Destination, content, token)
+            var httpRequest = new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri(_configuration.Destination),
+                Content = content,
+            };
+
+            response = await client.SendAsync(httpRequest)
                 .ConfigureAwait(false);
 
             if (response.IsSuccessStatusCode)
-                _logger.LogInformation("The command have been successfully sended");
+                _logger.LogInformation("The query have been successfully sended");
             else
                 _logger.LogWarning(
-                    "The command have not been sended. Response status code: {Status code}",
+                    "The query have not been sended. Response status code: {Status code}",
                     response.StatusCode);
         }
         catch (Exception ex)
             when (ex is InvalidOperationException or HttpRequestException)
         {
             _logger.LogWarning(
-                "The command have not been sended. More info: {Info}",
+                "The query have not been sended. More info: {Info}",
                 ex.Message);
         }
-        
+
         return _deserializer.Deserialize(await response.Content.ReadAsStringAsync());
     }
 }
