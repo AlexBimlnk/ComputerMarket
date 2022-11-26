@@ -75,7 +75,7 @@ public sealed class ImportQueryResultDeserializer :
         [JsonProperty("internalId", Required = Required.Always)]
         public TInternalId InternalID { get; set; } = default!;
 
-        [JsonProperty("internalId", Required = Required.Always)]
+        [JsonProperty("externalId", Required = Required.Always)]
         public TExternalId ExternalID { get; set; } = default!;
     }
     private sealed class TInternalId
