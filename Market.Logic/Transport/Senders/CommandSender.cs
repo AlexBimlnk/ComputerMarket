@@ -8,7 +8,7 @@ using Microsoft.Extensions.Options;
 namespace Market.Logic.Transport.Senders;
 
 /// <summary xml:lang = "ru">
-/// Отправитель команд в сервис импорта.
+/// Отправитель команд во внешние сервисы.
 /// </summary>
 /// <typeparam name="TConfiguration" xml:lang = "ru">
 /// Конфигурация отправителя.
@@ -34,7 +34,7 @@ public sealed class CommandSender<TConfiguration, TCommand> : ISender<TConfigura
     /// Опции с конфигурацией отправителя.
     /// </param>
     /// <param name="serializer" xml:lang = "ru">
-    /// Сериализатор комманд.
+    /// Сериализатор команд.
     /// </param>
     /// <exception cref="ArgumentNullException" xml:lang = "ru">
     /// Если любой из параметров оказался <see langword="null"/>.
