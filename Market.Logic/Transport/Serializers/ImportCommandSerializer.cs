@@ -1,13 +1,14 @@
 ﻿using General.Transport;
 
 using Market.Logic.Commands.Import;
+using Market.Logic.Transport.Models;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 namespace Market.Logic.Transport.Serializers;
 
-using TCommandBase = Models.Commands.Import.CommandBase;
+using TCommandBase = CommandBase;
 using TDeleteLinkCommand = Models.Commands.Import.DeleteLinkCommand;
 using TSetLinkCommand = Models.Commands.Import.SetLinkCommand;
 
