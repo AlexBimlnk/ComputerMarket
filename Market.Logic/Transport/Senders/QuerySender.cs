@@ -1,6 +1,6 @@
 ﻿using General.Transport;
 
-using Market.Logic.Commands;
+using Market.Logic.Queries;
 
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -13,16 +13,16 @@ namespace Market.Logic.Transport.Senders;
 /// <typeparam name="TConfiguration" xml:lang = "ru">
 /// Конфигурация отправителя.
 /// </typeparam>
-/// <typeparam name="TCommand" xml:lang = "ru">
+/// <typeparam name="TQuery" xml:lang = "ru">
 /// Тип команды, которую отправляет отправитель.
 /// </typeparam>
-public sealed class QuerySender<TConfiguration, TCommand> : ISender<TConfiguration, TCommand>
+public sealed class QuerySender<TConfiguration, TQuery> : IAPISender<TConfiguration, TQuery>
     where TConfiguration : class, ITransportSenderConfiguration
-    where TCommand : QueryBase
+    where TQuery : QueryBase
 {
-    private readonly ILogger<QuerySender<TConfiguration, TCommand>> _logger;
+    private readonly ILogger<QuerySender<TConfiguration, TQuery>> _logger;
     private readonly TConfiguration _configuration;
-    private readonly ISerializer<TCommand, string> _serializer;
+    private readonly ISerializer<TQuery, string> _serializer;
 
     /// <summary xml:lang = "ru">
     /// Создает новый экземпляр типа <see cref="QuerySender"/>
@@ -40,9 +40,9 @@ public sealed class QuerySender<TConfiguration, TCommand> : ISender<TConfigurati
     /// Если любой из параметров оказался <see langword="null"/>.
     /// </exception>
     public QuerySender(
-        ILogger<QuerySender<TConfiguration, TCommand>> logger,
+        ILogger<QuerySender<TConfiguration, TQuery>> logger,
         IOptions<TConfiguration> options,
-        ISerializer<TCommand, string> serializer)
+        ISerializer<TQuery, string> serializer)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _configuration = options?.Value ?? throw new ArgumentNullException(nameof(options.Value));
@@ -50,13 +50,13 @@ public sealed class QuerySender<TConfiguration, TCommand> : ISender<TConfigurati
     }
 
     /// <inheritdoc/>
-    public async Task SendAsync(TCommand command, CancellationToken token = default)
+    public async Task<HttpResponseMessage> SendAsync(TQuery command, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(command, nameof(command));
 
         token.ThrowIfCancellationRequested();
 
-        _logger.LogDebug("Sending command of type {CommandType}...", typeof(TCommand));
+        _logger.LogDebug("Sending command of type {CommandType}...", typeof(TQuery));
 
         var request = _serializer.Serialize(command);
         using var content = new StringContent(request);
@@ -84,9 +84,7 @@ public sealed class QuerySender<TConfiguration, TCommand> : ISender<TConfigurati
                 "The command have not been sended. More info: {Info}",
                 ex.Message);
         }
-        finally
-        {
-            response?.Dispose();
-        }
+        
+        return response;
     }
 }

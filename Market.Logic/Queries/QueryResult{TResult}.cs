@@ -1,15 +1,15 @@
-﻿using General.Logic.Commands;
-using General.Logic.Executables;
+﻿using General.Logic.Executables;
+using General.Logic.Queries;
 
-namespace Market.Logic.Commands;
+namespace Market.Logic.Queries;
 
 /// <summary xml:lang = "ru">
 /// Результат выполнения команды.
 /// </summary>
-public sealed class CommandResult : ICommandResult
+public sealed class QueryResult<TResult> : IQueryResult<TResult>
 {
     /// <summary xml:lang = "ru">
-    /// Создает экземляр класса <see cref="CommandResult"/>.
+    /// Создает экземляр класса <see cref="IQueryResult{TResult}"/>.
     /// </summary>
     /// <param name="id" xml:lang = "ru">
     /// Идентификатор команды.
@@ -20,10 +20,10 @@ public sealed class CommandResult : ICommandResult
     /// <exception cref="ArgumentNullException" xml:lang = "ru">
     /// Если <paramref name="id"/> - <see langword="null"/>.
     /// </exception>
-    public CommandResult(ExecutableID id, string? errorMessge)
+    public QueryResult(ExecutableID id, TResult? result, string? errorMessge)
     {
         Id = id ?? throw new ArgumentNullException(nameof(id));
-
+        Result = result;
         ErrorMessage = errorMessge;
     }
 
@@ -35,4 +35,7 @@ public sealed class CommandResult : ICommandResult
 
     /// <inheritdoc/>
     public string? ErrorMessage { get; }
+
+    /// <inheritdoc/>
+    public TResult? Result { get; }
 }
