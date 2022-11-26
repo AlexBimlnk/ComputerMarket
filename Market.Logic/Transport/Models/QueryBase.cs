@@ -1,4 +1,4 @@
-﻿using Import.Logic.Transport.Models.Commands;
+﻿using Market.Logic.Queries;
 
 using Newtonsoft.Json;
 

@@ -6,6 +6,8 @@ public class LinksController : Controller
 
     public IActionResult LinksList()
     {
-        var a = 
+        object a = null;
+
+        return View();
     }
 }
