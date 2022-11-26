@@ -1,11 +1,13 @@
 ﻿using General.Logic.Executables;
 
+using Market.Logic.Commands.Import;
+
 namespace Market.Logic.Queries.Import;
 
 /// <summary xml:lang = "ru">
 /// Запрос на получение всех связей.
 /// </summary>
-public sealed class GetLinksQuery : QueryBase
+public sealed class GetLinksQuery : ImportQuery
 {
     /// <summary xml:lang = "ru">
     /// Создает новый объект типа <see cref="GetLinksQuery"/>.
