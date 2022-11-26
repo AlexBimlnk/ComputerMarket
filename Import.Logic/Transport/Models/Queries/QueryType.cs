@@ -2,7 +2,7 @@
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 
-namespace Import.Logic.Transport.Models.Commands;
+namespace Import.Logic.Transport.Models.Queries;
 
 /// <summary xml:lang = "ru">
 /// Типы запросов обрабатываемых сервисом импорта.

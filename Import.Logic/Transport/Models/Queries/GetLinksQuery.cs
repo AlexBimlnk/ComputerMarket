@@ -1,6 +1,4 @@
-﻿using Import.Logic.Transport.Models.Queries;
-
-namespace Import.Logic.Transport.Models.Commands;
+﻿namespace Import.Logic.Transport.Models.Queries;
 
 /// <summary xml:lang = "ru">
 /// Транспортная модель запроса для получения всех связей.
