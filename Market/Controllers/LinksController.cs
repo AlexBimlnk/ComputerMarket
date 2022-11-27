@@ -68,7 +68,7 @@ public sealed class LinksController : Controller
     /// <summary xml:lang = "ru">
     /// Возвращает форму для создания связей.
     /// </summary>
-    /// <returns> <see cref="AcceptedResult"/>. </returns>
+    /// <returns> <see cref="ActionResult"/>. </returns>
     public ActionResult Create() => View();
 
     // POST: Links/Create
@@ -92,6 +92,54 @@ public sealed class LinksController : Controller
             await _importCommandSender.SendAsync(new SetLinkCommand(
                 new(Guid.NewGuid().ToString()),
                 new(link.InternalId),
+                new(link.ExternalId),
+                new(
+                    new(link.ProviderId),
+                    "some name",
+                    new(1.5m),
+                    new PaymentTransactionsInformation("0123456789", "01234012340123401234"))));
+
+            return RedirectToAction("List");
+        }
+
+        return View();
+    }
+
+    // GET: Links/Delete
+    /// <summary xml:lang = "ru">
+    /// Возвращает форму для удаления связей.
+    /// </summary>
+    /// <returns> <see cref="ActionResult"/>. </returns>
+    public ActionResult Delete(LinkViewModel link)
+    {
+        if (ModelState.IsValid)
+        {
+            return View(link);
+        }
+
+        return RedirectToAction("List");
+    }
+
+    // POST: Links/Delete
+    /// <summary xml:lang = "ru">
+    /// Запрос на удаление связи.
+    /// </summary>
+    /// <param name="link" xml:lang = "ru"> 
+    /// Связь которую необходимо удалить из системы. 
+    /// </param>
+    /// <returns> <see cref="Task{TResult}"/>. </returns>
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<ActionResult> DeleteAsync(LinkViewModel link)
+    {
+        if (ModelState.IsValid)
+        {
+            // ToDo: get provider 
+            // var provider = _repo.GetProviderById
+            // Или поменять команду установки, чтобы принимала только id поставщика.
+
+            await _importCommandSender.SendAsync(new DeleteLinkCommand(
+                new(Guid.NewGuid().ToString()),
                 new(link.ExternalId),
                 new(
                     new(link.ProviderId),

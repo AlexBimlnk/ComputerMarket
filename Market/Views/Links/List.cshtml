@@ -37,9 +37,20 @@
                 @Html.DisplayFor(modelItem => item.ExternalID.Value)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                @Html.ActionLink("Details", "Details",
+                new
+                {
+                    InternalId = item.InternalID.Value,
+                    ExternalId = item.ExternalID.Value,
+                    ProviderId = item.ProviderID.Value
+                }) |
+                @Html.ActionLink("Delete", "Delete",
+                new
+                {
+                    InternalId = item.InternalID.Value,
+                    ExternalId = item.ExternalID.Value,
+                    ProviderId = item.ProviderID.Value
+                })
             </td>
         </tr>
 }
