@@ -67,7 +67,10 @@ public sealed class QuerySender<TConfiguration, TQuery, TResult> : IQuerySender<
         var request = _serializer.Serialize(query);
         using var content = new StringContent(request);
 
-        using var client = new HttpClient();
+        var clientHandler = new HttpClientHandler();
+        clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true;
+
+        using var client = new HttpClient(clientHandler);
 
         HttpResponseMessage response = null!;
 

@@ -54,7 +54,10 @@ public sealed class TransactionsResultSender :
         var request = _serializer.Serialize(entity);
         using var content = new StringContent(request);
 
-        using var client = new HttpClient();
+        var clientHandler = new HttpClientHandler();
+        clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true;
+
+        using var client = new HttpClient(clientHandler);
 
         HttpResponseMessage response = null!;
 

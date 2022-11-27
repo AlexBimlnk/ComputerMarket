@@ -23,7 +23,9 @@ public static class Registrations
 {
     public static IServiceCollection AddMarketServices(this IServiceCollection services, IConfiguration configuration) =>
         services
-        .AddStorage();
+        .AddStorage()
+        .AddConfigurations(configuration)
+        .AddTransport();
 
     private static IServiceCollection AddConfigurations(this IServiceCollection services, IConfiguration configuration)
         => services

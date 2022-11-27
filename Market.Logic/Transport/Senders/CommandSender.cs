@@ -61,7 +61,10 @@ public sealed class CommandSender<TConfiguration, TCommand> : ISender<TConfigura
         var request = _serializer.Serialize(command);
         using var content = new StringContent(request);
 
-        using var client = new HttpClient();
+        var clientHandler = new HttpClientHandler();
+        clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true;
+
+        using var client = new HttpClient(clientHandler);
 
         HttpResponseMessage response = null!;
 
