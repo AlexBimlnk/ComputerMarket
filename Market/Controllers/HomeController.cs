@@ -28,7 +28,7 @@ public class HomeController : Controller
     [Authorize(Policy = "OnlyForAgents")]
     public IActionResult Provider() => View();
 
-    [AllowAnonymous]
+    [Authorize(Policy = "OnlyForManager")]
     public IActionResult Manager() => View();
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
