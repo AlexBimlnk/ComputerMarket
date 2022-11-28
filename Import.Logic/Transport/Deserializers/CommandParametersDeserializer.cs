@@ -1,4 +1,5 @@
-﻿using General.Logic.Executables;
+﻿using General.Logic.Commands;
+using General.Logic.Executables;
 using General.Transport;
 
 using Import.Logic.Commands;
@@ -14,9 +15,9 @@ using TDeleteLinkCommand = Models.Commands.DeleteLinkCommand;
 using TSetLinkCommand = Models.Commands.SetLinkCommand;
 
 /// <summary xml:lang = "ru">
-/// Дессериализатор из <see cref="string"/> в <see cref="ExecutableParametersBase"/>.
+/// Дессериализатор из <see cref="string"/> в <see cref="CommandParametersBase"/>.
 /// </summary>
-public sealed class CommandParametersDeserializer : IDeserializer<string, ExecutableParametersBase>
+public sealed class CommandParametersDeserializer : IDeserializer<string, CommandParametersBase>
 {
     private readonly JsonSerializer _serializer = JsonSerializer.CreateDefault(new JsonSerializerSettings
     {
@@ -30,7 +31,7 @@ public sealed class CommandParametersDeserializer : IDeserializer<string, Execut
     /// <exception cref="ArgumentException" xml:lang = "ru">
     /// Когда <paramref name="source"/> имел неверный формат.
     /// </exception>
-    public ExecutableParametersBase Deserialize(string source)
+    public CommandParametersBase Deserialize(string source)
     {
         if (string.IsNullOrWhiteSpace(source))
             throw new ArgumentException(

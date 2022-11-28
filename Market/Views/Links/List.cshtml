@@ -1,0 +1,58 @@
+﻿@model IEnumerable<Market.Logic.Models.Link>
+
+@{
+    ViewData["Title"] = "LinksList";
+}
+
+<h1>LinksList</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.InternalID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProviderID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ExternalID)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.InternalID.Value)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProviderID.Value)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ExternalID.Value)
+            </td>
+            <td>
+                @Html.ActionLink("Details", "Details",
+                new
+                {
+                    InternalId = item.InternalID.Value,
+                    ExternalId = item.ExternalID.Value,
+                    ProviderId = item.ProviderID.Value
+                }) |
+                @Html.ActionLink("Delete", "Delete",
+                new
+                {
+                    InternalId = item.InternalID.Value,
+                    ExternalId = item.ExternalID.Value,
+                    ProviderId = item.ProviderID.Value
+                })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

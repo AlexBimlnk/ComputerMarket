@@ -61,7 +61,7 @@ public sealed class APIQueryHandler : IAPIQueryHandler
         _logger.LogInformation(
             "Сommand {Id} processed with success: {Result}",
             result.Id,
-            result.Result);
+            result.ErrorMessage is null);
 
         return result;
     }

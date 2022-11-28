@@ -5,10 +5,12 @@ using Market.Logic.Storage;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
+using Serilog;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
-
+builder.Host.UseSerilog((ctx, cfg) => cfg.ReadFrom.Configuration(ctx.Configuration));
 builder.Services.AddDbContext<MarketContext>(opt =>
     opt.UseNpgsql(builder.Configuration.GetSection("ConnectionString").Value));
 

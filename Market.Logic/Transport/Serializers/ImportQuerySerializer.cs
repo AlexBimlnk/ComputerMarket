@@ -1,6 +1,7 @@
 ﻿using General.Transport;
 
 using Market.Logic.Commands.Import;
+using Market.Logic.Queries.Import;
 using Market.Logic.Transport.Models;
 
 using Newtonsoft.Json;
@@ -8,20 +9,18 @@ using Newtonsoft.Json.Converters;
 
 namespace Market.Logic.Transport.Serializers;
 
-using TCommandBase = CommandBase;
-using TDeleteLinkCommand = Models.Commands.Import.DeleteLinkCommand;
-using TSetLinkCommand = Models.Commands.Import.SetLinkCommand;
+using TQueryBase = QueryBase;
+using TGetLinksQuery = Models.Queries.Import.GetLinksQuery;
 
-public sealed class ImportCommandSerializer : ISerializer<ImportCommand, string>
+public sealed class ImportQuerySerializer : ISerializer<ImportQuery, string>
 {
-    public string Serialize(ImportCommand source)
+    public string Serialize(ImportQuery source)
     {
         ArgumentNullException.ThrowIfNull(source, nameof(source));
 
-        TCommandBase transportProducts = source switch
+        TQueryBase transportProducts = source switch
         {
-            SetLinkCommand setLinkCommand => TSetLinkCommand.ToModel(setLinkCommand),
-            DeleteLinkCommand deleteLinkCommand => TDeleteLinkCommand.ToModel(deleteLinkCommand),
+            GetLinksQuery setLinkCommand => TGetLinksQuery.ToModel(setLinkCommand),
             var unknownCommandType =>
                 throw new InvalidOperationException($"The source contains unknown command '{unknownCommandType?.GetType().Name}'. ")
         };
