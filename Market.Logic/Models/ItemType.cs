@@ -5,8 +5,6 @@
 /// </summary>
 public sealed record class ItemType
 {
-    private readonly int? _id;
-
     /// <summary>
     /// Создаёт экземпляр типа <see cref="ItemType"/>.
     /// </summary>
@@ -14,12 +12,16 @@ public sealed record class ItemType
     /// <exception cref="ArgumentException">
     /// Если <paramref name="name"/> - пустое или <see langword="null"/> или содержит только пробелы.
     /// </exception>
-    public ItemType(string name, int? id = null)
+    public ItemType(int id, string name)
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new ArgumentException($"Name of {nameof(name)} can't be empty or null or contains only white spaces");
         Name = name;
-        _id = id;
+
+        if (id <= 0)
+            throw new ArgumentOutOfRangeException("");
+
+        Id = id;
     }
 
     /// <summary xml:lang = "ru">
@@ -30,5 +32,5 @@ public sealed record class ItemType
     /// <summary xml:lang = "ru">
     /// Индетификатор типа продукта.
     /// </summary>
-    public int Id => _id ?? throw new InvalidOperationException($"Key for {nameof(ItemType)} is not defined");
+    public int Id { get; }
 }
