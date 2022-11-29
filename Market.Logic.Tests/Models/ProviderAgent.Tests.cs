@@ -10,17 +10,10 @@ public class ProviderAgentTests
     {
         // Arrange
         ProviderAgent providerAgent = null!;
-        var provider = new Provider(
-            id: new ID(1),
-            "Company Name",
-            new Margin(1.1m),
-            new PaymentTransactionsInformation("1234567890", "01234012340123401234"));
+        var provider = TestHelper.GetOrdinaryProvider();
         var user = new User(
             new ID(1),
-            new AuthenticationData(
-                email: "mmail@mail.ru",
-                new Password("12345678"),
-                login: "login1"),
+            TestHelper.GetOrdinaryAuthenticationData(),
             UserType.Agent);
 
         // Act
@@ -39,23 +32,15 @@ public class ProviderAgentTests
     public void CanNotCreateWhenUserIsNotAgent()
     {
         //Arrange
-        var provider = new Provider(
-            id: new ID(1),
-            "Company Name",
-            new Margin(1.1m),
-            new PaymentTransactionsInformation("1234567890", "01234012340123401234"));
         var user = new User(
             new ID(1),
-            new AuthenticationData(
-                email: "mmail@mail.ru",
-                new Password("12345678"),
-                login: "login1"),
+            TestHelper.GetOrdinaryAuthenticationData(),
             UserType.Customer);
 
         // Act
         var exception = Record.Exception(() => _ = new ProviderAgent(
             agent: user,
-            provider));
+            TestHelper.GetOrdinaryProvider()));
 
         // Assert
         exception.Should().BeOfType<ArgumentException>();
@@ -65,17 +50,10 @@ public class ProviderAgentTests
     [Trait("Category", "Unit")]
     public void CanNotCreateWithoutUser()
     {
-        //Arrange
-        var provider = new Provider(
-            id: new ID(1),
-            "Company Name",
-            new Margin(1.1m),
-            new PaymentTransactionsInformation("1234567890", "01234012340123401234"));
-
         // Act
         var exception = Record.Exception(() => _ = new ProviderAgent(
             agent: null!,
-            provider));
+            TestHelper.GetOrdinaryProvider()));
 
         // Assert
         exception.Should().BeOfType<ArgumentNullException>();
@@ -89,10 +67,7 @@ public class ProviderAgentTests
         var exception = Record.Exception(() => _ = new ProviderAgent(
             agent: new User(
                 new ID(1),
-                new AuthenticationData(
-                    email: "mmail@mail.ru",
-                    new Password("12345678"),
-                    login: "login1"),
+                TestHelper.GetOrdinaryAuthenticationData(),
                 UserType.Agent),
             provider: null!));
 

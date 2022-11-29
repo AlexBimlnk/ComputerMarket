@@ -64,13 +64,9 @@ public class ProductsRepositoryTests
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
         var logger = Mock.Of<ILogger<ProductsRepository>>();
 
-        var storageProduct = new TProduct()
-        {
-            ItemId = 1,
-            ProviderId = 1,
-            Quantity = 2,
-            ProviderCost = 100.00m
-        };
+        var inputProduct = TestHelper.GetOrdinaryProduct();
+
+        var storageProduct = TestHelper.GetStorageProduct(inputProduct);
 
         var products = new Mock<DbSet<TProduct>>(MockBehavior.Strict);
         var productsCallback = 0;
@@ -91,22 +87,6 @@ public class ProductsRepositoryTests
         var productRepository = new ProductsRepository(
             context.Object,
             logger);
-
-        var inputProduct = new Product(
-            new Item(
-                id: new ID(1),
-                new ItemType("type1"),
-                name: "Name 1",
-                Array.Empty<ItemProperty>()),
-            new Provider(
-                id: new ID(1),
-                name: "Provider1",
-                new Margin(1.20m),
-                new PaymentTransactionsInformation(
-                    "1234512345",
-                    "12345123451234512345")),
-            new Price(100.00m),
-            quantity: 2);
 
         // Act
         var exception = await Record.ExceptionAsync(async () =>
@@ -151,21 +131,7 @@ public class ProductsRepositoryTests
             context.Object,
             logger);
 
-        var inputProduct = new Product(
-            new Item(
-                id: new ID(1),
-                new ItemType("type1"),
-                name: "Name 1",
-                Array.Empty<ItemProperty>()),
-            new Provider(
-                id: new ID(1),
-                name: "Provider1",
-                new Margin(1.20m),
-                new PaymentTransactionsInformation(
-                    "1234512345",
-                    "12345123451234512345")),
-            new Price(100.00m),
-            quantity: 2);
+        var inputProduct = TestHelper.GetOrdinaryProduct();
 
         // Act
         cts.Cancel();
@@ -210,21 +176,7 @@ public class ProductsRepositoryTests
             context.Object,
             logger);
 
-        var inputProduct = new Product(
-            new Item(
-                id: new ID(1),
-                new ItemType("type1"),
-                name: "Name 1",
-                Array.Empty<ItemProperty>()),
-            new Provider(
-                id: new ID(1),
-                name: "Provider1",
-                new Margin(1.20m),
-                new PaymentTransactionsInformation(
-                    "1234512345",
-                    "12345123451234512345")),
-            new Price(100.00m),
-            quantity: 2);
+        var inputProduct = TestHelper.GetOrdinaryProduct();
 
         // Act
         cts.Cancel();
@@ -243,13 +195,9 @@ public class ProductsRepositoryTests
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
         var logger = Mock.Of<ILogger<ProductsRepository>>();
 
-        var storageProduct = new TProduct()
-        {
-            ItemId = 1,
-            ProviderId = 1,
-            Quantity = 2,
-            ProviderCost = 100.00m
-        };
+        var containsProduct = TestHelper.GetOrdinaryProduct();
+
+        var storageProduct = TestHelper.GetStorageProduct(containsProduct);
 
         var products = new Mock<DbSet<TProduct>>(MockBehavior.Loose);
 
@@ -259,22 +207,6 @@ public class ProductsRepositoryTests
         var productRepository = new ProductsRepository(
             context.Object,
             logger);
-
-        var containsProduct = new Product(
-            new Item(
-                id: new ID(1),
-                new ItemType("type1"),
-                name: "Name 1",
-                Array.Empty<ItemProperty>()),
-            new Provider(
-                id: new ID(1),
-                name: "Provider1",
-                new Margin(1.20m),
-                new PaymentTransactionsInformation(
-                    "1234512345",
-                    "12345123451234512345")),
-            new Price(100.00m),
-            quantity: 2);
 
         // Act
         var exception = Record.Exception(() =>
@@ -321,35 +253,11 @@ public class ProductsRepositoryTests
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
         var logger = Mock.Of<ILogger<ProductsRepository>>();
 
+        var expectedResult = TestHelper.GetOrdinaryProduct();
+
         var data = new List<TProduct>
         {
-            new TProduct()
-            {
-                ItemId = 1,
-                ProviderId = 1,
-                Quantity = 2,
-                ProviderCost = 100.00m,
-                Item = new TItem()
-                {
-                    Id = 1,
-                    Name = "Name 1",
-                    Description = Array.Empty<ItemDescription>(),
-                        TypeId = 1,
-                    Type = new TItemType()
-                    {
-                        Id = 1,
-                        Name = "Type1"
-                    }
-                },
-                Provider = new TProvider()
-                {
-                    Name = "Provider1",
-                    Id = 1,
-                    Inn = "1234512345",
-                    Margin = 1.20m,
-                    BankAccount = "12345123451234512345",
-                }
-            }
+            TestHelper.GetStorageProduct(expectedResult)
         }.AsQueryable();
 
         var products = new Mock<DbSet<TProduct>>(MockBehavior.Strict);
@@ -378,29 +286,12 @@ public class ProductsRepositoryTests
             context.Object,
             logger);
 
-        var expectedResult = new Product(
-            new Item(
-                id: new ID(1),
-                new ItemType("Type1"),
-                name: "Name 1",
-                Array.Empty<ItemProperty>()),
-            new Provider(
-                id: new ID(1),
-                name: "Provider1",
-                new Margin(1.20m),
-                new PaymentTransactionsInformation(
-                    "1234512345",
-                    "12345123451234512345")),
-            new Price(100.00m),
-            quantity: 2);
-
         // Act
-        var result1 = productRepository.GetByKey((1, 1));
-        var result2 = productRepository.GetByKey((1, 2));
+        var result1 = productRepository.GetByKey((expectedResult.Key.Item1, expectedResult.Key.Item2));
+        var result2 = productRepository.GetByKey((expectedResult.Key.Item1, expectedResult.Key.Item2 + 1));
 
         // Assert
-        result1.Should().NotBeNull();
-        result1.Should().BeEquivalentTo(expectedResult);
+        result1.Should().NotBeNull().And.BeEquivalentTo(expectedResult);
         result2.Should().BeNull();
     }
 
@@ -412,36 +303,14 @@ public class ProductsRepositoryTests
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
         var logger = Mock.Of<ILogger<ProductsRepository>>();
 
-        var data = new List<TProduct>
+        var expectedResult = new List<Product>()
         {
-            new TProduct()
-            {
-                ItemId = 1,
-                ProviderId = 1,
-                Quantity = 2,
-                ProviderCost = 100.00m,
-                Item = new TItem()
-                {
-                    Id = 1,
-                    Name = "Name 1",
-                    Description = Array.Empty<ItemDescription>(),
-                        TypeId = 1,
-                    Type = new TItemType()
-                    {
-                        Id = 1,
-                        Name = "Type1"
-                    }
-                },
-                Provider = new TProvider()
-                {
-                    Name = "Provider1",
-                    Id = 1,
-                    Inn = "1234512345",
-                    Margin = 1.20m,
-                    BankAccount = "12345123451234512345",
-                }
-            }
-        }.AsQueryable();
+            TestHelper.GetOrdinaryProduct()
+        };
+
+        var data = expectedResult
+            .Select(x => TestHelper.GetStorageProduct(x))
+            .AsQueryable();
 
         var products = new Mock<DbSet<TProduct>>(MockBehavior.Strict);
 
@@ -468,25 +337,6 @@ public class ProductsRepositoryTests
         var productRepository = new ProductsRepository(
             context.Object,
             logger);
-
-        var expectedResult = new List<Product>()
-        {
-            new Product(
-                new Item(
-                    id: new ID(1),
-                    new ItemType("Type1"),
-                    name: "Name 1",
-                    Array.Empty<ItemProperty>()),
-                new Provider(
-                    id: new ID(1),
-                    name: "Provider1",
-                    new Margin(1.20m),
-                    new PaymentTransactionsInformation(
-                        "1234512345",
-                        "12345123451234512345")),
-                new Price(100.00m),
-                quantity: 2)
-        };
 
         // Act
         var result = productRepository.GetEntities();
@@ -503,14 +353,6 @@ public class ProductsRepositoryTests
         // Arrange
         var context = new Mock<IRepositoryContext>(MockBehavior.Loose);
         var logger = Mock.Of<ILogger<ProductsRepository>>();
-
-        var storageProduct = new TProduct()
-        {
-            ItemId = 1,
-            ProviderId = 1,
-            Quantity = 2,
-            ProviderCost = 100.00m
-        };
 
         var productRepository = new ProductsRepository(
             context.Object,

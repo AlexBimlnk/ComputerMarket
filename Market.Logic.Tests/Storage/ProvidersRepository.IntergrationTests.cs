@@ -25,24 +25,11 @@ public class ProvidersRepositoryIntegrationTests : DBIntegrationTestBase
         context.SetupGet(x => x.Providers)
             .Returns(_marketContext.Providers);
 
-        var inputProvider = new Provider(
-            new ID(1),
-            "Provider Name 1",
-            new Margin(1.3m),
-            new PaymentTransactionsInformation(
-                inn: "1234512345",
-                bankAccount: "12345123451234512345"));
+        var inputProvider = TestHelper.GetOrdinaryProvider();
 
         var expectedProvider = new TProvider[]
         {
-            new TProvider
-            {
-                Id = 1,
-                Name = "Provider Name 1",
-                Margin = 1.3m,
-                Inn = "1234512345",
-                BankAccount = "12345123451234512345"
-            }
+            TestHelper.GetStorageProvider(inputProvider)
         };
 
         var repository = new ProvidersRepository(
@@ -88,13 +75,8 @@ public class ProvidersRepositoryIntegrationTests : DBIntegrationTestBase
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
         context.SetupGet(x => x.Providers)
             .Returns(_marketContext.Providers);
-        var provider = new Provider(
-            new ID(1),
-            "Provider Name 1",
-            new Margin(1.3m),
-            new PaymentTransactionsInformation(
-                inn: "1234512345",
-                bankAccount: "12345123451234512345"));
+
+        var provider = TestHelper.GetOrdinaryProvider();
 
         await AddProviderAsync(provider);
         
@@ -123,28 +105,15 @@ public class ProvidersRepositoryIntegrationTests : DBIntegrationTestBase
         context.Setup(x => x.SaveChanges())
             .Callback(() => _marketContext.SaveChanges());
 
-        var provider1 = new Provider(
-            id: new ID(1),
-            "name1",
-            new Margin(1.3m),
-            new PaymentTransactionsInformation(
-                inn: "1234512345",
-                bankAccount: "12345123451234512345"));
+        var provider1 = TestHelper.GetOrdinaryProvider();
 
-        
         await AddProviderAsync(provider1);
         
         var repository = new ProvidersRepository(
             context.Object,
             logger);
 
-        var inputProvider = new Provider(
-            new ID(1),
-            "Provider Name 1",
-            new Margin(1.3m),
-            new PaymentTransactionsInformation(
-                inn: "1234512345",
-                bankAccount: "12345123451234512345"));
+        var inputProvider = TestHelper.GetOrdinaryProvider();
 
         // Act
         var beforeContains = await repository.ContainsAsync(inputProvider)
@@ -181,23 +150,11 @@ public class ProvidersRepositoryIntegrationTests : DBIntegrationTestBase
     public static readonly TheoryData<Provider, bool> ContainsData = new()
     {
         {
-            new Provider(
-                new ID(1),
-                "Provider Name 1",
-                new Margin(1.3m),
-                new PaymentTransactionsInformation(
-                    inn: "1234512345",
-                    bankAccount: "12345123451234512345")),
+            TestHelper.GetOrdinaryProvider(),
             true
         },
         {
-            new Provider(
-                new ID(2),
-                "Provider Name 1",
-                new Margin(1.3m),
-                new PaymentTransactionsInformation(
-                    inn: "1234512344",
-                    bankAccount: "12345123451234512344")),
+            TestHelper.GetOrdinaryProvider(2, "Provider Name 2", TestHelper.GetOrdinaryPaymentTransactionsInformation("1111111111","11111111111111111111")),
             false
         },
     };

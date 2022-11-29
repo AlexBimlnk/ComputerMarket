@@ -8,7 +8,14 @@ public sealed class PropertyGroup
 
     public PropertyGroup(int id, string name)
     {
-        Id = id; 
+        if (id <= 0)
+            throw new ArgumentOutOfRangeException("Property group id can't have negative id");
+
+        Id = id;
+
+        if (string.IsNullOrWhiteSpace(name))
+            throw new ArgumentException($"Name of {nameof(PropertyGroup)} can't be null or white spaces or empty.");
+
         Name = name;
     }
 

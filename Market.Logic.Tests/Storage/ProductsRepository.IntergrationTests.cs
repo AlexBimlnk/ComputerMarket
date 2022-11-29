@@ -1,4 +1,6 @@
-﻿using Market.Logic.Models;
+﻿using System;
+
+using Market.Logic.Models;
 using Market.Logic.Storage.Repositories;
 
 using Microsoft.Extensions.Logging;
@@ -25,22 +27,12 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
         context.SetupGet(x => x.Products)
             .Returns(_marketContext.Products);
 
-        var provider1 = new Provider(
-            id: new ID(1),
-            "name1",
-            new Margin(1.3m),
-            new PaymentTransactionsInformation(
-                inn: "1234512345",
-                bankAccount: "12345123451234512345"));
+        var provider1 = TestHelper.GetOrdinaryProvider();
 
 
-        var type1 = new ItemType("Type1", id: 1);
+        var type1 = TestHelper.GetOrdinaryItemType();
 
-        var item1 = new Item(
-            id: new ID(1),
-            type1,
-            "Name 1",
-            Array.Empty<ItemProperty>());
+        var item1 = TestHelper.GetOrdinaryItem(type: type1);
 
         await AddProviderAsync(provider1);
 
@@ -48,18 +40,14 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
 
         await AddItemAsync(item1);
 
-        var inputProduct = new Product(item1, provider1, new Price(1000.30m), quantity: 3);
+        var inputProduct = TestHelper.GetOrdinaryProduct(item1, provider1);
 
         var expectedProduct = new TProduct[]
         {
-            new TProduct
-            {
-                ItemId = 1,
-                ProviderId = 1,
-                ProviderCost = 1000.30m,
-                Quantity = 3,
-            }
-        };
+            TestHelper.GetStorageProduct(inputProduct)
+        }
+        .Select(x => { x.Provider = null!; x.Item = null!; return x; })
+        .ToArray();
 
         var repository = new ProductsRepository(
             context.Object,
@@ -104,35 +92,19 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
         context.SetupGet(x => x.Products)
             .Returns(_marketContext.Products);
 
-        var provider1 = new Provider(
-            id: new ID(1),
-            "name1",
-            new Margin(1.3m),
-            new PaymentTransactionsInformation(
-                inn: "1234512345",
-                bankAccount: "12345123451234512345"));
+        var provider1 = TestHelper.GetOrdinaryProvider(1, info: TestHelper.GetOrdinaryPaymentTransactionsInformation(
+            inn: "1111111111", 
+            acc:"11111111111111111111"));
 
-        var provider2 = new Provider(
-            id: new ID(2),
-            "name2",
-            new Margin(1.2m),
-            new PaymentTransactionsInformation(
-                inn: "1234512344",
-                bankAccount: "12345123451234512344"));
+        var provider2 = TestHelper.GetOrdinaryProvider(2, info: TestHelper.GetOrdinaryPaymentTransactionsInformation(
+            inn: "2111111112",
+            acc: "21111111111111111112"));
 
-        var type1 = new ItemType("Type1", id: 1);
+        var type1 = TestHelper.GetOrdinaryItemType();
 
-        var item1 = new Item(
-            id: new ID(1),
-            type1,
-            "Name 1",
-            Array.Empty<ItemProperty>());
+        var item1 = TestHelper.GetOrdinaryItem(1, type1, "Item1");
 
-        var item2 = new Item(
-            id: new ID(2),
-            type1,
-            "Name 2",
-            Array.Empty<ItemProperty>());
+        var item2 = TestHelper.GetOrdinaryItem(2, type1, "Item2");
 
         await AddProviderAsync(provider1);
         await AddProviderAsync(provider2);
@@ -142,9 +114,9 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
         await AddItemAsync(item1);
         await AddItemAsync(item2);
 
-        await AddProductAsync(new(item1, provider1, new Price(100.00m), quantity: 3));
-        await AddProductAsync(new(item2, provider1, new Price(120.00m), quantity: 4));
-        await AddProductAsync(new(item2, provider2, new Price(1000.00m), quantity: 5));
+        await AddProductAsync(TestHelper.GetOrdinaryProduct(item1, provider1));
+        await AddProductAsync(TestHelper.GetOrdinaryProduct(item2, provider1));
+        await AddProductAsync(TestHelper.GetOrdinaryProduct(item2, provider2));
 
         var repository = new ProductsRepository(
             context.Object,
@@ -171,27 +143,13 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
         context.Setup(x => x.SaveChanges())
             .Callback(() => _marketContext.SaveChanges());
 
-        var provider = new Provider(
-            id: new ID(1),
-            "name1",
-            new Margin(1.3m),
-            new PaymentTransactionsInformation(
-                inn: "1234512345",
-                bankAccount: "12345123451234512345"));
+        var provider = TestHelper.GetOrdinaryProvider();
 
-        var type1 = new ItemType("Type1", id: 1);
+        var type1 = TestHelper.GetOrdinaryItemType();
 
-        var item1 = new Item(
-            id: new ID(1),
-            type1,
-            "Name 1",
-            Array.Empty<ItemProperty>());
+        var item1 = TestHelper.GetOrdinaryItem(1, type1, "Name1");
 
-        var item2 = new Item(
-            id: new ID(2),
-            type1,
-            "Name 2",
-            Array.Empty<ItemProperty>());
+        var item2 = TestHelper.GetOrdinaryItem(2, type1, "Name2");
 
         await AddProviderAsync(provider);
 
@@ -200,28 +158,14 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
         await AddItemAsync(item1);
         await AddItemAsync(item2);
 
-        await AddProductAsync(new(item1, provider, new Price(100.00m), quantity: 3));
-        await AddProductAsync(new(item2, provider, new Price(120.00m), quantity: 4));
+        await AddProductAsync(TestHelper.GetOrdinaryProduct(item1, provider));
+        await AddProductAsync(TestHelper.GetOrdinaryProduct(item2, provider));
 
         var repository = new ProductsRepository(
             context.Object,
             logger);
 
-        var inputProduct = new Product(
-            new Item(
-                id: new ID(2),
-                new ItemType("Type1", id: 1),
-                "Name 2",
-                Array.Empty<ItemProperty>()),
-            new Provider(
-                id: new ID(1),
-                "name1",
-                new Margin(1.3m),
-                new PaymentTransactionsInformation(
-                    inn: "1234512345",
-                    bankAccount: "12345123451234512345")),
-            new Price(120.00m),
-            quantity: 4);
+        var inputProduct = TestHelper.GetOrdinaryProduct(item1, provider);
 
         // Act
         var beforeContains = await repository.ContainsAsync(inputProduct)
@@ -286,37 +230,29 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
     public static readonly TheoryData<Product, bool> ContainsData = new()
     {
         {
-            new(new Item(
-                    id: new ID(1), 
-                    new ItemType("Type1", id: 1),
-                    "Name 2",
-                    Array.Empty<ItemProperty>()),
-                new Provider(
-                    id: new ID(1),
-                    "name1",
-                    new Margin(1.3m),
-                    new PaymentTransactionsInformation(
-                        inn: "1234512345",
-                        bankAccount: "12345123451234512345")),
-                new Price(120.00m),
-                quantity: 4),
+            TestHelper.GetOrdinaryProduct(
+                TestHelper.GetOrdinaryItem(
+                    1, 
+                    TestHelper.GetOrdinaryItemType(), 
+                    "Name1"), 
+                TestHelper.GetOrdinaryProvider(
+                    1, 
+                    info: TestHelper.GetOrdinaryPaymentTransactionsInformation(
+                        inn: "1111111111",
+                        acc:"11111111111111111111"))),
             true
         },
         {
-            new(new Item(
-                    id: new ID(4),
-                    new ItemType("Type1", id: 1),
-                    "Name 4",
-                    Array.Empty<ItemProperty>()),
-                new Provider(
-                    id: new ID(4),
-                    "name4",
-                    new Margin(1.3m),
-                    new PaymentTransactionsInformation(
-                        inn: "1234512345",
-                        bankAccount: "12345123451234512345")),
-                new Price(320.00m),
-                quantity: 2),
+            TestHelper.GetOrdinaryProduct(
+                TestHelper.GetOrdinaryItem(
+                    4,
+                    TestHelper.GetOrdinaryItemType(),
+                    "Name4"),
+                TestHelper.GetOrdinaryProvider(
+                    4,
+                    info: TestHelper.GetOrdinaryPaymentTransactionsInformation(
+                        inn: "4111111114",
+                        acc:"41111111111111111114"))),
             false
         },
     };

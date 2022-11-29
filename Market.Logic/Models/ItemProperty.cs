@@ -1,5 +1,8 @@
 ﻿using General.Models;
 
+using Market.Logic.Storage.Models;
+using Microsoft.Extensions.Logging;
+
 namespace Market.Logic.Models;
 
 /// <summary xml:lang = "ru">
@@ -20,8 +23,11 @@ public sealed record class ItemProperty : IKeyable<ID>
         if (string.IsNullOrWhiteSpace(name))
             throw new ArgumentException($"Name of {nameof(ItemProperty)} can't be null or white spaces or empty.");
 
-        Key= id;
-        Group = group;
+        if (!Enum.IsDefined(typeof(PropertyDataType), (int)dataType))
+            throw new ArgumentException($"Enum value {nameof(dataType)} not match with {nameof(PropertyDataType)}.");
+
+        Key = id;
+        Group = group ?? throw new ArgumentNullException(nameof(group));
         Name = name;
         ProperyDataType = dataType;
         IsFilterable = isFilterable;

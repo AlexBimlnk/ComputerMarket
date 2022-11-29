@@ -10,34 +10,8 @@ public class OrderTests
     {
         // Arrange
         Order order = null!;
-        var user = new User(
-            new ID(1),
-            new AuthenticationData(
-                email: "mail@mail.ru",
-                new Password("12345678"),
-                login: "login1"),
-            UserType.Customer);
-        var quantity = 2;
-        var product = new Product(
-            new Item(
-                id: new ID(1),
-                new ItemType("some_type"),
-                "some_name",
-                properties: Array.Empty<ItemProperty>()),
-            new Provider(
-                id: new ID(1),
-                "provider_name",
-                new Margin(1.1m),
-                new PaymentTransactionsInformation(
-                    "0123456789",
-                    "01234012340123401234")),
-            new Price(100m),
-            quantity: 10);
-
-        var entities = new HashSet<PurchasableEntity>()
-        {
-            new PurchasableEntity(product, quantity)
-        };
+        var user = TestHelper.GetOrdinaryUser();
+        var entities = TestHelper.GetOrdinaryPurchasableEntities();
 
         // Act
         var exception = Record.Exception(() => order = new Order(user, entities));
@@ -54,27 +28,7 @@ public class OrderTests
     public void CanNotCreateWithoutUser()
     {
         // Arrange
-        var quantity = 2;
-        var product = new Product(
-            new Item(
-                id: new ID(1),
-                new ItemType("some_type"),
-                "some_name",
-                properties: Array.Empty<ItemProperty>()),
-            new Provider(
-                id: new ID(1),
-                "provider_name",
-                new Margin(1.1m),
-                new PaymentTransactionsInformation(
-                    "0123456789",
-                    "01234012340123401234")),
-            new Price(100m),
-            quantity: 10);
-
-        var entities = new HashSet<PurchasableEntity>()
-        {
-            new PurchasableEntity(product, quantity)
-        };
+        var entities = TestHelper.GetOrdinaryPurchasableEntities();
 
         // Act
         var exception = Record.Exception(() => _ = new Order(user: null!, entities));
@@ -88,13 +42,7 @@ public class OrderTests
     public void CanNotCreateWithoutItems()
     {
         // Arrange       
-        var user = new User(
-            new ID(1),
-            new AuthenticationData(
-                email: "mail@mail.ru",
-                new Password("12345678"),
-                login: "login1"),
-            UserType.Customer);
+        var user = TestHelper.GetOrdinaryUser();
 
         // Act
         var exception = Record.Exception(() => _ = new Order(user, entities: null!));
@@ -109,37 +57,14 @@ public class OrderTests
     public void CanNotCreateWithZeroItems()
     {
         // Arrange       
-        var user = new User(
-            new ID(1),
-            new AuthenticationData(
-                email: "mail@mail.ru",
-                new Password("12345678"),
-                login: "login1"),
-            UserType.Customer);
-        var quantity = 2;
-        var product = new Product(
-            new Item(
-                id: new ID(1),
-                new ItemType("some_type"),
-                "some_name",
-                properties: Array.Empty<ItemProperty>()),
-            new Provider(
-                id: new ID(1),
-                "provider_name",
-                new Margin(1.1m),
-                new PaymentTransactionsInformation(
-                    "0123456789",
-                    "01234012340123401234")),
-            new Price(100m),
-            quantity: 10);
-
-        var entities = new HashSet<PurchasableEntity>()
-        {
-            new PurchasableEntity(product, quantity)
-            {
-                Selected = false
-            }
-        };
+        var user = TestHelper.GetOrdinaryUser();
+        var entities = TestHelper.GetOrdinaryPurchasableEntities()
+            .Select(x => 
+            { 
+                x.Selected = false; 
+                return x; 
+            })
+            .ToHashSet();
 
         // Act
         var exception = Record.Exception(() => _ = new Order(user, entities));
@@ -153,63 +78,11 @@ public class OrderTests
     public void CanCalculateOrderSumCost()
     {
         // Arrange
-        var user = new User(
-            new ID(1),
-            new AuthenticationData(
-                email: "mail@mail.ru",
-                new Password("12345678"),
-                login: "login1"),
-            UserType.Customer);
-        var provider1 = new Provider(
-            id: new ID(1),
-            "provider_name",
-            new Margin(1.1m),
-            new PaymentTransactionsInformation(
-                inn: "0123456789",
-                bankAccount: "01234012340123401234"));
-        var provider2 = new Provider(
-            id: new ID(2),
-            "provider_name",
-            new Margin(1.6m),
-            new PaymentTransactionsInformation(
-                inn: "0123456789",
-                bankAccount: "01234012340123401234"));
-        var quantity1 = 2;
-        var quantity2 = 4;
-        var price1 = 100m;
-        var price2 = 400m;
-        var item1 = new Item(
-            id: new ID(1),
-            new ItemType("some_type"),
-            "some_name1",
-            properties: Array.Empty<ItemProperty>());
-        var item2 = new Item(
-            id: new ID(2),
-            new ItemType("some_type"),
-            "some_name2",
-            properties: Array.Empty<ItemProperty>());
-
-        var product1 = new Product(
-            item1,
-            provider1,
-            price: new Price(price1),
-            quantity: 10);
-
-        var product2 = new Product(
-            item2,
-            provider2,
-            price: new Price(price2),
-            quantity: 10);
-
-        var entities = new HashSet<PurchasableEntity>()
-        {
-            new PurchasableEntity(product1, quantity1),
-            new PurchasableEntity(product2, quantity2)
-
-        };
+        var user = TestHelper.GetOrdinaryUser();
+        var entities = TestHelper.GetOrdinaryPurchasableEntities();
 
         var order = new Order(user, entities);
-        var expectedResult = quantity1 * provider1.Margin.Value * price1 + quantity2 * provider2.Margin.Value * price2;
+        var expectedResult = entities.Select(x => x.Product.FinalCost * x.Quantity).Sum();
 
         // Act
         var result = order.GetSumCost();
