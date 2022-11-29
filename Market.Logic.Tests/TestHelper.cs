@@ -1,21 +1,21 @@
 ﻿using Market.Logic.Models;
 
-using TItem = Market.Logic.Storage.Models.Item;
-using TItemType = Market.Logic.Storage.Models.ItemType;
 using ItemDescription = Market.Logic.Storage.Models.ItemDescription;
+using TItem = Market.Logic.Storage.Models.Item;
 using TItemProperty = Market.Logic.Storage.Models.ItemProperty;
-using TPropertyGroup = Market.Logic.Storage.Models.PropertyGroup;
-using TPropertyDataType = Market.Logic.Storage.Models.PropertyDataTypeId;
+using TItemType = Market.Logic.Storage.Models.ItemType;
 using TProduct = Market.Logic.Storage.Models.Product;
-using TUser = Market.Logic.Storage.Models.User;
-using TUserType = Market.Logic.Storage.Models.UserType;
+using TPropertyDataType = Market.Logic.Storage.Models.PropertyDataTypeId;
+using TPropertyGroup = Market.Logic.Storage.Models.PropertyGroup;
 using TProvider = Market.Logic.Storage.Models.Provider;
-using Xunit.Sdk;
+using TUser = Market.Logic.Storage.Models.User;
 
 namespace Market.Logic.Tests;
 
 public static class TestHelper
 {
+    #region User
+
     public static AuthenticationData GetOrdinaryAuthenticationData(string? email = null, string? login = null) => new(
             email ?? "mAiL33@mail.ru",
             new Password("12345678"),
@@ -36,10 +36,14 @@ public static class TestHelper
     {
         Id = user.Key.Value,
         Login = user.AuthenticationData.Login,
-        Email= user.AuthenticationData.Email,
+        Email = user.AuthenticationData.Email,
         Password = user.AuthenticationData.Password.Value,
         UserTypeId = (short)user.Type,
     };
+
+    #endregion
+
+    #region Provider
 
     public static PaymentTransactionsInformation GetOrdinaryPaymentTransactionsInformation(string? inn = null, string? acc = null) => new(
             inn ?? "1234567890",
@@ -59,7 +63,7 @@ public static class TestHelper
         Inn = provider.PaymentTransactionsInformation.INN,
         BankAccount = provider.PaymentTransactionsInformation.BankAccount
     };
-    
+
     public static ProviderAgent GetOrdinaryProviderAgent() => new(
             agent: new User(
                 new ID(1),
@@ -67,15 +71,19 @@ public static class TestHelper
                 UserType.Agent),
             GetOrdinaryProvider());
 
+    #endregion
+
+    #region Item
+
     public static PropertyGroup GetOrdinaryPropertyGroup() => new(id: 1, "Some property Group");
 
     public static ItemType GetOrdinaryItemType() => new(id: 1, "Som item type");
 
     public static ItemProperty GetOrdinaryItemProperty() => new(
-            new ID(1), 
-            name: "Some property name", 
-            GetOrdinaryPropertyGroup(), 
-            isFilterable: false, 
+            new ID(1),
+            name: "Some property name",
+            GetOrdinaryPropertyGroup(),
+            isFilterable: false,
             PropertyDataType.String);
 
     public static ItemDescription GetStorageItemProperty(ItemProperty property)
@@ -108,9 +116,9 @@ public static class TestHelper
     };
 
     public static Item GetOrdinaryItem(
-        long id = 1, 
-        ItemType? type = null, 
-        string name = "Some item name", 
+        long id = 1,
+        ItemType? type = null,
+        string name = "Some item name",
         IReadOnlyCollection<ItemProperty>? properties = null) => new(
             new ID(id),
             type ?? GetOrdinaryItemType(),
@@ -139,6 +147,9 @@ public static class TestHelper
         return tItem;
     }
 
+    #endregion
+
+    #region Product
     public static Product GetOrdinaryProduct(Item? item = null, Provider? provider = null, decimal price = 100m, int quantity = 5) => new(
         item ?? GetOrdinaryItem(),
         provider ?? GetOrdinaryProvider(),
@@ -160,4 +171,6 @@ public static class TestHelper
         new PurchasableEntity(GetOrdinaryProduct(GetOrdinaryItem(1, name: "Item1"), price: 20m, quantity: 5),1),
         new PurchasableEntity(GetOrdinaryProduct(GetOrdinaryItem(2, name: "Item2"), price: 60m, quantity: 10),3)
     };
+
+    #endregion
 }
