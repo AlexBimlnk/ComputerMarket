@@ -25,10 +25,12 @@ public class ItemProperty
     /// </summary>
     public bool IsFilterable { get; set; }
 
+    public PropertyDataTypeId PropertyDataTypeId { get; set; }
+
     /// <summary xml:lang = "ru">
     /// Тип данных используемый свойством.
     /// </summary>
-    public string PropertyDataType { get; set; } = null!;
+    public virtual PropertyDataType DataType { get; set; } = null!;
 
     /// <summary xml:lang = "ru">
     /// Группа к которой относится свойство.
