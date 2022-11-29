@@ -1,82 +1,81 @@
-﻿using Market.Logic.Storage.Models;
+﻿using Market.Logic.Models;
 
-using Market.Logic.Storage.Models;
-
-using DItemProperty = Market.Logic.Models.ItemProperty;
-using DPropertyGroup = Market.Logic.Models.PropertyGroup;
-using DItem = Market.Logic.Models.Item;
-using DItemType = Market.Logic.Models.ItemType;
-using DPropertyDataType = Market.Logic.Models.PropertyDataType;
-
+using TItem = Market.Logic.Storage.Models.Item;
+using ItemDescription = Market.Logic.Storage.Models.ItemDescription;
+using TItemProperty = Market.Logic.Storage.Models.ItemProperty;
+using TPropertyGroup = Market.Logic.Storage.Models.PropertyGroup;
+using TPropertyDataType = Market.Logic.Storage.Models.PropertyDataTypeId;
 using TProduct = Market.Logic.Storage.Models.Product;
 using TUser = Market.Logic.Storage.Models.User;
-
+using TProvider = Market.Logic.Storage.Models.Provider;
+using Microsoft.Extensions.Logging;
 
 namespace Market.Logic.Storage.Repositories;
 
-public class RepositoryHelper
+public abstract class RepositoryHelper
 {
-    private static Item ConvertToStorageModel(DItem dItem)
+    #region Item
+    protected static TItem ConvertToStorageModel(Item item)
     {
-        var item = new Item()
+        var tItem = new TItem()
         {
-            Id = dItem.Key.Value,
-            Name = dItem.Name,
-            TypeId = dItem.Type.Id,
+            Id = item.Key.Value,
+            Name = item.Name,
+            TypeId = item.Type.Id,
         };
 
-        item.Description = dItem.Properties
-           .Select(x => ConvertToStorage(x))
-           .Select(x => { x.Item = item; x.ItemId = item.Id; return x; })
+        tItem.Description = item.Properties
+           .Select(x => ConvertToStorageModel(x))
+           .Select(x => { x.Item = tItem; x.ItemId = tItem.Id; return x; })
            .ToArray();
 
-        return item;
+        return tItem;
     }
 
-    private static DItem ConvertFromStorage(Item item) => new DItem(
+    protected static Item ConvertFromStorageModel(TItem item) => new(
         new ID(item.Id),
-        new DItemType(item.TypeId, item.Type.Name),
+        new ItemType(item.TypeId, item.Type.Name),
         item.Name,
         item.Description
-            .Select(x => ConvertFromStorage(x))
+            .Select(x => ConvertFromStorageModel(x))
             .ToArray());
 
-    public static ItemDescription ConvertToStorage(DItemProperty dProperty)
+    protected static ItemDescription ConvertToStorageModel(ItemProperty property)
     {
-        var property = new ItemProperty()
+        var tProperty = new TItemProperty()
         {
-            Id = dProperty.Key.Value,
-            Name = dProperty.Name,
-            GroupId = dProperty.Group.Id,
-            Group = new PropertyGroup()
+            Id = property.Key.Value,
+            Name = property.Name,
+            GroupId = property.Group.Id,
+            Group = new TPropertyGroup()
             {
-                Id = dProperty.Group.Id,
-                Name = dProperty.Group.Name
+                Id = property.Group.Id,
+                Name = property.Group.Name
             },
-            IsFilterable = dProperty.IsFilterable,
-            PropertyDataTypeId = (PropertyDataTypeId)dProperty.ProperyDataType
+            IsFilterable = property.IsFilterable,
+            PropertyDataTypeId = (TPropertyDataType)property.ProperyDataType
         };
 
         return new ItemDescription()
         {
-            PropertyId = property.Id,
-            Property = property,
-            PropertyValue = dProperty.Value
+            PropertyId = tProperty.Id,
+            Property = tProperty,
+            PropertyValue = property.Value
         };
     }
 
-    private static DItemProperty ConvertFromStorage(ItemDescription property)
+    protected static ItemProperty ConvertFromStorageModel(ItemDescription property)
     {
         var group = property.Property.GroupId is not null
-                ? new DPropertyGroup(property.Property.GroupId.GetValueOrDefault(), property.Property.Group!.Name)
-                : DPropertyGroup.Default;
+                ? new PropertyGroup(property.Property.GroupId.GetValueOrDefault(), property.Property.Group!.Name)
+                : PropertyGroup.Default;
 
-        var dProperty = new DItemProperty(
+        var dProperty = new ItemProperty(
             new ID(property.PropertyId),
             property.Property.Name,
             group,
             property.Property.IsFilterable,
-            (DPropertyDataType)property.Property.PropertyDataTypeId);
+            (PropertyDataType)property.Property.PropertyDataTypeId);
 
         if (property.PropertyValue is not null)
         {
@@ -86,7 +85,11 @@ public class RepositoryHelper
         return dProperty;
     }
 
-    private static TProduct ConvertToStorageModel(Product product) => new()
+    #endregion
+
+    #region Product
+
+    protected static TProduct ConvertToStorageModel(Product product) => new()
     {
         ProviderCost = product.ProviderCost,
         Quantity = product.Quantity,
@@ -94,28 +97,17 @@ public class RepositoryHelper
         ProviderId = product.Provider.Key.Value,
     };
 
-    private static Product ConvertFromStorage(TProduct product)
+    protected static Product ConvertFromStorageModel(TProduct product)
       => new Product(
-          new Item(
-              new ID(product.ItemId),
-              new ItemType(product.Item.TypeId, product.Item.Type.Name),
-              product.Item.Name,
-              product.Item.Description
-                .Select(x => new ItemProperty(
-                    x.Property.Name,
-                    x.PropertyValue ?? string.Empty))
-                .ToArray()),
-          new Provider(
-              new ID(product.ProviderId),
-              product.Provider.Name,
-              new Margin(product.Provider.Margin),
-              new PaymentTransactionsInformation(
-                  product.Provider.Inn,
-                  product.Provider.BankAccount)),
+          ConvertFromStorageModel(product.Item),
+          ConvertFromStorageModel(product.Provider),
           new Price(product.ProviderCost),
           product.Quantity);
 
-    private static TUser ConvertToStorageModel(User user) => new()
+    #endregion
+
+    #region User
+    protected static TUser ConvertToStorageModel(User user) => new()
     {
         Id = user.Key.Value,
         Login = user.AuthenticationData.Login,
@@ -124,14 +116,13 @@ public class RepositoryHelper
         UserTypeId = (short)user.Type
     };
 
-    private User? ConvertFromStorageModel(TUser user)
+    protected static User? ConvertFromStorageModel(TUser user, ILogger logger)
     {
         if (!Enum.IsDefined(typeof(UserType), (int)user.UserTypeId))
         {
-            _logger.LogWarning(
+            logger.LogWarning(
                 "The user with user type id: {UserTypeId} can't be converted",
                 user.UserTypeId);
-
             return null;
         }
 
@@ -143,4 +134,26 @@ public class RepositoryHelper
                 user.Login),
             (UserType)user.UserTypeId);
     }
+
+    #endregion
+
+    #region Provider
+
+    protected static TProvider ConvertToStorageModel(Provider provider) => new()
+    {
+        Id = provider.Key.Value,
+        Name = provider.Name,
+        Margin = provider.Margin.Value,
+        Inn = provider.PaymentTransactionsInformation.INN,
+        BankAccount = provider.PaymentTransactionsInformation.BankAccount
+    };
+
+    protected static Provider ConvertFromStorageModel(TProvider provider) =>
+        new Provider(
+            new ID(provider.Id),
+            provider.Name,
+            new Margin(provider.Margin),
+            new PaymentTransactionsInformation(provider.Inn, provider.BankAccount));
+    
+    #endregion
 }

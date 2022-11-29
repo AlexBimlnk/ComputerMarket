@@ -5,8 +5,6 @@ using Microsoft.Extensions.Logging;
 
 namespace Market.Logic.Storage.Repositories;
 
-
-
 /// <summary xml:lang = "ru">
 /// Репозиторий пользователей.
 /// </summary>
@@ -34,8 +32,6 @@ public sealed class UsersRepository : RepositoryHelper, IUsersRepository
         _context = context ?? throw new ArgumentNullException(nameof(context));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
-
-    
 
     /// <inheritdoc/>
     public async Task AddAsync(User entity, CancellationToken token = default)
@@ -71,7 +67,7 @@ public sealed class UsersRepository : RepositoryHelper, IUsersRepository
     public IEnumerable<User> GetEntities() =>
         _context.Users
         .AsEnumerable()
-        .Select(x => ConvertFromStorageModel(x))
+        .Select(x => ConvertFromStorageModel(x, _logger))
         .Where(x => x != null)!;
 
     /// <inheritdoc/>
@@ -81,7 +77,7 @@ public sealed class UsersRepository : RepositoryHelper, IUsersRepository
     public User? GetByKey(ID key) =>
         _context.Users
             .Where(x => x.Id == key.Value)
-            .Select(x => ConvertFromStorageModel(x))
+            .Select(x => ConvertFromStorageModel(x, _logger))
             .SingleOrDefault();
 
     /// <inheritdoc/>
@@ -93,7 +89,7 @@ public sealed class UsersRepository : RepositoryHelper, IUsersRepository
         if (user is null)
             return null;
 
-        return ConvertFromStorageModel(user);
+        return ConvertFromStorageModel(user, _logger);
     }
 
     /// <inheritdoc/>

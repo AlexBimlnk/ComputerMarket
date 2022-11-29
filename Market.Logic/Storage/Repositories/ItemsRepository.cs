@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Market.Logic.Models;
+
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 
@@ -18,7 +20,7 @@ public sealed class ItemsRepository : RepositoryHelper, IItemsRepository
     
 
     /// <inheritdoc/>
-    public async Task AddAsync(DItem entity, CancellationToken token = default)
+    public async Task AddAsync(Item entity, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(entity);
 
@@ -29,7 +31,7 @@ public sealed class ItemsRepository : RepositoryHelper, IItemsRepository
     }
 
     /// <inheritdoc/>
-    public async Task<bool> ContainsAsync(DItem entity, CancellationToken token = default)
+    public async Task<bool> ContainsAsync(Item entity, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(entity);
 
@@ -40,7 +42,7 @@ public sealed class ItemsRepository : RepositoryHelper, IItemsRepository
     }
 
     /// <inheritdoc/>
-    public void Delete(DItem entity)
+    public void Delete(Item entity)
     {
         ArgumentNullException.ThrowIfNull(entity);
 
@@ -48,23 +50,23 @@ public sealed class ItemsRepository : RepositoryHelper, IItemsRepository
     }
 
     /// <inheritdoc/>
-    public IEnumerable<DItem> GetEntities() =>
+    public IEnumerable<Item> GetEntities() =>
         _context.Items
         .AsEnumerable()
-        .Select(x => ConvertFromStorage(x));
+        .Select(x => ConvertFromStorageModel(x));
 
     /// <inheritdoc/>
     public void Save() => _context.SaveChanges();
 
     /// <inheritdoc/>
-    public DItem? GetByKey(ID key) =>
+    public Item? GetByKey(ID key) =>
         _context.Items
             .Where(x => x.Id == key.Value)
-            .Select(x => ConvertFromStorage(x))
+            .Select(x => ConvertFromStorageModel(x))
             .SingleOrDefault();
 
     /// <inheritdoc/>
-    public void AddOrUpdate(DItem item)
+    public void AddOrUpdate(Item item)
     {
         ArgumentNullException.ThrowIfNull(item);
 

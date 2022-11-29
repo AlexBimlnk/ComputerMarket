@@ -5,11 +5,9 @@ using Market.Logic.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-using TProvider = Market.Logic.Storage.Models.Provider;
-
 namespace Market.Logic.Storage.Repositories;
 
-public sealed class ProvidersRepository : IKeyableRepository<Provider, ID>
+public sealed class ProvidersRepository : RepositoryHelper, IKeyableRepository<Provider, ID>
 {
     private readonly IRepositoryContext _context;
     private readonly ILogger<ProvidersRepository> _logger;
@@ -33,21 +31,7 @@ public sealed class ProvidersRepository : IKeyableRepository<Provider, ID>
         _context = context ?? throw new ArgumentNullException(nameof(context));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
-    private static TProvider ConvertToStorageModel(Provider provider) => new()
-    {
-        Id = provider.Key.Value,
-        Name = provider.Name,
-        Margin = provider.Margin.Value,
-        Inn = provider.PaymentTransactionsInformation.INN,
-        BankAccount = provider.PaymentTransactionsInformation.BankAccount
-    };
-
-    private static Provider? ConvertFromStorageModel(TProvider provider) =>
-        new Provider(
-            new ID(provider.Id),
-            provider.Name,
-            new Margin(provider.Margin),
-            new PaymentTransactionsInformation(provider.Inn, provider.BankAccount));
+   
 
     /// <inheritdoc/>
     public async Task AddAsync(Provider entity, CancellationToken token = default)

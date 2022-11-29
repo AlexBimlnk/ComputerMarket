@@ -56,7 +56,7 @@ public sealed class ProductsRepository : RepositoryHelper, IKeyableRepository<Pr
     public IEnumerable<Product> GetEntities() =>
         _context.Products
         .AsEnumerable()
-        .Select(x => ConvertFromStorage(x));
+        .Select(x => ConvertFromStorageModel(x));
 
     /// <inheritdoc/>
     public void Save() => _context.SaveChanges();
@@ -65,6 +65,6 @@ public sealed class ProductsRepository : RepositoryHelper, IKeyableRepository<Pr
     public Product? GetByKey((long, long) key) =>
         _context.Products
             .Where(x => x.ItemId == key.Item1 && x.ProviderId == key.Item2)
-            .Select(x => ConvertFromStorage(x))
+            .Select(x => ConvertFromStorageModel(x))
             .SingleOrDefault();
 }
