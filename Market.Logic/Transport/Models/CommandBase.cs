@@ -2,7 +2,7 @@
 
 using Newtonsoft.Json;
 
-namespace Market.Logic.Transport.Models.Commands.Import;
+namespace Market.Logic.Transport.Models;
 
 /// <summary xml:lang = "ru">
 /// Представляет базовую транспортную модель команды.

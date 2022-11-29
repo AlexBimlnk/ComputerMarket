@@ -2,10 +2,10 @@
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 
-namespace Import.Logic.Transport.Models.Queries;
+namespace Market.Logic.Queries;
 
 /// <summary xml:lang = "ru">
-/// Типы запросов обрабатываемых сервисом импорта.
+/// Типы запросов посылаемые во внешние сервисы.
 /// </summary>
 [JsonConverter(typeof(StringEnumConverter), typeof(SnakeCaseNamingStrategy))]
 public enum QueryType

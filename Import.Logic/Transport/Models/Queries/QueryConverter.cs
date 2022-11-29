@@ -1,9 +1,7 @@
-﻿using Import.Logic.Transport.Models.Queries;
-
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Import.Logic.Transport.Models.Commands;
+namespace Import.Logic.Transport.Models.Queries;
 
 /// <summary xml:lang = "ru">
 /// Конвертер запросов.

@@ -1,4 +1,4 @@
-﻿using General.Logic.Executables;
+﻿using General.Logic.Commands;
 
 using Import.Logic.Commands;
 using Import.Logic.Models;
@@ -22,7 +22,7 @@ public class CommandParametersDeserializerTests
     [Theory(DisplayName = $"The {nameof(CommandParametersDeserializer)} can deserialize.")]
     [Trait("Category", "Unit")]
     [MemberData(nameof(DeserializeParameters))]
-    public void CanDeserialize(string rawSource, ExecutableParametersBase expectedParameters)
+    public void CanDeserialize(string rawSource, CommandParametersBase expectedParameters)
     {
         // Arrange
         var deserializer = new CommandParametersDeserializer();
@@ -77,7 +77,7 @@ public class CommandParametersDeserializerTests
         exception.Should().BeOfType<ArgumentException>();
     }
 
-    public readonly static TheoryData<string, ExecutableParametersBase> DeserializeParameters = new()
+    public readonly static TheoryData<string, CommandParametersBase> DeserializeParameters = new()
     {
         {
             /*lang=json,strict*/ @"
