@@ -5,12 +5,11 @@ using Market.Logic.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-using TProduct = Market.Logic.Storage.Models.Product;
 
 
 namespace Market.Logic.Storage.Repositories;
 
-public sealed class ProductsRepository : IKeyableRepository<Product, (long, long)>
+public sealed class ProductsRepository : RepositoryHelper, IKeyableRepository<Product, (long, long)>
 {
     private readonly ILogger<ProductsRepository> _logger;
     private readonly IRepositoryContext _context;
@@ -21,34 +20,7 @@ public sealed class ProductsRepository : IKeyableRepository<Product, (long, long
         _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
-    private static TProduct ConvertToStorageModel(Product product) => new()
-    {
-        ProviderCost = product.ProviderCost,
-        Quantity = product.Quantity,
-        ItemId = product.Item.Key.Value,
-        ProviderId = product.Provider.Key.Value,
-    };
-
-    private static Product ConvertFromStorage(TProduct product)
-      => new Product(
-          new Item(
-              new ID(product.ItemId),
-              new ItemType(product.Item.Type.Name),
-              product.Item.Name,
-              product.Item.Description
-                .Select(x => new ItemProperty(
-                    x.Property.Name,
-                    x.PropertyValue ?? string.Empty))
-                .ToArray()),
-          new Provider(
-              new ID(product.ProviderId),
-              product.Provider.Name,
-              new Margin(product.Provider.Margin),
-              new PaymentTransactionsInformation(
-                  product.Provider.Inn,
-                  product.Provider.BankAccount)),
-          new Price(product.ProviderCost),
-          product.Quantity);
+    
 
     /// <inheritdoc/>
     public async Task AddAsync(Product entity, CancellationToken token = default)
