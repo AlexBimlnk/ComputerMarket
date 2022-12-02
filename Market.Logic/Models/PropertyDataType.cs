@@ -2,6 +2,6 @@
 
 public enum PropertyDataType
 {
-    String = 0,
-    Int = 1
+    String = 1,
+    Int = 2
 }
