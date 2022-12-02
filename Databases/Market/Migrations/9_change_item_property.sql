@@ -1,9 +1,6 @@
 BEGIN;
 
-DELETE FROM db_version WHERE TRUE;
-
-INSERT INTO db_version
-VALUES (9);
+UPDATE db_version SET version = 9 WHERE TRUE;
 
 DROP TABLE IF EXISTS property_data_type;
 
