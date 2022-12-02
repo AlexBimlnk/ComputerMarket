@@ -90,7 +90,7 @@ public class ItemPropertyTests
         var property = TestHelper.GetOrdinaryItemProperty();
 
         // Act
-        var exception = Record.Exception(() => property.SetValue(value));
+        var exception = Record.Exception(() => property.Value = value);
 
         // Assert
         exception.Should().BeNull();
@@ -109,7 +109,7 @@ public class ItemPropertyTests
         var property = TestHelper.GetOrdinaryItemProperty();
 
         // Act
-        var exception = Record.Exception(() => property.SetValue(value));
+        var exception = Record.Exception(() => property.Value = value);
 
         // Assert
         exception.Should().BeOfType<ArgumentException>();

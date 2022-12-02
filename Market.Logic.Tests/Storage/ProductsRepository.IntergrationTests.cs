@@ -609,7 +609,7 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
     private async Task AddItemPropertyAsync(ItemProperty property)
     {
         var fromPropertyQuery = "item_properties (id, group_id, is_filterable, name, data_type_id)";
-        var valuesQuery = $"({property.Key.Value}, {property.Group.Id}, {property.IsFilterable}, '{property.Name}', {(int)property.ProperyDataType})";
+        var valuesQuery = $"({property.Key.Value}, {property.Group.Id.Value}, {property.IsFilterable}, '{property.Name}', {(int)property.ProperyDataType})";
 
         await AddAsync(fromPropertyQuery, valuesQuery);
     }
@@ -617,7 +617,7 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
     private async Task AddPropertyGroupAsync(PropertyGroup group)
     {
         var fromQuery = "property_group (id, name)";
-        var valuesQuery = $"({group.Id}, '{group.Name}')";
+        var valuesQuery = $"({group.Id.Value}, '{group.Name}')";
 
         await AddAsync(fromQuery, valuesQuery);
     }

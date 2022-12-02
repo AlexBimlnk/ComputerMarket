@@ -16,7 +16,6 @@ using TItem = Models.Item;
 using ItemDescription = Models.ItemDescription;
 using TItemProperty = Models.ItemProperty;
 using TPropertyGroup = Models.PropertyGroup;
-using TPropertyDataType = Models.PropertyDataTypeId;
 using TProduct = Models.Product;
 using TProvider = Models.Provider;
 
@@ -60,14 +59,14 @@ public sealed class ProductsRepository : IProductsRepository
         {
             Id = property.Key.Value,
             Name = property.Name,
-            GroupId = property.Group.Id,
+            GroupId = (int)property.Group.Id.Value,
             Group = new TPropertyGroup()
             {
-                Id = property.Group.Id,
+                Id = (int)property.Group.Id.Value,
                 Name = property.Group.Name
             },
             IsFilterable = property.IsFilterable,
-            PropertyDataTypeId = (TPropertyDataType)property.ProperyDataType
+            PropertyDataTypeId = property.ProperyDataType
         };
 
         if (tProperty.GroupId == -1)
@@ -87,7 +86,7 @@ public sealed class ProductsRepository : IProductsRepository
     private static ItemProperty ConvertFromStorageModel(ItemDescription property)
     {
         var group = property.Property.GroupId is not null
-                ? new PropertyGroup(property.Property.GroupId.GetValueOrDefault(), property.Property.Group!.Name)
+                ? new PropertyGroup(new ID(property.Property.GroupId.GetValueOrDefault()), property.Property.Group!.Name)
                 : PropertyGroup.Default;
 
         var dProperty = new ItemProperty(
@@ -99,7 +98,7 @@ public sealed class ProductsRepository : IProductsRepository
 
         if (property.PropertyValue is not null)
         {
-            dProperty.SetValue(property.PropertyValue);
+            dProperty.Value = property.PropertyValue;
         }
 
         return dProperty;

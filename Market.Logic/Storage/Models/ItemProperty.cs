@@ -1,4 +1,6 @@
-﻿namespace Market.Logic.Storage.Models;
+﻿using PropertyDataTypeId = Market.Logic.Models.PropertyDataType;
+
+namespace Market.Logic.Storage.Models;
 
 /// <summary xml:lang = "ru">
 /// Транспортная модель свойства товара, используемая хранилищем.
@@ -25,6 +27,9 @@ public class ItemProperty
     /// </summary>
     public bool IsFilterable { get; set; }
 
+    /// <summary xml:lang = "ru">
+    /// Тип данных свойства.
+    /// </summary>
     public PropertyDataTypeId PropertyDataTypeId { get; set; }
 
     /// <summary xml:lang = "ru">

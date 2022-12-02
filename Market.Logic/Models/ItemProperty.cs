@@ -10,6 +10,8 @@ namespace Market.Logic.Models;
 /// </summary>
 public sealed record class ItemProperty : IKeyable<ID>
 {
+    private string? _value = null!;
+
     /// <summary xml:lang = "ru">
     /// Создает экземпляр типа <see cref="ItemProperty"/>.
     /// </summary>
@@ -41,21 +43,35 @@ public sealed record class ItemProperty : IKeyable<ID>
     /// <summary xml:lang = "ru">
     /// Значения свойства.
     /// </summary>
-    public string? Value { get; private set; } = null;
-
-    public void SetValue(string value)
+    public string? Value 
     {
-        if (string.IsNullOrWhiteSpace(value))
-            throw new ArgumentException($"Value of {nameof(ItemProperty)} can't be null or white spaces or empty.");
+        get => _value;
+        set
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                throw new ArgumentException($"Value of {nameof(ItemProperty)} can't be null or white spaces or empty.");
 
-        Value = value;
+            _value = value;
+        }
     }
 
+    /// <summary xml:lang = "ru">
+    /// Группа свойства.
+    /// </summary>
     public PropertyGroup Group { get; }
 
+    /// <summary xml:lang = "ru">
+    /// Используется ли при фильтрации.
+    /// </summary>
     public bool IsFilterable { get; }
 
+    /// <summary xml:lang = "ru">
+    /// Ключ свойства.
+    /// </summary>
     public ID Key { get; }
 
+    /// <summary xml:lang = "ru">
+    /// Тип данных, который хранится в свойстве.
+    /// </summary>
     public PropertyDataType ProperyDataType { get; }
 }

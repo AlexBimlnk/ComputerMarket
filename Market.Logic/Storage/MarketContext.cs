@@ -2,6 +2,7 @@
 
 using Microsoft.EntityFrameworkCore;
 
+using PropertyDataTypeId = Market.Logic.Models.PropertyDataType;
 
 namespace Market.Logic.Storage;
 

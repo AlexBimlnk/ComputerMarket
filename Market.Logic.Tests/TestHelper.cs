@@ -5,7 +5,6 @@ using TItem = Market.Logic.Storage.Models.Item;
 using TItemProperty = Market.Logic.Storage.Models.ItemProperty;
 using TItemType = Market.Logic.Storage.Models.ItemType;
 using TProduct = Market.Logic.Storage.Models.Product;
-using TPropertyDataType = Market.Logic.Storage.Models.PropertyDataTypeId;
 using TPropertyGroup = Market.Logic.Storage.Models.PropertyGroup;
 using TProvider = Market.Logic.Storage.Models.Provider;
 using TUser = Market.Logic.Storage.Models.User;
@@ -69,7 +68,7 @@ public static class TestHelper
 
     #region Item
 
-    public static PropertyGroup GetOrdinaryPropertyGroup() => new(id: 1, "Some property Group");
+    public static PropertyGroup GetOrdinaryPropertyGroup() => new(id: new ID(1), "Some property Group");
 
     public static ItemType GetOrdinaryItemType() => new(id: 1, "Som item type");
 
@@ -89,7 +88,7 @@ public static class TestHelper
             type);
 
         if (value is not null)
-            property.SetValue(value);
+            property.Value = value;
 
         return property;
     }
@@ -100,14 +99,14 @@ public static class TestHelper
         {
             Id = property.Key.Value,
             Name = property.Name,
-            GroupId = property.Group.Id,
+            GroupId = (int) property.Group.Id.Value,
             Group = new TPropertyGroup()
             {
-                Id = property.Group.Id,
+                Id = (int) property.Group.Id.Value,
                 Name = property.Group.Name
             },
             IsFilterable = property.IsFilterable,
-            PropertyDataTypeId = (TPropertyDataType)property.ProperyDataType
+            PropertyDataTypeId = property.ProperyDataType
         };
 
         return new ItemDescription()

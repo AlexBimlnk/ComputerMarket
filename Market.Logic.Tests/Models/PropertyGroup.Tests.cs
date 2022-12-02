@@ -10,7 +10,7 @@ public class PropertyGroupTests
     {
         // Arrange
         var name = "name";
-        var id = 1;
+        var id = new ID(1);
         PropertyGroup property = null!;
 
         // Act
@@ -31,24 +31,10 @@ public class PropertyGroupTests
     public void CanNotCreatWhenNameIsBad(string name)
     {
         // Act
-        var exception = Record.Exception(() => _ = new PropertyGroup(id: 1, name));
+        var exception = Record.Exception(() => _ = new PropertyGroup(new ID(1), name));
 
         // Assert
         exception.Should().BeOfType<ArgumentException>();
-    }
-
-    [Theory(DisplayName = $"The {nameof(PropertyGroup)} cannot be created with out ranged id.")]
-    [Trait("Category", "Unit")]
-    [InlineData(-1)]
-    [InlineData(0)]
-    [InlineData(-5000)]
-    public void CanNotCreatWhenIdIsOutOfRange(int id)
-    {
-        // Act
-        var exception = Record.Exception(() => _ = new PropertyGroup(id, name: "Name"));
-
-        // Assert
-        exception.Should().BeOfType<ArgumentOutOfRangeException>();
     }
 
     [Fact(DisplayName = $"The {nameof(PropertyGroup)} can be created.")]
@@ -64,6 +50,6 @@ public class PropertyGroupTests
         // Assert
         exception.Should().BeNull();
         property.Name.Should().Be("None");
-        property.Id.Should().Be(-1);
+        property.Id.Should().Be(new ID(-1));
     }
 }
