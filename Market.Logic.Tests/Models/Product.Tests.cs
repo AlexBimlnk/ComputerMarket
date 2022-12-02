@@ -28,7 +28,7 @@ public class ProductTests
 
         // Assert
         exception.Should().BeNull();
-        product.Key.Should().Be((itemId.Value, providerId.Value));
+        product.Key.Should().Be((itemId, providerId));
         product.Item.Should().Be(item);
         product.Provider.Should().Be(provider);
         product.Quantity.Should().Be(quantity);

@@ -29,7 +29,6 @@ public class UsersRepositoryIntegrationTests : DBIntegrationTestBase
 
         var inputUser = TestHelper.GetOrdinaryUser();
 
-
         var expectedUser = new TUser[]
         {
             TestHelper.GetStorageUser(inputUser)
@@ -110,7 +109,11 @@ public class UsersRepositoryIntegrationTests : DBIntegrationTestBase
         context.Setup(x => x.SaveChanges())
             .Callback(() => _marketContext.SaveChanges());
 
-        var users = TestHelper.GetUsersCollection();
+        var users = new User[]
+        {
+            TestHelper.GetOrdinaryUser(1, TestHelper.GetOrdinaryAuthenticationData("mail1@mail.ru", "login1"), UserType.Customer),
+            TestHelper.GetOrdinaryUser(2, TestHelper.GetOrdinaryAuthenticationData("mail2@mail.ru", "login2"), UserType.Agent)
+        };
 
         await AddUserTypeAsync(UserType.Customer);
         await AddUserTypeAsync(UserType.Manager);

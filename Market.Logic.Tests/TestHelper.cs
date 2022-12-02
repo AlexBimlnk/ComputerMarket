@@ -16,21 +16,15 @@ public static class TestHelper
 {
     #region User
 
-    public static AuthenticationData GetOrdinaryAuthenticationData(string? email = null, string? login = null) => new(
+    public static AuthenticationData GetOrdinaryAuthenticationData(string? email = null, string? login = "login1", string? pass = null) => new(
             email ?? "mAiL33@mail.ru",
-            new Password("12345678"),
-            login ?? "login1");
+            new Password(pass ?? "12345678"),
+            login);
 
     public static User GetOrdinaryUser(long id = 1, AuthenticationData data = null!, UserType type = UserType.Customer) => new(
             new ID(id),
             data ?? GetOrdinaryAuthenticationData(),
             type);
-
-    public static IReadOnlyCollection<User> GetUsersCollection() => new[]
-    {
-        GetOrdinaryUser(1, GetOrdinaryAuthenticationData("mail1@mail.ru", "login1"), UserType.Customer),
-        GetOrdinaryUser(2, GetOrdinaryAuthenticationData("mail2@mail.ru", "login2"), UserType.Agent),
-    };
 
     public static TUser GetStorageUser(User user) => new()
     {
@@ -79,14 +73,28 @@ public static class TestHelper
 
     public static ItemType GetOrdinaryItemType() => new(id: 1, "Som item type");
 
-    public static ItemProperty GetOrdinaryItemProperty() => new(
-            new ID(1),
-            name: "Some property name",
-            GetOrdinaryPropertyGroup(),
-            isFilterable: false,
-            PropertyDataType.String);
+    public static ItemProperty GetOrdinaryItemProperty(
+        long id = 1, 
+        string name = "Some property name", 
+        string? value = null,
+        PropertyGroup? group = null,
+        bool isFilterable = false,
+        PropertyDataType type = PropertyDataType.String)
+    {
+        var property = new ItemProperty(
+            new ID(id),
+            name,
+            group ?? GetOrdinaryPropertyGroup(),
+            isFilterable,
+            type);
 
-    public static ItemDescription GetStorageItemProperty(ItemProperty property)
+        if (value is not null)
+            property.SetValue(value);
+
+        return property;
+    }
+
+    public static ItemDescription GetStorageItemPropertyWithOutItem(ItemProperty property)
     {
         var tProperty = new TItemProperty()
         {
@@ -110,11 +118,6 @@ public static class TestHelper
         };
     }
 
-    public static IReadOnlyCollection<ItemProperty> GetOrdinaryItemProperties() => new[]
-    {
-        new ItemProperty(new ID(1), "Property1", new  PropertyGroup(1, "Group 1"), false, PropertyDataType.String),
-    };
-
     public static Item GetOrdinaryItem(
         long id = 1,
         ItemType? type = null,
@@ -123,7 +126,12 @@ public static class TestHelper
             new ID(id),
             type ?? GetOrdinaryItemType(),
             name,
-            properties ?? GetOrdinaryItemProperties());
+            properties ?? new ItemProperty[]
+            {
+                GetOrdinaryItemProperty(1, "PropName1", "Value1"),
+                GetOrdinaryItemProperty(2, "PropName1", "Value2"),
+                GetOrdinaryItemProperty(3, "PropName1", "Value3")
+            });
 
     public static TItem GetStorageItem(Item item)
     {
@@ -140,7 +148,7 @@ public static class TestHelper
         };
 
         tItem.Description = item.Properties
-           .Select(x => GetStorageItemProperty(x))
+           .Select(x => GetStorageItemPropertyWithOutItem(x))
            .Select(x => { x.Item = tItem; x.ItemId = tItem.Id; return x; })
            .ToArray();
 
@@ -150,6 +158,7 @@ public static class TestHelper
     #endregion
 
     #region Product
+
     public static Product GetOrdinaryProduct(Item? item = null, Provider? provider = null, decimal price = 100m, int quantity = 5) => new(
         item ?? GetOrdinaryItem(),
         provider ?? GetOrdinaryProvider(),
@@ -166,11 +175,8 @@ public static class TestHelper
         Item = GetStorageItem(product.Item)
     };
 
-    public static IReadOnlySet<PurchasableEntity> GetOrdinaryPurchasableEntities() => new HashSet<PurchasableEntity>()
-    {
-        new PurchasableEntity(GetOrdinaryProduct(GetOrdinaryItem(1, name: "Item1"), price: 20m, quantity: 5),1),
-        new PurchasableEntity(GetOrdinaryProduct(GetOrdinaryItem(2, name: "Item2"), price: 60m, quantity: 10),3)
-    };
+    public static PurchasableEntity GetOrdinaryPurchasableEntity(Product? product = null, int quantity = 3) => 
+        new(product ?? GetOrdinaryProduct(), quantity);
 
     #endregion
 }

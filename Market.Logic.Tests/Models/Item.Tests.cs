@@ -13,7 +13,12 @@ public class ItemTests
         var type = TestHelper.GetOrdinaryItemType();
         var name = "name";
         var id = new ID(1);
-        var properties = TestHelper.GetOrdinaryItemProperties();
+        var properties = new ItemProperty[]
+        {
+            TestHelper.GetOrdinaryItemProperty(1, "PropName1", "Value1"),
+            TestHelper.GetOrdinaryItemProperty(2, "PropName1", "Value2"),
+            TestHelper.GetOrdinaryItemProperty(3, "PropName1", "Value3")
+        };
 
         // Act
         var exception = Record.Exception(() => item = new Item(
@@ -39,7 +44,7 @@ public class ItemTests
             new ID(1),
             type: null!,
             name: "name",
-            TestHelper.GetOrdinaryItemProperties()));
+            Array.Empty<ItemProperty>()));
 
         // Assert
         exception.Should().BeOfType<ArgumentNullException>();
@@ -73,7 +78,7 @@ public class ItemTests
             new ID(1),
             TestHelper.GetOrdinaryItemType(),
             name,
-            TestHelper.GetOrdinaryItemProperties()));
+            Array.Empty<ItemProperty>()));
 
         // Assert
         exception.Should().BeOfType<ArgumentException>();

@@ -246,10 +246,12 @@ public class UsersRepositoryTests
         // Arrange
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
         var logger = Mock.Of<ILogger<UsersRepository>>();
+        var userKey = new ID(1);
+        var notUserKey = new ID(2);
 
         var data = new List<TUser>
         {
-            TestHelper.GetStorageUser(TestHelper.GetOrdinaryUser())
+            TestHelper.GetStorageUser(TestHelper.GetOrdinaryUser(userKey.Value))
         }.AsQueryable();
 
         var users = new Mock<DbSet<TUser>>(MockBehavior.Strict);
@@ -281,8 +283,8 @@ public class UsersRepositoryTests
         var expectedResult = TestHelper.GetOrdinaryUser();
 
         // Act
-        var result1 = userRepository.GetByKey(expectedResult.Key);
-        var result2 = userRepository.GetByKey(new ID(expectedResult.Key.Value + 1));
+        var result1 = userRepository.GetByKey(userKey);
+        var result2 = userRepository.GetByKey(notUserKey);
 
         // Assert
         result1.Should().NotBeNull().And.BeEquivalentTo(expectedResult);
@@ -297,11 +299,10 @@ public class UsersRepositoryTests
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
         var logger = Mock.Of<ILogger<UsersRepository>>();
 
-
-        var expectedResult = TestHelper.GetOrdinaryUser();
-
-        var userEmail = expectedResult.AuthenticationData.Email;
-        var notExsistingUserEmail = "none" + userEmail;
+        var userEmail = "mail@mail.ru";
+        var notExsistingUserEmail = "nonemail@mail.ru";
+        
+        var expectedResult = TestHelper.GetOrdinaryUser(data: TestHelper.GetOrdinaryAuthenticationData(email: userEmail));
         
         var data = new List<TUser>
         {
@@ -351,16 +352,16 @@ public class UsersRepositoryTests
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
         var logger = Mock.Of<ILogger<UsersRepository>>();
 
-        var expectedResult = TestHelper.GetOrdinaryUser();
+        var userEmail = "mail@mail.ru";
+        var userPassword = "12345678";
+        var inccorectUserPassword = "02345678";
+        var notExsistingUserEmail = "nonemail@mail.ru";
 
-        var userEmail = expectedResult.AuthenticationData.Email;
-        var userPassword = expectedResult.AuthenticationData.Password.Value;
-        var inccorectUserPassword = "none" + expectedResult.AuthenticationData.Password.Value;
-        var notExsistingUserEmail = "none" + expectedResult.AuthenticationData.Email;
-
+        var expectedResult = TestHelper.GetOrdinaryUser(data: TestHelper.GetOrdinaryAuthenticationData(email: userEmail, pass: userPassword));
+        
         var data = new List<TUser>
         {
-            TestHelper.GetStorageUser(TestHelper.GetOrdinaryUser())
+            TestHelper.GetStorageUser(TestHelper.GetOrdinaryUser(data: TestHelper.GetOrdinaryAuthenticationData(email: userEmail, pass: userPassword)))
         }.AsQueryable();
 
         var users = new Mock<DbSet<TUser>>(MockBehavior.Strict);
@@ -390,10 +391,33 @@ public class UsersRepositoryTests
             logger);
 
         // Act
-        var result1 = userRepository.IsCanAuthenticate(new AuthenticationData(userEmail, new Password(userPassword)), out var user1);
-        var result2 = userRepository.IsCanAuthenticate(new AuthenticationData(userEmail, new Password(inccorectUserPassword)), out var user2);
-        var result3 = userRepository.IsCanAuthenticate(new AuthenticationData(notExsistingUserEmail, new Password(userPassword)), out var user3);
-        var result4 = userRepository.IsCanAuthenticate(new AuthenticationData(notExsistingUserEmail, new Password(inccorectUserPassword)), out var user4);
+        var result1 = userRepository.IsCanAuthenticate(
+            TestHelper.GetOrdinaryAuthenticationData(
+                email: userEmail, 
+                login: null, pass: 
+                userPassword), 
+            out var user1);
+
+        var result2 = userRepository.IsCanAuthenticate(
+            TestHelper.GetOrdinaryAuthenticationData(
+                email: userEmail, 
+                login: null, 
+                pass: inccorectUserPassword), 
+            out var user2);
+
+        var result3 = userRepository.IsCanAuthenticate(
+            TestHelper.GetOrdinaryAuthenticationData(
+                email: notExsistingUserEmail, 
+                login: null,
+                pass: userPassword), 
+            out var user3);
+
+        var result4 = userRepository.IsCanAuthenticate(
+            TestHelper.GetOrdinaryAuthenticationData(
+                email: notExsistingUserEmail, 
+                login: null, 
+                pass: inccorectUserPassword), 
+            out var user4);
 
         // Assert
         result1.Should().BeTrue();
@@ -414,13 +438,13 @@ public class UsersRepositoryTests
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
         var logger = Mock.Of<ILogger<UsersRepository>>();
 
-        var user = TestHelper.GetOrdinaryUser();
+        var userPassword = "12345678";
+        var inccorectUserPassword = "02345678";
+        var userId = new ID(1);
+        var notExsistingUserId = new ID(2);
 
-        var userPassword = user.AuthenticationData.Password.Value;
-        var inccorectUserPassword = "none" + user.AuthenticationData.Password.Value;
-        var userId = user.Key;
-        var notExsistingUserId = new ID(user.Key.Value + 1);
-
+        var user = TestHelper.GetOrdinaryUser(userId.Value, data: TestHelper.GetOrdinaryAuthenticationData(pass: userPassword));
+        
         var data = new List<TUser>
         {
             TestHelper.GetStorageUser(user)

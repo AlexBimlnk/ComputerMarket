@@ -251,7 +251,10 @@ public class ProvidersRepositoryTests
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
         var logger = Mock.Of<ILogger<ProvidersRepository>>();
 
-        var expectedResult = TestHelper.GetOrdinaryProvider();
+        var providerKey = new ID(1);
+        var notExsistingProviderKey = new ID(2);
+
+        var expectedResult = TestHelper.GetOrdinaryProvider(providerKey.Value);
 
         var data = new List<TProvider>
         {
@@ -285,8 +288,8 @@ public class ProvidersRepositoryTests
             logger);
 
         // Act
-        var result1 = providersRepository.GetByKey(expectedResult.Key);
-        var result2 = providersRepository.GetByKey(new ID(expectedResult.Key.Value + 1));
+        var result1 = providersRepository.GetByKey(providerKey);
+        var result2 = providersRepository.GetByKey(notExsistingProviderKey);
 
         // Assert
         result1.Should().NotBeNull().And.BeEquivalentTo(expectedResult);

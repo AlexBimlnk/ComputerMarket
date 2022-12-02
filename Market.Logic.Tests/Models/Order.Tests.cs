@@ -11,7 +11,11 @@ public class OrderTests
         // Arrange
         Order order = null!;
         var user = TestHelper.GetOrdinaryUser();
-        var entities = TestHelper.GetOrdinaryPurchasableEntities();
+        var entities = new PurchasableEntity[]
+        {
+            TestHelper.GetOrdinaryPurchasableEntity(TestHelper.GetOrdinaryProduct(TestHelper.GetOrdinaryItem(1, name: "Item1"), price: 20m, quantity: 5),1),
+            TestHelper.GetOrdinaryPurchasableEntity(TestHelper.GetOrdinaryProduct(TestHelper.GetOrdinaryItem(2, name: "Item2"), price: 60m, quantity: 10),3)
+        }.ToHashSet();
 
         // Act
         var exception = Record.Exception(() => order = new Order(user, entities));
@@ -28,7 +32,11 @@ public class OrderTests
     public void CanNotCreateWithoutUser()
     {
         // Arrange
-        var entities = TestHelper.GetOrdinaryPurchasableEntities();
+        var entities = new PurchasableEntity[]
+        {
+            TestHelper.GetOrdinaryPurchasableEntity(TestHelper.GetOrdinaryProduct(TestHelper.GetOrdinaryItem(1, name: "Item1"), price: 20m, quantity: 5),1),
+            TestHelper.GetOrdinaryPurchasableEntity(TestHelper.GetOrdinaryProduct(TestHelper.GetOrdinaryItem(2, name: "Item2"), price: 60m, quantity: 10),3)
+        }.ToHashSet();
 
         // Act
         var exception = Record.Exception(() => _ = new Order(user: null!, entities));
@@ -58,13 +66,17 @@ public class OrderTests
     {
         // Arrange       
         var user = TestHelper.GetOrdinaryUser();
-        var entities = TestHelper.GetOrdinaryPurchasableEntities()
-            .Select(x => 
-            { 
-                x.Selected = false; 
-                return x; 
-            })
-            .ToHashSet();
+        var entities = new PurchasableEntity[]
+        {
+            TestHelper.GetOrdinaryPurchasableEntity(TestHelper.GetOrdinaryProduct(TestHelper.GetOrdinaryItem(1, name: "Item1"), price: 20m, quantity: 5),1),
+            TestHelper.GetOrdinaryPurchasableEntity(TestHelper.GetOrdinaryProduct(TestHelper.GetOrdinaryItem(2, name: "Item2"), price: 60m, quantity: 10),3)
+        }
+        .Select(x => 
+        { 
+            x.Selected = false; 
+            return x; 
+        })
+        .ToHashSet();
 
         // Act
         var exception = Record.Exception(() => _ = new Order(user, entities));
@@ -79,7 +91,11 @@ public class OrderTests
     {
         // Arrange
         var user = TestHelper.GetOrdinaryUser();
-        var entities = TestHelper.GetOrdinaryPurchasableEntities();
+        var entities = new PurchasableEntity[] 
+        { 
+            TestHelper.GetOrdinaryPurchasableEntity(TestHelper.GetOrdinaryProduct(TestHelper.GetOrdinaryItem(1, name: "Item1"), price: 20m, quantity: 5), 1), 
+            TestHelper.GetOrdinaryPurchasableEntity(TestHelper.GetOrdinaryProduct(TestHelper.GetOrdinaryItem(2, name: "Item2"), price: 60m, quantity: 10), 3) 
+        }.ToHashSet();
 
         var order = new Order(user, entities);
         var expectedResult = entities.Select(x => x.Product.FinalCost * x.Quantity).Sum();
