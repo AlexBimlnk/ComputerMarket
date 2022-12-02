@@ -5,11 +5,45 @@ using Microsoft.Extensions.Logging;
 
 namespace Market.Logic.Storage.Repositories;
 
+using TUser = Models.User;
+
 /// <summary xml:lang = "ru">
 /// Репозиторий пользователей.
 /// </summary>
-public sealed class UsersRepository : RepositoryHelper, IUsersRepository
+public sealed class UsersRepository : IUsersRepository
 {
+    #region Converers
+
+    private static TUser ConvertToStorageModel(User user) => new()
+    {
+        Id = user.Key.Value,
+        Login = user.AuthenticationData.Login,
+        Email = user.AuthenticationData.Email,
+        Password = user.AuthenticationData.Password.Value,
+        UserTypeId = (short)user.Type
+    };
+
+    private User? ConvertFromStorageModel(TUser user)
+    {
+        if (!Enum.IsDefined(typeof(UserType), (int)user.UserTypeId))
+        {
+            _logger.LogWarning(
+                "The user with user type id: {UserTypeId} can't be converted",
+                user.UserTypeId);
+            return null;
+        }
+
+        return new User(
+            id: new ID(user.Id),
+            new AuthenticationData(
+                user.Email,
+                new Password(user.Password),
+                user.Login),
+            (UserType)user.UserTypeId);
+    }
+
+    #endregion
+
     private readonly IRepositoryContext _context;
     private readonly ILogger<UsersRepository> _logger;
 
@@ -67,7 +101,7 @@ public sealed class UsersRepository : RepositoryHelper, IUsersRepository
     public IEnumerable<User> GetEntities() =>
         _context.Users
         .AsEnumerable()
-        .Select(x => ConvertFromStorageModel(x, _logger))
+        .Select(x => ConvertFromStorageModel(x))
         .Where(x => x != null)!;
 
     /// <inheritdoc/>
@@ -77,7 +111,7 @@ public sealed class UsersRepository : RepositoryHelper, IUsersRepository
     public User? GetByKey(ID key) =>
         _context.Users
             .Where(x => x.Id == key.Value)
-            .Select(x => ConvertFromStorageModel(x, _logger))
+            .Select(x => ConvertFromStorageModel(x))
             .SingleOrDefault();
 
     /// <inheritdoc/>
@@ -89,7 +123,7 @@ public sealed class UsersRepository : RepositoryHelper, IUsersRepository
         if (user is null)
             return null;
 
-        return ConvertFromStorageModel(user, _logger);
+        return ConvertFromStorageModel(user);
     }
 
     /// <inheritdoc/>

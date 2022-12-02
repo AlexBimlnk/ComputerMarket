@@ -7,8 +7,30 @@ using Microsoft.Extensions.Logging;
 
 namespace Market.Logic.Storage.Repositories;
 
-public sealed class ProvidersRepository : RepositoryHelper, IKeyableRepository<Provider, ID>
+using TProvider = Models.Provider;
+
+public sealed class ProvidersRepository : IKeyableRepository<Provider, ID>
 {
+    #region Converters
+
+    private static TProvider ConvertToStorageModel(Provider provider) => new()
+    {
+        Id = provider.Key.Value,
+        Name = provider.Name,
+        Margin = provider.Margin.Value,
+        Inn = provider.PaymentTransactionsInformation.INN,
+        BankAccount = provider.PaymentTransactionsInformation.BankAccount
+    };
+
+    private static Provider ConvertFromStorageModel(TProvider provider) =>
+        new Provider(
+            new ID(provider.Id),
+            provider.Name,
+            new Margin(provider.Margin),
+            new PaymentTransactionsInformation(provider.Inn, provider.BankAccount));
+
+    #endregion
+
     private readonly IRepositoryContext _context;
     private readonly ILogger<ProvidersRepository> _logger;
 
