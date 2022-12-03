@@ -99,7 +99,7 @@ public sealed class TransactionRequestHandler : IAPIRequestHandler<WTMarker>
         {
             { IsCancelled: true } n => HandleCancelledRequestAsync(linkedOrder),
             { State: TransactionRequestState.Held } => UpdateOrderStateAsync(linkedOrder, OrderState.ProviderAnswerWait),
-            { State: TransactionRequestState.Finished } => UpdateOrderStateAsync(linkedOrder, OrderState.ProductDeliveryWait)
+            { State: TransactionRequestState.Finished } => UpdateOrderStateAsync(linkedOrder, OrderState.ProductDeliveryWait),
             { State: TransactionRequestState.Aborted } => HandleAbortedOrderAsync(linkedOrder),
             _ => Task.CompletedTask // Другие состояния нам не интересны.
         };
