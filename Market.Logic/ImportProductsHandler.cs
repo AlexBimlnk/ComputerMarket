@@ -14,7 +14,7 @@ namespace Market.Logic;
 public sealed class ImportProductsHandler : IAPIRequestHandler<IReadOnlyCollection<Product>>
 {
     private readonly ILogger<ImportProductsHandler> _logger;
-    private readonly IDeserializer<string, TraReqRe> _deserializer;
+    private readonly IDeserializer<string, IReadOnlyCollection<Product>> _deserializer;
     private readonly IRepository<Product> _repositoryProduct;
 
     /// <summary xml:lang = "ru">
