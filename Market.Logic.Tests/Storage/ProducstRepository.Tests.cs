@@ -1,5 +1,7 @@
 ﻿using System.Net.WebSockets;
 
+using General.Storage;
+
 using Market.Logic.Models;
 using Market.Logic.Storage.Repositories;
 
@@ -70,9 +72,11 @@ public class ProductsRepositoryTests
             context.Object,
             logger);
 
+        Item item = null!;
+
         // Act
         var exception = await Record.ExceptionAsync(async () =>
-            await itemsRepository.AddAsync(null!));
+            await itemsRepository.AddAsync(item));
 
         // Assert
         exception.Should().BeOfType<ArgumentNullException>();
@@ -115,9 +119,11 @@ public class ProductsRepositoryTests
             context.Object,
             logger);
 
+        Item item = null!;
+
         // Act
         var exception = await Record.ExceptionAsync(async () =>
-            await itemRepository.ContainsAsync(null!));
+            await itemRepository.ContainsAsync(item));
 
         // Assert
         exception.Should().BeOfType<ArgumentNullException>();
@@ -197,9 +203,11 @@ public class ProductsRepositoryTests
             context.Object,
             logger);
 
+        Item item = null!;
+
         // Act
         var exception = Record.Exception(() =>
-            itemsRepository.Delete(null!));
+            itemsRepository.Delete(item));
 
         // Assert
         exception.Should().BeOfType<ArgumentNullException>();
@@ -299,7 +307,7 @@ public class ProductsRepositoryTests
             logger);
 
         // Act
-        var result = itemsRepository.GetEntities();
+        var result = ((IRepository<Item>)itemsRepository).GetEntities();
 
         // Assert
         result.Should().BeEquivalentTo(expectedResult, opt => opt.WithStrictOrdering());
@@ -366,7 +374,7 @@ public class ProductsRepositoryTests
 
         // Act
         var exception = await Record.ExceptionAsync(async () =>
-            await productRepository.AddOrUpdateProductAsync(inputProduct));
+            await productRepository.AddOrUpdateAsync(inputProduct));
 
         // Assert
         exception.Should().BeNull();
@@ -419,7 +427,7 @@ public class ProductsRepositoryTests
 
         // Act
         var exception = await Record.ExceptionAsync(async () =>
-            await productRepository.AddOrUpdateProductAsync(inputProduct));
+            await productRepository.AddOrUpdateAsync(inputProduct));
 
         // Assert
         exception.Should().BeNull();
@@ -440,7 +448,7 @@ public class ProductsRepositoryTests
 
         // Act
         var exception = await Record.ExceptionAsync(async () =>
-            await productRepository.AddOrUpdateProductAsync(null!));
+            await productRepository.AddOrUpdateAsync(null!));
 
         // Assert
         exception.Should().BeOfType<ArgumentNullException>();
@@ -465,7 +473,7 @@ public class ProductsRepositoryTests
         // Act
         cts.Cancel();
         var exception = await Record.ExceptionAsync(async () =>
-            await productRepository.AddOrUpdateProductAsync(inputProduct, cts.Token));
+            await productRepository.AddOrUpdateAsync(inputProduct, cts.Token));
 
         // Assert
         exception.Should().BeOfType<OperationCanceledException>();
@@ -505,12 +513,12 @@ public class ProductsRepositoryTests
             context.Object,
             logger);
 
-        var inputProductKey = TestHelper.GetOrdinaryProduct().Key;
+        var inputProduct = TestHelper.GetOrdinaryProduct();
 
         // Act
         cts.Cancel();
         var exception = await Record.ExceptionAsync(async () =>
-            await productRepository.ContainsProductAsync(inputProductKey, cts.Token));
+            await productRepository.ContainsAsync(inputProduct, cts.Token));
 
         // Assert
         exception.Should().BeOfType<OperationCanceledException>();
@@ -539,7 +547,7 @@ public class ProductsRepositoryTests
 
         // Act
         var exception = Record.Exception(() =>
-            productRepository.RemoveProduct(containsProduct));
+            productRepository.Delete(containsProduct));
 
         // Assert
         exception.Should().BeNull();
@@ -566,9 +574,11 @@ public class ProductsRepositoryTests
             context.Object,
             logger);
 
+        Product product = null!;
+
         // Act
         var exception = Record.Exception(() =>
-            productRepository.RemoveProduct(null!));
+            productRepository.Delete(product));
 
         // Assert
         exception.Should().BeOfType<ArgumentNullException>();
@@ -583,7 +593,6 @@ public class ProductsRepositoryTests
         var logger = Mock.Of<ILogger<ProductsRepository>>();
 
         var containsProduct = TestHelper.GetOrdinaryProduct();
-        var containsProductKey = containsProduct.Key;
 
         var storageProduct = TestHelper.GetStorageProduct(containsProduct);
 
@@ -598,7 +607,7 @@ public class ProductsRepositoryTests
 
         // Act
         var exception = Record.Exception(() =>
-            productRepository.RemoveProduct(containsProductKey));
+            productRepository.Delete(containsProduct));
 
         // Assert
         exception.Should().BeNull();
@@ -655,119 +664,7 @@ public class ProductsRepositoryTests
             logger);
 
         // Act
-        var result = productRepository.GetAllProducts();
-
-        // Assert
-        result.Should().BeEquivalentTo(expectedResult, opt => opt.WithStrictOrdering());
-    }
-
-    [Fact(DisplayName = $"The {nameof(ProductsRepository)} can get all products.")]
-    [Trait("Category", "Unit")]
-    public void CanGetItemProducts()
-    {
-        // Arrange
-        var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
-        var logger = Mock.Of<ILogger<ProductsRepository>>();
-
-        var inputItem = TestHelper.GetOrdinaryItem(1);
-        var otherItem = TestHelper.GetOrdinaryItem(2);
-
-        var productsList = new List<Product>()
-        {
-            TestHelper.GetOrdinaryProduct(inputItem),
-            TestHelper.GetOrdinaryProduct(otherItem)
-        };
-
-        var expectedResult = productsList.Where(x => x.Item.Key == inputItem.Key).ToList();
-
-        var data = productsList
-            .Select(x => TestHelper.GetStorageProduct(x))
-            .AsQueryable();
-
-        var products = new Mock<DbSet<TProduct>>(MockBehavior.Strict);
-
-        products
-            .As<IQueryable<TProduct>>()
-            .Setup(m => m.Provider)
-            .Returns(data.Provider);
-        products
-            .As<IQueryable<TProduct>>()
-            .Setup(m => m.Expression)
-            .Returns(data.Expression);
-        products
-            .As<IQueryable<TProduct>>()
-            .Setup(m => m.ElementType)
-            .Returns(data.ElementType);
-        products
-            .As<IQueryable<TProduct>>()
-            .Setup(m => m.GetEnumerator())
-            .Returns(() => data.GetEnumerator());
-
-        context.Setup(x => x.Products)
-            .Returns(products.Object);
-
-        var productRepository = new ProductsRepository(
-            context.Object,
-            logger);
-
-        // Act
-        var result = productRepository.GetAllItemProducts(inputItem);
-
-        // Assert
-        result.Should().BeEquivalentTo(expectedResult, opt => opt.WithStrictOrdering());
-    }
-
-    [Fact(DisplayName = $"The {nameof(ProductsRepository)} can get all products.")]
-    [Trait("Category", "Unit")]
-    public void CanGetProviderProducts()
-    {
-        // Arrange
-        var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
-        var logger = Mock.Of<ILogger<ProductsRepository>>();
-
-        var inputProvider = TestHelper.GetOrdinaryProvider(1);
-        var otherProvider = TestHelper.GetOrdinaryProvider(2);
-
-        var productsList = new List<Product>()
-        {
-            TestHelper.GetOrdinaryProduct(provider: inputProvider),
-            TestHelper.GetOrdinaryProduct(provider: otherProvider)
-        };
-
-        var expectedResult = productsList.Where(x => x.Provider.Key == inputProvider.Key).ToList();
-
-        var data = productsList
-            .Select(x => TestHelper.GetStorageProduct(x))
-            .AsQueryable();
-
-        var products = new Mock<DbSet<TProduct>>(MockBehavior.Strict);
-
-        products
-            .As<IQueryable<TProduct>>()
-            .Setup(m => m.Provider)
-            .Returns(data.Provider);
-        products
-            .As<IQueryable<TProduct>>()
-            .Setup(m => m.Expression)
-            .Returns(data.Expression);
-        products
-            .As<IQueryable<TProduct>>()
-            .Setup(m => m.ElementType)
-            .Returns(data.ElementType);
-        products
-            .As<IQueryable<TProduct>>()
-            .Setup(m => m.GetEnumerator())
-            .Returns(() => data.GetEnumerator());
-
-        context.Setup(x => x.Products)
-            .Returns(products.Object);
-
-        var productRepository = new ProductsRepository(
-            context.Object,
-            logger);
-
-        // Act
-        var result = productRepository.GetAllProviderProducts(inputProvider);
+        var result = productRepository.GetEntities();
 
         // Assert
         result.Should().BeEquivalentTo(expectedResult, opt => opt.WithStrictOrdering());

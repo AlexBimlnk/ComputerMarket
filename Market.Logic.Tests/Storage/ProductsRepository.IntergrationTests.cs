@@ -52,7 +52,7 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
 
         await AddItemTypeAsync(type);
 
-        await Task.WhenAll(properties.Select(x => { AddItemPropertyAsync(x).Wait(); return Task.CompletedTask; }).ToArray());
+        await Task.WhenAll(properties.Select(async x => AddItemPropertyAsync(x)).ToArray());
 
         var inputItem = TestHelper.GetOrdinaryItem(type: type, properties: properties);
 
@@ -65,7 +65,7 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
 
         var expectedDescription = properties
             .Select(x => TestHelper.GetStorageItemPropertyWithOutItem(x))
-            .Select(x => { x.ItemId = inputItem.Key.Value; x.Property= null!; return x; })
+            .Select(x => { x.ItemId = inputItem.Key.Value; x.Property = null!; return x; })
             .ToArray();
 
         var repository = new ProductsRepository(
@@ -135,11 +135,11 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
         await AddItemTypeAsync(type);
 
         await Task.WhenAll(item.Properties
-            .Select(x => { AddItemPropertyAsync(x).Wait(); return Task.CompletedTask; })
+            .Select(async x => AddItemPropertyAsync(x))
             .ToArray());
 
         await AddItemAsync(item);
-        
+
         var repository = new ProductsRepository(
             context.Object,
             logger);
@@ -177,7 +177,7 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
         await AddItemTypeAsync(type);
 
         await Task.WhenAll(item.Properties
-            .Select(x => { AddItemPropertyAsync(x).Wait(); return Task.CompletedTask; })
+            .Select(async x => AddItemPropertyAsync(x))
             .ToArray());
 
         await AddItemAsync(item);
@@ -245,7 +245,7 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
 
         await AddItemTypeAsync(type);
 
-        await Task.WhenAll(properties.Select(x => { AddItemPropertyAsync(x).Wait(); return Task.CompletedTask; }).ToArray());
+        await Task.WhenAll(properties.Select(async x => AddItemPropertyAsync(x)).ToArray());
 
         var inputItem = TestHelper.GetOrdinaryItem(1, type: type, properties: properties.Take(2).ToArray());
 
@@ -325,7 +325,7 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
         using var transaction = _marketContext.Database
             .BeginTransaction();
 
-        await repository.AddOrUpdateProductAsync(inputProduct)
+        await repository.AddOrUpdateAsync(inputProduct)
             .ConfigureAwait(false);
 
         await _marketContext.SaveChangesAsync()
@@ -351,7 +351,7 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
     [Theory(DisplayName = $"The {nameof(ProductsRepository)} can contains works.")]
     [Trait("Category", "Integration")]
     [MemberData(nameof(ContainsDataProduct))]
-    public async Task CanContainsProductWorksAsync((ID, ID) inputKey, bool expectedResult)
+    public async Task CanContainsProductWorksAsync(Product inputProduct, bool expectedResult)
     {
         // Arrange
         var logger = Mock.Of<ILogger<ProductsRepository>>();
@@ -391,7 +391,7 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
             logger);
 
         // Act
-        var result = await repository.ContainsProductAsync(inputKey)
+        var result = await repository.ContainsAsync(inputProduct)
             .ConfigureAwait(false);
 
         // Assert
@@ -425,7 +425,7 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
         await AddItemTypeAsync(type);
 
         await AddItemAsync(item);
-        
+
         await AddProductAsync(oldProduct);
 
         var repository = new ProductsRepository(
@@ -435,10 +435,10 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
         var updatedProduct = TestHelper.GetOrdinaryProduct(item, provider, price: 400m, quantity: 5);
 
         // Act
-        await repository.AddOrUpdateProductAsync(updatedProduct);
+        await repository.AddOrUpdateAsync(updatedProduct);
         repository.Save();
 
-        var result = repository.GetProduct((item.Key, provider.Key));
+        var result = repository.GetByKey((item.Key, provider.Key));
 
         // Assert
         result.Should().BeEquivalentTo(updatedProduct).And.NotBeNull();
@@ -484,90 +484,25 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
         var inputProduct = TestHelper.GetOrdinaryProduct(item1, provider);
 
         // Act
-        var beforeContains1 = await repository.ContainsProductAsync((item1.Key, provider.Key))
+        var beforeContains1 = await repository.ContainsAsync(inputProduct)
             .ConfigureAwait(false);
 
-        var beforeContains2 = await repository.ContainsProductAsync((item2.Key, provider.Key))
-            .ConfigureAwait(false);
-
-        var exception = Record.Exception(() =>
+        var exception = Record.Exception((Action)(() =>
         {
-            repository.RemoveProduct(inputProduct);
-            repository.RemoveProduct((item2.Key, provider.Key));
+            repository.Delete(inputProduct);
             repository.Save();
-        });
+        }));
 
-        var afterContains1 = await repository.ContainsProductAsync((item1.Key, provider.Key))
-            .ConfigureAwait(false);
-
-        var afterContains2 = await repository.ContainsProductAsync((item2.Key, provider.Key))
+        var afterContains1 = await repository.ContainsAsync(inputProduct)
             .ConfigureAwait(false);
 
         // Assert
         exception.Should().BeNull();
         beforeContains1.Should().BeTrue();
-        beforeContains2.Should().BeTrue();
         afterContains1.Should().BeFalse();
-        afterContains2.Should().BeFalse();
     }
-        /*
-        [Fact(DisplayName = $"The {nameof(ProductsRepository)} can delete product.")]
-        [Trait("Category", "Integration")]
-        public async Task CanDeleteProductAsync()
-        {
-            // Arrange
-            var logger = Mock.Of<ILogger<ProductsRepository>>();
 
-            var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
-            context.SetupGet(x => x.Products)
-                .Returns(_marketContext.Products);
-            context.Setup(x => x.SaveChanges())
-                .Callback(() => _marketContext.SaveChanges());
-
-            var provider = TestHelper.GetOrdinaryProvider();
-
-            var type1 = TestHelper.GetOrdinaryItemType();
-
-            var item1 = TestHelper.GetOrdinaryItem(1, type1, "Name1");
-
-            var item2 = TestHelper.GetOrdinaryItem(2, type1, "Name2");
-
-            await AddProviderAsync(provider);
-
-            await AddItemTypeAsync(type1);
-
-            await AddItemAsync(item1);
-            await AddItemAsync(item2);
-
-            await AddProductAsync(TestHelper.GetOrdinaryProduct(item1, provider));
-            await AddProductAsync(TestHelper.GetOrdinaryProduct(item2, provider));
-
-            var repository = new ProductsRepository(
-                context.Object,
-                logger);
-
-            var inputProduct = TestHelper.GetOrdinaryProduct(item1, provider);
-
-            // Act
-            var beforeContains = await repository.ContainsAsync(inputProduct)
-                .ConfigureAwait(false);
-
-            var exception = Record.Exception(() =>
-            {
-                repository.Delete(inputProduct);
-                repository.Save();
-            });
-
-            var afterContains = await repository.ContainsAsync(inputProduct)
-                .ConfigureAwait(false);
-
-            // Assert
-            beforeContains.Should().BeTrue();
-            exception.Should().BeNull();
-            afterContains.Should().BeFalse();
-        }*/
-
-        private async Task AddProviderAsync(Provider provider)
+    private async Task AddProviderAsync(Provider provider)
     {
         var fromQuery = "providers (id, name, margin, bank_account, inn)";
         var valuesQuery =
@@ -587,7 +522,7 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
 
         await AddAsync(fromQuery, valuesQuery);
 
-        await Task.WhenAll(item.Properties.Select(x => { AddItemDescriptionAsync(item.Key, x).Wait(); return Task.CompletedTask;  }).ToArray());
+        await Task.WhenAll(item.Properties.Select(x => { AddItemDescriptionAsync(item.Key, x).Wait(); return Task.CompletedTask; }).ToArray());
     }
 
     private async Task AddItemDescriptionAsync(ID itemId, ItemProperty property)
@@ -639,31 +574,35 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
     {
         {
             TestHelper.GetOrdinaryItem(
-                    1,
-                    TestHelper.GetOrdinaryItemType(),
-                    "Name1"),
+                1,
+                TestHelper.GetOrdinaryItemType(),
+                "Name1"),
             true
         },
         {
             TestHelper.GetOrdinaryItem(
-                    4,
-                    TestHelper.GetOrdinaryItemType(),
-                    "Name4"),
+                4,
+                TestHelper.GetOrdinaryItemType(),
+                "Name4"),
             false
         },
     };
 
-    public static readonly TheoryData<(ID, ID), bool> ContainsDataProduct = new()
+    public static readonly TheoryData<Product, bool> ContainsDataProduct = new()
     {
         {
-            (new ID(1), new ID(1)),
+            TestHelper.GetOrdinaryProduct(
+                TestHelper.GetOrdinaryItem(1),
+                TestHelper.GetOrdinaryProvider(1,
+                    info: TestHelper.GetOrdinaryPaymentTransactionsInformation(inn: "1234512345", acc: "12345123451234512345"))),
             true
         },
         {
-            (new ID(4), new ID(4)),
+            TestHelper.GetOrdinaryProduct(
+                TestHelper.GetOrdinaryItem(4),
+                TestHelper.GetOrdinaryProvider(4,
+                    info: TestHelper.GetOrdinaryPaymentTransactionsInformation(inn: "5234512345", acc: "52345123451234512345"))),
             false
         },
     };
-
-    /**/
 }
