@@ -103,7 +103,7 @@ public class ItemPropertyTests
     [InlineData("  ")]
     [InlineData("\t \n ")]
     [InlineData("")]
-    public void CanNotCreateWhenValueIsBad(string value)
+    public void CanNotSetWhenValueIsBad(string value)
     {
         // Arrange
         var property = TestHelper.GetOrdinaryItemProperty();

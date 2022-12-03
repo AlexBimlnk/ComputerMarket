@@ -13,8 +13,23 @@ public class OrderTests
         var user = TestHelper.GetOrdinaryUser();
         var entities = new PurchasableEntity[]
         {
-            TestHelper.GetOrdinaryPurchasableEntity(TestHelper.GetOrdinaryProduct(TestHelper.GetOrdinaryItem(1, name: "Item1"), price: 20m, quantity: 5),1),
-            TestHelper.GetOrdinaryPurchasableEntity(TestHelper.GetOrdinaryProduct(TestHelper.GetOrdinaryItem(2, name: "Item2"), price: 60m, quantity: 10),3)
+            TestHelper.GetOrdinaryPurchasableEntity(
+                TestHelper.GetOrdinaryProduct(
+                    TestHelper.GetOrdinaryItem(
+                        1, 
+                        name: "Item1"), 
+                    price: 20m, 
+                    quantity: 5),
+                1),
+            
+            TestHelper.GetOrdinaryPurchasableEntity(
+                TestHelper.GetOrdinaryProduct(
+                    TestHelper.GetOrdinaryItem(
+                        2, 
+                        name: "Item2"), 
+                    price: 60m, 
+                    quantity: 10),
+                3)
         }.ToHashSet();
 
         // Act
@@ -33,9 +48,24 @@ public class OrderTests
     {
         // Arrange
         var entities = new PurchasableEntity[]
-        {
-            TestHelper.GetOrdinaryPurchasableEntity(TestHelper.GetOrdinaryProduct(TestHelper.GetOrdinaryItem(1, name: "Item1"), price: 20m, quantity: 5),1),
-            TestHelper.GetOrdinaryPurchasableEntity(TestHelper.GetOrdinaryProduct(TestHelper.GetOrdinaryItem(2, name: "Item2"), price: 60m, quantity: 10),3)
+{
+            TestHelper.GetOrdinaryPurchasableEntity(
+                TestHelper.GetOrdinaryProduct(
+                    TestHelper.GetOrdinaryItem(
+                        1,
+                        name: "Item1"),
+                    price: 20m,
+                    quantity: 5),
+                1),
+
+            TestHelper.GetOrdinaryPurchasableEntity(
+                TestHelper.GetOrdinaryProduct(
+                    TestHelper.GetOrdinaryItem(
+                        2,
+                        name: "Item2"),
+                    price: 60m,
+                    quantity: 10),
+                3)
         }.ToHashSet();
 
         // Act
@@ -68,8 +98,23 @@ public class OrderTests
         var user = TestHelper.GetOrdinaryUser();
         var entities = new PurchasableEntity[]
         {
-            TestHelper.GetOrdinaryPurchasableEntity(TestHelper.GetOrdinaryProduct(TestHelper.GetOrdinaryItem(1, name: "Item1"), price: 20m, quantity: 5),1),
-            TestHelper.GetOrdinaryPurchasableEntity(TestHelper.GetOrdinaryProduct(TestHelper.GetOrdinaryItem(2, name: "Item2"), price: 60m, quantity: 10),3)
+            TestHelper.GetOrdinaryPurchasableEntity(
+                TestHelper.GetOrdinaryProduct(
+                    TestHelper.GetOrdinaryItem(
+                        1,
+                        name: "Item1"),
+                    price: 20m,
+                    quantity: 5),
+                1),
+
+            TestHelper.GetOrdinaryPurchasableEntity(
+                TestHelper.GetOrdinaryProduct(
+                    TestHelper.GetOrdinaryItem(
+                        2,
+                        name: "Item2"),
+                    price: 60m,
+                    quantity: 10),
+                3)
         }
         .Select(x => 
         { 
@@ -91,10 +136,25 @@ public class OrderTests
     {
         // Arrange
         var user = TestHelper.GetOrdinaryUser();
-        var entities = new PurchasableEntity[] 
-        { 
-            TestHelper.GetOrdinaryPurchasableEntity(TestHelper.GetOrdinaryProduct(TestHelper.GetOrdinaryItem(1, name: "Item1"), price: 20m, quantity: 5), 1), 
-            TestHelper.GetOrdinaryPurchasableEntity(TestHelper.GetOrdinaryProduct(TestHelper.GetOrdinaryItem(2, name: "Item2"), price: 60m, quantity: 10), 3) 
+        var entities = new PurchasableEntity[]
+{
+            TestHelper.GetOrdinaryPurchasableEntity(
+                TestHelper.GetOrdinaryProduct(
+                    TestHelper.GetOrdinaryItem(
+                        1,
+                        name: "Item1"),
+                    price: 20m,
+                    quantity: 5),
+                1),
+
+            TestHelper.GetOrdinaryPurchasableEntity(
+                TestHelper.GetOrdinaryProduct(
+                    TestHelper.GetOrdinaryItem(
+                        2,
+                        name: "Item2"),
+                    price: 60m,
+                    quantity: 10),
+                3)
         }.ToHashSet();
 
         var order = new Order(user, entities);
