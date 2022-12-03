@@ -2,6 +2,7 @@
 using General.Storage;
 using General.Transport;
 
+using Market.Logic.Markers;
 using Market.Logic.Models;
 
 using Microsoft.Extensions.Logging;
@@ -11,7 +12,7 @@ namespace Market.Logic;
 /// <summary xml:lang = "ru">
 /// Обработчки приема новых продуктов от сервиса импорта.
 /// </summary>
-public sealed class ImportProductsHandler : IAPIRequestHandler<IReadOnlyCollection<Product>>
+public sealed class ImportProductsHandler : IAPIRequestHandler<ImportMarker>
 {
     private readonly ILogger<ImportProductsHandler> _logger;
     private readonly IDeserializer<string, IReadOnlyCollection<Product>> _deserializer;
