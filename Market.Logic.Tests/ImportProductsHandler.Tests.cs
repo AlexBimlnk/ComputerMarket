@@ -105,7 +105,7 @@ public class ImportProductsHandlerTests
             logger);
 
         // Act
-        var exception = Record.ExceptionAsync(async () => await handler.HandleAsync(request));
+        var exception = await Record.ExceptionAsync(async () => await handler.HandleAsync(request));
 
         // Assert
         exception.Should().BeNull();
