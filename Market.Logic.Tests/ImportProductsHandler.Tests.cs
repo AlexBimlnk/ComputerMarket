@@ -1,15 +1,13 @@
-using General.Logic.Commands;
 using General.Storage;
 using General.Transport;
 
 using Market.Logic.Models;
-using Market.Logic.Receivers;
 
 using Microsoft.Extensions.Logging;
 
 using Moq;
 
-namespace Import.Logic.Tests;
+namespace Market.Logic.Tests;
 public class ImportProductsHandlerTests
 {
     [Fact(DisplayName = $"The {nameof(ImportProductsHandler)} can create.")]
@@ -90,12 +88,16 @@ public class ImportProductsHandlerTests
         deserializer.Setup(x => x.Deserialize(request))
             .Returns(addedProducts);
 
-        var repositoryCallBack = 0;
+        var repositoryAddCallBack = 0;
         repository.Setup(x => x.AddAsync(
                 It.Is<Product>(x => addedProducts.Contains(x)),
                 It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask)
-            .Callback(() => repositoryCallBack++);
+            .Callback(() => repositoryAddCallBack++);
+
+        var repositorySaveCallback = 0;
+        repository.Setup(x => x.Save())
+            .Callback(() => repositorySaveCallback++);
 
         var handler = new ImportProductsHandler(
             deserializer.Object,
@@ -103,10 +105,12 @@ public class ImportProductsHandlerTests
             logger);
 
         // Act
-        await handler.HandleAsync(request);
+        var exception = Record.ExceptionAsync(async () => await handler.HandleAsync(request));
 
         // Assert
-        repositoryCallBack.Should().Be(addedProducts.Count);
+        exception.Should().BeNull();
+        repositoryAddCallBack.Should().Be(addedProducts.Count);
+        repositorySaveCallback.Should().Be(1);
     }
 
     [Theory(DisplayName = $"The {nameof(ImportProductsHandler)} can't handle command if given bad request.")]
@@ -173,25 +177,25 @@ public class ImportProductsHandlerTests
             {
                 new Product(
                     new Item(
-                        new Market.Logic.ID(1), 
-                        new ItemType("type1"), 
-                        "Name 1", 
-                        Array.Empty<ItemProperty>()), 
+                        new ID(1),
+                        new ItemType("type1"),
+                        "Name 1",
+                        Array.Empty<ItemProperty>()),
                     new Provider(
-                        new Market.Logic.ID(1), 
-                        "Name 1", 
-                        new Margin(1.3m), 
-                        new PaymentTransactionsInformation("0123401234", "01234012340123401234")), 
-                    new Price(100m), 
+                        new ID(1),
+                        "Name 1",
+                        new Margin(1.3m),
+                        new PaymentTransactionsInformation("0123401234", "01234012340123401234")),
+                    new Price(100m),
                     5),
                 new Product(
                     new Item(
-                        new Market.Logic.ID(2),
+                        new ID(2),
                         new ItemType("type2"),
                         "Name 2",
                         Array.Empty<ItemProperty>()),
                     new Provider(
-                        new Market.Logic.ID(2),
+                        new ID(2),
                         "Name 1",
                         new Margin(1.2m),
                         new PaymentTransactionsInformation("0123401234", "01234012340123401234")),

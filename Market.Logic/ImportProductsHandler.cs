@@ -6,15 +6,15 @@ using Market.Logic.Models;
 
 using Microsoft.Extensions.Logging;
 
-namespace Market.Logic.Receivers;
+namespace Market.Logic;
 
 /// <summary xml:lang = "ru">
-/// Обработчки приема новых продукто от сервиса импорта.
+/// Обработчки приема новых продуктов от сервиса импорта.
 /// </summary>
 public sealed class ImportProductsHandler : IAPIRequestHandler<IReadOnlyCollection<Product>>
 {
     private readonly ILogger<ImportProductsHandler> _logger;
-    private readonly IDeserializer<string, IReadOnlyCollection<Product>> _deserializer;
+    private readonly IDeserializer<string, TraReqRe> _deserializer;
     private readonly IRepository<Product> _repositoryProduct;
 
     /// <summary xml:lang = "ru">
@@ -40,9 +40,7 @@ public sealed class ImportProductsHandler : IAPIRequestHandler<IReadOnlyCollecti
     public async Task HandleAsync(string request, CancellationToken token = default)
     {
         if (string.IsNullOrWhiteSpace(request))
-        {
             throw new ArgumentException("Source can't be null or empty or contains only whitespaces");
-        }
 
         token.ThrowIfCancellationRequested();
 
@@ -53,10 +51,10 @@ public sealed class ImportProductsHandler : IAPIRequestHandler<IReadOnlyCollecti
         _logger.LogDebug("Deserialize {Sourse} to Products comlete", request);
 
         foreach (var product in products)
-        {
             await _repositoryProduct.AddAsync(product);
-        }
 
-        _logger.LogInformation("Requesr processing complete");
+        _repositoryProduct.Save();
+
+        _logger.LogInformation("Request processing complete");
     }
 }
