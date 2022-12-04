@@ -13,5 +13,5 @@ public class PropertyGroup
     /// <summary xml:lang = "ru">
     /// Название группы.
     /// </summary>
-    public string? Name { get; set; }
+    public string Name { get; set; } = default!;
 }

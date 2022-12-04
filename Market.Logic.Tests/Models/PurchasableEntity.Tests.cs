@@ -10,22 +10,8 @@ public class PurchasableEntityTests
     {
         // Arrange
         PurchasableEntity entity = null!;
-        var quantity = 10;
-        var product = new Product(
-            item: new Item(
-                id: new ID(1),
-                new ItemType("some_type"),
-                "some_name",
-                properties: Array.Empty<ItemProperty>()),
-            provider: new Provider(
-                id: new ID(1),
-                "provider_name",
-                new Margin(1.1m),
-                new PaymentTransactionsInformation(
-                    "0123456789",
-                    "01234012340123401234")),
-            price: new Price(100m),
-            quantity: quantity);
+        var product = TestHelper.GetOrdinaryProduct();
+        var quantity = product.Quantity - 1;
 
         // Act
         var exception = Record.Exception(() => entity = new PurchasableEntity(product, quantity));
@@ -55,25 +41,8 @@ public class PurchasableEntityTests
     [InlineData(10000000)]
     public void CanNotCreateWhenQuantityLessThanOneOrGreaterThanProductQuantity(int quantity)
     {
-        // Arrange
-        var product = new Product(
-            item: new Item(
-                id: new ID(1),
-                new ItemType("some_type"),
-                "some_name",
-                properties: Array.Empty<ItemProperty>()),
-            provider: new Provider(
-                id: new ID(1),
-                "provider_name",
-                new Margin(1.1m),
-                new PaymentTransactionsInformation(
-                    "0123456789",
-                    "01234012340123401234")),
-            price: new Price(100m),
-            quantity: 5);
-
         // Act
-        var exception = Record.Exception(() => _ = new PurchasableEntity(product, quantity));
+        var exception = Record.Exception(() => _ = new PurchasableEntity(TestHelper.GetOrdinaryProduct(), quantity));
 
         // Assert
         exception.Should().BeOfType<ArgumentOutOfRangeException>();
@@ -85,23 +54,8 @@ public class PurchasableEntityTests
     {
         // Arrange
         var quantity = 1;
-        var product = new Product(
-            item: new Item(
-                id: new ID(1),
-                new ItemType("some_type"),
-                "some_name",
-                properties: Array.Empty<ItemProperty>()),
-            provider: new Provider(
-                id: new ID(1),
-                "provider_name",
-                new Margin(1.1m),
-                new PaymentTransactionsInformation(
-                    "0123456789",
-                    "01234012340123401234")),
-            price: new Price(100m),
-            quantity: 5);
 
-        var entity = new PurchasableEntity(product, quantity);
+        var entity = new PurchasableEntity(TestHelper.GetOrdinaryProduct(), quantity);
         var expectedResult = 3;
 
         // Act
@@ -115,7 +69,7 @@ public class PurchasableEntityTests
 
         // Assert
         result.Should().Be(expectedResult);
-        entity.Quantity.Should().Be(product.Quantity);
+        entity.Quantity.Should().Be(entity.Product.Quantity);
     }
 
     [Fact(DisplayName = $"The {nameof(PurchasableEntity)} can decrease product quantity.")]
@@ -124,23 +78,8 @@ public class PurchasableEntityTests
     {
         // Arrange
         var quantity = 4;
-        var product = new Product(
-            item: new Item(
-                id: new ID(1),
-                new ItemType("some_type"),
-                "some_name",
-                properties: Array.Empty<ItemProperty>()),
-            provider: new Provider(
-                id: new ID(1),
-                "provider_name",
-                new Margin(1.1m),
-                new PaymentTransactionsInformation(
-                    "0123456789",
-                    "01234012340123401234")),
-            price: new Price(100m),
-            quantity: 5);
 
-        var entity = new PurchasableEntity(product, quantity);
+        var entity = new PurchasableEntity(TestHelper.GetOrdinaryProduct(), quantity);
         var expectedResult = 2;
 
         // Act

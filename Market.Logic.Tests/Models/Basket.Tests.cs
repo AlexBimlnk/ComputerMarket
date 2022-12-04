@@ -26,21 +26,7 @@ public class BasketTests
     {
         // Arrange
         var basket = new Basket();
-        var product = new Product(
-            new Item(
-                id: new ID(1),
-                new ItemType("some_type"),
-                "some_name",
-                properties: Array.Empty<ItemProperty>()),
-            new Provider(
-                id: new ID(1),
-                "provider_name",
-                new Margin(1.1m),
-                new PaymentTransactionsInformation(
-                    "0123456789",
-                    "01234012340123401234")),
-            new Price(100m),
-            quantity: 10);
+        var product = TestHelper.GetOrdinaryProduct();
 
         // Act
         basket.Add(product);
@@ -72,21 +58,7 @@ public class BasketTests
     {
         // Arrange
         var quantity = 1;
-        var product = new Product(
-            new Item(
-                id: new ID(1),
-                new ItemType("some_type"),
-                "some_name",
-                properties: Array.Empty<ItemProperty>()),
-            new Provider(
-                id: new ID(1),
-                "provider_name",
-                new Margin(1.1m),
-                new PaymentTransactionsInformation(
-                    "0123456789",
-                    "01234012340123401234")),
-            new Price(100m),
-            quantity: 10);
+        var product = TestHelper.GetOrdinaryProduct();
 
         var basket = new Basket();
         basket.Add(product);
@@ -122,21 +94,7 @@ public class BasketTests
     {
         // Arrange       
         var basket = new Basket();
-        var product = new Product(
-            new Item(
-                id: new ID(1),
-                new ItemType("some_type"),
-                "some_name",
-                properties: Array.Empty<ItemProperty>()),
-            new Provider(
-                id: new ID(1),
-                "provider_name",
-                new Margin(1.1m),
-                new PaymentTransactionsInformation(
-                    "0123456789",
-                    "01234012340123401234")),
-            new Price(100m),
-            quantity: 10);
+        var product = TestHelper.GetOrdinaryProduct();
 
         // Act
         var exception = Record.Exception(() => basket.GetBasketItem(product));
@@ -151,19 +109,9 @@ public class BasketTests
     public void CanIncQuantityWhenAddSameProducts()
     {
         // Arrange
-        var item = new Item(
-            id: new ID(1),
-            new ItemType("some_type"),
-            "some_name",
-            properties: Array.Empty<ItemProperty>());
+        var item = TestHelper.GetOrdinaryItem();
 
-        var prodvider = new Provider(
-            id: new ID(1),
-            "provider_name",
-            new Margin(1.1m),
-            new PaymentTransactionsInformation(
-                inn: "0123456789",
-                bankAccount: "01234012340123401234"));
+        var prodvider = TestHelper.GetOrdinaryProvider();
 
         var product1 = new Product(item, prodvider, new Price(100m), 5);
         var product2 = new Product(item, prodvider, new Price(100m), 5);
@@ -190,21 +138,7 @@ public class BasketTests
     public void CanRemoveProduct()
     {
         // Arrange
-        var product = new Product(
-            new Item(
-                id: new ID(1),
-                new ItemType("some_type"),
-                "some_name",
-                properties: Array.Empty<ItemProperty>()),
-            new Provider(
-                id: new ID(1),
-                "provider_name",
-                new Margin(1.1m),
-                new PaymentTransactionsInformation(
-                    "0123456789",
-                    "01234012340123401234")),
-            new Price(100m),
-            quantity: 10);
+        var product = TestHelper.GetOrdinaryProduct();
 
         var basket = new Basket();
         basket.Add(product);

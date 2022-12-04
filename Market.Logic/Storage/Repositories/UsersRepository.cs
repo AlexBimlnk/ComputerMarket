@@ -35,35 +35,6 @@ public sealed class UsersRepository : IUsersRepository
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    private static TUser ConvertToStorageModel(User user) => new()
-    {
-        Id = user.Key.Value,
-        Login = user.AuthenticationData.Login,
-        Email = user.AuthenticationData.Email,
-        Password = user.AuthenticationData.Password.Value,
-        UserTypeId = (short)user.Type
-    };
-
-    private User? ConvertFromStorageModel(TUser user)
-    {
-        if (!Enum.IsDefined(typeof(UserType), (int)user.UserTypeId))
-        {
-            _logger.LogWarning(
-                "The user with user type id: {UserTypeId} can't be converted",
-                user.UserTypeId);
-
-            return null;
-        }
-
-        return new User(
-            id: new ID(user.Id),
-            new AuthenticationData(
-                user.Email,
-                new Password(user.Password),
-                user.Login),
-            (UserType)user.UserTypeId);
-    }
-
     /// <inheritdoc/>
     public async Task AddAsync(User entity, CancellationToken token = default)
     {
@@ -148,4 +119,36 @@ public sealed class UsersRepository : IUsersRepository
             null => false,
             var user => user.Password == password.Value
         };
+
+    #region Converers
+
+    private static TUser ConvertToStorageModel(User user) => new()
+    {
+        Id = user.Key.Value,
+        Login = user.AuthenticationData.Login,
+        Email = user.AuthenticationData.Email,
+        Password = user.AuthenticationData.Password.Value,
+        UserTypeId = (short)user.Type
+    };
+
+    private User? ConvertFromStorageModel(TUser user)
+    {
+        if (!Enum.IsDefined(typeof(UserType), (int)user.UserTypeId))
+        {
+            _logger.LogWarning(
+                "The user with user type id: {UserTypeId} can't be converted",
+                user.UserTypeId);
+            return null;
+        }
+
+        return new User(
+            id: new ID(user.Id),
+            new AuthenticationData(
+                user.Email,
+                new Password(user.Password),
+                user.Login),
+            (UserType)user.UserTypeId);
+    }
+
+    #endregion
 }

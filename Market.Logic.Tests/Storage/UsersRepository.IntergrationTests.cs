@@ -27,25 +27,11 @@ public class UsersRepositoryIntegrationTests : DBIntegrationTestBase
 
         await AddUserTypeAsync(UserType.Customer);
 
-        var inputUser = new User(
-            id: new ID(1),
-            new AuthenticationData(
-                email: "mmail@mail.ru",
-                new Password("12345678"),
-                login: "Login1"),
-            UserType.Customer);
-
+        var inputUser = TestHelper.GetOrdinaryUser();
 
         var expectedUser = new TUser[]
         {
-            new TUser
-            {
-                Id = 1,
-                UserTypeId = 1,
-                Login = "Login1",
-                Email = "mmail@mail.ru",
-                Password = "12345678"
-            }
+            TestHelper.GetStorageUser(inputUser)
         };
 
         var repository = new UsersRepository(
@@ -92,13 +78,7 @@ public class UsersRepositoryIntegrationTests : DBIntegrationTestBase
         context.SetupGet(x => x.Users)
             .Returns(_marketContext.Users);
 
-        var user = new User(
-            id: new ID(1),
-            new AuthenticationData(
-                email: "mmail1@mail.ru",
-                new Password("12345678"),
-                login: "Login1"),
-            UserType.Customer);
+        var user = TestHelper.GetOrdinaryUser();
 
         await AddUserTypeAsync(UserType.Customer);
 
@@ -129,39 +109,23 @@ public class UsersRepositoryIntegrationTests : DBIntegrationTestBase
         context.Setup(x => x.SaveChanges())
             .Callback(() => _marketContext.SaveChanges());
 
-        var user1 = new User(
-            id: new ID(1),
-            new AuthenticationData(
-                email: "mmail1@mail.ru",
-                new Password("12345678"),
-                login: "Login1"),
-            UserType.Customer);
-
-        var user2 = new User(
-            id: new ID(4),
-            new AuthenticationData(
-                email: "smail@mail.ru",
-                new Password("12345679"),
-                login: "Login2"),
-            UserType.Customer);
-
+        var users = new User[]
+        {
+            TestHelper.GetOrdinaryUser(1, TestHelper.GetOrdinaryAuthenticationData("mail1@mail.ru", "login1"), UserType.Customer),
+            TestHelper.GetOrdinaryUser(2, TestHelper.GetOrdinaryAuthenticationData("mail2@mail.ru", "login2"), UserType.Agent)
+        };
 
         await AddUserTypeAsync(UserType.Customer);
+        await AddUserTypeAsync(UserType.Manager);
+        await AddUserTypeAsync(UserType.Agent);
 
-        await AddUserAsync(user1);
-        await AddUserAsync(user2);
+        users.ToList().ForEach(x => AddUserAsync(x).Wait());
 
         var repository = new UsersRepository(
             context.Object,
             logger);
 
-        var inputUser = new User(
-            id: new ID(1),
-            new AuthenticationData(
-                email: "mmail@mail.ru",
-                new Password("12345678"),
-                login: "Login1"),
-            UserType.Customer);
+        var inputUser = users.First();
 
         // Act
         var beforeContains = await repository.ContainsAsync(inputUser)
@@ -206,23 +170,11 @@ public class UsersRepositoryIntegrationTests : DBIntegrationTestBase
     public static readonly TheoryData<User, bool> ContainsData = new()
     {
         {
-            new(
-                id: new ID(1),
-                new AuthenticationData(
-                    email: "mmail1@mail.ru",
-                    new Password("12345678"),
-                    login: "Login1"),
-                UserType.Customer),
+            TestHelper.GetOrdinaryUser(),
             true
         },
         {
-            new(
-                id: new ID(4),
-                new AuthenticationData(
-                    email: "tmail2@mail.ru",
-                    new Password("12345678"),
-                    login: "Login2"),
-                UserType.Customer),
+            TestHelper.GetOrdinaryUser(2, TestHelper.GetOrdinaryAuthenticationData("mail2@mail.ru", "login2")),
             false
         },
     };

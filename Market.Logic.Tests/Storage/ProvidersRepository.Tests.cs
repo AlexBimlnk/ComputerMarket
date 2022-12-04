@@ -60,14 +60,9 @@ public class ProvidersRepositoryTests
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
         var logger = Mock.Of<ILogger<ProvidersRepository>>();
 
-        var storageProvider = new TProvider()
-        {
-            Id = 1,
-            Name = "Provider Name 1",
-            Margin = 1.3m,
-            Inn = "1234512345", 
-            BankAccount = "12345123451234512345"
-        };
+        var inputProvider = TestHelper.GetOrdinaryProvider();
+
+        var storageProvider = TestHelper.GetStorageProvider(inputProvider);
 
         var providers = new Mock<DbSet<TProvider>>(MockBehavior.Strict);
         var providersCallback = 0;
@@ -89,14 +84,6 @@ public class ProvidersRepositoryTests
         var providersRepository = new ProvidersRepository(
             context.Object,
             logger);
-
-        var inputProvider = new Provider(
-                id: new ID(1),
-                name: "Provider Name 1",
-                new Margin(1.3m),
-                new PaymentTransactionsInformation(
-                    "1234512345",
-                    "12345123451234512345"));
 
         // Act
         var exception = await Record.ExceptionAsync(async () =>
@@ -141,13 +128,7 @@ public class ProvidersRepositoryTests
             context.Object,
             logger);
 
-        var inputProvider = new Provider(
-                id: new ID(1),
-                name: "Provider Name 1",
-                new Margin(1.3m),
-                new PaymentTransactionsInformation(
-                    "1234512345",
-                    "12345123451234512345"));
+        var inputProvider = TestHelper.GetOrdinaryProvider();
 
         // Act
         cts.Cancel();
@@ -192,13 +173,7 @@ public class ProvidersRepositoryTests
             context.Object,
             logger);
 
-        var inputProvider = new Provider(
-                id: new ID(1),
-                name: "Provider Name 1",
-                new Margin(1.3m),
-                new PaymentTransactionsInformation(
-                    "1234512345",
-                    "12345123451234512345"));
+        var inputProvider = TestHelper.GetOrdinaryProvider();
 
         // Act
         cts.Cancel();
@@ -217,14 +192,9 @@ public class ProvidersRepositoryTests
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
         var logger = Mock.Of<ILogger<ProvidersRepository>>();
 
-        var storageProvider = new TProvider()
-        {
-            Id = 1,
-            Name = "Provider Name 1",
-            Margin = 1.3m,
-            Inn = "1234512345",
-            BankAccount = "12345123451234512345"
-        };
+        var containsProvider = TestHelper.GetOrdinaryProvider();
+
+        var storageProvider = TestHelper.GetStorageProvider(containsProvider);
 
         var providers = new Mock<DbSet<TProvider>>(MockBehavior.Loose);
 
@@ -234,14 +204,6 @@ public class ProvidersRepositoryTests
         var providersRepository = new ProvidersRepository(
             context.Object,
             logger);
-
-        var containsProvider = new Provider(
-                id: new ID(1),
-                name: "Provider Name 1",
-                new Margin(1.3m),
-                new PaymentTransactionsInformation(
-                    "1234512345",
-                    "12345123451234512345"));
 
         // Act
         var exception = Record.Exception(() =>
@@ -289,16 +251,14 @@ public class ProvidersRepositoryTests
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
         var logger = Mock.Of<ILogger<ProvidersRepository>>();
 
+        var providerKey = new ID(1);
+        var notExsistingProviderKey = new ID(2);
+
+        var expectedResult = TestHelper.GetOrdinaryProvider(providerKey.Value);
+
         var data = new List<TProvider>
         {
-            new TProvider()
-            {
-                Id = 1,
-                Name = "Provider Name 1",
-                Margin = 1.3m,
-                Inn = "1234512345",
-                BankAccount = "12345123451234512345"
-            }
+            TestHelper.GetStorageProvider(expectedResult)
         }.AsQueryable();
 
         var providers = new Mock<DbSet<TProvider>>(MockBehavior.Strict);
@@ -327,21 +287,12 @@ public class ProvidersRepositoryTests
             context.Object,
             logger);
 
-        var expectedResult = new Provider(
-                id: new ID(1),
-                name: "Provider Name 1",
-                new Margin(1.3m),
-                new PaymentTransactionsInformation(
-                    "1234512345",
-                    "12345123451234512345"));
-
         // Act
-        var result1 = providersRepository.GetByKey(new ID(1));
-        var result2 = providersRepository.GetByKey(new ID(2));
+        var result1 = providersRepository.GetByKey(providerKey);
+        var result2 = providersRepository.GetByKey(notExsistingProviderKey);
 
         // Assert
-        result1.Should().NotBeNull();
-        result1.Should().BeEquivalentTo(expectedResult);
+        result1.Should().NotBeNull().And.BeEquivalentTo(expectedResult);
         result2.Should().BeNull();
     }
 
@@ -353,17 +304,14 @@ public class ProvidersRepositoryTests
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
         var logger = Mock.Of<ILogger<ProvidersRepository>>();
 
-        var data = new List<TProvider>
+        var expectedResult = new List<Provider>()
         {
-            new TProvider()
-            {
-                Id = 1,
-                Name = "Provider Name 1",
-                Margin = 1.3m,
-                Inn = "1234512345",
-                BankAccount = "12345123451234512345"
-            }
-        }.AsQueryable();
+            TestHelper.GetOrdinaryProvider()
+        };
+
+        var data = expectedResult
+            .Select(x => TestHelper.GetStorageProvider(x))
+            .AsQueryable();
 
         var providers = new Mock<DbSet<TProvider>>(MockBehavior.Strict);
 
@@ -391,17 +339,6 @@ public class ProvidersRepositoryTests
             context.Object,
             logger);
 
-        var expectedResult = new List<Provider>()
-        {
-            new Provider(
-                id: new ID(1),
-                name: "Provider Name 1",
-                new Margin(1.3m),
-                new PaymentTransactionsInformation(
-                    "1234512345",
-                    "12345123451234512345"))
-        };
-
         // Act
         var result = productRepository.GetEntities();
 
@@ -417,15 +354,6 @@ public class ProvidersRepositoryTests
         // Arrange
         var context = new Mock<IRepositoryContext>(MockBehavior.Loose);
         var logger = Mock.Of<ILogger<ProvidersRepository>>();
-
-        var storageProduct = new TProvider()
-        {
-            Id = 1,
-            Name = "Provider Name 1",
-            Margin = 1.3m,
-            Inn = "1234512345",
-            BankAccount = "12345123451234512345"
-        };
 
         var providersRepository = new ProvidersRepository(
             context.Object,
