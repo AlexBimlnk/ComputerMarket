@@ -1,6 +1,5 @@
 ﻿using Market.Logic.Commands.Import;
 using Market.Logic.Commands.WT;
-using Market.Logic.Models;
 using Market.Logic.Models.WT;
 using Market.Logic.Transport.Serializers;
 
