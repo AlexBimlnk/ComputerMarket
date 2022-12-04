@@ -24,12 +24,12 @@ public class QueryBase
     /// <summary xml:lang = "ru">
     /// Тип запроса.
     /// </summary>
-    [JsonProperty("type")]
+    [JsonProperty("type", Required = Required.Always)]
     public QueryType Type { get; }
 
     /// <summary xml:lang = "ru">
     /// Идентификатор запроса.
     /// </summary>
-    [JsonProperty("id")]
+    [JsonProperty("id", Required = Required.Always)]
     public string Id { get; }
 }
