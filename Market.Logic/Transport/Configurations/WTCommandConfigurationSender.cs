@@ -5,7 +5,7 @@ namespace Market.Logic.Transport.Configurations;
 /// <summary xml:lang = "ru">
 /// Конфигурация отправителя в сервис WT.
 /// </summary>
-public class WTCommandConfigurationSender : ITransportSenderConfiguration
+public sealed class WTCommandConfigurationSender : ITransportSenderConfiguration
 {
     /// <inheritdoc/>
     public string Destination { get; set; } = null!;
