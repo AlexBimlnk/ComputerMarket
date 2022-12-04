@@ -479,26 +479,6 @@ public class ProductsRepositoryTests
         exception.Should().BeOfType<OperationCanceledException>();
     }
 
-/*    [Fact(DisplayName = $"The {nameof(ProductsRepository)} cannot contains product when product is null.")]
-    [Trait("Category", "Unit")]
-    public async void CanNotContainsWhenProductIsNullAsync()
-    {
-        // Arrange
-        var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
-        var logger = Mock.Of<ILogger<ProductsRepository>>();
-
-        var productRepository = new ProductsRepository(
-            context.Object,
-            logger);
-
-        // Act
-        var exception = await Record.ExceptionAsync(async () =>
-            await productRepository.ContainsAsync(null!));
-
-        // Assert
-        exception.Should().BeOfType<ArgumentNullException>();
-    }*/
-
     [Fact(DisplayName = $"The {nameof(ProductsRepository)} can cancel contains product.")]
     [Trait("Category", "Unit")]
     public async void CanCancelContainsProductAsync()

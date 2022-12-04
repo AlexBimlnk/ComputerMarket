@@ -49,23 +49,22 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
         var type = TestHelper.GetOrdinaryItemType();
 
         await AddPropertyGroupAsync(group);
-
         await AddItemTypeAsync(type);
 
-        await Task.WhenAll(properties.Select(async x => AddItemPropertyAsync(x)).ToArray());
+        foreach (var property in properties)
+        {
+            await AddItemPropertyAsync(property);
+        }
 
         var inputItem = TestHelper.GetOrdinaryItem(type: type, properties: properties);
 
         var expectedItem = new TItem[]
         {
             TestHelper.GetStorageItem(inputItem)
-        }
-        .Select(x => { x.Description = null!; x.Type = null!; return x; })
-        .ToArray();
+        }.ToArray();
 
         var expectedDescription = properties
             .Select(x => TestHelper.GetStorageItemPropertyWithOutItem(x))
-            .Select(x => { x.ItemId = inputItem.Key.Value; x.Property = null!; return x; })
             .ToArray();
 
         var repository = new ProductsRepository(
@@ -108,8 +107,16 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
             });
 
         // Assert
-        dbItems.Should().BeEquivalentTo(expectedItem);
-        dbDescription.Should().BeEquivalentTo(expectedDescription);
+        dbItems.Should().BeEquivalentTo(
+            expectedItem, 
+            options => options
+            .Excluding(su => su.Description)
+            .Excluding(su => su.Type));
+        dbDescription.Should().BeEquivalentTo(
+            expectedDescription, 
+            options => options
+                .Excluding(su => su.Property)
+                .Excluding(su => su.ItemId));
     }
 
     [Theory(DisplayName = $"The {nameof(ProductsRepository)} can contains works.")]
@@ -134,9 +141,10 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
 
         await AddItemTypeAsync(type);
 
-        await Task.WhenAll(item.Properties
-            .Select(async x => AddItemPropertyAsync(x))
-            .ToArray());
+        foreach(var property in item.Properties)
+        {
+            await AddItemPropertyAsync(property);
+        }
 
         await AddItemAsync(item);
 
@@ -176,9 +184,10 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
 
         await AddItemTypeAsync(type);
 
-        await Task.WhenAll(item.Properties
-            .Select(async x => AddItemPropertyAsync(x))
-            .ToArray());
+        foreach (var property in item.Properties)
+        {
+            await AddItemPropertyAsync(property);
+        }
 
         await AddItemAsync(item);
 
@@ -242,10 +251,12 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
         var type = TestHelper.GetOrdinaryItemType();
 
         await AddPropertyGroupAsync(group);
-
         await AddItemTypeAsync(type);
 
-        await Task.WhenAll(properties.Select(async x => AddItemPropertyAsync(x)).ToArray());
+        foreach (var property in properties)
+        {
+            await AddItemPropertyAsync(property);
+        }
 
         var inputItem = TestHelper.GetOrdinaryItem(1, type: type, properties: properties.Take(2).ToArray());
 
