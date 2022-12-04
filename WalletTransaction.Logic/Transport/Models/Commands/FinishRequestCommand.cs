@@ -16,7 +16,7 @@ public sealed class FinishRequestCommand : CommandBase
     public FinishRequestCommand(CommandType type, string id) : base(type, id) { }
 
     /// <summary xml:lang = "ru">
-    /// Внутренний идентификатор.
+    /// Идентификатор запроса.
     /// </summary>
     [JsonProperty("request_id", Required = Required.Always)]
     public long RequestID { get; set; }

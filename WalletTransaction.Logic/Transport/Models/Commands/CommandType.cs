@@ -23,5 +23,10 @@ public enum CommandType
     /// <summary xml:lang = "ru">
     /// Полный рассчет запроса.
     /// </summary>
-    FinishTransactionRequest
+    FinishTransactionRequest,
+
+    /// <summary xml:lang = "ru">
+    /// Возврат средств по запросу.
+    /// </summary>
+    RefundTransactionRequest
 }

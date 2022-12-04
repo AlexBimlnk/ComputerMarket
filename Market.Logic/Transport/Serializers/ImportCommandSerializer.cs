@@ -12,13 +12,17 @@ using TCommandBase = CommandBase;
 using TDeleteLinkCommand = Models.Commands.Import.DeleteLinkCommand;
 using TSetLinkCommand = Models.Commands.Import.SetLinkCommand;
 
+/// <summary xml:lang = "ru">
+/// Сериализатор команд для сервиса импорта.
+/// </summary>
 public sealed class ImportCommandSerializer : ISerializer<ImportCommand, string>
 {
+    /// <inheritdoc/>
     public string Serialize(ImportCommand source)
     {
         ArgumentNullException.ThrowIfNull(source, nameof(source));
 
-        TCommandBase transportProducts = source switch
+        TCommandBase transportCommand = source switch
         {
             SetLinkCommand setLinkCommand => TSetLinkCommand.ToModel(setLinkCommand),
             DeleteLinkCommand deleteLinkCommand => TDeleteLinkCommand.ToModel(deleteLinkCommand),
@@ -26,6 +30,6 @@ public sealed class ImportCommandSerializer : ISerializer<ImportCommand, string>
                 throw new InvalidOperationException($"The source contains unknown command '{unknownCommandType?.GetType().Name}'. ")
         };
 
-        return JsonConvert.SerializeObject(transportProducts, new StringEnumConverter());
+        return JsonConvert.SerializeObject(transportCommand, new StringEnumConverter());
     }
 }

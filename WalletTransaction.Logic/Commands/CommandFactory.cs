@@ -10,7 +10,8 @@ public sealed class CommandFactory : ICommandFactory
 {
     private readonly Func<CreateTransactionRequestCommandParameters, ICommand> _createRequestCommandFactory;
     private readonly Func<CancelTransactionRequestCommandParameters, ICommand> _cancelRequestCommandFactory;
-    private readonly Func<FinishTransactionRequestCommandParameters, ICommand> _finishedRequestCommandFactory;
+    private readonly Func<FinishTransactionRequestCommandParameters, ICommand> _finishRequestCommandFactory;
+    private readonly Func<RefundTransactionRequestCommandParameters, ICommand> _refundRequestCommandFactory;
 
     /// <summary xml:lang = "ru">
     /// Создает новый экземпляр типа <see cref="CommandFactory"/>.
@@ -23,8 +24,12 @@ public sealed class CommandFactory : ICommandFactory
     /// Делегат, создающий на основе <see cref="ExecutableID"/> и <see cref="CancelTransactionRequestCommand"/>
     /// команду типа <see cref="ICommand"/>.
     /// </param>
-    /// <param name="cancelRequestCommandFactory" xml:lang = "ru">
+    /// <param name="finishRequestCommandFactory" xml:lang = "ru">
     /// Делегат, создающий на основе <see cref="ExecutableID"/> и <see cref="FinishTransactionRequestCommand"/>
+    /// команду типа <see cref="ICommand"/>.
+    /// </param>
+    /// <param name="refundRequestCommandFactory" xml:lang = "ru">
+    /// Делегат, создающий на основе <see cref="ExecutableID"/> и <see cref="RefundTransactionRequestCommand"/>
     /// команду типа <see cref="ICommand"/>.
     /// </param>
     /// <exception cref="ArgumentNullException" xml:lang = "ru">
@@ -33,11 +38,13 @@ public sealed class CommandFactory : ICommandFactory
     public CommandFactory(
         Func<CreateTransactionRequestCommandParameters, ICommand> createRequestCommandFactory,
         Func<CancelTransactionRequestCommandParameters, ICommand> cancelRequestCommandFactory,
-        Func<FinishTransactionRequestCommandParameters, ICommand> finishedRequestCommandFactory)
+        Func<FinishTransactionRequestCommandParameters, ICommand> finishRequestCommandFactory,
+        Func<RefundTransactionRequestCommandParameters, ICommand> refundRequestCommandFactory)
     {
         _createRequestCommandFactory = createRequestCommandFactory ?? throw new ArgumentNullException(nameof(createRequestCommandFactory));
         _cancelRequestCommandFactory = cancelRequestCommandFactory ?? throw new ArgumentNullException(nameof(cancelRequestCommandFactory));
-        _finishedRequestCommandFactory = finishedRequestCommandFactory ?? throw new ArgumentNullException(nameof(finishedRequestCommandFactory));
+        _finishRequestCommandFactory = finishRequestCommandFactory ?? throw new ArgumentNullException(nameof(finishRequestCommandFactory));
+        _refundRequestCommandFactory = refundRequestCommandFactory ?? throw new ArgumentNullException(nameof(refundRequestCommandFactory));
     }
 
     /// <inheritdoc/>
@@ -54,7 +61,10 @@ public sealed class CommandFactory : ICommandFactory
                 _cancelRequestCommandFactory(cancelRequestCommandParameters),
 
             FinishTransactionRequestCommandParameters finishRequestCommandParameters =>
-                _finishedRequestCommandFactory(finishRequestCommandParameters),
+                _finishRequestCommandFactory(finishRequestCommandParameters),
+
+            RefundTransactionRequestCommandParameters refundRequestCommandParameters =>
+                _refundRequestCommandFactory(refundRequestCommandParameters),
 
             _ => throw new ArgumentException(
                 $"The command parameters type is unknown {parameters.GetType().Name}",

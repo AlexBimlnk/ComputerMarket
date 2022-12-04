@@ -1,5 +1,4 @@
-﻿using General.Logic.Commands;
-using General.Logic.Executables;
+﻿using General.Logic.Executables;
 
 using WalletTransaction.Logic.Commands;
 
