@@ -16,7 +16,7 @@ public sealed class CreateRequestCommand : CommandBase
     public CreateRequestCommand(CommandType type, string id) : base(type, id) { }
 
     /// <summary xml:lang = "ru">
-    /// Внутренний идентификатор.
+    /// Запрос на проведение транзакций.
     /// </summary>
     [JsonProperty("request", Required = Required.Always)]
     public TransactionRequest TransactionRequest { get; set; } = default!;

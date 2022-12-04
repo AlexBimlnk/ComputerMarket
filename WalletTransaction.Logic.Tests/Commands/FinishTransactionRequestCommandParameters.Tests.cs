@@ -1,5 +1,4 @@
-﻿using General.Logic.Commands;
-using General.Logic.Executables;
+﻿using General.Logic.Executables;
 
 using WalletTransaction.Logic.Commands;
 
@@ -33,7 +32,7 @@ public class FinishTransactionRequestCommandParametersTests
         var requestId = new InternalID(1);
 
         // Act
-        var exception = Record.Exception(() => _ = 
+        var exception = Record.Exception(() => _ =
             new FinishTransactionRequestCommandParameters(id: null!, requestId));
 
         // Assert

@@ -3,17 +3,17 @@
 namespace WalletTransaction.Logic.Transport.Models.Commands;
 
 /// <summary xml:lang = "ru">
-/// Транспортная модель команды отмены запроса.
+/// Транспортная модель команды возврата средств по запросу.
 /// </summary>
-public sealed class CancelRequestCommand : CommandBase
+public sealed class RefundRequestCommand : CommandBase
 {
     /// <summary xml:lang = "ru">
-    /// Создает новый экземпляр типа <see cref="CancelRequestCommand"/>.
+    /// Создает новый экземпляр типа <see cref="RefundRequestCommand"/>.
     /// </summary>
     /// <param name="type" xml:lang = "ru">
     /// Тип команды.
     /// </param>
-    public CancelRequestCommand(CommandType type, string id) : base(type, id) { }
+    public RefundRequestCommand(CommandType type, string id) : base(type, id) { }
 
     /// <summary xml:lang = "ru">
     /// Идентификатор запроса.

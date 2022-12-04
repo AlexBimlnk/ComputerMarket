@@ -16,12 +16,14 @@ public class CommandFactoryTests
         var createRequest = Mock.Of<Func<CreateTransactionRequestCommandParameters, ICommand>>();
         var cancelRequest = Mock.Of<Func<CancelTransactionRequestCommandParameters, ICommand>>();
         var finishRequest = Mock.Of<Func<FinishTransactionRequestCommandParameters, ICommand>>();
+        var refundRequest = Mock.Of<Func<RefundTransactionRequestCommandParameters, ICommand>>();
 
         // Act
         var exception = Record.Exception(() => _ = new CommandFactory(
             createRequest, 
             cancelRequest,
-            finishRequest));
+            finishRequest,
+            refundRequest));
 
         // Assert
         exception.Should().BeNull();
@@ -53,6 +55,7 @@ public class CommandFactoryTests
         var createRequest = new Mock<Func<CreateTransactionRequestCommandParameters, ICommand>>(MockBehavior.Strict);
         var cancelRequest = Mock.Of<Func<CancelTransactionRequestCommandParameters, ICommand>>(MockBehavior.Strict);
         var finishRequest = Mock.Of<Func<FinishTransactionRequestCommandParameters, ICommand>>(MockBehavior.Strict);
+        var refundRequest = Mock.Of<Func<RefundTransactionRequestCommandParameters, ICommand>>(MockBehavior.Strict);
 
         var createRequestInvokeCount = 0;
         createRequest.Setup(x => x.Invoke(createParameters))
@@ -62,7 +65,8 @@ public class CommandFactoryTests
         var factory = new CommandFactory(
             createRequest.Object, 
             cancelRequest,
-            finishRequest);
+            finishRequest,
+            refundRequest);
 
         // Act
         ICommand result = null!;
@@ -90,6 +94,7 @@ public class CommandFactoryTests
         var createRequest = Mock.Of<Func<CreateTransactionRequestCommandParameters, ICommand>>(MockBehavior.Strict);
         var cancelRequest = new Mock<Func<CancelTransactionRequestCommandParameters, ICommand>>(MockBehavior.Strict);
         var finishRequest = Mock.Of<Func<FinishTransactionRequestCommandParameters, ICommand>>(MockBehavior.Strict);
+        var refundRequest = Mock.Of<Func<RefundTransactionRequestCommandParameters, ICommand>>(MockBehavior.Strict);
 
         var cancelRequestInvokeCount = 0;
         cancelRequest.Setup(x => x.Invoke(cancelParameters))
@@ -99,7 +104,8 @@ public class CommandFactoryTests
         var factory = new CommandFactory(
             createRequest, 
             cancelRequest.Object,
-            finishRequest);
+            finishRequest,
+            refundRequest);
 
         // Act
         ICommand result = null!;
@@ -127,6 +133,7 @@ public class CommandFactoryTests
         var createRequest = Mock.Of<Func<CreateTransactionRequestCommandParameters, ICommand>>(MockBehavior.Strict);
         var cancelRequest = Mock.Of<Func<CancelTransactionRequestCommandParameters, ICommand>>(MockBehavior.Strict);
         var finishRequest = new Mock<Func<FinishTransactionRequestCommandParameters, ICommand>>(MockBehavior.Strict);
+        var refundRequest = Mock.Of<Func<RefundTransactionRequestCommandParameters, ICommand>>(MockBehavior.Strict);
 
         var finishRequestInvokeCount = 0;
         finishRequest.Setup(x => x.Invoke(finishParameters))
@@ -136,7 +143,8 @@ public class CommandFactoryTests
         var factory = new CommandFactory(
             createRequest,
             cancelRequest,
-            finishRequest.Object);
+            finishRequest.Object,
+            refundRequest);
 
         // Act
         ICommand result = null!;
@@ -150,6 +158,45 @@ public class CommandFactoryTests
         finishRequestInvokeCount.Should().Be(1);
     }
 
+    [Fact(DisplayName = $"The {nameof(CommandFactory)} can create 'refund request' command.")]
+    [Trait("Category", "Unit")]
+    public void CanCreateRefundRequestCommand()
+    {
+        // Arrange
+        var refundParameters = new RefundTransactionRequestCommandParameters(
+            new("some id"),
+            new(1));
+
+        var command = Mock.Of<ICommand>(MockBehavior.Strict);
+
+        var createRequest = Mock.Of<Func<CreateTransactionRequestCommandParameters, ICommand>>(MockBehavior.Strict);
+        var cancelRequest = Mock.Of<Func<CancelTransactionRequestCommandParameters, ICommand>>(MockBehavior.Strict);
+        var finishRequest = Mock.Of<Func<FinishTransactionRequestCommandParameters, ICommand>>(MockBehavior.Strict);
+        var refundRequest = new Mock<Func<RefundTransactionRequestCommandParameters, ICommand>>(MockBehavior.Strict);
+
+        var refundRequestInvokeCount = 0;
+        refundRequest.Setup(x => x.Invoke(refundParameters))
+            .Returns(command)
+            .Callback(() => refundRequestInvokeCount++);
+
+        var factory = new CommandFactory(
+            createRequest,
+            cancelRequest,
+            finishRequest,
+            refundRequest.Object);
+
+        // Act
+        ICommand result = null!;
+
+        var exception = Record.Exception(() =>
+            result = factory.Create(refundParameters));
+
+        // Assert
+        exception.Should().BeNull();
+        result.Should().Be(command);
+        refundRequestInvokeCount.Should().Be(1);
+    }
+
     [Fact(DisplayName = $"The {nameof(CommandFactory)} can't create without parameters.")]
     [Trait("Category", "Unit")]
     public void CanNotCreateWithoutParameters()
@@ -158,11 +205,13 @@ public class CommandFactoryTests
         var createRequest = Mock.Of<Func<CreateTransactionRequestCommandParameters, ICommand>>(MockBehavior.Strict);
         var cancelRequest = Mock.Of<Func<CancelTransactionRequestCommandParameters, ICommand>>(MockBehavior.Strict);
         var finishRequest = Mock.Of<Func<FinishTransactionRequestCommandParameters, ICommand>>(MockBehavior.Strict);
+        var refundRequest = Mock.Of<Func<RefundTransactionRequestCommandParameters, ICommand>>(MockBehavior.Strict);
 
         var factory = new CommandFactory(
             createRequest, 
             cancelRequest,
-            finishRequest);
+            finishRequest,
+            refundRequest);
 
         // Act
         var exception = Record.Exception(() =>
@@ -180,13 +229,15 @@ public class CommandFactoryTests
         var createRequest = Mock.Of<Func<CreateTransactionRequestCommandParameters, ICommand>>(MockBehavior.Strict);
         var cancelRequest = Mock.Of<Func<CancelTransactionRequestCommandParameters, ICommand>>(MockBehavior.Strict);
         var finishRequest = Mock.Of<Func<FinishTransactionRequestCommandParameters, ICommand>>(MockBehavior.Strict);
+        var refundRequest = Mock.Of<Func<RefundTransactionRequestCommandParameters, ICommand>>(MockBehavior.Strict);
 
         var unknownParameters = new UnknownParameters(new("some id"));
 
         var factory = new CommandFactory(
             createRequest, 
             cancelRequest,
-            finishRequest);
+            finishRequest, 
+            refundRequest);
 
         // Act
         var exception = Record.Exception(() =>

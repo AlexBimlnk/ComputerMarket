@@ -18,5 +18,25 @@ public enum CommandType
     /// <summary xml:lang = "ru">
     /// Удаление связи.
     /// </summary>
-    DeleteLink
+    DeleteLink,
+
+    /// <summary xml:lang = "ru">
+    /// Создание запроса на проведение транзакции.
+    /// </summary>
+    CreateTransactionRequest,
+
+    /// <summary xml:lang = "ru">
+    /// Произвести полный рассчет транзакции.
+    /// </summary>
+    FinishTransactionRequest,
+
+    /// <summary xml:lang = "ru">
+    /// Отменить транзакцию.
+    /// </summary>
+    CancelTransactionRequest,
+
+    /// <summary xml:lang = "ru">
+    /// Сделать возврат средств по транзакции.
+    /// </summary>
+    RefundTransactionRequest,
 }

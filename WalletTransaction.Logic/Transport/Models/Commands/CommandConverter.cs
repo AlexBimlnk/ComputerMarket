@@ -23,6 +23,7 @@ public sealed class CommandConverter : JsonConverter<CommandBase>
             CommandType.CreateTransactionRequest => rawCommand.ToObject<CreateRequestCommand>(),
             CommandType.CancelTransactionRequest => rawCommand.ToObject<CancelRequestCommand>(),
             CommandType.FinishTransactionRequest => rawCommand.ToObject<FinishRequestCommand>(),
+            CommandType.RefundTransactionRequest => rawCommand.ToObject<RefundRequestCommand>(),
             var unknownCommandType =>
                 throw new InvalidOperationException($"The unknown command type has been received '{unknownCommandType}'. ")
         };

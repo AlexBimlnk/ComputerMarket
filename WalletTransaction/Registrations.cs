@@ -41,6 +41,8 @@ public static class Registrations
             .AddScoped<ICommandFactory, CommandFactory>()
             .AddScoped<Func<CreateTransactionRequestCommandParameters, ICommand>>(
                static provider => (parameters) => ActivatorUtilities.CreateInstance<CreateTransactionRequestCommand>(provider, parameters))
+            .AddScoped<Func<RefundTransactionRequestCommandParameters, ICommand>>(
+               static provider => (parameters) => ActivatorUtilities.CreateInstance<RefundTransactionRequestCommand>(provider, parameters))
             .AddScoped<Func<FinishTransactionRequestCommandParameters, ICommand>>(
                static provider => (parameters) => ActivatorUtilities.CreateInstance<FinishTransactionRequestCommand>(provider, parameters))
             .AddScoped<Func<CancelTransactionRequestCommandParameters, ICommand>>(

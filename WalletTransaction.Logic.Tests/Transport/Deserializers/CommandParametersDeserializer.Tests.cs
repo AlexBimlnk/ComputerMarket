@@ -62,7 +62,7 @@ public class CommandParametersDeserializerTests
         var rawSource = /*lang=json,strict*/ @"
         {
             ""type"": ""unknown_command"",
-            ""id"": ""some id"",
+            ""id"": ""some id""
         }";
 
         // Act
@@ -125,6 +125,17 @@ public class CommandParametersDeserializerTests
                 ""request_id"": 1
             }",
             new FinishTransactionRequestCommandParameters(
+                new("1"),
+                new(1))
+        },
+        {
+            /*lang=json,strict*/ @"
+            {
+                ""type"": ""refund_transaction_request"",
+                ""id"": ""1"",
+                ""request_id"": 1
+            }",
+            new RefundTransactionRequestCommandParameters(
                 new("1"),
                 new(1))
         },

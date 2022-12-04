@@ -56,6 +56,10 @@ public sealed class CommandParametersDeserializer : IDeserializer<string, Comman
                 new(finishCommand.Id),
                 new(finishCommand.RequestID)),
 
+            RefundRequestCommand finishCommand => new RefundTransactionRequestCommandParameters(
+                new(finishCommand.Id),
+                new(finishCommand.RequestID)),
+
             var unknownCommandType =>
                 throw new InvalidOperationException($"The source contains unknown command '{unknownCommandType?.GetType().Name}'. ")
         };
