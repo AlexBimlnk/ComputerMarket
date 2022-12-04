@@ -1,12 +1,9 @@
-﻿using General.Logic.Commands;
-using General.Logic.Executables;
+﻿using General.Logic.Executables;
 using General.Storage;
-using General.Transport;
 
 using Moq;
 
 using WalletTransaction.Logic.Commands;
-using WalletTransaction.Logic.Transport;
 
 namespace WalletTransaction.Logic.Tests.Commands;
 
@@ -18,10 +15,10 @@ public class CancelTransactionRequestCommandTests
     {
         // Arrange
         CancelTransactionRequestCommand command = null!;
-        
+
         var requestId = new InternalID(1);
         var commandId = new ExecutableID("some id");
-        
+
         var parameters = new CancelTransactionRequestCommandParameters(
             commandId,
             requestId);
