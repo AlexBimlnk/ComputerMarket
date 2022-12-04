@@ -26,7 +26,7 @@ public sealed class CreateTransactionRequestCommand : WTCommand
         ExecutableID id,
         ID requestID,
         IReadOnlyCollection<Transaction> transactions)
-        : base(id, CommandType.CancelTransactionRequest)
+        : base(id, CommandType.CreateTransactionRequest)
     {
         TransactionRequestID = requestID;
         Transactions = transactions ?? throw new ArgumentNullException(nameof(transactions));

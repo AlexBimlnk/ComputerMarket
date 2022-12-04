@@ -24,7 +24,7 @@ public sealed class RefundTransactionRequestCommand : WTCommand
     public RefundTransactionRequestCommand(
         ExecutableID id,
         ID requestID)
-        : base(id, CommandType.CancelTransactionRequest)
+        : base(id, CommandType.RefundTransactionRequest)
     {
         TransactionRequestID = requestID;
     }

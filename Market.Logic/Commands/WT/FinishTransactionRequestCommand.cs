@@ -24,7 +24,7 @@ public sealed class FinishTransactionRequestCommand : WTCommand
     public FinishTransactionRequestCommand(
         ExecutableID id,
         ID requestID)
-        : base(id, CommandType.CancelTransactionRequest)
+        : base(id, CommandType.FinishTransactionRequest)
     {
         TransactionRequestID = requestID;
     }
