@@ -12,6 +12,11 @@ namespace Market.Logic.Models.WT;
 public enum TransactionRequestState
 {
     /// <summary xml:lang = "ru">
+    /// Ожидает обработки.
+    /// </summary>
+    WaitHandle,
+
+    /// <summary xml:lang = "ru">
     /// Удерживается магазином.
     /// </summary>
     Held,

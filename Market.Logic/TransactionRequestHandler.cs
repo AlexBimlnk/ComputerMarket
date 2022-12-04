@@ -1,8 +1,10 @@
 ﻿using General.Logic;
+using General.Logic.Executables;
 using General.Storage;
 using General.Transport;
 
 using Market.Logic.Commands.Import;
+using Market.Logic.Commands.WT;
 using Market.Logic.Markers;
 using Market.Logic.Models;
 using Market.Logic.Models.WT;
@@ -44,38 +46,56 @@ public sealed class TransactionRequestHandler : IAPIRequestHandler<WTMarker>
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    private static async Task HandleCancelledRequestAsync(Order order)
+    private async Task HandleCancelledRequestAsync(TransactionRequestResult result)
     {
-        if (order.State is OrderState.PaymentWait or OrderState.ProviderAnswerWait)
+        var linkedOrder = _orderRepository.GetByKey(result.TransactionRequestId);
+
+        if (linkedOrder is null)
+            throw new InvalidOperationException($"Order id: {result.TransactionRequestId} is not exist");
+
+        // Наверное здесь удалять заказы не нужно. А обновить его состояние.
+        // А удалять их по старости в бд тригером
+
+        if (result.State is TransactionRequestState.WaitHandle or TransactionRequestState.Aborted)
         {
-            order.State = OrderState.Cancel;
-            // ToDo: Полный возврат средств.
+            linkedOrder.State = OrderState.Cancel;
+            // ToDo: UPdate order or delete order
         }
 
         else
         {
-            order.State = OrderState.Cancel;
-            // ToDo: Неполный возврат средств. Доделаем вместе с командами.
-        }
+            linkedOrder.State = OrderState.Cancel;
+            // Todo: Update or delete
 
-        // Наверное здесь удалять заказы не нужно. А обновить его состояние. А удалять их по старости
-        // в бд тригером
+            await _commandSender.SendAsync(new RefundTransactionRequestCommand(
+                new ExecutableID(Guid.NewGuid().ToString()),
+                result.TransactionRequestId));
+        }
     }
 
-    private static async Task UpdateOrderStateAsync(Order order, OrderState newState)
+    private async Task HandleHeldRequestStateAsync(TransactionRequestResult result)
     {
-        order.State = newState;
+        var linkedOrder = _orderRepository.GetByKey(result.TransactionRequestId);
+
+        if (linkedOrder is null)
+            throw new InvalidOperationException($"Order id: {result.TransactionRequestId} is not exist");
+
+        linkedOrder.State = OrderState.ProviderAnswerWait;
         // await _repo.Update
         return;
     }
 
-    private static async Task HandleAbortedOrderAsync(Order order)
+    private async Task HandleAbortedRequestAsync(TransactionRequestResult result)
     {
+        var linkedOrder = _orderRepository.GetByKey(result.TransactionRequestId);
+
+        if (linkedOrder is null)
+            throw new InvalidOperationException($"Order id: {result.TransactionRequestId} is not exist");
+
         // Обработка неудачной транзакции.
         // По идее мы просто должны оповестить об этом пользователя.
-        // ToDo
-        order.State = OrderState.PaymentWait;
-        return;
+        // ToDo: оповещение о неудачной транзакции, возможно просто добавить новое состояние заказа
+        linkedOrder.State = OrderState.PaymentWait;
     }
 
     /// <inheritdoc/>
@@ -90,17 +110,11 @@ public sealed class TransactionRequestHandler : IAPIRequestHandler<WTMarker>
 
         var transationRequestResult = _deserializer.Deserialize(request)!;
 
-        var linkedOrder = _orderRepository.GetByKey(transationRequestResult.TransactionRequestId);
-
-        if (linkedOrder is null)
-            throw new InvalidOperationException($"Order id: {transationRequestResult.TransactionRequestId} is not exist");
-
-        var handleTask = transationRequestResult switch
-        {
-            { IsCancelled: true } n => HandleCancelledRequestAsync(linkedOrder),
-            { State: TransactionRequestState.Held } => UpdateOrderStateAsync(linkedOrder, OrderState.ProviderAnswerWait),
-            { State: TransactionRequestState.Finished } => UpdateOrderStateAsync(linkedOrder, OrderState.ProductDeliveryWait),
-            { State: TransactionRequestState.Aborted } => HandleAbortedOrderAsync(linkedOrder),
+       var handleTask = transationRequestResult switch
+       {
+            { IsCancelled: true } n => HandleCancelledRequestAsync(transationRequestResult),
+            { State: TransactionRequestState.Held } => HandleHeldRequestStateAsync(transationRequestResult),
+            { State: TransactionRequestState.Aborted } => HandleAbortedRequestAsync(transationRequestResult),
             _ => Task.CompletedTask // Другие состояния нам не интересны.
         };
 
