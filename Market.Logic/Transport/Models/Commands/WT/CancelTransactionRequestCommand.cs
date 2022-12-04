@@ -2,7 +2,7 @@
 
 using Newtonsoft.Json;
 
-namespace Market.Logic.Transport.Models.Commands.Import;
+namespace Market.Logic.Transport.Models.Commands.WT;
 
 /// <summary xml:lang = "ru">
 /// Транспортная модель команды для отмены запроса на проведение транзакции.
