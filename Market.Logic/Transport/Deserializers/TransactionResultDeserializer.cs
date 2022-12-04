@@ -36,13 +36,13 @@ public sealed class TransactionResultDeserializer : IDeserializer<string, Transa
 
     private sealed class TransportTransactionRequestResult
     {
-        [JsonProperty("id")]
+        [JsonProperty("id", Required = Required.Always)]
         public long TransactionRequestId { get; set; }
 
-        [JsonProperty("is_cancelled")]
+        [JsonProperty("is_cancelled", Required = Required.Always)]
         public bool IsCancelled { get; set; }
 
-        [JsonProperty("last_state")]
+        [JsonProperty("last_state", Required = Required.Always)]
         public TransactionRequestState State { get; set; }
     }
 }
