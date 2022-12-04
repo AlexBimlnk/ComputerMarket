@@ -1,10 +1,14 @@
-﻿using General.Logic.Commands;
+﻿using General.Logic;
+using General.Logic.Commands;
 using General.Logic.Queries;
 using General.Transport;
 
+using Market.Logic;
 using Market.Logic.Commands;
 using Market.Logic.Commands.Import;
+using Market.Logic.Markers;
 using Market.Logic.Models;
+using Market.Logic.Models.WT;
 using Market.Logic.Queries;
 using Market.Logic.Queries.Import;
 using Market.Logic.Storage.Repositories;
@@ -32,6 +36,11 @@ public static class Registrations
             .Configure<ImportCommandConfigurationSender>(configuration.GetSection(nameof(ImportCommandConfigurationSender)))
             .AddSingleton<IValidateOptions<ImportCommandConfigurationSender>, SenderConfigurationValidator<ImportCommandConfigurationSender>>();
 
+    private static IServiceCollection AddLogic(this IServiceCollection services)
+        => services
+            .AddScoped<IAPIRequestHandler<ImportMarker>, ImportProductsHandler>()
+            .AddScoped<IAPIRequestHandler<WTMarker>, TransactionRequestHandler>()
+            .AddScoped<IUsersRepository, UsersRepository>();
 
     private static IServiceCollection AddStorage(this IServiceCollection services)
         => services
@@ -40,6 +49,8 @@ public static class Registrations
 
     private static IServiceCollection AddTransport(this IServiceCollection services)
         => services
+            .AddSingleton<IDeserializer<string, TransactionRequestResult>, TransactionResultDeserializer>()
+
             .AddSingleton<IDeserializer<string, CommandResult>, CommandResultDeserializer>()
             .AddSingleton<IDeserializer<string, QueryResult<IReadOnlyCollection<Link>>>, ImportQueryResultDeserializer>()
 
