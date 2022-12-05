@@ -8,25 +8,25 @@ public enum OrderState
     /// <summary xml:lang = "ru">
     /// Отменён.
     /// </summary>
-    Cancel,
+    Cancel = 1,
 
     /// <summary xml:lang = "ru">
     /// Ожидает оплаты.
     /// </summary>
-    PaymentWait,
+    PaymentWait = 2,
 
     /// <summary xml:lang = "ru">
     /// Ожидает ответа от поставщиков.
     /// </summary>
-    ProviderAnswerWait,
+    ProviderAnswerWait = 3,
 
     /// <summary xml:lang = "ru">
     /// Ожидает доставки всех товаров.
     /// </summary>
-    ProductDeliveryWait,
+    ProductDeliveryWait = 4,
 
     /// <summary xml:lang = "ru">
     /// Готов.
     /// </summary>
-    Ready
+    Ready = 5
 }

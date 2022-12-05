@@ -1,9 +1,11 @@
-﻿namespace Market.Logic.Models;
+﻿using General.Models;
+
+namespace Market.Logic.Models;
 
 /// <summary xml:lang = "ru">
 ///  Заказ.
 /// </summary>
-public sealed class Order
+public sealed class Order : IKeyable<ID>
 {
     /// <summary xml:lang = "ru">
     /// Создает экземпляр типа <see cref="Order"/>.
@@ -51,6 +53,8 @@ public sealed class Order
     /// Дата создания заказа.
     /// </summary>
     public DateTime OrderDate { get; }
+
+    public ID Key => throw new NotImplementedException();
 
     /// <summary xml:lang = "ru">
     /// Метод высчитывающий итоговую стоимость заказа.
