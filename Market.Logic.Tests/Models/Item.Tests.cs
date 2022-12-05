@@ -10,14 +10,14 @@ public class ItemTests
     {
         // Arrange
         Item item = null!;
-        var type = new ItemType("some_type");
+        var type = TestHelper.GetOrdinaryItemType();
         var name = "name";
         var id = new ID(1);
         var properties = new ItemProperty[]
         {
-            new ItemProperty("Prop1", "Val1"),
-            new ItemProperty("Prop2", "Val2"),
-            new ItemProperty("Prop3", "Val3")
+            TestHelper.GetOrdinaryItemProperty(1, "PropName1", "Value1"),
+            TestHelper.GetOrdinaryItemProperty(2, "PropName1", "Value2"),
+            TestHelper.GetOrdinaryItemProperty(3, "PropName1", "Value3")
         };
 
         // Act
@@ -39,20 +39,12 @@ public class ItemTests
     [Trait("Category", "Unit")]
     public void CanNotCreateWithoutItemType()
     {
-        // Arrange
-        var properties = new ItemProperty[]
-        {
-            new ItemProperty("Prop1", "Val1"),
-            new ItemProperty("Prop2", "Val2"),
-            new ItemProperty("Prop3", "Val3")
-        };
-
         // Act
         var exception = Record.Exception(() => _ = new Item(
-            id: new ID(1),
+            new ID(1),
             type: null!,
             name: "name",
-            properties));
+            Array.Empty<ItemProperty>()));
 
         // Assert
         exception.Should().BeOfType<ArgumentNullException>();
@@ -64,8 +56,8 @@ public class ItemTests
     {
         // Act
         var exception = Record.Exception(() => _ = new Item(
-            id: new ID(1),
-            type: new ItemType("some_type"),
+            new ID(1),
+            TestHelper.GetOrdinaryItemType(),
             name: "name",
             properties: null!));
 
@@ -81,20 +73,12 @@ public class ItemTests
     [InlineData("")]
     public void CanNotCreateWhenItemNameIsBad(string name)
     {
-        // Arrange
-        var properties = new ItemProperty[]
-        {
-            new ItemProperty("Prop1", "Val1"),
-            new ItemProperty("Prop2", "Val2"),
-            new ItemProperty("Prop3", "Val3")
-        };
-
         // Act
         var exception = Record.Exception(() => _ = new Item(
-            id: new ID(1),
-            type: new ItemType("some_type"),
+            new ID(1),
+            TestHelper.GetOrdinaryItemType(),
             name,
-            properties));
+            Array.Empty<ItemProperty>()));
 
         // Assert
         exception.Should().BeOfType<ArgumentException>();

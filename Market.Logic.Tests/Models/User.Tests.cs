@@ -11,10 +11,7 @@ public class UserTests
         // Arrange
         User user = null!;
         var id = new ID(1);
-        var data = new AuthenticationData(
-            email: "mAiL33@mail.ru",
-            new Password("12345678"),
-            login: "login1");
+        var data = TestHelper.GetOrdinaryAuthenticationData();
         var type = UserType.Customer;
 
         // Act
@@ -51,10 +48,7 @@ public class UserTests
         // Act
         var exception = Record.Exception(() => _ = new User(
             new ID(1),
-            new AuthenticationData(
-                email: "mAiL33@mail.ru",
-                new Password("12345678"),
-                login: "login1"),
+            TestHelper.GetOrdinaryAuthenticationData(),
             type: (UserType)1234));
 
         // Assert

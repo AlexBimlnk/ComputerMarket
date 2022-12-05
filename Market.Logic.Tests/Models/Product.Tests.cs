@@ -12,19 +12,9 @@ public class ProductTests
         var providerId = new ID(2); 
         var itemId = new ID(1);
         Product product = null!;
-        var provider = new Provider(
-            providerId,
-            "provider_name",
-            new Margin(1.1m),
-            new PaymentTransactionsInformation(
-                "0123456789",
-                "01234012340123401234"));
+        var provider = TestHelper.GetOrdinaryProvider(2);
 
-        var item = new Item(
-            itemId,
-            new ItemType("some_type"),
-            "some_name",
-            properties: Array.Empty<ItemProperty>());
+        var item = TestHelper.GetOrdinaryItem(1);
 
         var price = new Price(100m);
         var quantity = 5;
@@ -38,37 +28,22 @@ public class ProductTests
 
         // Assert
         exception.Should().BeNull();
-        product.Key.Should().Be((itemId.Value, providerId.Value));
+        product.Key.Should().Be((itemId, providerId));
         product.Item.Should().Be(item);
         product.Provider.Should().Be(provider);
         product.Quantity.Should().Be(quantity);
         product.ProviderCost.Should().Be(100m);
-        product.FinalCost.Should().Be(100m * 1.1m);
+        product.FinalCost.Should().Be(100m * provider.Margin.Value);
     }
 
     [Fact(DisplayName = $"The {nameof(Product)} cannot be created when quantity less 0.")]
     [Trait("Category", "Unit")]
     public void CanNotCreateWhenQuantityLessZero()
     {
-        // Arrange
-        var provider = new Provider(
-            id: new ID(1),
-            "provider_name",
-            new Margin(1.1m),
-            new PaymentTransactionsInformation(
-                "0123456789",
-                "01234012340123401234"));
-
-        var item = new Item(
-            id: new ID(1),
-            new ItemType("some_type"),
-            "some_name",
-            properties: Array.Empty<ItemProperty>());
-
         // Act
         var exception = Record.Exception(() => _ = new Product(
-            item,
-            provider,
+            TestHelper.GetOrdinaryItem(),
+            TestHelper.GetOrdinaryProvider(),
             price: new(100m),
             quantity: -5));
 
@@ -80,19 +55,10 @@ public class ProductTests
     [Trait("Category", "Unit")]
     public void CanNotCreateWithoutItem()
     {
-        // Arrange
-        var provider = new Provider(
-            id: new ID(1),
-            "provider_name",
-            new Margin(1.1m),
-            new PaymentTransactionsInformation(
-                "0123456789",
-                "01234012340123401234"));
-
         // Act
         var exception = Record.Exception(() => _ = new Product(
             item: null!,
-            provider,
+            TestHelper.GetOrdinaryProvider(),
             price: new(100m),
             quantity: -5));
 
@@ -104,16 +70,9 @@ public class ProductTests
     [Trait("Category", "Unit")]
     public void CanNotCreateWithoutProvider()
     {
-        // Arrange
-        var item = new Item(
-            id: new ID(1),
-            new ItemType("some_type"),
-            "some_name",
-            properties: Array.Empty<ItemProperty>());
-
         // Act
         var exception = Record.Exception(() => _ = new Product(
-            item,
+            TestHelper.GetOrdinaryItem(),
             provider: null!,
             price: new(100m),
             quantity: -5));

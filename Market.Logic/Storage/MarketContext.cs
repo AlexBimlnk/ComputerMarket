@@ -2,6 +2,7 @@
 
 using Microsoft.EntityFrameworkCore;
 
+using PropertyDataTypeId = Market.Logic.Models.PropertyDataType;
 
 namespace Market.Logic.Storage;
 
@@ -112,7 +113,7 @@ public sealed class MarketContext : DbContext
             entity.HasOne(i => i.Item)
                 .WithMany(d => d.Description)
                 .HasForeignKey(d => d.ItemId)
-                .OnDelete(DeleteBehavior.Restrict)
+                .OnDelete(DeleteBehavior.ClientCascade)
                 .HasConstraintName("item_description_item_id_fkey");
 
             entity.HasOne(d => d.Property)
@@ -138,15 +139,34 @@ public sealed class MarketContext : DbContext
                 .HasMaxLength(40)
                 .HasColumnName("name");
 
-            entity.Property(e => e.PropertyDataType)
-                .HasMaxLength(10)
-                .HasColumnName("property_data_type")
-                .HasDefaultValueSql("'varchar'::character varying");
+            entity.Property(e => e.PropertyDataTypeId)
+                .HasColumnName("data_type_id");
 
             entity.HasOne(d => d.Group)
                 .WithMany()
                 .HasForeignKey(d => d.GroupId)
                 .HasConstraintName("item_properties_group_id_fkey");
+        });
+
+        modelBuilder.Entity<PropertyDataType>(entity =>
+        {
+            entity.ToTable("property_data_type");
+
+            entity.HasKey(e => e.PropertyDataTypeId)
+                .HasName("property_data_type_pkey");
+
+            entity.Property(e => e.PropertyDataTypeId).HasColumnName("id");
+
+            entity.Property(e => e.Name)
+                .HasMaxLength(10)
+                .HasColumnName("name");
+
+            entity.HasData(Enum.GetValues(typeof(PropertyDataTypeId))
+                .Cast<PropertyDataTypeId>().Select(e => new PropertyDataType()
+                {
+                    PropertyDataTypeId = e,
+                    Name = e.ToString(),
+                }));
         });
 
         modelBuilder.Entity<ItemType>(entity =>

@@ -13,7 +13,7 @@ public class ProviderTests
         var id = new ID(1);
         var name = "Company Name";
         var margin = new Margin(1m);
-        var information = new PaymentTransactionsInformation("1234567890", "01234012340123401234");
+        var information = TestHelper.GetOrdinaryPaymentTransactionsInformation();
 
         // Act
         var exception = Record.Exception(() => provider = new Provider(
@@ -58,7 +58,7 @@ public class ProviderTests
             id: new ID(1),
             name: name,
             margin: new Margin(1m),
-            paymentTransactionsInformation: new PaymentTransactionsInformation("1234567890", "01234012340123401234")));
+            TestHelper.GetOrdinaryPaymentTransactionsInformation()));
 
         // Assert
         exception.Should().BeOfType<ArgumentException>();

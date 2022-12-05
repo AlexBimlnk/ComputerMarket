@@ -175,32 +175,24 @@ public class ImportProductsHandlerTests
             ]",
             new []
             {
-                new Product(
-                    new Item(
-                        new ID(1),
-                        new ItemType("type1"),
-                        "Name 1",
-                        Array.Empty<ItemProperty>()),
-                    new Provider(
-                        new ID(1),
-                        "Name 1",
-                        new Margin(1.3m),
-                        new PaymentTransactionsInformation("0123401234", "01234012340123401234")),
-                    new Price(100m),
-                    5),
-                new Product(
-                    new Item(
-                        new ID(2),
-                        new ItemType("type2"),
-                        "Name 2",
-                        Array.Empty<ItemProperty>()),
-                    new Provider(
-                        new ID(2),
-                        "Name 1",
-                        new Margin(1.2m),
-                        new PaymentTransactionsInformation("0123401234", "01234012340123401234")),
-                    new Price(55m),
-                    3)
+                TestHelper.GetOrdinaryProduct(
+                    TestHelper.GetOrdinaryItem(1), 
+                    TestHelper.GetOrdinaryProvider(
+                        2, 
+                        info: TestHelper.GetOrdinaryPaymentTransactionsInformation(
+                            inn: "1111111111", 
+                            acc: "11111111111111111111")),
+                    price: 100m,
+                quantity: 5),
+                TestHelper.GetOrdinaryProduct(
+                    TestHelper.GetOrdinaryItem(2),
+                    TestHelper.GetOrdinaryProvider(
+                        2,
+                        info: TestHelper.GetOrdinaryPaymentTransactionsInformation(
+                            inn: "1111111111",
+                            acc: "11111111111111111111")),
+                    price: 55m,
+                quantity: 3)
             }
         },
         {
