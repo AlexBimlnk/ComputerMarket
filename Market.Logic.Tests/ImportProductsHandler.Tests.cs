@@ -1,16 +1,13 @@
-using General.Logic.Commands;
 using General.Storage;
 using General.Transport;
 
 using Market.Logic.Models;
-using Market.Logic.Receivers;
-using Market.Logic.Tests;
 
 using Microsoft.Extensions.Logging;
 
 using Moq;
 
-namespace Import.Logic.Tests;
+namespace Market.Logic.Tests;
 public class ImportProductsHandlerTests
 {
     [Fact(DisplayName = $"The {nameof(ImportProductsHandler)} can create.")]
@@ -91,12 +88,16 @@ public class ImportProductsHandlerTests
         deserializer.Setup(x => x.Deserialize(request))
             .Returns(addedProducts);
 
-        var repositoryCallBack = 0;
+        var repositoryAddCallBack = 0;
         repository.Setup(x => x.AddAsync(
                 It.Is<Product>(x => addedProducts.Contains(x)),
                 It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask)
-            .Callback(() => repositoryCallBack++);
+            .Callback(() => repositoryAddCallBack++);
+
+        var repositorySaveCallback = 0;
+        repository.Setup(x => x.Save())
+            .Callback(() => repositorySaveCallback++);
 
         var handler = new ImportProductsHandler(
             deserializer.Object,
@@ -104,10 +105,12 @@ public class ImportProductsHandlerTests
             logger);
 
         // Act
-        await handler.HandleAsync(request);
+        var exception = await Record.ExceptionAsync(async () => await handler.HandleAsync(request));
 
         // Assert
-        repositoryCallBack.Should().Be(addedProducts.Count);
+        exception.Should().BeNull();
+        repositoryAddCallBack.Should().Be(addedProducts.Count);
+        repositorySaveCallback.Should().Be(1);
     }
 
     [Theory(DisplayName = $"The {nameof(ImportProductsHandler)} can't handle command if given bad request.")]

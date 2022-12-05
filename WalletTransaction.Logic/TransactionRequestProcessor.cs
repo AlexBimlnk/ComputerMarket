@@ -71,7 +71,8 @@ public sealed class TransactionRequestProcessor : ITransactionsRequestProcessor
                 return;
             }
 
-            await _transactionRequestExecuter.ExecuteAsync(request, token);
+            if (!request.IsCancelled)
+                await _transactionRequestExecuter.ExecuteAsync(request, token);
 
             _logger.LogDebug(
                 "Processing comlete with request status: {Status}",
