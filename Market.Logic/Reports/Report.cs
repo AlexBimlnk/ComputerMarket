@@ -3,7 +3,7 @@
 namespace Market.Logic.Reports;
 
 /// <summary>
-/// Отчет о прдожах.
+/// Отчет о продажах.
 /// </summary>
 public sealed class Report
 {
