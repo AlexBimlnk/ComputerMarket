@@ -10,6 +10,7 @@ public class OrderTests
     {
         // Arrange
         Order order = null!;
+        var id = new ID(1);
         var user = TestHelper.GetOrdinaryUser();
         var entities = new PurchasableEntity[]
         {
@@ -33,7 +34,7 @@ public class OrderTests
         }.ToHashSet();
 
         // Act
-        var exception = Record.Exception(() => order = new Order(user, entities));
+        var exception = Record.Exception(() => order = new Order(id, user, entities));
 
         // Assert
         exception.Should().BeNull();
@@ -69,7 +70,7 @@ public class OrderTests
         }.ToHashSet();
 
         // Act
-        var exception = Record.Exception(() => _ = new Order(user: null!, entities));
+        var exception = Record.Exception(() => _ = new Order(new ID(1), user: null!, entities));
 
         // Assert
         exception.Should().BeOfType<ArgumentNullException>();
@@ -83,7 +84,7 @@ public class OrderTests
         var user = TestHelper.GetOrdinaryUser();
 
         // Act
-        var exception = Record.Exception(() => _ = new Order(user, entities: null!));
+        var exception = Record.Exception(() => _ = new Order(new ID(1), user, entities: null!));
 
         // Assert
         exception.Should().BeOfType<ArgumentNullException>();
@@ -124,7 +125,7 @@ public class OrderTests
         .ToHashSet();
 
         // Act
-        var exception = Record.Exception(() => _ = new Order(user, entities));
+        var exception = Record.Exception(() => _ = new Order(new ID(1), user, entities));
 
         // Assert
         exception.Should().BeOfType<InvalidOperationException>();
@@ -157,7 +158,7 @@ public class OrderTests
                 3)
         }.ToHashSet();
 
-        var order = new Order(user, entities);
+        var order = new Order(new ID(1), user, entities);
         var expectedResult = entities.Select(x => x.Product.FinalCost * x.Quantity).Sum();
 
         // Act
