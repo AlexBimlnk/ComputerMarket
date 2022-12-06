@@ -2,6 +2,8 @@ BEGIN;
 
 UPDATE db_version SET version = 10 WHERE TRUE;
 
+DROP TABLE IF EXISTS order_fill;
+DROP TABLE IF EXISTS orders;
 DROP TABLE IF EXISTS order_state;
 
 CREATE TABLE order_state(
@@ -16,44 +18,43 @@ INSERT INTO order_state VALUES
 (4,'ProductDeliveryWait'),
 (5,'Ready');
 
-DROP TABLE IF EXISTS orders;
+
 
 CREATE TABLE orders(
   Id BIGSERIAL PRIMARY KEY,
-  UserId BIGINT NOT NULL,
+  user_id BIGINT NOT NULL,
   Date DATE NOT NULL DEFAULT NOW(),
-  StateId INT NOT NULL,
-    FOREIGN KEY (StateId) REFERENCES order_state(Id) ON DELETE RESTRICT,
-    FOREIGN KEY (UserId) REFERENCES users(Id) ON DELETE CASCADE
+  state_id INT NOT NULL,
+    FOREIGN KEY (state_id) REFERENCES order_state(Id) ON DELETE RESTRICT,
+    FOREIGN KEY (user_id) REFERENCES users(Id) ON DELETE CASCADE
 );
 
-DROP TABLE IF EXISTS order_fill;
 
 CREATE TABLE order_fill(
-    OrderId BIGINT NOT NULL,
-    ProviderId BIGINT NOT NULL,
-    ItemId BIGINT NOT NULL,
+    order_id BIGINT NOT NULL,
+    provider_id BIGINT NOT NULL,
+    item_id BIGINT NOT NULL,
     Quantity INT NOT NULL,
-    PaidPrice DECIMAL(20,2) NOT NULL,
-    FOREIGN KEY (OrderId) REFERENCES orders(Id) ON DELETE CASCADE,
-    FOREIGN KEY (ProviderId) REFERENCES providers(Id) ON DELETE CASCADE,
-    FOREIGN KEY (ItemId) REFERENCES items(Id) ON DELETE CASCADE,
-    CHECK ( PaidPrice >= 0 AND Quantity > 0),
-    PRIMARY KEY (OrderId, ProviderId, ItemId)
+    Paid_Price DECIMAL(20,2) NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(Id) ON DELETE CASCADE,
+    FOREIGN KEY (provider_id) REFERENCES providers(Id) ON DELETE CASCADE,
+    FOREIGN KEY (item_id) REFERENCES items(Id) ON DELETE CASCADE,
+    CHECK ( Paid_Price >= 0 AND Quantity > 0),
+    PRIMARY KEY (order_id, provider_id, item_id)
 );
 
 DROP TABLE IF EXISTS basket_items;
 
 CREATE TABLE basket_items(
-  UserId BIGINT NOT NULL,
-  ProviderId BIGINT NOT NULL,
-  ItemId BIGINT NOT NULL,
+  user_id BIGINT NOT NULL,
+  provider_id BIGINT NOT NULL,
+  item_id BIGINT NOT NULL,
   Quantity INT NOT NULL,
-  FOREIGN KEY (UserId) REFERENCES users(Id) ON DELETE CASCADE,
-  FOREIGN KEY (ProviderId) REFERENCES providers(Id) ON DELETE CASCADE,
-  FOREIGN KEY (ItemId) REFERENCES items(Id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users(Id) ON DELETE CASCADE,
+  FOREIGN KEY (provider_id) REFERENCES providers(Id) ON DELETE CASCADE,
+  FOREIGN KEY (item_id) REFERENCES items(Id) ON DELETE CASCADE,
   CHECK ( Quantity> 0 ),
-  PRIMARY KEY(UserId, ProviderId, ItemId)
+  PRIMARY KEY(user_id, provider_id, item_id)
 );
 
 COMMIT;

@@ -51,6 +51,12 @@ public sealed class RepositoryContext : IRepositoryContext
     public DbSet<UserType> UserTypes => _marketContext.UserTypes;
 
     /// <inheritdoc/>
+    public DbSet<Order> Orders => _marketContext.Orders;
+
+    /// <inheritdoc/>
+    public DbSet<BasketItem> BasketItems => _marketContext.BasketItems;
+
+    /// <inheritdoc/>
     public void SaveChanges()
     {
         _logger.LogDebug("Save changes");

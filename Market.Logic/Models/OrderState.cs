@@ -3,7 +3,7 @@
 /// <summary xml:lang = "ru">
 /// Состояние заказа.
 /// </summary>
-public enum OrderState
+public enum OrderState : int
 {
     /// <summary xml:lang = "ru">
     /// Отменён.

@@ -68,6 +68,16 @@ public sealed class MarketContext : DbContext
     /// </summary>
     public DbSet<UserType> UserTypes { get; set; } = default!;
 
+    /// <summary xml:lang="ru">
+    /// Заказы.
+    /// </summary>
+    public DbSet<Order> Orders { get; set; } = default!;
+
+    /// <summary xml:lang="ru">
+    /// Продукты в корзинах пользователей.
+    /// </summary>
+    public DbSet<BasketItem> BasketItems { get; set; } = default!;
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
 
@@ -339,6 +349,115 @@ public sealed class MarketContext : DbContext
                 .HasColumnName("name");
         });
 
+        modelBuilder.Entity<Order>(entity =>
+        {
+            entity.ToTable("orders");
 
+            entity.HasKey(e => e.Id)
+                .HasName("orders_pkey");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+
+            entity.Property(e => e.UserId)
+                .HasColumnName("user_id");
+
+            entity.Property(e => e.Date)
+                .HasColumnName("date");
+
+            entity.Property(e => e.StateId)
+                .HasColumnName("state_id");
+
+            entity.HasOne(d => d.User)
+                .WithMany()
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientCascade)
+                .HasConstraintName("user_id_fkey");
+        });
+
+        modelBuilder.Entity<OrderState>(entity =>
+        {
+            entity.ToTable("order_state");
+
+            entity.HasKey(e => e.Id)
+                .HasName("order_state_pkey");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+
+            entity.Property(e => e.Name)
+                .HasMaxLength(20)   
+                .HasColumnName("name");
+
+            entity.HasData(Enum.GetValues(typeof(Logic.Models.OrderState))
+                .Cast<Logic.Models.OrderState>().Select(e => new OrderState()
+                {
+                    Id = e,
+                    Name = e.ToString(),
+                }));
+        });
+
+        modelBuilder.Entity<OrderItem>(entity =>
+        {
+            entity.ToTable("order_fill");
+
+            entity.HasKey(e => new { e.OrderId, e.ItemId, e.ProviderId})
+                .HasName("order_fill_pkey");
+
+            entity.Property(e => e.OrderId).HasColumnName("order_id");
+            
+            entity.Property(e => e.ItemId).HasColumnName("item_id");
+            
+            entity.Property(e => e.ProviderId).HasColumnName("provider_id");
+
+            entity.Property(e => e.Quantity).HasColumnName("quantity");
+
+            entity.Property(e => e.PaidPrice).HasColumnName("paid_price");
+
+            entity.HasOne(d => d.Order)
+                .WithMany(d => d.Items)
+                .HasForeignKey(d => d.OrderId)
+                .OnDelete(DeleteBehavior.ClientCascade)
+                .HasConstraintName("order_fill_order_id_fkey");
+
+            entity.HasOne(d => d.Item)
+                .WithMany()
+                .HasForeignKey(d => d.ItemId)
+                .HasConstraintName("order_fill_item_id_fkey");
+
+            entity.HasOne(d => d.Provider)
+                .WithMany()
+                .HasForeignKey(d => d.ProviderId)
+                .HasConstraintName("order_fill_provider_id_fkey");
+        });
+
+        modelBuilder.Entity<BasketItem>(entity =>
+        {
+            entity.ToTable("basket_items");
+
+            entity.HasKey(e => new { e.UserId, e.ItemId, e.ProviderId })
+                .HasName("basket_items_pkey");
+
+            entity.Property(e => e.UserId).HasColumnName("user_id");
+
+            entity.Property(e => e.ItemId).HasColumnName("item_id");
+
+            entity.Property(e => e.ProviderId).HasColumnName("provider_id");
+
+            entity.Property(e => e.Quantity).HasColumnName("quantity");
+
+            entity.HasOne(d => d.Item)
+                .WithMany()
+                .HasForeignKey(d => d.ItemId)
+                .HasConstraintName("basket_items_item_id_fkey");
+
+            entity.HasOne(d => d.Provider)
+                .WithMany()
+                .HasForeignKey(d => d.ProviderId)
+                .HasConstraintName("basket_items_provider_id_fkey");
+
+            entity.HasOne(d => d.User)
+                .WithMany()
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("basket_items_user_id_fkey");
+        });
     }
 }
