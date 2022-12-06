@@ -19,15 +19,15 @@ public interface IOrderRepository : IKeyableRepository<Order, ID>
     /// Добавление продукта в корзину.
     /// </summary>
     /// <param name="user" xml:lang="ru">Пользоватлеь корзины.</param>
-    /// <param name="product" xml:lang="ru">Продут, который бдует добавлен.</param>
-    public void AddToBasket(User user, Product product);
+    /// <param name="entity" xml:lang="ru">Продут, который бдует добавлен.</param>
+    public void AddToBasket(User user, PurchasableEntity entity);
 
     /// <summary xml:lang="ru">
     /// Удаление из продукта корзины.
     /// </summary>
     /// <param name="user" xml:lang="ru">Пользователь корзины.</param>
-    /// <param name="product" xml:lang="ru">Продукт который будет удален из корзины.</param>
-    public void RemoveFromBasket(User user, Product product);
+    /// <param name="entity" xml:lang="ru">Продукт который будет удален из корзины.</param>
+    public void RemoveFromBasket(User user, PurchasableEntity entity);
 
     /// <summary xml:lang="ru">
     /// Получение коллекции продуктво в корзине.
