@@ -34,21 +34,21 @@ public sealed class ReportController : Controller
         _reportBuilder = reportBuilder ?? throw new ArgumentNullException(nameof(reportBuilder));
     }
 
-    // GET: report/index
+    // GET: report/details
     /// <summary xml:lang = "ru">
     /// Возвращает форму для представления отчета.
     /// </summary>
     /// <returns> <see cref="ActionResult"/>. </returns>
     public ActionResult Details(Report report) => View(report);
 
-    // GET: report/Create
+    // GET: report/create
     /// <summary xml:lang = "ru">
     /// Возвращает форму для создания отчетов.
     /// </summary>
     /// <returns> <see cref="ActionResult"/>. </returns>
     public ActionResult Create() => View();
 
-    // POST: Links/Create
+    // POST: report/create
     /// <summary xml:lang = "ru">
     /// Запрос на создание новой связи.
     /// </summary>
