@@ -46,6 +46,9 @@ public sealed class PurchasableEntity : IEquatable<PurchasableEntity>
     /// </summary>
     public void IncQuantity()
     {
+        // Todo: состояние продукта может быть не актуальным.
+        // Нужно наверное ссылку на реп хранить, чтобы актуальный продукт получать.
+
         if (Quantity == Product.Quantity)
             return;
 
@@ -64,7 +67,7 @@ public sealed class PurchasableEntity : IEquatable<PurchasableEntity>
     }
 
     /// <inheritdoc/>
-    public override int GetHashCode() => HashCode.Combine(Product);
+    public override int GetHashCode() => HashCode.Combine(Product, Quantity);
 
     /// <inheritdoc/>
     public override bool Equals(object? obj) => obj is PurchasableEntity entity && Equals(entity);

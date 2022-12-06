@@ -47,13 +47,14 @@ public sealed class Order : IKeyable<ID>
     /// <summary xml:lang = "ru">
     /// Состояние заказа.
     /// </summary>
-    public OrderState State { get; private set; }
+    public OrderState State { get; set; }
 
     /// <summary xml:lang = "ru">
     /// Дата создания заказа.
     /// </summary>
     public DateTime OrderDate { get; }
 
+    /// <inheritdoc/>
     public ID Key => throw new NotImplementedException();
 
     /// <summary xml:lang = "ru">

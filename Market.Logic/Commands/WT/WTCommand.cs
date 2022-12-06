@@ -3,7 +3,7 @@
 namespace Market.Logic.Commands.Import;
 
 /// <summary xml:lang = "ru">
-/// Маркерный класс команд для сервиса импорта.
+/// Маркерный класс команд для сервиса WT.
 /// </summary>
 public abstract class WTCommand : CommandBase
 {
