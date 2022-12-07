@@ -17,7 +17,8 @@ INSERT INTO order_state VALUES
 (3,'ProviderAnswerWait'),
 (4,'ProductDeliveryWait'),
 (5,'Ready'),
-(6,'Recivied');
+(6,'Recivied'),
+(7,'PaymentError');
 
 
 

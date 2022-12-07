@@ -374,27 +374,6 @@ public sealed class MarketContext : DbContext
                 .HasConstraintName("user_id_fkey");
         });
 
-        modelBuilder.Entity<OrderState>(entity =>
-        {
-            entity.ToTable("order_state");
-
-            entity.HasKey(e => e.Id)
-                .HasName("order_state_pkey");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-
-            entity.Property(e => e.Name)
-                .HasMaxLength(20)   
-                .HasColumnName("name");
-
-            entity.HasData(Enum.GetValues(typeof(Logic.Models.OrderState))
-                .Cast<Logic.Models.OrderState>().Select(e => new OrderState()
-                {
-                    Id = e,
-                    Name = e.ToString(),
-                }));
-        });
-
         modelBuilder.Entity<OrderItem>(entity =>
         {
             entity.ToTable("order_fill");

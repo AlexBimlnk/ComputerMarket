@@ -33,5 +33,10 @@ public enum OrderState : int
     /// <summary xml:lang = "ru">
     /// Получен.
     /// </summary>
-    Received = 6
+    Received = 6,
+
+    /// <summary xml:lang = "ru">
+    /// Ошибка при оплате.
+    /// </summary>
+    PaymentError = 7
 }

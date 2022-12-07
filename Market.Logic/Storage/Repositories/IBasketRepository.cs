@@ -22,7 +22,7 @@ public interface IBasketRepository
     public void RemoveFromBasket(User user, PurchasableEntity entity);
 
     /// <summary xml:lang="ru">
-    /// Получение коллекции продуктво в корзине.
+    /// Получение коллекции продуктов в корзине.
     /// </summary>
     /// <param name="user" xml:lang="ru">Пользователь корзины.</param>
     /// <returns xml:lang="ru">Продукты в корзине пользователя.</returns>
