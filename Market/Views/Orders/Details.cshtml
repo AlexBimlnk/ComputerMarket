@@ -1,0 +1,63 @@
+﻿@model Market.Logic.Models.Order
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Order</h4>
+    <hr />
+    <dl class="row">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Items.First().Product)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Items.First().Product.FinalCost)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Items.First().Quantity)
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Product.Item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Product.FinalCost)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Quantity)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.State)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.State)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.State)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.OrderDate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.OrderDate)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
