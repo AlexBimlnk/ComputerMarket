@@ -178,4 +178,10 @@ public static class TestHelper
         new(product ?? GetOrdinaryProduct(), quantity);
 
     #endregion
+
+    public static Order WithState(this Order order, OrderState state)
+    {
+        order.State = state;
+        return order;
+    }
 }
