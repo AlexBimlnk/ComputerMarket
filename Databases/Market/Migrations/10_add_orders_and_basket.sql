@@ -58,4 +58,25 @@ CREATE TABLE basket_items(
   PRIMARY KEY(user_id, provider_id, item_id)
 );
 
+CREATE OR REPLACE FUNCTION trg_delete_basket_items()
+RETURNS TRIGGER
+AS
+$trg$
+DECLARE
+    id_of_user BIGINT;
+BEGIN
+
+    SELECT o.user_id INTO id_of_user  FROM orders o WHERE o.id = NEW.order_id;
+	DELETE FROM basket_items bi
+            WHERE item_id = NEW.item_id AND provider_id = NEW.provider_id AND bi.user_id = id_of_user;
+	RETURN NEW;
+END
+$trg$
+LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS trg_delete_basket_items_when_add_order_item ON order_fill ;
+CREATE TRIGGER trg_delete_basket_items_when_add_order_item AFTER INSERT ON order_fill
+    FOR EACH ROW
+    EXECUTE PROCEDURE trg_delete_basket_items();
+
 COMMIT;
