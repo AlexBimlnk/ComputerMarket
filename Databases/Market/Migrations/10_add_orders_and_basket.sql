@@ -79,4 +79,26 @@ CREATE TRIGGER trg_delete_basket_items_when_add_order_item AFTER INSERT ON order
     FOR EACH ROW
     EXECUTE PROCEDURE trg_delete_basket_items();
 
+CREATE OR REPLACE FUNCTION trg_basket_items_recall()
+RETURNS TRIGGER
+AS
+$trg$
+BEGIN
+    IF (NEW.state_id != 1)
+        THEN RETURN NEW;
+    END IF;
+
+	INSERT INTO basket_items(user_id, provider_id, item_id, quantity)
+	SELECT NEW.user_id, of.provider_id, of.item_id, of.quantity FROM order_fill of WHERE of.order_id = NEW.id;
+
+	RETURN NEW;
+END
+$trg$
+LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS trg_add_basket_items_when_order_cancel ON orders ;
+CREATE TRIGGER trg_add_basket_items_when_order_cancel BEFORE UPDATE ON orders
+    FOR EACH ROW
+    EXECUTE PROCEDURE trg_basket_items_recall();
+
 COMMIT;
