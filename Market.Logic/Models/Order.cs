@@ -18,7 +18,7 @@ public sealed class Order : IKeyable<ID>
     /// <exception cref="InvalidOperationException" xml:lang = "ru">
     /// Если в заказе имеются одинаковые продукты или продуктов нет.
     /// </exception>
-    public Order(User user, IReadOnlySet<PurchasableEntity> entities)
+    public Order(ID key, User user, IReadOnlySet<PurchasableEntity> entities)
     {
         Creator = user ?? throw new ArgumentNullException(nameof(user));
         State = OrderState.PaymentWait;
@@ -32,6 +32,8 @@ public sealed class Order : IKeyable<ID>
 
         if (!Items.Any())
             throw new InvalidOperationException("Order can't contains zero items");
+
+        Key = key;
     }
 
     /// <summary xml:lang = "ru">
@@ -55,7 +57,7 @@ public sealed class Order : IKeyable<ID>
     public DateTime OrderDate { get; }
 
     /// <inheritdoc/>
-    public ID Key => throw new NotImplementedException();
+    public ID Key { get; }
 
     /// <summary xml:lang = "ru">
     /// Метод высчитывающий итоговую стоимость заказа.

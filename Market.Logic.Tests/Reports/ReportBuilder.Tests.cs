@@ -95,6 +95,7 @@ public class ReportBuilderTests
         var orders = new List<Order>()
         {
             new Order(
+                new ID(1),
                 TestHelper.GetOrdinaryUser(),
                 new HashSet<PurchasableEntity>()
                 {
@@ -106,6 +107,7 @@ public class ReportBuilderTests
                         2)
                 }).WithState(OrderState.ProviderAnswerWait),
             new Order(
+                new ID(1),
                 TestHelper.GetOrdinaryUser(),
                 new HashSet<PurchasableEntity>()
                 {
@@ -123,6 +125,7 @@ public class ReportBuilderTests
                         2)
                 }).WithState(OrderState.Ready),
             new Order(
+                new ID(1),
                 TestHelper.GetOrdinaryUser(),
                 new HashSet<PurchasableEntity>()
                 {
