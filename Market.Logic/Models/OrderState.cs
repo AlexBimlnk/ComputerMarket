@@ -28,5 +28,10 @@ public enum OrderState : int
     /// <summary xml:lang = "ru">
     /// Готов.
     /// </summary>
-    Ready = 5
+    Ready = 5,
+
+    /// <summary xml:lang = "ru">
+    /// Получен.
+    /// </summary>
+    Received = 6
 }
