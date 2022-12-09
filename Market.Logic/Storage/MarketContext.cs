@@ -24,6 +24,8 @@ public sealed class MarketContext : DbContext
     {
         optionsBuilder
             .UseLazyLoadingProxies();
+        AppContext.
+            SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
         base.OnConfiguring(optionsBuilder);
     }

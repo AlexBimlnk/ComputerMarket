@@ -13,16 +13,17 @@ using TItemProperty = Models.ItemProperty;
 using TProduct = Models.Product;
 using TPropertyGroup = Models.PropertyGroup;
 using TProvider = Models.Provider;
+using TUser = Models.User;
 
-public sealed class OrderRepository : IOrderRepository
+public sealed class OrdersRepository : IOrderRepository
 {
     private readonly IRepositoryContext _context;
-    private readonly ILogger<OrderRepository> _logger;
+    private readonly ILogger<OrdersRepository> _logger;
 
-    public OrderRepository(IRepositoryContext context, ILogger<OrderRepository> logger)
+    public OrdersRepository(IRepositoryContext context, ILogger<OrdersRepository> logger)
     {
-        _context = context;
-        _logger = logger;
+        _context = context ?? throw new ArgumentNullException(nameof(context));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     /// <inheritdoc/>
@@ -30,9 +31,13 @@ public sealed class OrderRepository : IOrderRepository
     {
         ArgumentNullException.ThrowIfNull(entity);
 
+        var order = ConvertToStorageModel(entity);
+        order.User = default!;
+        order.Items = order.Items.Select(x => { x.Product = default!; return x; }).ToList();
+
         token.ThrowIfCancellationRequested();
 
-        await _context.Orders.AddAsync(ConvertToStorageModel(entity), token)
+        await _context.Orders.AddAsync(order, token)
             .ConfigureAwait(false);
     }
     
@@ -52,7 +57,11 @@ public sealed class OrderRepository : IOrderRepository
     {
         ArgumentNullException.ThrowIfNull(entity);
 
-        _context.Orders.Remove(ConvertToStorageModel(entity));
+        var order = ConvertToStorageModel(entity);
+        order.User = default!;
+        order.Items = order.Items.Select(x => { x.Product = default!; return x; }).ToList();
+
+        _context.Orders.Remove(order);
     }
     
     /// <inheritdoc/>
@@ -90,7 +99,7 @@ public sealed class OrderRepository : IOrderRepository
             Date = order.OrderDate,
             StateId = (int)order.State,
             UserId = order.Creator.Key.Value,
-            User = default!,
+            User = ConvertToStorageModel(order.Creator),
             Items = order.Items.Select(x => ConvertToStorageModel(x)).ToList()
         };
 
@@ -108,20 +117,27 @@ public sealed class OrderRepository : IOrderRepository
         ItemId = item.Product.Item.Key.Value,
         Quantity = item.Quantity,
         PaidPrice = item.Product.FinalCost,
-        Product = default!
+        Product = ConvertToStorageModel(item.Product)
     };
 
-    private static Order ConvertFromStorageModel(TOrder order) =>
-        new Order(
+    private static Order ConvertFromStorageModel(TOrder order)
+    {
+        var newOrder = new Order(
             new ID(order.Id),
             new User(
-                new ID(order.UserId), 
+                new ID(order.UserId),
                 new AuthenticationData(
-                    order.User.Email, 
-                    new Password(order.User.Password), 
-                    order.User.Login), 
+                    order.User.Email,
+                    new Password(order.User.Password),
+                    order.User.Login),
                 (UserType)order.User.UserTypeId),
+            order.Date,
             order.Items.Select(x => ConvertFromStorageModel(x)).ToHashSet());
+
+        newOrder.State = (OrderState)order.StateId;
+
+        return newOrder;
+    }
 
     private static PurchasableEntity ConvertFromStorageModel(TOrderItem item) =>
         new PurchasableEntity(
@@ -214,7 +230,9 @@ public sealed class OrderRepository : IOrderRepository
         ProviderCost = product.ProviderCost,
         Quantity = product.Quantity,
         ItemId = product.Item.Key.Value,
+        Item = ConvertToStorageModel(product.Item),
         ProviderId = product.Provider.Key.Value,
+        Provider = ConvertToStorageModel(product.Provider)
     };
 
     private static Product ConvertFromStorageModel(TProduct product)
@@ -239,6 +257,34 @@ public sealed class OrderRepository : IOrderRepository
            provider.Name,
            new Margin(provider.Margin),
            new PaymentTransactionsInformation(provider.Inn, provider.BankAccount));
+
+    private static TUser ConvertToStorageModel(User user) => new()
+    {
+        Id = user.Key.Value,
+        Login = user.AuthenticationData.Login,
+        Email = user.AuthenticationData.Email,
+        Password = user.AuthenticationData.Password.Value,
+        UserTypeId = (short)user.Type
+    };
+
+    private User? ConvertFromStorageModel(TUser user)
+    {
+        if (!Enum.IsDefined(typeof(UserType), (int)user.UserTypeId))
+        {
+            _logger.LogWarning(
+                "The user with user type id: {UserTypeId} can't be converted",
+                user.UserTypeId);
+            return null;
+        }
+
+        return new User(
+            id: new ID(user.Id),
+            new AuthenticationData(
+                user.Email,
+                new Password(user.Password),
+                user.Login),
+            (UserType)user.UserTypeId);
+    }
 
     #endregion
 }

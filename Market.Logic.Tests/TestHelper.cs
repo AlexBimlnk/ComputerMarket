@@ -179,6 +179,41 @@ public static class TestHelper
 
     #endregion
 
+    #region Order
+    
+    public static Order GetOrdinaryOrder(
+    long id = 1,
+    User? user = null,
+    DateTime? date = null,
+    IReadOnlySet<PurchasableEntity>? entities = null) =>
+    new(
+        new ID(id),
+        user ?? GetOrdinaryUser(),
+        date ?? DateTime.Now,
+        entities ?? new HashSet<PurchasableEntity>()
+        {
+                GetOrdinaryPurchasableEntity()
+        });
+
+    public static TOrder GetStorageOrder(Order order) =>
+        new()
+        {
+            Id = order.Key.Value,
+            StateId = (int)order.State,
+            UserId = order.Creator.Key.Value,
+            User = GetStorageUser(order.Creator),
+            Date = order.OrderDate,
+            Items = order.Items.Select(x => new Logic.Storage.Models.OrderItem()
+            {
+                OrderId = order.Key.Value,
+                ItemId = x.Product.Item.Key.Value,
+                ProviderId = x.Product.Provider.Key.Value,
+                Product = GetStorageProduct(x.Product),
+                Quantity = x.Quantity,
+                PaidPrice = x.Product.FinalCost
+            }).ToList()
+        };
+
     public static Order WithState(this Order order, OrderState state)
     {
         order.State = state;
