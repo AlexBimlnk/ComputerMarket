@@ -18,11 +18,11 @@ public sealed class Order : IKeyable<ID>
     /// <exception cref="InvalidOperationException" xml:lang = "ru">
     /// Если в заказе имеются одинаковые продукты или продуктов нет.
     /// </exception>
-    public Order(ID key, User user, IReadOnlySet<PurchasableEntity> entities)
+    public Order(ID key, User user, DateTime date, IReadOnlySet<PurchasableEntity> entities)
     {
         Creator = user ?? throw new ArgumentNullException(nameof(user));
         State = OrderState.PaymentWait;
-        OrderDate = DateTime.Now;
+        OrderDate = date;
 
         ArgumentNullException.ThrowIfNull(entities, nameof(entities));
 
