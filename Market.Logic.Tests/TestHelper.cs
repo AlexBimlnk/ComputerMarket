@@ -8,6 +8,8 @@ using TProduct = Market.Logic.Storage.Models.Product;
 using TPropertyGroup = Market.Logic.Storage.Models.PropertyGroup;
 using TProvider = Market.Logic.Storage.Models.Provider;
 using TUser = Market.Logic.Storage.Models.User;
+using TOrder = Market.Logic.Storage.Models.Order;
+using TBasketItem = Market.Logic.Storage.Models.BasketItem;
 
 namespace Market.Logic.Tests;
 
@@ -219,4 +221,16 @@ public static class TestHelper
         order.State = state;
         return order;
     }
+
+    public static TBasketItem GetStorageBasketItem(User user, PurchasableEntity entity) => new()
+    {
+        User = GetStorageUser(user),
+        UserId = user.Key.Value,
+        Quantity = entity.Quantity,
+        ItemId = entity.Product.Item.Key.Value,
+        ProviderId = entity.Product.Provider.Key.Value,
+        Product = GetStorageProduct(entity.Product)
+    };
+
+    #endregion
 }

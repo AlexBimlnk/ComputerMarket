@@ -27,4 +27,12 @@ public interface IBasketRepository
     /// <param name="user" xml:lang="ru">Пользователь корзины.</param>
     /// <returns xml:lang="ru">Продукты в корзине пользователя.</returns>
     public IEnumerable<PurchasableEntity> GetAllBasketItems(User user);
+
+    /// <summary xml:lang = "ru">
+    /// Сохраняет все накопленные команды.
+    /// </summary>
+    /// <returns xml:lang = "ru">
+    /// <see cref="Task"/>.
+    /// </returns>
+    public void Save();
 }

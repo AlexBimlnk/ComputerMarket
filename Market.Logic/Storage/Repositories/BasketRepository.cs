@@ -1,5 +1,8 @@
-﻿using Market.Logic.Models;
+﻿using System.Collections.Specialized;
 
+using Market.Logic.Models;
+
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Market.Logic.Storage.Repositories;
@@ -19,21 +22,41 @@ public sealed class BasketRepository : IBasketRepository
 
     public BasketRepository(IRepositoryContext context, ILogger<BasketRepository> logger)
     {
-        _context = context;
-        _logger = logger;
+        _context = context ?? throw new ArgumentNullException(nameof(context));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
+    /// <inheritdoc/>
     public async Task AddToBasketAsync(User user, Product product, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(user);
         ArgumentNullException.ThrowIfNull(product);
 
+        var item = ConvertToStorageModel(product, user);
+
         token.ThrowIfCancellationRequested();
 
-        await _context.BasketItems.AddAsync(ConvertToStorageModel(product, user), token)
+        var exsistedItem = _context.BasketItems.SingleOrDefault(x =>
+            x.UserId == item.UserId &&
+            x.ItemId == item.ItemId &&
+            x.ProviderId == item.ProviderId);
+
+        if (exsistedItem is null)
+        {
+            item.User = default!;
+            item.Product = default!;
+
+            await _context.BasketItems.AddAsync(item, token)
             .ConfigureAwait(false);
+            return;
+        }
+
+        exsistedItem.Quantity++;
+
+        _context.BasketItems.Update(exsistedItem);
     }
 
+    /// <inheritdoc/>
     public IEnumerable<PurchasableEntity> GetAllBasketItems(User user)
     {
         ArgumentNullException.ThrowIfNull(user);
@@ -44,13 +67,37 @@ public sealed class BasketRepository : IBasketRepository
             .AsEnumerable();
     }
 
+    /// <inheritdoc/>
     public void RemoveFromBasket(User user, Product product)
     {
         ArgumentNullException.ThrowIfNull(user);
         ArgumentNullException.ThrowIfNull(product);
 
-        _context.BasketItems.Remove(ConvertToStorageModel(product, user));
+        var item = ConvertToStorageModel(product, user);
+
+        var exsistedItem = _context.BasketItems.SingleOrDefault(x =>
+            x.UserId == item.UserId &&
+            x.ItemId == item.ItemId &&
+            x.ProviderId == item.ProviderId);
+
+        if (exsistedItem is null)
+            return;
+
+        if (exsistedItem.Quantity == 1)
+        {
+            exsistedItem.User = default!;
+            exsistedItem.Product = default!;
+            _context.BasketItems.Remove(exsistedItem);
+            return;
+        }
+
+        exsistedItem.Quantity--;
+
+        _context.BasketItems.Update(exsistedItem);
     }
+
+    /// <inheritdoc/>
+    public void Save() => _context.SaveChanges();
 
     #region Converter
 
@@ -178,7 +225,7 @@ public sealed class BasketRepository : IBasketRepository
            provider.Name,
            new Margin(provider.Margin),
            new PaymentTransactionsInformation(provider.Inn, provider.BankAccount));
-
+    
     #endregion
 
 }
