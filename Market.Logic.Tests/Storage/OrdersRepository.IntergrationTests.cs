@@ -295,7 +295,6 @@ public class OrdersRepositoryIntegrationTests : DBIntegrationTestBase
         newOrder.Should().BeEquivalentTo(updatedOrder);
     }
 
-
     private async Task AddProviderAsync(Provider provider)
     {
         var fromQuery = "providers (id, name, margin, bank_account, inn)";

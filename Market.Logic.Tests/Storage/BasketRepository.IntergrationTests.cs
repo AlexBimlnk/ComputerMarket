@@ -18,7 +18,7 @@ public class BasketRepositoryIntegrationTests : DBIntegrationTestBase
     public BasketRepositoryIntegrationTests()
         : base(nameof(BasketRepositoryIntegrationTests)) { }
 
-    [Fact(DisplayName = $"The {nameof(BasketRepository)} can add order.")]
+    [Fact(DisplayName = $"The {nameof(BasketRepository)} can add product.")]
     [Trait("Category", "Integration")]
     public async Task CanAddProductAsync()
     {
@@ -90,10 +90,9 @@ public class BasketRepositoryIntegrationTests : DBIntegrationTestBase
             .Excluding(su => su.Product));
     }
 
-    
-    [Fact(DisplayName = $"The {nameof(BasketRepository)} can delete order.")]
+    [Fact(DisplayName = $"The {nameof(BasketRepository)} can delete product.")]
     [Trait("Category", "Integration")]
-    public async Task CanRemoveBasketAsync()
+    public async Task CanRemoveProductAsync()
     {
         // Arrange
         var logger = Mock.Of<ILogger<BasketRepository>>();

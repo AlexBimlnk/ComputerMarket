@@ -56,7 +56,7 @@ public class BasketRepositoryTests
         exception.Should().BeOfType<ArgumentNullException>();
     }
 
-    [Fact(DisplayName = $"The {nameof(BasketRepository)} cannot add null order .")]
+    [Fact(DisplayName = $"The {nameof(BasketRepository)} cannot add when product null.")]
     [Trait("Category", "Unit")]
     public async void CanNotAddNullProductAsync()
     {
@@ -76,7 +76,7 @@ public class BasketRepositoryTests
         exception.Should().BeOfType<ArgumentNullException>();
     }
 
-    [Fact(DisplayName = $"The {nameof(BasketRepository)} cannot add null order .")]
+    [Fact(DisplayName = $"The {nameof(BasketRepository)} cannot add when user null.")]
     [Trait("Category", "Unit")]
     public async void CanNotAddWhenUserIsNullAsync()
     {
@@ -96,7 +96,7 @@ public class BasketRepositoryTests
         exception.Should().BeOfType<ArgumentNullException>();
     }
 
-    [Fact(DisplayName = $"The {nameof(BasketRepository)} can cancel add order.")]
+    [Fact(DisplayName = $"The {nameof(BasketRepository)} can cancel add product.")]
     [Trait("Category", "Unit")]
     public async void CanCancelAddOrderAsync()
     {
@@ -122,7 +122,7 @@ public class BasketRepositoryTests
         exception.Should().BeOfType<OperationCanceledException>();
     }
 
-    [Fact(DisplayName = $"The {nameof(BasketRepository)} cannot delete null order.")]
+    [Fact(DisplayName = $"The {nameof(BasketRepository)} cannot delete when user null.")]
     [Trait("Category", "Unit")]
     public void CanNotDeleteWhenNullUser()
     {
@@ -142,7 +142,7 @@ public class BasketRepositoryTests
         exception.Should().BeOfType<ArgumentNullException>();
     }
 
-    [Fact(DisplayName = $"The {nameof(BasketRepository)} cannot delete null order.")]
+    [Fact(DisplayName = $"The {nameof(BasketRepository)} cannot delete when product null.")]
     [Trait("Category", "Unit")]
     public void CanNotDeleteWhenNullProduct()
     {
@@ -162,7 +162,7 @@ public class BasketRepositoryTests
         exception.Should().BeOfType<ArgumentNullException>();
     }
 
-    [Fact(DisplayName = $"The {nameof(BasketRepository)} can get all orders.")]
+    [Fact(DisplayName = $"The {nameof(BasketRepository)} can get all products in user basket.")]
     [Trait("Category", "Unit")]
     public void CanGetEntities()
     {
@@ -213,7 +213,6 @@ public class BasketRepositoryTests
         // Assert
         result.Should().BeEquivalentTo(expectedResult, opt => opt.WithStrictOrdering());
     }
-
 
     [Fact(DisplayName = $"The {nameof(BasketRepository)} can save.")]
     [Trait("Category", "Unit")]

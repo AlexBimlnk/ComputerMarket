@@ -306,7 +306,6 @@ public class OrdersRepositoryTests
         result.Should().BeEquivalentTo(expectedResult, opt => opt.WithStrictOrdering().Excluding(o => o.OrderDate));
     }
 
-
     [Fact(DisplayName = $"The {nameof(OrdersRepository)} can save.")]
     [Trait("Category", "Unit")]
     public void CanSave()
@@ -372,7 +371,5 @@ public class OrdersRepositoryTests
         exception.Should().BeNull();
         ordersCallback.Should().Be(1);
     }
-
-   
 }
 
