@@ -75,7 +75,8 @@ public sealed class OrdersRepository : IOrderRepository
     
     /// <inheritdoc/>
     public Order? GetByKey(ID key) =>
-        _context.Orders
+        _context.Orders 
+            .ToList() //Todo: костыль
             .Where(x => x.Id == key.Value)
             .Select(x => ConvertFromStorageModel(x))
             .SingleOrDefault();
@@ -83,7 +84,7 @@ public sealed class OrdersRepository : IOrderRepository
     /// <inheritdoc/>
     public IEnumerable<Order> GetEntities() =>
          _context.Orders
-            .AsEnumerable()
+            .ToList() //Todo: костыль
             .Select(x => ConvertFromStorageModel(x))
             .Where(x => x != null)!;
 

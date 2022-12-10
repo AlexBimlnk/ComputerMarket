@@ -71,7 +71,7 @@ public sealed class TransactionsResultSender :
             else
                 _logger.LogWarning(
                     "The result request have not been sended. Response status code: {Status code}",
-                    response.StatusCode);
+                    response.StatusCode.ToString());
         }
         catch (Exception ex)
             when (ex is InvalidOperationException or HttpRequestException)

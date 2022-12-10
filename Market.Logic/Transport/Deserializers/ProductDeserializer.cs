@@ -1,5 +1,6 @@
 ﻿using General.Transport;
-using Market.Logic.Transport.Models;
+
+using Market.Logic.Models;
 
 using Newtonsoft.Json;
 

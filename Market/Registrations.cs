@@ -45,17 +45,21 @@ public static class Registrations
     private static IServiceCollection AddStorage(this IServiceCollection services)
         => services
             .AddScoped<IRepositoryContext, RepositoryContext>()
-            .AddScoped<IUsersRepository, UsersRepository>();
+            .AddScoped<IUsersRepository, UsersRepository>()
+            .AddScoped<IProductsRepository, ProductsRepository>()
+            .AddScoped<IOrderRepository, OrdersRepository>();
 
     private static IServiceCollection AddTransport(this IServiceCollection services)
         => services
             .AddSingleton<IDeserializer<string, TransactionRequestResult>, TransactionResultDeserializer>()
 
+            .AddSingleton<IDeserializer<string, IReadOnlyCollection<Product>>, ProductDeserializer>()
             .AddSingleton<IDeserializer<string, CommandResult>, CommandResultDeserializer>()
             .AddSingleton<IDeserializer<string, QueryResult<IReadOnlyCollection<Link>>>, ImportQueryResultDeserializer>()
 
             .AddSingleton<ISerializer<ImportQuery, string>, ImportQuerySerializer>()
             .AddSingleton<ISerializer<ImportCommand, string>, ImportCommandSerializer>()
+            .AddSingleton<ISerializer<WTCommand, string>, WTCommandSerializer>()
 
             .AddSingleton(typeof(IQuerySender<,,>), typeof(QuerySender<,,>))
             .AddSingleton(typeof(ISender<,>), typeof(CommandSender<,>));

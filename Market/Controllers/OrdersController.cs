@@ -82,16 +82,16 @@ public sealed class OrdersController : Controller
     /// Возвращает форму с детальным описанием заказа.
     /// </summary>
     /// <returns> <see cref="ActionResult"/>. </returns>
-    public ActionResult Details(ID key) => View(_orderRepository.GetByKey(key));
+    public ActionResult Details(long key) => View(_orderRepository.GetByKey(new(key)));
 
     // GET: Orders/cancel
     /// <summary xml:lang = "ru">
     /// Отменяет заказ.
     /// </summary>
     /// <returns> <see cref="ActionResult"/>. </returns>
-    public async Task<ActionResult> CancelAsync(ID key)
+    public async Task<ActionResult> CancelAsync(long key)
     {
-        var order = _orderRepository.GetByKey(key)!;
+        var order = _orderRepository.GetByKey(new(key))!;
 
         order.State = OrderState.Cancel;
 
