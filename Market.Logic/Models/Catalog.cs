@@ -53,19 +53,17 @@ public sealed class Catalog : ICatalog
         {
             var idOfType = filter.SelectedType.Id;
 
-            filter.SelectedType = _itemRepository
-                .GetEntities()
-                .Select(x => x.Type)
-                .Single(x => x.Id == idOfType);
-
             products = products.Where(x => x.Item.Type.Id == idOfType);
         }
 
-        products = products
+        if (filter.PropertiesWithValues.Any())
+        {
+            products = products
             .Where(x => x.Item.Properties.Where(prop =>
                 prop.Value is not null &&
                 filter.PropertiesWithValues.Contains((prop.Key, prop.Value)))
             .Any());
+        }
 
         return products.AsEnumerable();
     }
