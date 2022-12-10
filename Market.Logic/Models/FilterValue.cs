@@ -1,4 +1,6 @@
-﻿using Market.Logic.Models.Abstractions;
+﻿using System.Xml.Linq;
+
+using Market.Logic.Models.Abstractions;
 
 namespace Market.Logic.Models;
 
@@ -17,15 +19,11 @@ public sealed class FilterValue : IFilterValue
             throw new ArgumentException($"Value of {nameof(value)} can't be empty or null or contains only white spaces");
 
         Value = value;
-        Count = 1;
         Selected = false;
     }
 
     /// <inheritdoc/>
     public string Value { get; }
-
-    /// <inheritdoc/>
-    public int Count { get; set; }
 
     /// <inheritdoc/>
     public bool Selected { get; set; }

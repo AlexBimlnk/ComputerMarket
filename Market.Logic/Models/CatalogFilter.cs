@@ -7,12 +7,22 @@ namespace Market.Logic.Models;
 /// </summary>
 public sealed class CatalogFilter : ICatalogFilter
 {
-    /// <inheritdoc/>
-    public string? SearchString { get; set; }
+    public CatalogFilter(
+        string? searchString = null, 
+        int? typeId = null,
+        IReadOnlySet<(ID, string)>? values = null) 
+    { 
+        SearchString = searchString;
+        SelectedTypeId= typeId;
+        PropertiesWithValues = values ?? new HashSet<(ID, string)>();
+    }
 
     /// <inheritdoc/>
-    public ItemType? SelectedType { get; set; }
+    public string? SearchString { get; }
 
     /// <inheritdoc/>
-    public ISet<(ID, string)> PropertiesWithValues { get; } = new HashSet<(ID, string)>();
+    public int? SelectedTypeId { get; }
+
+    /// <inheritdoc/>
+    public IReadOnlySet<(ID, string)> PropertiesWithValues { get; }
 }

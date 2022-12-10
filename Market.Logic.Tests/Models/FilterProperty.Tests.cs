@@ -42,9 +42,9 @@ public class FilterPropertyTests
         var value1 = TestHelper.GetOrdinaryFilterValue();
         var value2 = TestHelper.GetOrdinaryFilterValue();
 
-        var expectedResult = new Dictionary<string, IFilterValue>()
+        var expectedResult = new HashSet<IFilterValue>()
         {
-            {value1.Value, value1.WithCount(2) }
+            value1
         };
 
         // Act

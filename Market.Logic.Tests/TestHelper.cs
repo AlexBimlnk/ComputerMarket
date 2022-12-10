@@ -185,27 +185,12 @@ public static class TestHelper
 
     public static FilterValue GetOrdinaryFilterValue(string value = "value") => new(value);
 
-    public static FilterValue WithCount(this FilterValue value, int count)
-    {
-        value.Count = count;
-        return value;
-    }
-
-    public static CatalogFilter GetOrdinaryCatalog(string? searchString = null, ItemType? type = null) => new()
-    {
-        SearchString = searchString,
-        SelectedType= type,
-    };
-
-    public static CatalogFilter WithValues(this CatalogFilter catalog, ISet<(ID, string)> values)
-    {
-        foreach(var item in values)
-        {
-            catalog.PropertiesWithValues.Add(item);
-        }
-
-        return catalog;
-    }
+    public static CatalogFilter GetOrdinaryCatalog(
+        string? searchString = null, 
+        int? typeId = null, 
+        IReadOnlySet<(ID, string)>? values = null) => 
+        
+        new(searchString, typeId, values);
 
     #endregion
 }

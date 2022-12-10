@@ -18,7 +18,6 @@ public class FilterValueTests
         // Assert
         exception.Should().BeNull();
         value.Value.Should().Be(stringValue);
-        value.Count.Should().Be(1);
         value.Selected.Should().BeFalse();
     }
 
