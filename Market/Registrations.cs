@@ -45,6 +45,8 @@ public static class Registrations
     private static IServiceCollection AddStorage(this IServiceCollection services)
         => services
             .AddScoped<IRepositoryContext, RepositoryContext>()
+            .AddScoped<IProductsRepository, ProductsRepository>()
+            .AddScoped<IItemsRepository, ProductsRepository>()
             .AddScoped<IUsersRepository, UsersRepository>();
 
     private static IServiceCollection AddTransport(this IServiceCollection services)

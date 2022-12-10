@@ -1,0 +1,40 @@
+﻿@model Market.Models.Products.CatalogViewModel;
+
+@{
+    ViewData["Title"] = "Categories";
+}
+
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" asp-controller="Products" asp-action="Update">
+            <h2>Фильтр.</h2>
+            <hr />
+            <div class="form-floating">
+                <input asp-for="TypeId" type="hidden"/>
+            </div>
+            <div class="form-floating">
+                <input asp-for="SearchString" class="form-control"/>
+                <label asp-for="SearchString"></label>
+            </div>
+            @*// ToDo: Options filter*@
+            <div>
+                <button id="updateSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Update</button>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-4">
+        <h2>Продукты.</h2>
+            <hr />
+        @{
+            foreach(var product in Model.Products)
+            {
+                <div class="form-floating">
+                    <h3>@product.Item.Key</h3> <br/>
+                    <h3>@product.Item.Name</h3> <br/>
+                    <h3>@product.FinalCost</h3> <br/>
+                    <a href="~/products/product?itemId=@product.Item.Key.Value&&providerId=@product.Provider.Key.Value">Подробнее</a>
+                </div>
+            }
+        }
+    </div>
+</div>

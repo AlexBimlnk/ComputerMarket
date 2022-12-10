@@ -1,0 +1,19 @@
+﻿@model IEnumerable<Market.Logic.Models.ItemType>
+
+@{
+    ViewData["Title"] = "Categories";
+}
+<h1>Категории товаров</h1>
+
+<hr />
+<div class="row">
+    @{
+        foreach(var type in Model)
+        {
+            <div class="form-group">
+                <h2>@type.Name</h2>
+                <a href="~/products/catalog?typeId=@type.Id">Перейти</a>
+            </div>
+        }
+    }   
+</div>
