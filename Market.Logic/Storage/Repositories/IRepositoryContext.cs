@@ -49,6 +49,16 @@ public interface IRepositoryContext
     /// </summary>
     public DbSet<UserType> UserTypes { get; }
 
+    /// <summary xml:lang="ru">
+    /// Заказы.
+    /// </summary>
+    public DbSet<Order> Orders { get; }
+
+    /// <summary xml:lang="ru">
+    /// Продукты в корзинах пользователей.
+    /// </summary>
+    public DbSet<BasketItem> BasketItems { get; }
+
     /// <summary xml:lang = "ru">
     /// Сохраняет текущие изменения.
     /// </summary>

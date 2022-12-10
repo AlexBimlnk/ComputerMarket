@@ -1,9 +1,11 @@
-﻿namespace Market.Logic.Models;
+﻿using General.Models;
+
+namespace Market.Logic.Models;
 
 /// <summary xml:lang = "ru">
 ///  Заказ.
 /// </summary>
-public sealed class Order
+public sealed class Order : IKeyable<ID>
 {
     /// <summary xml:lang = "ru">
     /// Создает экземпляр типа <see cref="Order"/>.
@@ -16,7 +18,7 @@ public sealed class Order
     /// <exception cref="InvalidOperationException" xml:lang = "ru">
     /// Если в заказе имеются одинаковые продукты или продуктов нет.
     /// </exception>
-    public Order(User user, IReadOnlySet<PurchasableEntity> entities)
+    public Order(ID key, User user, IReadOnlySet<PurchasableEntity> entities)
     {
         Creator = user ?? throw new ArgumentNullException(nameof(user));
         State = OrderState.PaymentWait;
@@ -30,6 +32,8 @@ public sealed class Order
 
         if (!Items.Any())
             throw new InvalidOperationException("Order can't contains zero items");
+
+        Key = key;
     }
 
     /// <summary xml:lang = "ru">
@@ -45,12 +49,15 @@ public sealed class Order
     /// <summary xml:lang = "ru">
     /// Состояние заказа.
     /// </summary>
-    public OrderState State { get; private set; }
+    public OrderState State { get; set; }
 
     /// <summary xml:lang = "ru">
     /// Дата создания заказа.
     /// </summary>
     public DateTime OrderDate { get; }
+
+    /// <inheritdoc/>
+    public ID Key { get; }
 
     /// <summary xml:lang = "ru">
     /// Метод высчитывающий итоговую стоимость заказа.

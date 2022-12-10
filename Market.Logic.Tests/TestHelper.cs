@@ -181,6 +181,12 @@ public static class TestHelper
 
     #endregion
 
+    public static Order WithState(this Order order, OrderState state)
+    {
+        order.State = state;
+        return order;
+    }
+
     #region Filter
 
     public static FilterValue GetOrdinaryFilterValue(string value = "value") => new(value);
