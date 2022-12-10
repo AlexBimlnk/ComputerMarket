@@ -21,7 +21,7 @@ namespace Market.Controllers;
 public sealed class OrdersController : Controller
 {
     private readonly ILogger<OrdersController> _logger;
-    private readonly IKeyableRepository<Order, ID> _orderRepository;
+    private readonly IOrderRepository _orderRepository;
     private readonly IUsersRepository _userRepository;
     private readonly ISender<WTCommandConfigurationSender, WTCommand> _wtCommandSender;
 
@@ -45,7 +45,7 @@ public sealed class OrdersController : Controller
     /// </exception>
     public OrdersController(
         ILogger<OrdersController> logger,
-        IKeyableRepository<Order, ID> orderRepository,
+        IOrderRepository orderRepository,
         IUsersRepository usersRepository,
         ISender<WTCommandConfigurationSender, WTCommand> wtCommandSender)
     {
@@ -95,7 +95,8 @@ public sealed class OrdersController : Controller
 
         order.State = OrderState.Cancel;
 
-        // todo: update order state
+        _orderRepository.UpdateState(order);
+        _orderRepository.Save();
 
         await _wtCommandSender.SendAsync(new CancelTransactionRequestCommand(
             new ExecutableID(Guid.NewGuid().ToString()),
