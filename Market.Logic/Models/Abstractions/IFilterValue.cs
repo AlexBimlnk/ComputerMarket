@@ -11,12 +11,7 @@ public interface IFilterValue : IEquatable<IFilterValue>
     public string Value { get; }
 
     /// <summary xml:lang="ru">
-    /// Колличество раз сколько значение свойства встречалось у каждого товара.
-    /// </summary>
-    public int Count { get; set; }
-
-    /// <summary xml:lang="ru">
-    /// Было ли выбран значение свойтва.
+    /// Было ли выбрано значение свойтва.
     /// </summary>
     public bool Selected { get; set; }
 }
