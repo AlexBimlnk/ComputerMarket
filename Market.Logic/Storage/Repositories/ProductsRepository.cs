@@ -141,7 +141,7 @@ public sealed class ProductsRepository : IItemsRepository, IProductsRepository
     /// <inheritdoc/>
     IEnumerable<Item> IRepository<Item>.GetEntities() =>
         _context.Items
-        .AsEnumerable()
+        .ToList()
         .Select(x => ConvertFromStorageModel(x));
 
     public async Task AddAsync(Product entity, CancellationToken token = default)
@@ -218,7 +218,7 @@ public sealed class ProductsRepository : IItemsRepository, IProductsRepository
     /// <inheritdoc/>
     public IEnumerable<Product> GetEntities() =>
         _context.Products
-        .AsEnumerable()
+        .ToList()
         .Select(x => ConvertFromStorageModel(x));
 
     /// <inheritdoc/>

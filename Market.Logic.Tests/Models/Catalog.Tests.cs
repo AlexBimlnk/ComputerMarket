@@ -24,7 +24,7 @@ public class CatalogTests
         
 
         // Act
-        var exception = Record.Exception(() => catalog = new Catalog(productRepository, itemRepository, logger));
+        var exception = Record.Exception(() => catalog = new Catalog(productRepository, itemRepository));
 
         // Assert
         exception.Should().BeNull();
@@ -39,7 +39,7 @@ public class CatalogTests
         var itemRepository = Mock.Of<IItemsRepository>();
 
         // Act
-        var exception = Record.Exception(() => _ = new Catalog(productRepository, itemRepository, logger: null!));
+        var exception = Record.Exception(() => _ = new Catalog(productRepository, itemRepository));
 
         // Assert
         exception.Should().BeOfType<ArgumentNullException>();
@@ -54,7 +54,7 @@ public class CatalogTests
         var itemRepository = Mock.Of<IItemsRepository>();
 
         // Act
-        var exception = Record.Exception(() => _ = new Catalog(productRepository: null!, itemRepository, logger));
+        var exception = Record.Exception(() => _ = new Catalog(productRepository: null!, itemRepository));
 
         // Assert
         exception.Should().BeOfType<ArgumentNullException>();
@@ -69,7 +69,7 @@ public class CatalogTests
         var productRepository = Mock.Of<IProductsRepository>();
 
         // Act
-        var exception = Record.Exception(() => _ = new Catalog(productRepository, itemRepository: null!, logger));
+        var exception = Record.Exception(() => _ = new Catalog(productRepository, itemRepository: null!));
 
         // Assert
         exception.Should().BeOfType<ArgumentNullException>();
@@ -96,7 +96,7 @@ public class CatalogTests
             .Returns(itemCollection)
             .Callback(() => itemRepositoryCallback++);
 
-        var catalog = new Catalog(productRepository, itemRepository.Object, logger);
+        var catalog = new Catalog(productRepository, itemRepository.Object);
 
         var expectedResult = itemCollection
             .Select(x => x.Type)
@@ -140,7 +140,7 @@ public class CatalogTests
         var expectedResult1 = products.Where(x => x.Item.Name == searcshString1).ToList();
         var expectedResult2 = Array.Empty<Product>();
 
-        var catalog = new Catalog(productRepository.Object, itemRepository, logger);
+        var catalog = new Catalog(productRepository.Object, itemRepository);
 
         // Act
         var result1 = catalog.GetProducts(catalogFilter1);
@@ -180,7 +180,7 @@ public class CatalogTests
         var catalogFilter = new CatalogFilter(typeId: type2.Id);
         var expectedResult = products.Where(x => x.Item.Type.Id == type2.Id).ToList();
 
-        var catalog = new Catalog(productRepository.Object, itemRepository, logger);
+        var catalog = new Catalog(productRepository.Object, itemRepository);
 
         // Act
         var result = catalog.GetProducts(catalogFilter);
@@ -234,7 +234,7 @@ public class CatalogTests
             TestHelper.GetOrdinaryProduct(item1)
         };
 
-        var catalog = new Catalog(productRepository.Object, itemRepository, logger);
+        var catalog = new Catalog(productRepository.Object, itemRepository);
 
         // Act
         var result = catalog.GetProducts(catalogFilter);
