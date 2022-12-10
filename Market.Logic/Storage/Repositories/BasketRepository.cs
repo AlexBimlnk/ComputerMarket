@@ -15,11 +15,20 @@ using TProduct = Models.Product;
 using TPropertyGroup = Models.PropertyGroup;
 using TProvider = Models.Provider;
 
+/// <summary xml:lang="ru">
+/// Репозиторий продуктов в корзинах пользователей.
+/// </summary>
 public sealed class BasketRepository : IBasketRepository
 {
     private readonly IRepositoryContext _context;
     private readonly ILogger<BasketRepository> _logger;
 
+    /// <summary xml:lang="ru">
+    /// Создаёт экземпляр класса <see cref="BasketRepository"/>.
+    /// </summary>
+    /// <param name="context" xml:lang="ru">Контекст базы данных.</param>
+    /// <param name="logger" xml:lang="ru">Логгер.</param>
+    /// <exception cref="ArgumentNullException" xml:lang="ru">Если один из параметров - <see langword="null"/>.</exception>
     public BasketRepository(IRepositoryContext context, ILogger<BasketRepository> logger)
     {
         _context = context ?? throw new ArgumentNullException(nameof(context));

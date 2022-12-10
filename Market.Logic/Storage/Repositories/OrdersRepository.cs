@@ -15,11 +15,20 @@ using TPropertyGroup = Models.PropertyGroup;
 using TProvider = Models.Provider;
 using TUser = Models.User;
 
+/// <summary xml:lang="ru">
+/// Репозиторий заказаов.
+/// </summary>
 public sealed class OrdersRepository : IOrderRepository
 {
     private readonly IRepositoryContext _context;
     private readonly ILogger<OrdersRepository> _logger;
 
+    /// <summary xml:lang="ru">
+    /// Создаёт экземпляр класса <see cref="Order"/>.
+    /// </summary>
+    /// <param name="context" xml:lang="ru">Контекст базы данных.</param>
+    /// <param name="logger" xml:lang="ru">Логгер.</param>
+    /// <exception cref="ArgumentNullException" xml:lang="ru">Если один из параметров - <see langword="null"/>.</exception>
     public OrdersRepository(IRepositoryContext context, ILogger<OrdersRepository> logger)
     {
         _context = context ?? throw new ArgumentNullException(nameof(context));
