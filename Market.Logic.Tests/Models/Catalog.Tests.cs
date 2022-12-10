@@ -177,7 +177,7 @@ public class CatalogTests
             .Returns(products)
             .Callback(() => repositoryCallback++);
 
-        var catalogFilter = TestHelper.GetOrdinaryCatalog(type: type2);
+        var catalogFilter = TestHelper.GetOrdinaryCatalog(typeId: type2.Id);
         var expectedResult = products.Where(x => x.Item.Type.Id == type2.Id).ToList();
 
         var catalog = new Catalog(productRepository.Object, itemRepository, logger);
@@ -228,7 +228,7 @@ public class CatalogTests
             .Callback(() => repositoryCallback++);
 
 
-        var catalogFilter = TestHelper.GetOrdinaryCatalog().WithValues(values);
+        var catalogFilter = TestHelper.GetOrdinaryCatalog(values: values);
         var expectedResult = new List<Product>()
         {
             TestHelper.GetOrdinaryProduct(item1)

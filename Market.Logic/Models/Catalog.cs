@@ -34,7 +34,7 @@ public sealed class Catalog : ICatalog
         .GetEntities()
         .Select(x => x.Type)
         .DistinctBy(x => x.Id)
-        .AsEnumerable();
+        .ToList();
 
     /// <inheritdoc/>
     public IEnumerable<Product> GetProducts(ICatalogFilter filter)
@@ -45,15 +45,12 @@ public sealed class Catalog : ICatalog
 
         if (filter.SearchString is not null)
         {
-            var searchString = filter.SearchString;
-            products = products.Where(x => x.Item.Name == searchString);
+            products = products.Where(x => x.Item.Name == filter.SearchString);
         }
 
-        if (filter.SelectedType is not null)
+        if (filter.SelectedTypeId is not null)
         {
-            var idOfType = filter.SelectedType.Id;
-
-            products = products.Where(x => x.Item.Type.Id == idOfType);
+            products = products.Where(x => x.Item.Type.Id == filter.SelectedTypeId);
         }
 
         if (filter.PropertiesWithValues.Any())
@@ -65,34 +62,6 @@ public sealed class Catalog : ICatalog
             .Any());
         }
 
-        return products.AsEnumerable();
-    }
-
-    /// <summary xml:lang="ru">
-    /// Возращает список свойств с их значениями выбранной колекции продктов.
-    /// </summary>
-    /// <param name="products" xml:lang="ru">Входная колекция продуктов.</param>
-    /// <returns xml:lang="ru">Коллеккция свойств с их значениями из колекции продуктов.</returns>
-    public static Dictionary<ID, IFileterProperty> GetProductsProperties(IEnumerable<Product> products)
-    {
-        var result = new Dictionary<ID, IFileterProperty>();
-
-        _ = products.SelectMany(x => x.Item.Properties)
-            .Where(x => x.Value is not null)
-            .Select(x =>
-        {
-            var property = new FilterProperty(x);
-            var value = new FilterValue(x.Value!);
-
-            if (!result.ContainsKey(x.Key))
-            {
-                result.Add(x.Key, property);
-            }
-
-            result[x.Key].AddValue(value);
-            return x;
-        }).ToList();
-
-        return result;
+        return products.ToList();
     }
 }
