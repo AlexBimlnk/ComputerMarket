@@ -5,16 +5,16 @@
 /// </summary>
 public interface ICatalog
 {
-    /// <summary>
-    /// Поис товаров по введенному имени.
+    /// <summary xml:lang="ru">
+    /// Возвращает все типы товаров.
     /// </summary>
-    /// <param name="name">Введенное название товара.</param>
-    /// <returns>Список найденных продутов.</returns>
-    public IProducts Search(string name);
+    /// <returns>Коллекция типов товаров.</returns>
+    public IEnumerable<ItemType> GetItemTypes();
 
-    public IEnumerable<ItemType> Type { get; }
-
-    public IProducts ProductOfType(ItemType type);
-
-    public IEnumerable<IFileterProperty> Properties(IProducts products); 
+    /// <summary xml:lang="ru">
+    /// Получение продуктов по заданому фильтру.
+    /// </summary>
+    /// <param name="filter">Фильтр для продутов.</param>
+    /// <returns>Коллекция продутов удовлятворяющих условиям фильтра.</returns>
+    public IEnumerable<Product> GetProducts(ICatalogFilter filter);
 }

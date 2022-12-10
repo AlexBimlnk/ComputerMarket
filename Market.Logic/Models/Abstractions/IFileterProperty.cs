@@ -1,13 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Market.Logic.Models.Abstractions;
 
-namespace Market.Logic.Models.Abstractions;
-internal interface IFileterProperty
+/// <summary xml:lang="ru">
+/// Свойство для фильтра товаров.
+/// </summary>
+public interface IFileterProperty : IEquatable<IFileterProperty>
 {
+    /// <summary xml:lang="ru">
+    /// Свойтво товара.
+    /// </summary>
     public ItemProperty Property { get; }
-    
-    public IEnumerable<IFilterValue> Values { get; }
+
+    /// <summary xml:lang="ru">
+    /// Все значения свойтва.
+    /// </summary>
+    public IReadOnlyDictionary<string, IFilterValue> Values { get; }
+
+    /// <summary xml:lang="ru">
+    /// Добавление нового значения к свойтву товара.
+    /// </summary>
+    /// <param name="value" xml:lang="ru">Значение свойтва товара.</param>
+    public void AddValue(IFilterValue value);
 }

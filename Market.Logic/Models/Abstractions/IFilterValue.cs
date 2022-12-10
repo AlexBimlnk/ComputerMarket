@@ -1,10 +1,22 @@
 ﻿namespace Market.Logic.Models.Abstractions;
 
-public interface IFilterValue
+/// <summary xml:lang="ru">
+/// Значение свойства товарва.
+/// </summary>
+public interface IFilterValue : IEquatable<IFilterValue>
 {
+    /// <summary xml:lang="ru">
+    /// Значение свойства.
+    /// </summary>
     public string Value { get; }
 
-    public int Count { get; }
+    /// <summary xml:lang="ru">
+    /// Колличество раз сколько значение свойства встречалось у каждого товара.
+    /// </summary>
+    public int Count { get; set; }
 
+    /// <summary xml:lang="ru">
+    /// Было ли выбран значение свойтва.
+    /// </summary>
     public bool Selected { get; set; }
 }
