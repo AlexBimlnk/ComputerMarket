@@ -8,6 +8,8 @@ using TProduct = Market.Logic.Storage.Models.Product;
 using TPropertyGroup = Market.Logic.Storage.Models.PropertyGroup;
 using TProvider = Market.Logic.Storage.Models.Provider;
 using TUser = Market.Logic.Storage.Models.User;
+using TOrder = Market.Logic.Storage.Models.Order;
+using TBasketItem = Market.Logic.Storage.Models.BasketItem;
 
 namespace Market.Logic.Tests;
 
@@ -179,9 +181,56 @@ public static class TestHelper
 
     #endregion
 
+    #region Order
+    
+    public static Order GetOrdinaryOrder(
+    long id = 1,
+    User? user = null,
+    DateTime? date = null,
+    IReadOnlySet<PurchasableEntity>? entities = null) =>
+    new(
+        new ID(id),
+        user ?? GetOrdinaryUser(),
+        date ?? DateTime.Now,
+        entities ?? new HashSet<PurchasableEntity>()
+        {
+                GetOrdinaryPurchasableEntity()
+        });
+
+    public static TOrder GetStorageOrder(Order order) =>
+        new()
+        {
+            Id = order.Key.Value,
+            StateId = (int)order.State,
+            UserId = order.Creator.Key.Value,
+            User = GetStorageUser(order.Creator),
+            Date = order.OrderDate,
+            Items = order.Items.Select(x => new Logic.Storage.Models.OrderItem()
+            {
+                OrderId = order.Key.Value,
+                ItemId = x.Product.Item.Key.Value,
+                ProviderId = x.Product.Provider.Key.Value,
+                Product = GetStorageProduct(x.Product),
+                Quantity = x.Quantity,
+                PaidPrice = x.Product.FinalCost
+            }).ToList()
+        };
+
     public static Order WithState(this Order order, OrderState state)
     {
         order.State = state;
         return order;
     }
+
+    public static TBasketItem GetStorageBasketItem(User user, PurchasableEntity entity) => new()
+    {
+        User = GetStorageUser(user),
+        UserId = user.Key.Value,
+        Quantity = entity.Quantity,
+        ItemId = entity.Product.Item.Key.Value,
+        ProviderId = entity.Product.Provider.Key.Value,
+        Product = GetStorageProduct(entity.Product)
+    };
+
+    #endregion
 }
