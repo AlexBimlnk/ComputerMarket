@@ -10,10 +10,7 @@
     @{
         foreach(var type in Model)
         {
-            <div class="form-group">
-                <h2>@type.Name</h2>
-                <a href="~/products/catalog?typeId=@type.Id">Перейти</a>
-            </div>
+            <partial name="Partial/_Category" model="type" />
         }
     }   
 </div>

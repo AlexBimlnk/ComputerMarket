@@ -1,0 +1,8 @@
+﻿@model Market.Logic.Models.Product;
+
+<div class="form-floating">
+    <h3>@Model.Item.Key</h3> <br/>
+    <h3>@Model.Item.Name</h3> <br/>
+    <h3>@Model.FinalCost</h3> <br/>
+<a href="~/products/product?itemId=@Model.Item.Key.Value&&providerId=@Model.Provider.Key.Value">Подробнее</a>
+</div>
