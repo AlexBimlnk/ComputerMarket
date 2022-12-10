@@ -97,7 +97,6 @@ public class ReportBuilderTests
             new Order(
                 new ID(1),
                 TestHelper.GetOrdinaryUser(),
-                DateTime.Now,
                 new HashSet<PurchasableEntity>()
                 {
                     new PurchasableEntity(
@@ -110,7 +109,6 @@ public class ReportBuilderTests
             new Order(
                 new ID(1),
                 TestHelper.GetOrdinaryUser(),
-                DateTime.Now,
                 new HashSet<PurchasableEntity>()
                 {
                     new PurchasableEntity(
@@ -129,7 +127,6 @@ public class ReportBuilderTests
             new Order(
                 new ID(1),
                 TestHelper.GetOrdinaryUser(),
-                DateTime.Now,
                 new HashSet<PurchasableEntity>()
                 {
                     new PurchasableEntity(

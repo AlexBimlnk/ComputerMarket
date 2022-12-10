@@ -40,9 +40,49 @@ public class OrderTests
         // Assert
         exception.Should().BeNull();
         order.Creator.Should().Be(user);
+        order.OrderDate.Should().Be(date);
         order.State.Should().Be(OrderState.PaymentWait);
         order.Items.Should().BeEquivalentTo(entities, opt => opt.WithStrictOrdering());
-        order.OrderDate.Should().Be(date);
+    }
+
+    [Fact(DisplayName = $"The {nameof(Order)} can be created without date.")]
+    [Trait("Category", "Unit")]
+    public void CanBeCreatedWithoutDate()
+    {
+        // Arrange
+        Order order = null!;
+        //var date = DateTime.Now;
+        var id = new ID(1);
+        var user = TestHelper.GetOrdinaryUser();
+        var entities = new PurchasableEntity[]
+        {
+            TestHelper.GetOrdinaryPurchasableEntity(
+                TestHelper.GetOrdinaryProduct(
+                    TestHelper.GetOrdinaryItem(
+                        1,
+                        name: "Item1"),
+                    price: 20m,
+                    quantity: 5),
+                1),
+
+            TestHelper.GetOrdinaryPurchasableEntity(
+                TestHelper.GetOrdinaryProduct(
+                    TestHelper.GetOrdinaryItem(
+                        2,
+                        name: "Item2"),
+                    price: 60m,
+                    quantity: 10),
+                3)
+        }.ToHashSet();
+
+        // Act
+        var exception = Record.Exception(() => order = new Order(id, user, entities));
+
+        // Assert
+        exception.Should().BeNull();
+        order.Creator.Should().Be(user);
+        order.State.Should().Be(OrderState.PaymentWait);
+        order.Items.Should().BeEquivalentTo(entities, opt => opt.WithStrictOrdering());
     }
 
     [Fact(DisplayName = $"The {nameof(Order)} cannot be created without {nameof(User)}.")]
@@ -72,7 +112,7 @@ public class OrderTests
         }.ToHashSet();
 
         // Act
-        var exception = Record.Exception(() => _ = new Order(new ID(1), user: null!, DateTime.Now, entities));
+        var exception = Record.Exception(() => _ = new Order(new ID(1), user: null!, entities));
 
         // Assert
         exception.Should().BeOfType<ArgumentNullException>();
@@ -86,7 +126,7 @@ public class OrderTests
         var user = TestHelper.GetOrdinaryUser();
 
         // Act
-        var exception = Record.Exception(() => _ = new Order(new ID(1), user, DateTime.Now, entities: null!));
+        var exception = Record.Exception(() => _ = new Order(new ID(1), user, entities: null!));
 
         // Assert
         exception.Should().BeOfType<ArgumentNullException>();
@@ -127,7 +167,7 @@ public class OrderTests
         .ToHashSet();
 
         // Act
-        var exception = Record.Exception(() => _ = new Order(new ID(1), user, DateTime.Now, entities));
+        var exception = Record.Exception(() => _ = new Order(new ID(1), user, entities));
 
         // Assert
         exception.Should().BeOfType<InvalidOperationException>();
@@ -160,7 +200,7 @@ public class OrderTests
                 3)
         }.ToHashSet();
 
-        var order = new Order(new ID(1), user, DateTime.Now, entities);
+        var order = new Order(new ID(1), user, entities);
         var expectedResult = entities.Select(x => x.Product.FinalCost * x.Quantity).Sum();
 
         // Act
