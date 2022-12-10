@@ -13,6 +13,9 @@ public sealed class FilterValue : IFilterValue
     /// <param name="value" xml:lang="ru">Значение свойства.</param>
     public FilterValue(string value)
     {
+        if (string.IsNullOrWhiteSpace(value))
+            throw new ArgumentException($"Value of {nameof(value)} can't be empty or null or contains only white spaces");
+
         Value = value;
         Count = 1;
         Selected = false;

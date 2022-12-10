@@ -1,4 +1,6 @@
-﻿using Market.Logic.Models;
+﻿using System.ComponentModel.DataAnnotations;
+
+using Market.Logic.Models;
 
 using ItemDescription = Market.Logic.Storage.Models.ItemDescription;
 using TItem = Market.Logic.Storage.Models.Item;
@@ -70,7 +72,7 @@ public static class TestHelper
 
     public static PropertyGroup GetOrdinaryPropertyGroup() => new(id: new ID(1), "Some property Group");
 
-    public static ItemType GetOrdinaryItemType() => new(id: 1, "Som item type");
+    public static ItemType GetOrdinaryItemType(int id = 1, string name = "Som item type") => new(id, name);
 
     public static ItemProperty GetOrdinaryItemProperty(
         long id = 1, 
@@ -176,6 +178,34 @@ public static class TestHelper
 
     public static PurchasableEntity GetOrdinaryPurchasableEntity(Product? product = null, int quantity = 3) => 
         new(product ?? GetOrdinaryProduct(), quantity);
+
+    #endregion
+
+    #region Filter
+
+    public static FilterValue GetOrdinaryFilterValue(string value = "value") => new(value);
+
+    public static FilterValue WithCount(this FilterValue value, int count)
+    {
+        value.Count = count;
+        return value;
+    }
+
+    public static CatalogFilter GetOrdinaryCatalog(string? searchString = null, ItemType? type = null) => new()
+    {
+        SearchString = searchString,
+        SelectedType= type,
+    };
+
+    public static CatalogFilter WithValues(this CatalogFilter catalog, ISet<(ID, string)> values)
+    {
+        foreach(var item in values)
+        {
+            catalog.PropertiesWithValues.Add(item);
+        }
+
+        return catalog;
+    }
 
     #endregion
 }
