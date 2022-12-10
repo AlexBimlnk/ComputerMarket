@@ -135,8 +135,8 @@ public class CatalogTests
 
         var searcshString1 = "Name2";
         var searcshString2 = "NotExsistingName";
-        var catalogFilter1 = TestHelper.GetOrdinaryCatalog(searcshString1);
-        var catalogFilter2 = TestHelper.GetOrdinaryCatalog(searcshString2);
+        var catalogFilter1 = new CatalogFilter(searcshString1);
+        var catalogFilter2 = new CatalogFilter(searcshString2);
         var expectedResult1 = products.Where(x => x.Item.Name == searcshString1).ToList();
         var expectedResult2 = Array.Empty<Product>();
 
@@ -177,7 +177,7 @@ public class CatalogTests
             .Returns(products)
             .Callback(() => repositoryCallback++);
 
-        var catalogFilter = TestHelper.GetOrdinaryCatalog(typeId: type2.Id);
+        var catalogFilter = new CatalogFilter(typeId: type2.Id);
         var expectedResult = products.Where(x => x.Item.Type.Id == type2.Id).ToList();
 
         var catalog = new Catalog(productRepository.Object, itemRepository, logger);
@@ -228,7 +228,7 @@ public class CatalogTests
             .Callback(() => repositoryCallback++);
 
 
-        var catalogFilter = TestHelper.GetOrdinaryCatalog(values: values);
+        var catalogFilter = new CatalogFilter(values: values);
         var expectedResult = new List<Product>()
         {
             TestHelper.GetOrdinaryProduct(item1)

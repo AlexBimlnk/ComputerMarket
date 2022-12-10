@@ -33,8 +33,7 @@ public sealed class Catalog : ICatalog
         _itemRepository
         .GetEntities()
         .Select(x => x.Type)
-        .DistinctBy(x => x.Id)
-        .ToList();
+        .DistinctBy(x => x.Id);
 
     /// <inheritdoc/>
     public IEnumerable<Product> GetProducts(ICatalogFilter filter)
@@ -45,7 +44,7 @@ public sealed class Catalog : ICatalog
 
         if (filter.SearchString is not null)
         {
-            products = products.Where(x => x.Item.Name == filter.SearchString);
+            products = products.Where(x => x.Item.Name.Contains(filter.SearchString));
         }
 
         if (filter.SelectedTypeId is not null)
@@ -62,6 +61,6 @@ public sealed class Catalog : ICatalog
             .Any());
         }
 
-        return products.ToList();
+        return products;
     }
 }

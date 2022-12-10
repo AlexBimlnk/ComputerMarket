@@ -39,8 +39,8 @@ public class FilterPropertyTests
     {
         // Arrange
         var property = new FilterProperty(TestHelper.GetOrdinaryItemProperty());
-        var value1 = TestHelper.GetOrdinaryFilterValue();
-        var value2 = TestHelper.GetOrdinaryFilterValue();
+        var value1 = new FilterValue("value1");
+        var value2 = new FilterValue("value1");
 
         var expectedResult = new HashSet<IFilterValue>()
         {

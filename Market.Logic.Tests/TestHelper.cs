@@ -186,17 +186,4 @@ public static class TestHelper
         order.State = state;
         return order;
     }
-
-    #region Filter
-
-    public static FilterValue GetOrdinaryFilterValue(string value = "value") => new(value);
-
-    public static CatalogFilter GetOrdinaryCatalog(
-        string? searchString = null, 
-        int? typeId = null, 
-        IReadOnlySet<(ID, string)>? values = null) => 
-        
-        new(searchString, typeId, values);
-
-    #endregion
 }
