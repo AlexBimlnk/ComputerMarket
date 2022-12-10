@@ -1,4 +1,6 @@
-﻿using Market.Logic.Models;
+﻿using System.ComponentModel.DataAnnotations;
+
+using Market.Logic.Models;
 
 using ItemDescription = Market.Logic.Storage.Models.ItemDescription;
 using TItem = Market.Logic.Storage.Models.Item;
@@ -72,7 +74,7 @@ public static class TestHelper
 
     public static PropertyGroup GetOrdinaryPropertyGroup() => new(id: new ID(1), "Some property Group");
 
-    public static ItemType GetOrdinaryItemType() => new(id: 1, "Som item type");
+    public static ItemType GetOrdinaryItemType(int id = 1, string name = "Som item type") => new(id, name);
 
     public static ItemProperty GetOrdinaryItemProperty(
         long id = 1, 
