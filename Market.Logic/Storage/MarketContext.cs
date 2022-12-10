@@ -24,6 +24,8 @@ public sealed class MarketContext : DbContext
     {
         optionsBuilder
             .UseLazyLoadingProxies();
+        AppContext.
+            SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
         base.OnConfiguring(optionsBuilder);
     }
@@ -395,17 +397,12 @@ public sealed class MarketContext : DbContext
                 .WithMany(d => d.Items)
                 .HasForeignKey(d => d.OrderId)
                 .OnDelete(DeleteBehavior.ClientCascade)
-                .HasConstraintName("order_fill_order_id_fkey");
+                .HasConstraintName("order_fill_product_id_fkey");
 
-            entity.HasOne(d => d.Item)
+            entity.HasOne(d => d.Product)
                 .WithMany()
-                .HasForeignKey(d => d.ItemId)
+                .HasForeignKey(d => new{ d.ItemId, d.ProviderId })
                 .HasConstraintName("order_fill_item_id_fkey");
-
-            entity.HasOne(d => d.Provider)
-                .WithMany()
-                .HasForeignKey(d => d.ProviderId)
-                .HasConstraintName("order_fill_provider_id_fkey");
         });
 
         modelBuilder.Entity<BasketItem>(entity =>
@@ -423,15 +420,10 @@ public sealed class MarketContext : DbContext
 
             entity.Property(e => e.Quantity).HasColumnName("quantity");
 
-            entity.HasOne(d => d.Item)
+            entity.HasOne(d => d.Product)
                 .WithMany()
-                .HasForeignKey(d => d.ItemId)
-                .HasConstraintName("basket_items_item_id_fkey");
-
-            entity.HasOne(d => d.Provider)
-                .WithMany()
-                .HasForeignKey(d => d.ProviderId)
-                .HasConstraintName("basket_items_provider_id_fkey");
+                .HasForeignKey(d => new { d.ItemId, d.ProviderId })
+                .HasConstraintName("basket_items_product_id_fkey");
 
             entity.HasOne(d => d.User)
                 .WithMany()

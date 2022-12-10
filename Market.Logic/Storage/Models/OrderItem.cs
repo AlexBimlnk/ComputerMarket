@@ -13,7 +13,5 @@ public class OrderItem
 
     public virtual Order Order { get; set; } = default!;
 
-    public virtual Item Item { get; set; } = default!;
-
-    public virtual Provider Provider { get; set; } = default!;
+    public virtual Product Product { get; set; } = default!;
 }

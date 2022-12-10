@@ -10,6 +10,7 @@ public class OrderTests
     {
         // Arrange
         Order order = null!;
+        var date = DateTime.Now;
         var id = new ID(1);
         var user = TestHelper.GetOrdinaryUser();
         var entities = new PurchasableEntity[]
@@ -29,6 +30,47 @@ public class OrderTests
                         2, 
                         name: "Item2"), 
                     price: 60m, 
+                    quantity: 10),
+                3)
+        }.ToHashSet();
+
+        // Act
+        var exception = Record.Exception(() => order = new Order(id, user, date, entities));
+
+        // Assert
+        exception.Should().BeNull();
+        order.Creator.Should().Be(user);
+        order.OrderDate.Should().Be(date);
+        order.State.Should().Be(OrderState.PaymentWait);
+        order.Items.Should().BeEquivalentTo(entities, opt => opt.WithStrictOrdering());
+    }
+
+    [Fact(DisplayName = $"The {nameof(Order)} can be created without date.")]
+    [Trait("Category", "Unit")]
+    public void CanBeCreatedWithoutDate()
+    {
+        // Arrange
+        Order order = null!;
+        //var date = DateTime.Now;
+        var id = new ID(1);
+        var user = TestHelper.GetOrdinaryUser();
+        var entities = new PurchasableEntity[]
+        {
+            TestHelper.GetOrdinaryPurchasableEntity(
+                TestHelper.GetOrdinaryProduct(
+                    TestHelper.GetOrdinaryItem(
+                        1,
+                        name: "Item1"),
+                    price: 20m,
+                    quantity: 5),
+                1),
+
+            TestHelper.GetOrdinaryPurchasableEntity(
+                TestHelper.GetOrdinaryProduct(
+                    TestHelper.GetOrdinaryItem(
+                        2,
+                        name: "Item2"),
+                    price: 60m,
                     quantity: 10),
                 3)
         }.ToHashSet();
