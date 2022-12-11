@@ -2,18 +2,27 @@
 
 <div class="col-md-4">
         <form method="post" asp-controller="Products" asp-action="Update">
-            <h2>Фильтр.</h2>
-            <hr />
             <div class="form-floating">
                 <input asp-for="TypeId" type="hidden"/>
+                <input asp-for="SearchString" type="hidden"/>
+                
             </div>
+        @{
+            foreach(var property in Model.Properties)
+            {
+                <div class="form-floating">
+                    <h4>@property.Value.Property.Name</h4>
+                </div>
+                foreach(var values in property.Value.Values)
+                {
+                    <partial name="Partial/_PropertyValue" model="values" /> 
+                }
+            }
+        }
+            <br />
+            <hr />
             <div class="form-floating">
-                <input asp-for="SearchString" class="form-control"/>
-                <label asp-for="SearchString"></label>
-            </div>
-        @*// ToDo: Options filter*@
-            <div>
-                <button id="updateSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Update</button>
+                <button id="updateSubmit" type="submit" class="w-80 btn btn-lg btn-primary">Update</button>
             </div>
         </form>
     </div>

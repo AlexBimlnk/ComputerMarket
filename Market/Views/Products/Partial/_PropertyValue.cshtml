@@ -1,0 +1,12 @@
+﻿@model Market.Logic.Models.Abstractions.IFilterValue
+
+<label class="pdsa-checkbox-group btn">
+
+  <span class="glyphicon glyphicon-unchecked"></span>
+
+    @Model.Value
+    @Html.CheckBoxFor(m => m.Selected, new { Value = @Model.Value + '_' + Model.PropertyID.Value.ToString() })
+
+    @*@Html.LabelFor(x => x.Genre, Model.Genre)*@
+
+</label>
