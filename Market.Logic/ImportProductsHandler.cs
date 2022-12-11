@@ -83,10 +83,10 @@ public sealed class ImportProductsHandler : IAPIRequestHandler<ImportMarker>
             else
             {
                 addOrUpdateProduct = new Product(
-                domainProduct.Item,
-                domainProduct.Provider,
-                new Price(product.Price),
-                product.Quantity);
+                    domainProduct.Item,
+                    domainProduct.Provider,
+                    new Price(product.Price),
+                    product.Quantity);
             }
 
             await _productRepository.AddOrUpdateAsync(addOrUpdateProduct);
