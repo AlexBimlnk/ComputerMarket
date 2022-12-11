@@ -6,6 +6,11 @@
 public interface IFilterValue : IEquatable<IFilterValue>
 {
     /// <summary xml:lang="ru">
+    /// Индетификатор свойства.
+    /// </summary>
+    public ID PropertyID { get; }
+
+    /// <summary xml:lang="ru">
     /// Значение свойства.
     /// </summary>
     public string Value { get; }
