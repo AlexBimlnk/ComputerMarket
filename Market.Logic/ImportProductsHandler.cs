@@ -22,7 +22,6 @@ public sealed class ImportProductsHandler : IAPIRequestHandler<ImportMarker>
     private readonly IItemsRepository _itemRepository;
     private readonly IKeyableRepository<Provider, ID> _providerRepository;
 
-
     /// <summary xml:lang = "ru">
     /// Создаёт экземлпяр класса <see cref="ImportProductsHandler"/>.
     /// </summary>

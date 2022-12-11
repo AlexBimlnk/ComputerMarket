@@ -28,6 +28,7 @@ public static class Registrations
         services
         .AddStorage()
         .AddConfigurations(configuration)
+        .AddLogic()
         .AddTransport();
 
     private static IServiceCollection AddConfigurations(this IServiceCollection services, IConfiguration configuration)
