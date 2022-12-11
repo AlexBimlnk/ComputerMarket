@@ -53,8 +53,23 @@ public class ProductsController : Controller
     [HttpPost]
     public IActionResult Update(CatalogViewModel model)
     {
+        var res = Request.Form["Selected"].ToString();
+
         var filter = new CatalogFilter(model.SearchString, model.TypeId);
+        model.Properties = GetProductsProperties(_catalog.GetProducts(filter));
+
+        filter = new CatalogFilter(model.SearchString, model.TypeId, GetPropertiesValues(res));
         model.Products = _catalog.GetProducts(filter);
+
+        foreach (var value in filter.PropertiesWithValues)
+        {
+            if (model.Properties.ContainsKey(value.Item1))
+            {
+                var newValue = new FilterValue(value.Item1, value.Item2);
+                newValue.Selected = true;
+                model.Properties[value.Item1].AddValue(newValue);
+            }
+        }
 
         return View("Catalog", model);
     }
@@ -63,7 +78,7 @@ public class ProductsController : Controller
     public IActionResult Product(long itemId, long providerId) 
     {
 
-        var product = _productsRepository.GetByKey((new ID(itemId), new ID(providerId)));
+        var product = _productsRepository.GetByKey((new ID(providerId), new ID(itemId)));
 
         if (product is null)
         {
@@ -90,7 +105,7 @@ public class ProductsController : Controller
             .ForEach(x =>
             {
                 var property = new FilterProperty(x);
-                var value = new FilterValue(x.Value!);
+                var value = new FilterValue(property.Property.Key, x.Value!);
 
                 if (!result.ContainsKey(x.Key))
                 {
@@ -99,6 +114,32 @@ public class ProductsController : Controller
 
                 result[x.Key].AddValue(value);
             });
+
+        return result;
+    }
+
+    public static IReadOnlySet<(ID, string)> GetPropertiesValues(string request)
+    {
+        var result = new HashSet<(ID, string)>();
+
+        foreach(var line in request.Split(',')) 
+        { 
+            if (!line.Contains("_"))
+            {
+                continue;
+            }
+
+            var value = line.Split('_');
+
+            var isSucces = long.TryParse(value[1], out var propertyId);
+
+            if (!isSucces)
+            {
+                continue;
+            }
+
+            result.Add((new ID(propertyId), value[0]));
+        }
 
         return result;
     }
