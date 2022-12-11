@@ -18,7 +18,6 @@ public class CatalogTests
     {
         // Arrange
         Catalog catalog = null!;
-        var logger = Mock.Of<ILogger<Catalog>>();
         var productRepository = Mock.Of<IProductsRepository>();
         var itemRepository = Mock.Of<IItemsRepository>();
         
@@ -30,27 +29,11 @@ public class CatalogTests
         exception.Should().BeNull();
     }
 
-    [Fact(DisplayName = $"The {nameof(Catalog)} can not be created when logger is null.")]
-    [Trait("Category", "Unit")]
-    public void CanNotBeCreatedWithNullLogger()
-    {
-        // Arrange
-        var productRepository = Mock.Of<IProductsRepository>();
-        var itemRepository = Mock.Of<IItemsRepository>();
-
-        // Act
-        var exception = Record.Exception(() => _ = new Catalog(productRepository, itemRepository));
-
-        // Assert
-        exception.Should().BeOfType<ArgumentNullException>();
-    }
-
     [Fact(DisplayName = $"The {nameof(Catalog)} can not be created when product repository is null.")]
     [Trait("Category", "Unit")]
     public void CanNotBeCreatedWithNullProductRepository()
     {
         // Arrange
-        var logger = Mock.Of<ILogger<Catalog>>();
         var itemRepository = Mock.Of<IItemsRepository>();
 
         // Act
@@ -65,7 +48,6 @@ public class CatalogTests
     public void CanNotBeCreatedWithNullItemRepository()
     {
         // Arrange
-        var logger = Mock.Of<ILogger<Catalog>>();
         var productRepository = Mock.Of<IProductsRepository>();
 
         // Act
@@ -80,7 +62,6 @@ public class CatalogTests
     public void CanGetItemTypes()
     {
         // Arrange
-        var logger = Mock.Of<ILogger<Catalog>>();
         var productRepository = Mock.Of<IProductsRepository>();
         var itemRepository = new Mock<IItemsRepository>(MockBehavior.Strict);
 
