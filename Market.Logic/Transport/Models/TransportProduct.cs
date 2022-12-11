@@ -5,7 +5,7 @@ namespace Market.Logic.Transport.Models;
 /// <summary xml:lang = "ru">
 /// Транспортная модель продукта.
 /// </summary>
-public sealed class Product
+public sealed class TransportProduct
 {
     /// <summary xml:lang = "ru">
     /// Внешний индетификатор продукта.
@@ -17,13 +17,13 @@ public sealed class Product
     /// Внутрений индетификатор продукта.
     /// </summary>
     [JsonProperty("internal_id", Required = Required.Always)]
-    public long? InternalID { get; set; }
+    public long InternalID { get; set; }
 
     /// <summary xml:lang = "ru">
     /// Название поставщика.
     /// </summary>
     [JsonProperty("provider_id", Required = Required.Always)]
-    public long? ProviderID { get; set; }
+    public long ProviderID { get; set; }
 
     /// <summary xml:lang = "ru">
     /// Цена продукта.

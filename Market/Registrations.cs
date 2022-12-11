@@ -1,6 +1,5 @@
 ﻿using General.Logic;
-using General.Logic.Commands;
-using General.Logic.Queries;
+using General.Storage;
 using General.Transport;
 
 using Market.Logic;
@@ -15,10 +14,10 @@ using Market.Logic.Storage.Repositories;
 using Market.Logic.Transport.Configuration;
 using Market.Logic.Transport.Configurations;
 using Market.Logic.Transport.Deserializers;
+using Market.Logic.Transport.Models;
 using Market.Logic.Transport.Senders;
 using Market.Logic.Transport.Serializers;
 
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
 namespace Market;
@@ -46,14 +45,16 @@ public static class Registrations
         => services
             .AddScoped<IRepositoryContext, RepositoryContext>()
             .AddScoped<IUsersRepository, UsersRepository>()
+            .AddScoped<IKeyableRepository<Provider, ID>, ProvidersRepository>()
             .AddScoped<IProductsRepository, ProductsRepository>()
+            .AddScoped<IItemsRepository, ProductsRepository>()
             .AddScoped<IOrderRepository, OrdersRepository>();
 
     private static IServiceCollection AddTransport(this IServiceCollection services)
         => services
             .AddSingleton<IDeserializer<string, TransactionRequestResult>, TransactionResultDeserializer>()
 
-            .AddSingleton<IDeserializer<string, IReadOnlyCollection<Product>>, ProductDeserializer>()
+            .AddSingleton<IDeserializer<string, IReadOnlyCollection<TransportProduct>>, ProductDeserializer>()
             .AddSingleton<IDeserializer<string, CommandResult>, CommandResultDeserializer>()
             .AddSingleton<IDeserializer<string, QueryResult<IReadOnlyCollection<Link>>>, ImportQueryResultDeserializer>()
 
