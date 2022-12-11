@@ -7,26 +7,38 @@ using Market.Models.Products;
 
 using Microsoft.AspNetCore.Mvc;
 
-using Microsoft.EntityFrameworkCore;
-
 namespace Market.Controllers;
+
+/// <summary xml:lang="ru">
+/// Контроллер для поучения информации об товарах.
+/// </summary>
 public class ProductsController : Controller
 {
-    private readonly IItemsRepository _itemsRepository;
     private readonly IProductsRepository _productsRepository;
     private readonly ILogger<ProductsController> _logger;
     private readonly Catalog _catalog;
-    private readonly MarketContext _context;
-
-    public ProductsController(IItemsRepository itemsRepository, IProductsRepository productsRepository, ILogger<ProductsController> logger, MarketContext context)
+    
+    /// <summary xml:lang="ru">
+    /// Создаёт экземпляр класса <see cref="ProductsController"/>.
+    /// </summary>
+    /// <param name="itemsRepository" xml:lang="ru">Репозиторий товаров.</param>
+    /// <param name="productsRepository" xml:lang="ru">Репозиторий продуктов.</param>
+    /// <param name="logger" xml:lang="ru">Логгер.</param>
+    /// <exception cref="ArgumentNullException" xml:lang="ru">Если один из параметров - <see langword="null"/>.</exception>
+    public ProductsController(
+        IItemsRepository itemsRepository, 
+        IProductsRepository productsRepository, 
+        ILogger<ProductsController> logger)
     {
-        _itemsRepository = itemsRepository ?? throw new ArgumentNullException(nameof(itemsRepository));
         _productsRepository = productsRepository ?? throw new ArgumentNullException(nameof(productsRepository));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _context = context;
         _catalog = new Catalog(productsRepository, itemsRepository);
     }
 
+    /// <summary xml:lang="ru">
+    /// Возвращает страницу со всеми категориями товаров.
+    /// </summary>
+    /// <returns xml:lang="ru"></returns>
     [HttpGet]
     public IActionResult Categories()
     {
@@ -34,6 +46,12 @@ public class ProductsController : Controller
         return View(types);
     }
 
+    /// <summary xml:lang="ru">
+    /// Возвращает страницу с каталогом товаров с заданными параметрами.
+    /// </summary>
+    /// <param name="searchString" xml:lang="ru">Посикаова строка.</param>
+    /// <param name="typeId" xml:lang="ru">Индетификатор категории товара.</param>
+    /// <returns xml:lang="ru"></returns>
     [HttpGet]
     public IActionResult Catalog(string? searchString = null, int? typeId = null)
     {
@@ -50,6 +68,11 @@ public class ProductsController : Controller
         });
     }
 
+    /// <summary xml:lang="ru">
+    /// Обновляет страницу с каталогом товаров.
+    /// </summary>
+    /// <param name="model" xml:lang="ru"></param>
+    /// <returns xml:lang="ru"></returns>
     [HttpPost]
     public IActionResult Update(CatalogViewModel model)
     {
@@ -74,6 +97,12 @@ public class ProductsController : Controller
         return View("Catalog", model);
     }
 
+    /// <summary xml:lang="ru">
+    /// Возвращает страницу продукта.
+    /// </summary>
+    /// <param name="itemId" xml:lang="ru"></param>
+    /// <param name="providerId" xml:lang="ru"></param>
+    /// <returns xml:lang="ru"></returns>
     [HttpGet]
     public IActionResult Product(long itemId, long providerId) 
     {
@@ -89,11 +118,6 @@ public class ProductsController : Controller
         return View(product);
     }
 
-    /// <summary xml:lang="ru">
-    /// Возращает список свойств с их значениями выбранной колекции продктов.
-    /// </summary>
-    /// <param name="products" xml:lang="ru">Входная колекция продуктов.</param>
-    /// <returns xml:lang="ru">Коллеккция свойств с их значениями из колекции продуктов.</returns>
     public static IReadOnlyDictionary<ID, IFilterProperty> GetProductsProperties(IEnumerable<Product> products)
     {
         var result = new Dictionary<ID, IFilterProperty>();
