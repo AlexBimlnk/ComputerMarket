@@ -154,43 +154,6 @@ public class ProductsRepositoryTests
         exception.Should().BeOfType<OperationCanceledException>();
     }
 
-    [Fact(DisplayName = $"The {nameof(ProductsRepository)} can delete item.")]
-    [Trait("Category", "Unit")]
-    public void CanDeleteItem()
-    {
-        // Arrange
-        var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
-        var logger = Mock.Of<ILogger<ProductsRepository>>();
-
-        var containsItem = TestHelper.GetOrdinaryItem();
-
-        var storageItem = TestHelper.GetStorageItem(containsItem);
-
-        var items = new Mock<DbSet<TItem>>(MockBehavior.Loose);
-
-        context.Setup(x => x.Items)
-            .Returns(items.Object);
-
-        var itemsRepository = new ProductsRepository(
-            context.Object,
-            logger);
-
-        // Act
-        var exception = Record.Exception(() =>
-            itemsRepository.Delete(containsItem));
-
-        // Assert
-        exception.Should().BeNull();
-
-        items.Verify(x =>
-            x.Remove(
-                It.Is<TItem>(p =>
-                    p.Id == storageItem.Id &&
-                    p.Name == storageItem.Name &&
-                    p.TypeId == storageItem.TypeId)),
-            Times.Once);
-    }
-
     [Fact(DisplayName = $"The {nameof(ProductsRepository)} cannot delete null item.")]
     [Trait("Category", "Unit")]
     public void CanNotDeleteWhenNullItem()
@@ -504,44 +467,6 @@ public class ProductsRepositoryTests
         exception.Should().BeOfType<OperationCanceledException>();
     }
 
-    [Fact(DisplayName = $"The {nameof(ProductsRepository)} can remove product.")]
-    [Trait("Category", "Unit")]
-    public void CanRemoveProduct()
-    {
-        // Arrange
-        var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
-        var logger = Mock.Of<ILogger<ProductsRepository>>();
-
-        var containsProduct = TestHelper.GetOrdinaryProduct();
-
-        var storageProduct = TestHelper.GetStorageProduct(containsProduct);
-
-        var products = new Mock<DbSet<TProduct>>(MockBehavior.Loose);
-
-        context.Setup(x => x.Products)
-            .Returns(products.Object);
-
-        var productRepository = new ProductsRepository(
-            context.Object,
-            logger);
-
-        // Act
-        var exception = Record.Exception(() =>
-            productRepository.Delete(containsProduct));
-
-        // Assert
-        exception.Should().BeNull();
-
-        products.Verify(x =>
-            x.Remove(
-                It.Is<TProduct>(p =>
-                    p.ItemId == storageProduct.ItemId &&
-                    p.ProviderId == storageProduct.ProviderId &&
-                    p.Quantity == storageProduct.Quantity &&
-                    p.ProviderCost == storageProduct.ProviderCost)),
-            Times.Once);
-    }
-
     [Fact(DisplayName = $"The {nameof(ProductsRepository)} cannot remove null product.")]
     [Trait("Category", "Unit")]
     public void CanNotRemoveNullProduct()
@@ -562,42 +487,6 @@ public class ProductsRepositoryTests
 
         // Assert
         exception.Should().BeOfType<ArgumentNullException>();
-    }
-
-    [Fact(DisplayName = $"The {nameof(ProductsRepository)} can remove product by key.")]
-    [Trait("Category", "Unit")]
-    public void CanRemoveProductByKey()
-    {
-        // Arrange
-        var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
-        var logger = Mock.Of<ILogger<ProductsRepository>>();
-
-        var containsProduct = TestHelper.GetOrdinaryProduct();
-
-        var storageProduct = TestHelper.GetStorageProduct(containsProduct);
-
-        var products = new Mock<DbSet<TProduct>>(MockBehavior.Loose);
-
-        context.Setup(x => x.Products)
-            .Returns(products.Object);
-
-        var productRepository = new ProductsRepository(
-            context.Object,
-            logger);
-
-        // Act
-        var exception = Record.Exception(() =>
-            productRepository.Delete(containsProduct));
-
-        // Assert
-        exception.Should().BeNull();
-
-        products.Verify(x =>
-            x.Remove(
-                It.Is<TProduct>(p =>
-                    p.ItemId == storageProduct.ItemId &&
-                    p.ProviderId == storageProduct.ProviderId)),
-            Times.Once);
     }
 
     [Fact(DisplayName = $"The {nameof(ProductsRepository)} can get all products.")]
