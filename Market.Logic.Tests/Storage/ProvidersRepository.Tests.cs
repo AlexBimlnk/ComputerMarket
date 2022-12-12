@@ -52,7 +52,7 @@ public class ProvidersRepositoryTests
         exception.Should().BeOfType<ArgumentNullException>();
     }
 
-    [Fact(DisplayName = $"The {nameof(ProvidersRepository)} can add product.")]
+    [Fact(DisplayName = $"The {nameof(ProvidersRepository)} can add provider.")]
     [Trait("Category", "Unit")]
     public async void CanAddProductAsync()
     {
@@ -94,7 +94,7 @@ public class ProvidersRepositoryTests
         providersCallback.Should().Be(1);
     }
 
-    [Fact(DisplayName = $"The {nameof(ProvidersRepository)} cannot add product when product is null.")]
+    [Fact(DisplayName = $"The {nameof(ProvidersRepository)} cannot add provider when product is null.")]
     [Trait("Category", "Unit")]
     public async void CanNotAddProductWhenProductIsNullAsync()
     {
@@ -114,7 +114,7 @@ public class ProvidersRepositoryTests
         exception.Should().BeOfType<ArgumentNullException>();
     }
 
-    [Fact(DisplayName = $"The {nameof(ProvidersRepository)} can cancel add product.")]
+    [Fact(DisplayName = $"The {nameof(ProvidersRepository)} can cancel add provider.")]
     [Trait("Category", "Unit")]
     public async void CanCancelAddProductAsync()
     {
@@ -139,7 +139,7 @@ public class ProvidersRepositoryTests
         exception.Should().BeOfType<OperationCanceledException>();
     }
 
-    [Fact(DisplayName = $"The {nameof(ProvidersRepository)} cannot contains product when product is null.")]
+    [Fact(DisplayName = $"The {nameof(ProvidersRepository)} cannot contains null provider.")]
     [Trait("Category", "Unit")]
     public async void CanNotContainsWhenProductIsNullAsync()
     {
@@ -159,7 +159,7 @@ public class ProvidersRepositoryTests
         exception.Should().BeOfType<ArgumentNullException>();
     }
 
-    [Fact(DisplayName = $"The {nameof(ProvidersRepository)} can cancel contains product.")]
+    [Fact(DisplayName = $"The {nameof(ProvidersRepository)} can cancel contains provider.")]
     [Trait("Category", "Unit")]
     public async void CanCancelContainsAsync()
     {
@@ -184,7 +184,7 @@ public class ProvidersRepositoryTests
         exception.Should().BeOfType<OperationCanceledException>();
     }
 
-    [Fact(DisplayName = $"The {nameof(ProvidersRepository)} can delete product.")]
+    [Fact(DisplayName = $"The {nameof(ProvidersRepository)} can delete provider.")]
     [Trait("Category", "Unit")]
     public void CanDeleteProduct()
     {
@@ -223,7 +223,7 @@ public class ProvidersRepositoryTests
             Times.Once);
     }
 
-    [Fact(DisplayName = $"The {nameof(ProvidersRepository)} cannot delete product when product is null.")]
+    [Fact(DisplayName = $"The {nameof(ProvidersRepository)} cannot delete null provider.")]
     [Trait("Category", "Unit")]
     public void CanNotDeleteWhenProductIsNull()
     {
@@ -243,7 +243,7 @@ public class ProvidersRepositoryTests
         exception.Should().BeOfType<ArgumentNullException>();
     }
 
-    [Fact(DisplayName = $"The {nameof(ProvidersRepository)} can get product by key.")]
+    [Fact(DisplayName = $"The {nameof(ProvidersRepository)} can get provider by key.")]
     [Trait("Category", "Unit")]
     public void CanGetByKey()
     {

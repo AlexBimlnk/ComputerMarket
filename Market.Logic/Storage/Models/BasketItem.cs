@@ -11,7 +11,5 @@ public class BasketItem
 
     public virtual User User { get; set; } = default!;
 
-    public virtual Provider Provider { get; set; } = default!;
-
-    public virtual Item Item { get; set; } = default!;
+    public virtual Product Product { get; set; } = default!;
 }

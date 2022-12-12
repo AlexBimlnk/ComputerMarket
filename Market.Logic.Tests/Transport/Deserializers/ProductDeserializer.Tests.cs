@@ -28,7 +28,7 @@ public class ProductDeserializerTests
     [Theory(DisplayName = $"The {nameof(ProductDeserializer)} can deserialize.")]
     [Trait("Category", "Unit")]
     [MemberData(nameof(DeserializeParameters))]
-    public void CanDeserialize(string rawSource, ICollection<Product> expectedResult)
+    public void CanDeserialize(string rawSource, ICollection<TransportProduct> expectedResult)
     {
         // Arrange
         var deserializer = new ProductDeserializer();
@@ -59,7 +59,7 @@ public class ProductDeserializerTests
         exception.Should().BeOfType<ArgumentException>();
     }
 
-    public readonly static TheoryData<string, IReadOnlyCollection<Product>> DeserializeParameters = new()
+    public readonly static TheoryData<string, IReadOnlyCollection<TransportProduct>> DeserializeParameters = new()
     {
         {
             /*lang=json,strict*/
@@ -69,13 +69,13 @@ public class ProductDeserializerTests
             ]",
             new []
             {
-                new Product() {ExternalID = 1, InternalID = 1, ProviderID = 1, Price = 100m, Quantity = 5 },
-                new Product() {ExternalID = 1, InternalID = 4, ProviderID = 2, Price = 55m, Quantity = 3 }
+                new TransportProduct() {ExternalID = 1, InternalID = 1, ProviderID = 1, Price = 100m, Quantity = 5 },
+                new TransportProduct() {ExternalID = 1, InternalID = 4, ProviderID = 2, Price = 55m, Quantity = 3 }
             }
         },
         {
             /*lang=json,strict*/@"[]",
-            Array.Empty<Product>()
+            Array.Empty<TransportProduct>()
         }
     };
 }

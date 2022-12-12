@@ -37,6 +37,23 @@ public sealed class Order : IKeyable<ID>
     }
 
     /// <summary xml:lang = "ru">
+    /// Создает экземпляр типа <see cref="Order"/> с ипользованием даты.
+    /// </summary>
+    /// <param name="user" xml:lang = "ru">Пользователь создавший заказ.</param>
+    /// <param name="date" xml:lang = "ru">Дата создания заказа.</param>
+    /// <param name="entities" xml:lang = "ru">Продукты для добавления в заказ.</param>
+    /// <exception cref="ArgumentNullException" xml:lang = "ru">
+    /// Если <paramref name="user"/> или <paramref name="entities"/> - <see langword="null"/>.
+    /// </exception>
+    /// <exception cref="InvalidOperationException" xml:lang = "ru">
+    /// Если в заказе имеются одинаковые продукты или продуктов нет.
+    /// </exception>
+    public Order(ID key, User user, DateTime date, IReadOnlySet<PurchasableEntity> entities) : this(key, user, entities) 
+    {
+        OrderDate = date;
+    }
+
+    /// <summary xml:lang = "ru">
     /// Позиции в заказе.
     /// </summary>
     public IReadOnlySet<PurchasableEntity> Items { get; }

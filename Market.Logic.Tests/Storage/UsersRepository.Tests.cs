@@ -182,43 +182,6 @@ public class UsersRepositoryTests
         exception.Should().BeOfType<OperationCanceledException>();
     }
 
-    [Fact(DisplayName = $"The {nameof(UsersRepository)} can delete user.")]
-    [Trait("Category", "Unit")]
-    public void CanDeleteUser()
-    {
-        // Arrange
-        var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
-        var logger = Mock.Of<ILogger<UsersRepository>>();
-
-        var users = new Mock<DbSet<TUser>>(MockBehavior.Loose);
-
-        context.Setup(x => x.Users)
-            .Returns(users.Object);
-
-        var userRepository = new UsersRepository(
-            context.Object,
-            logger);
-
-        var containsUser = TestHelper.GetOrdinaryUser();
-        var storageUser = TestHelper.GetStorageUser(containsUser);
-
-        // Act
-        var exception = Record.Exception(() =>
-            userRepository.Delete(containsUser));
-
-        // Assert
-        exception.Should().BeNull();
-
-        users.Verify(x =>
-            x.Remove(
-                It.Is<TUser>(p =>
-                    p.UserTypeId == storageUser.UserTypeId &&
-                    p.Login == storageUser.Login &&
-                    p.Email == storageUser.Email &&
-                    p.Password == storageUser.Password)),
-            Times.Once);
-    }
-
     [Fact(DisplayName = $"The {nameof(UsersRepository)} cannot delete user when user is null.")]
     [Trait("Category", "Unit")]
     public void CanNotDeleteWhenUserIsNull()

@@ -1,6 +1,5 @@
 ﻿using General.Logic;
 using General.Logic.Executables;
-using General.Storage;
 using General.Transport;
 
 using Market.Logic.Commands.Import;
@@ -8,6 +7,7 @@ using Market.Logic.Commands.WT;
 using Market.Logic.Markers;
 using Market.Logic.Models;
 using Market.Logic.Models.WT;
+using Market.Logic.Storage.Repositories;
 using Market.Logic.Transport.Configurations;
 
 using Microsoft.Extensions.Logging;
@@ -22,7 +22,7 @@ public sealed class TransactionRequestHandler : IAPIRequestHandler<WTMarker>
     private readonly ILogger<TransactionRequestHandler> _logger;
     private readonly IDeserializer<string, TransactionRequestResult> _deserializer;
     private readonly ISender<WTCommandConfigurationSender, WTCommand> _commandSender;
-    private readonly IKeyableRepository<Order, ID> _orderRepository;
+    private readonly IOrderRepository _orderRepository;
 
     /// <summary xml:lang = "ru">
     /// Создаёт экземлпяр класса <see cref="TransactionRequestHandler"/>.
@@ -36,7 +36,7 @@ public sealed class TransactionRequestHandler : IAPIRequestHandler<WTMarker>
     /// </exception>
     public TransactionRequestHandler(
         IDeserializer<string, TransactionRequestResult> deserializer,
-        IKeyableRepository<Order, ID> orderRepository,
+        IOrderRepository orderRepository,
         ISender<WTCommandConfigurationSender, WTCommand> commandSender,
         ILogger<TransactionRequestHandler> logger)
     {
@@ -53,19 +53,18 @@ public sealed class TransactionRequestHandler : IAPIRequestHandler<WTMarker>
         if (linkedOrder is null)
             throw new InvalidOperationException($"Order id: {result.TransactionRequestId} is not exist");
 
-        // Наверное здесь удалять заказы не нужно. А обновить его состояние.
-        // А удалять их по старости в бд тригером
-
         if (result.State is TransactionRequestState.WaitHandle or TransactionRequestState.Aborted)
         {
             linkedOrder.State = OrderState.Cancel;
-            // ToDo: UPdate order or delete order
+            _orderRepository.UpdateState(linkedOrder);
+            _orderRepository.Save();
         }
 
         else
         {
             linkedOrder.State = OrderState.Cancel;
-            // Todo: Update or delete
+            _orderRepository.UpdateState(linkedOrder);
+            _orderRepository.Save();
 
             await _commandSender.SendAsync(new RefundTransactionRequestCommand(
                 new ExecutableID(Guid.NewGuid().ToString()),
@@ -73,7 +72,7 @@ public sealed class TransactionRequestHandler : IAPIRequestHandler<WTMarker>
         }
     }
 
-    private async Task HandleHeldRequestStateAsync(TransactionRequestResult result)
+    private Task HandleHeldRequestStateAsync(TransactionRequestResult result)
     {
         var linkedOrder = _orderRepository.GetByKey(result.TransactionRequestId);
 
@@ -81,21 +80,22 @@ public sealed class TransactionRequestHandler : IAPIRequestHandler<WTMarker>
             throw new InvalidOperationException($"Order id: {result.TransactionRequestId} is not exist");
 
         linkedOrder.State = OrderState.ProviderAnswerWait;
-        // await _repo.Update
-        return;
+        _orderRepository.UpdateState(linkedOrder);
+        _orderRepository.Save();
+        return Task.CompletedTask;
     }
 
-    private async Task HandleAbortedRequestAsync(TransactionRequestResult result)
+    private Task HandleAbortedRequestAsync(TransactionRequestResult result)
     {
         var linkedOrder = _orderRepository.GetByKey(result.TransactionRequestId);
 
         if (linkedOrder is null)
             throw new InvalidOperationException($"Order id: {result.TransactionRequestId} is not exist");
 
-        // Обработка неудачной транзакции.
-        // По идее мы просто должны оповестить об этом пользователя.
-        // ToDo: оповещение о неудачной транзакции, возможно просто добавить новое состояние заказа
-        linkedOrder.State = OrderState.PaymentWait;
+        linkedOrder.State = OrderState.PaymentError;
+        _orderRepository.UpdateState(linkedOrder);
+        _orderRepository.Save();
+        return Task.CompletedTask;
     }
 
     /// <inheritdoc/>
@@ -110,8 +110,8 @@ public sealed class TransactionRequestHandler : IAPIRequestHandler<WTMarker>
 
         var transationRequestResult = _deserializer.Deserialize(request)!;
 
-       var handleTask = transationRequestResult switch
-       {
+        var handleTask = transationRequestResult switch
+        {
             { IsCancelled: true } n => HandleCancelledRequestAsync(transationRequestResult),
             { State: TransactionRequestState.Held } => HandleHeldRequestStateAsync(transationRequestResult),
             { State: TransactionRequestState.Aborted } => HandleAbortedRequestAsync(transationRequestResult),
