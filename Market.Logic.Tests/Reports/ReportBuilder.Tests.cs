@@ -124,7 +124,7 @@ public class ReportBuilderTests
                             TestHelper.GetOrdinaryProvider(9999),
                             120),
                         2)
-                }).WithState(OrderState.Ready),
+                }).WithState(OrderState.Received),
             new Order(
                 new ID(1),
                 TestHelper.GetOrdinaryUser(),
@@ -136,7 +136,7 @@ public class ReportBuilderTests
                             provider,
                             120),
                         5)
-                }).WithState(OrderState.Ready),
+                }).WithState(OrderState.Received),
         };
 
         var orderRepository = new Mock<IOrderRepository>(MockBehavior.Strict);
