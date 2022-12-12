@@ -134,6 +134,80 @@ public class ProvidersRepositoryIntegrationTests : DBIntegrationTestBase
         afterContains.Should().BeFalse();
     }
 
+    [Fact(DisplayName = $"The {nameof(ProvidersRepository)} can get all providers.")]
+    [Trait("Category", "Integration")]
+    public async Task CanGetEntitiesAsync()
+    {
+        // Arrange
+        var logger = Mock.Of<ILogger<ProvidersRepository>>();
+
+        var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
+        context.SetupGet(x => x.Providers)
+            .Returns(_marketContext.Providers);
+        context.Setup(x => x.SaveChanges())
+            .Callback(() => _marketContext.SaveChanges());
+
+        var provider1 = TestHelper.GetOrdinaryProvider();
+
+        await AddProviderAsync(provider1);
+
+        var repository = new ProvidersRepository(
+            context.Object,
+            logger);
+
+        var expectedResult = new Provider[]
+        {
+            TestHelper.GetOrdinaryProvider()
+        };
+
+        var result = repository.GetEntities().ToList();
+
+        // Assert
+        expectedResult.Should().BeEquivalentTo(result, opt => opt.WithStrictOrdering());
+    }
+
+    [Fact(DisplayName = $"The {nameof(ProvidersRepository)} can call multiple operations.")]
+    [Trait("Category", "Integration")]
+    public async Task CanCallMultipleMethodsAsync()
+    {
+        // Arrange
+        var logger = Mock.Of<ILogger<ProvidersRepository>>();
+
+        var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
+        context.SetupGet(x => x.Providers)
+            .Returns(_marketContext.Providers);
+        context.Setup(x => x.SaveChanges())
+            .Callback(() => _marketContext.SaveChanges());
+
+        var provider1 = TestHelper.GetOrdinaryProvider(1);
+        var provider2 = TestHelper.GetOrdinaryProvider(2, 
+            info: TestHelper.GetOrdinaryPaymentTransactionsInformation("2222222222", "22222222222222222222"));
+        
+        await AddProviderAsync(provider1);
+
+        var repository = new ProvidersRepository(
+            context.Object,
+            logger);
+
+
+        // Act
+        var exception = await Record.ExceptionAsync(async () =>
+        {
+            _ = await repository.ContainsAsync(provider1);
+
+            await repository.AddAsync(provider2);
+
+            repository.Save();
+
+            _ = repository.GetEntities();
+            _ = repository.GetByKey(provider2.Key);
+            _ = repository.GetByKey(provider2.Key);
+        });
+
+        // Assert
+        exception.Should().BeNull();
+    }
+
     private async Task AddProviderAsync(Provider provider)
     {
         var fromQuery = "providers (id, name, margin, bank_account, inn)";

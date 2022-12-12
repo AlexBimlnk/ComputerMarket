@@ -21,7 +21,7 @@ namespace Market.Controllers;
 public sealed class OrdersController : Controller
 {
     private readonly ILogger<OrdersController> _logger;
-    private readonly IKeyableRepository<Order, ID> _orderRepository;
+    private readonly IOrderRepository _orderRepository;
     private readonly IUsersRepository _userRepository;
     private readonly ISender<WTCommandConfigurationSender, WTCommand> _wtCommandSender;
 
@@ -45,7 +45,7 @@ public sealed class OrdersController : Controller
     /// </exception>
     public OrdersController(
         ILogger<OrdersController> logger,
-        IKeyableRepository<Order, ID> orderRepository,
+        IOrderRepository orderRepository,
         IUsersRepository usersRepository,
         ISender<WTCommandConfigurationSender, WTCommand> wtCommandSender)
     {
@@ -82,20 +82,21 @@ public sealed class OrdersController : Controller
     /// Возвращает форму с детальным описанием заказа.
     /// </summary>
     /// <returns> <see cref="ActionResult"/>. </returns>
-    public ActionResult Details(ID key) => View(_orderRepository.GetByKey(key));
+    public ActionResult Details(long key) => View(_orderRepository.GetByKey(new(key)));
 
     // GET: Orders/cancel
     /// <summary xml:lang = "ru">
     /// Отменяет заказ.
     /// </summary>
     /// <returns> <see cref="ActionResult"/>. </returns>
-    public async Task<ActionResult> CancelAsync(ID key)
+    public async Task<ActionResult> CancelAsync(long key)
     {
-        var order = _orderRepository.GetByKey(key)!;
+        var order = _orderRepository.GetByKey(new(key))!;
 
         order.State = OrderState.Cancel;
 
-        // todo: update order state
+        _orderRepository.UpdateState(order);
+        _orderRepository.Save();
 
         await _wtCommandSender.SendAsync(new CancelTransactionRequestCommand(
             new ExecutableID(Guid.NewGuid().ToString()),

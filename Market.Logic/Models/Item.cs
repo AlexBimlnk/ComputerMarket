@@ -20,7 +20,7 @@ public sealed class Item : IEquatable<Item>, IKeyable<ID>
     /// <exception cref="ArgumentException" xml:lang = "ru">
     ///  Если <paramref name="name"/> - состоит из пробелов, явялется пустой строкой или <see langword="null"/>.
     /// </exception>
-    public Item(ID id ,ItemType type, string name, IReadOnlyCollection<ItemProperty> properties)
+    public Item(ID id, ItemType type, string name, IReadOnlyCollection<ItemProperty> properties)
     {
         Type = type ?? throw new ArgumentNullException(nameof(type));
 

@@ -1,6 +1,7 @@
 ﻿using General.Storage;
 
 using Market.Logic.Models;
+using Market.Logic.Storage.Repositories;
 
 namespace Market.Logic.Reports;
 
@@ -10,7 +11,7 @@ namespace Market.Logic.Reports;
 public sealed class ReportBuilder : IReportBuilder
 {
     private BuilderConfig _config = new();
-    private readonly IKeyableRepository<Order, ID> _orderRepository;
+    private readonly IOrderRepository _orderRepository;
     private readonly IKeyableRepository<Provider, ID> _providerRepository;
 
     /// <summary>
@@ -22,7 +23,7 @@ public sealed class ReportBuilder : IReportBuilder
     /// Если любой из аргументов оказался <see langword="null"/>.
     /// </exception>
     public ReportBuilder(
-        IKeyableRepository<Order, ID> orderRepository,
+        IOrderRepository orderRepository,
         IKeyableRepository<Provider, ID> providerRepository)
     {
         _orderRepository = orderRepository ?? throw new ArgumentNullException(nameof(orderRepository));
@@ -32,7 +33,7 @@ public sealed class ReportBuilder : IReportBuilder
     private IReadOnlyDictionary<Product, long> CreateProductMap(Provider provider)
     {
         var possibleOrders = _orderRepository.GetEntities()
-            .Where(x => x.State == OrderState.Ready)
+            .Where(x => x.State == OrderState.Received)
             .Where(x =>
                 DateOnly.FromDateTime(x.OrderDate) >= _config.StartPeriod &&
                 DateOnly.FromDateTime(x.OrderDate) <= _config.EndPeriod)

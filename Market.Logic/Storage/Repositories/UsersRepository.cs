@@ -62,14 +62,21 @@ public sealed class UsersRepository : IUsersRepository
     {
         ArgumentNullException.ThrowIfNull(entity);
 
-        _context.Users.Remove(ConvertToStorageModel(entity));
+        var storage = ConvertToStorageModel(entity);
+
+        var storageItem = _context.Users.SingleOrDefault(x => x.Id == storage.Id);
+
+        if (storageItem is null)
+            return;
+
+        _context.Users.Remove(storageItem);
     }
 
     /// <inheritdoc/>
     public IEnumerable<User> GetEntities() =>
         _context.Users
         .AsEnumerable()
-        .Select(x => ConvertFromStorageModel(x))
+        .Select(x => ConvertFromStorageModel(x, _logger))
         .Where(x => x != null)!;
 
     /// <inheritdoc/>
@@ -79,7 +86,7 @@ public sealed class UsersRepository : IUsersRepository
     public User? GetByKey(ID key) =>
         _context.Users
             .Where(x => x.Id == key.Value)
-            .Select(x => ConvertFromStorageModel(x))
+            .Select(x => ConvertFromStorageModel(x, _logger))
             .SingleOrDefault();
 
     /// <inheritdoc/>
@@ -91,7 +98,7 @@ public sealed class UsersRepository : IUsersRepository
         if (user is null)
             return null;
 
-        return ConvertFromStorageModel(user);
+        return ConvertFromStorageModel(user, _logger);
     }
 
     /// <inheritdoc/>
@@ -131,7 +138,7 @@ public sealed class UsersRepository : IUsersRepository
         UserTypeId = (short)user.Type
     };
 
-    private User? ConvertFromStorageModel(TUser user)
+    private static User? ConvertFromStorageModel(TUser user, ILogger<UsersRepository> _logger)
     {
         if (!Enum.IsDefined(typeof(UserType), (int)user.UserTypeId))
         {

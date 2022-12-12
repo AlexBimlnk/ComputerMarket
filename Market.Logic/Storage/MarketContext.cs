@@ -125,7 +125,7 @@ public sealed class MarketContext : DbContext
             entity.HasOne(i => i.Item)
                 .WithMany(d => d.Description)
                 .HasForeignKey(d => d.ItemId)
-                .OnDelete(DeleteBehavior.ClientCascade)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("item_description_item_id_fkey");
 
             entity.HasOne(d => d.Property)

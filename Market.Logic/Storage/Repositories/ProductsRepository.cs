@@ -1,4 +1,6 @@
-﻿using General.Storage;
+﻿using System.Security.Cryptography.X509Certificates;
+
+using General.Storage;
 
 using Market.Logic.Models;
 
@@ -65,7 +67,9 @@ public sealed class ProductsRepository : IItemsRepository, IProductsRepository
 
         token.ThrowIfCancellationRequested();
 
-        return await _context.Items.ContainsAsync(ConvertToStorageModel(entity), token)
+        return await _context.Items
+            .AsNoTrackingWithIdentityResolution()
+            .ContainsAsync(ConvertToStorageModel(entity), token)
             .ConfigureAwait(false);
     }
 
@@ -74,26 +78,30 @@ public sealed class ProductsRepository : IItemsRepository, IProductsRepository
     {
         ArgumentNullException.ThrowIfNull(entity);
 
-        var storageItem = ConvertToStorageModel(entity);
+        var storage = ConvertToStorageModel(entity);
 
-        storageItem.Description = storageItem.Description.Select(x =>
-        {
-            x.Property = default!;
+        var nesStorage = _context.Items.SingleOrDefault(x => x.Id == storage.Id);
 
-            return x;
-        }).ToArray();
+        if (nesStorage is null)
+            return;
 
-        storageItem.Type = default!;
-
-        _context.Items.Remove(storageItem);
+        _context.Items.Remove(nesStorage);
     }
 
     /// <inheritdoc/>
-    public Item? GetByKey(ID key) =>
-        _context.Items
+    public Item? GetByKey(ID key)
+    {
+        var item = _context.Items
+            .AsNoTrackingWithIdentityResolution()
+            .Include(x => x.Type)
+            .Include(x => x.Description)
+            .ThenInclude(x => x.Property)
+            .ThenInclude(x => x.Group)
             .Where(x => x.Id == key.Value)
-            .Select(x => ConvertFromStorageModel(x))
             .SingleOrDefault();
+
+        return item is null ? null : ConvertFromStorageModel(item);
+    }
 
     /// <inheritdoc/>
     public void Update(Item item)
@@ -102,46 +110,50 @@ public sealed class ProductsRepository : IItemsRepository, IProductsRepository
 
         var storageItem = ConvertToStorageModel(item);
 
-        var groupTrackCheck = new HashSet<int>();
+        var newStorageItem = _context.Items.SingleOrDefault(x => x.Id == storageItem.Id);
 
-        if (!_context.ItemTypes.Contains(storageItem.Type))
+        if (newStorageItem is null)
+            return;
+
+        newStorageItem.Type.Name = storageItem.Type.Name;
+        newStorageItem.Name = storageItem.Name;
+
+        var description = new HashSet<ItemDescription>();
+
+        foreach (var properties in storageItem.Description)
         {
-            _context.ItemTypes.Add(storageItem.Type);
+            var itemDesciption = newStorageItem.Description.SingleOrDefault(x => x.PropertyId == properties.PropertyId);
+
+            if (itemDesciption is null)
+            {
+                itemDesciption = new ItemDescription()
+                {
+                    PropertyId = properties.PropertyId
+                };
+            }
+
+            itemDesciption.Property = _context.ItemProperties.Single(x => properties.PropertyId == x.Id);
+
+            itemDesciption.Property.Name = properties.Property.Name;
+            itemDesciption.PropertyValue = properties.PropertyValue;
+
+            description.Add(itemDesciption);
         }
 
-        storageItem.Description = storageItem.Description
-            .Select(x =>
-            {
-                if (x.Property.Group is not null &&
-                    !groupTrackCheck.Contains(x.Property.Group.Id))
-                {
-                    if (!_context.PropertyGroups.Contains(x.Property.Group))
-                    {
-                        _context.PropertyGroups.Add(x.Property.Group);
-                    }
+        newStorageItem.Description = description;
 
-                    groupTrackCheck.Add(x.Property.Group.Id);
-                }
-
-                if (x.Property.Group is not null)
-                    x.Property.Group = _context.PropertyGroups.Single(xx => xx.Id == x.Property.Group!.Id);
-
-                if (!_context.ItemProperties.Contains(x.Property))
-                {
-                    _context.ItemProperties.Add(x.Property);
-                }
-
-                return x;
-            })
-            .ToArray();
-
-        _context.Items.Update(storageItem);
+        _context.Items.Update(newStorageItem);
     }
 
     /// <inheritdoc/>
     IEnumerable<Item> IRepository<Item>.GetEntities() =>
         _context.Items
-        .ToList()
+        .AsNoTrackingWithIdentityResolution()
+        .Include(x => x.Description)
+        .ThenInclude(x => x.Property)
+        .ThenInclude(x => x.Group)
+        .Include(x => x.Type)
+        .AsEnumerable()
         .Select(x => ConvertFromStorageModel(x));
 
     public async Task AddAsync(Product entity, CancellationToken token = default)
@@ -184,7 +196,13 @@ public sealed class ProductsRepository : IItemsRepository, IProductsRepository
 
         var storage = ConvertToStorageModel(entity);
 
-        _context.Products.Remove(storage);
+        var storageEntity = _context.Products.SingleOrDefault(x => x.ItemId == storage.ItemId &&
+            x.ProviderId == storage.ProviderId);
+
+        if (storageEntity is null)
+            return;
+
+        _context.Products.Remove(storageEntity);
     }
 
     /// <inheritdoc/>
@@ -192,14 +210,25 @@ public sealed class ProductsRepository : IItemsRepository, IProductsRepository
     {
         ArgumentNullException.ThrowIfNull(products);
 
-        await Task.WhenAll(products.Select(async x => await AddOrUpdateAsync(x)));
+        foreach (var product in products)
+        {
+            await AddOrUpdateAsync(product);
+        }
     }
 
     /// <inheritdoc/>
     public Product? GetByKey((ID, ID) key)
     {
         var product = _context.Products
-            .Find(key.Item1.Value, key.Item2.Value);
+            .AsNoTrackingWithIdentityResolution()
+            .Include(x => x.Item)
+            .ThenInclude(x => x.Type)
+            .Include(x => x.Item)
+            .ThenInclude(x => x.Description)
+            .ThenInclude(x => x.Property)
+            .Include(x => x.Provider)
+            .SingleOrDefault(x => x.ProviderId == key.Item1.Value &&
+            x.ItemId == key.Item2.Value);
 
         return product is null ? null : ConvertFromStorageModel(product);
     }
@@ -218,7 +247,14 @@ public sealed class ProductsRepository : IItemsRepository, IProductsRepository
     /// <inheritdoc/>
     public IEnumerable<Product> GetEntities() =>
         _context.Products
-        .ToList()
+        .AsNoTrackingWithIdentityResolution()
+        .Include(x => x.Item)
+        .ThenInclude(x => x.Type)
+        .Include(x => x.Item)
+        .ThenInclude(x => x.Description)
+        .ThenInclude(x => x.Property)
+        .Include(x => x.Provider)
+        .AsEnumerable()
         .Select(x => ConvertFromStorageModel(x));
 
     /// <inheritdoc/>
