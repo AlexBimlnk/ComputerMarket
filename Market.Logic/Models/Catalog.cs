@@ -27,6 +27,7 @@ public sealed class Catalog : ICatalog
     public IEnumerable<ItemType> GetItemTypes() =>
         _itemRepository
         .GetEntities()
+        .ToList()
         .Select(x => x.Type)
         .DistinctBy(x => x.Id);
 

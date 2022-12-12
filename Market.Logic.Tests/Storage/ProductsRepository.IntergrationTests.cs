@@ -562,8 +562,8 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
             item2
         };
 
-        var productsResult = repository.GetEntities().ToList();
         var itemsResult = ((IItemsRepository)repository).GetEntities().ToList();
+        var productsResult = repository.GetEntities().ToList();
 
         // Assert
         productsResult.Should().BeEquivalentTo(expectedProducts, opt=> opt.WithStrictOrdering());
