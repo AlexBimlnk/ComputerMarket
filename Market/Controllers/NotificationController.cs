@@ -10,7 +10,7 @@ namespace Market.Controllers;
 /// Контроллер для по обработке оповещений от внешних сервисов.
 /// </summary>
 [ApiController]
-[Route("external/[controller]")]
+[Route("market/external/[controller]")]
 public class NotificationController : ControllerBase
 {
     private readonly ILogger<NotificationController> _logger;
