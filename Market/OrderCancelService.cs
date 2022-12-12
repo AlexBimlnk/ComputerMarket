@@ -2,6 +2,7 @@
 
 using Market.Logic;
 using Market.Logic.Models;
+using Market.Logic.Storage.Repositories;
 
 namespace WalletTransaction;
 
@@ -52,7 +53,7 @@ public sealed class OrderCancelService : BackgroundService
 
             using var scope = _serviceScopeFactory.CreateScope();
 
-            var orderRepository = scope.ServiceProvider.GetRequiredService<IKeyableRepository<Order, ID>>();
+            var orderRepository = scope.ServiceProvider.GetRequiredService<IOrderRepository>();
 
             var checkableOrder = orderRepository.GetEntities()
                 .Where(x => x.State is OrderState.PaymentWait);
@@ -66,7 +67,8 @@ public sealed class OrderCancelService : BackgroundService
                         order.Key);
 
                     order.State = OrderState.Cancel;
-                    // Todo: update order date
+                    orderRepository.UpdateState(order);
+                    orderRepository.Save();
                 }
             }
 
