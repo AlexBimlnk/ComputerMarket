@@ -14,7 +14,6 @@ namespace Market.Controllers;
 /// </summary>
 public class ProductsController : Controller
 {
-    private readonly IProductsRepository _productsRepository;
     private readonly ILogger<ProductsController> _logger;
     private readonly Catalog _catalog;
     
@@ -30,7 +29,8 @@ public class ProductsController : Controller
         IProductsRepository productsRepository, 
         ILogger<ProductsController> logger)
     {
-        _productsRepository = productsRepository ?? throw new ArgumentNullException(nameof(productsRepository));
+        ArgumentNullException.ThrowIfNull(itemsRepository);
+        ArgumentNullException.ThrowIfNull(productsRepository);
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _catalog = new Catalog(productsRepository, itemsRepository);
     }
@@ -107,7 +107,7 @@ public class ProductsController : Controller
     public IActionResult Product(long itemId, long providerId) 
     {
 
-        var product = _productsRepository.GetByKey((new ID(providerId), new ID(itemId)));
+        var product = _catalog.GetProductByKey((new ID(providerId), new ID(itemId)));
 
         if (product is null)
         {

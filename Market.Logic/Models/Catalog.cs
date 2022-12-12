@@ -58,4 +58,6 @@ public sealed class Catalog : ICatalog
 
         return products;
     }
+
+    public Product? GetProductByKey((ID, ID) key) => _productRepository.GetByKey(key); 
 }

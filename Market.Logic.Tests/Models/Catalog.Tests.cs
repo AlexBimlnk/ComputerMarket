@@ -223,4 +223,46 @@ public class CatalogTests
         // Arrange
         result.Should().BeEquivalentTo(expectedResult, opt => opt.WithStrictOrdering());
     }
+
+    [Fact(DisplayName = $"The {nameof(Catalog)} can get product by key.")]
+    [Trait("Category", "Unit")]
+    public void CanGetProductByKey()
+    {
+        // Arrange
+        var logger = Mock.Of<ILogger<Catalog>>();
+        var itemRepository = Mock.Of<IItemsRepository>();
+        var productRepository = new Mock<IProductsRepository>(MockBehavior.Strict);
+
+        var item1 = TestHelper.GetOrdinaryItem(id: 1, name: "Name1");
+        var item2 = TestHelper.GetOrdinaryItem(id: 2, name: "Name2");
+
+        var provider1 = TestHelper.GetOrdinaryProvider(1);
+        var provider2 = TestHelper.GetOrdinaryProvider(2);
+
+        var products = new Product[]
+        {
+            TestHelper.GetOrdinaryProduct(item1, provider1),
+            TestHelper.GetOrdinaryProduct(item2, provider1)
+        };
+
+        var expectedResult1 = TestHelper.GetOrdinaryProduct(item1, provider1);
+        var keyOfExsistingProduct = expectedResult1.Key;
+
+        var keyOfNotExsistingProduct = TestHelper.GetOrdinaryProduct(item2, provider2).Key;
+
+        var repositoryCallback = 0;
+        productRepository.Setup(x => x.GetByKey(It.IsAny<(ID, ID)>()))
+            .Returns<(ID, ID)>(key => products.SingleOrDefault(x => x.Item.Key == key.Item1 && x.Provider.Key == key.Item2))
+            .Callback(() => repositoryCallback++);
+
+        var catalog = new Catalog(productRepository.Object, itemRepository);
+
+        // Act
+        var result1 = catalog.GetProductByKey(keyOfExsistingProduct);
+        var result2 = catalog.GetProductByKey(keyOfNotExsistingProduct);
+
+        // Arrange
+        result1.Should().BeEquivalentTo(expectedResult1);
+        result2.Should().BeNull();
+    }
 }
