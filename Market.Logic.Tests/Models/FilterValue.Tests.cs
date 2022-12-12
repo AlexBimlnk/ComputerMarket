@@ -11,14 +11,16 @@ public class FilterValueTests
         // Arrange
         FilterValue value = null!;
         var stringValue = "value";
-        
+        var propertyId = new ID(1);
+
         // Act
-        var exception = Record.Exception(() => value = new FilterValue(stringValue));
+        var exception = Record.Exception(() => value = new FilterValue(propertyId,stringValue));
 
         // Assert
         exception.Should().BeNull();
         value.Value.Should().Be(stringValue);
         value.Selected.Should().BeFalse();
+        value.PropertyID.Should().Be(propertyId);
     }
 
     [Theory(DisplayName = $"The {nameof(FilterValue)} cannot be created with empty or null or white spaced value.")]
@@ -30,7 +32,7 @@ public class FilterValueTests
     public void CanNotCreatWhenNameIsBad(string value)
     {
         // Act
-        var exception = Record.Exception(() => _ = new FilterValue(value));
+        var exception = Record.Exception(() => _ = new FilterValue(new ID(1), value));
 
         // Assert
         exception.Should().BeOfType<ArgumentException>();

@@ -7,6 +7,7 @@ using Market.Logic.Commands;
 using Market.Logic.Commands.Import;
 using Market.Logic.Markers;
 using Market.Logic.Models;
+using Market.Logic.Models.Abstractions;
 using Market.Logic.Models.WT;
 using Market.Logic.Queries;
 using Market.Logic.Queries.Import;
@@ -41,7 +42,8 @@ public static class Registrations
         => services
             .AddScoped<IReportBuilder, ReportBuilder>()
             .AddScoped<IAPIRequestHandler<ImportMarker>, ImportProductsHandler>()
-            .AddScoped<IAPIRequestHandler<WTMarker>, TransactionRequestHandler>();
+            .AddScoped<IAPIRequestHandler<WTMarker>, TransactionRequestHandler>()
+            .AddScoped<ICatalog, Catalog>();
 
     private static IServiceCollection AddStorage(this IServiceCollection services)
         => services

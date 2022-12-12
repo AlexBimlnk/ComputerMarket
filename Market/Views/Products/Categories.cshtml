@@ -1,0 +1,16 @@
+﻿@model IEnumerable<Market.Logic.Models.ItemType>
+
+@{
+    ViewData["Title"] = "Categories";
+}
+<h1>Категории товаров</h1>
+
+<hr />
+<div class="row">
+    @{
+        foreach(var type in Model)
+        {
+            <partial name="Partial/_Category" model="type" />
+        }
+    }   
+</div>

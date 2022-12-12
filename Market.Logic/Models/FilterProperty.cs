@@ -28,8 +28,11 @@ public sealed class FilterProperty : IFilterProperty
     public IReadOnlySet<IFilterValue> Values => _values;
 
     /// <inheritdoc/>
-    public void AddValue(IFilterValue value) =>
-        _values.Add(value ?? throw new ArgumentNullException(nameof(value)));
+    public void AddValue(IFilterValue value)
+    {
+        _values.Remove(value ?? throw new ArgumentNullException(nameof(value)));
+        _values.Add(value);
+    }
 
     /// <inheritdoc/>
     public override int GetHashCode() => HashCode.Combine(Property);
