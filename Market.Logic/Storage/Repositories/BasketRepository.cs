@@ -72,8 +72,8 @@ public sealed class BasketRepository : IBasketRepository
 
         return _context.BasketItems
             .Where(x => x.UserId == user.Key.Value)
-            .Select(x => ConvertFromStorageModel(x))
-            .AsEnumerable();
+            .ToList()
+            .Select(x => ConvertFromStorageModel(x));
     }
 
     /// <inheritdoc/>

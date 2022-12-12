@@ -40,11 +40,12 @@ public sealed class OrdersRepository : IOrderRepository
     {
         ArgumentNullException.ThrowIfNull(entity);
 
-        var order = ConvertToStorageModel(entity);
-        order.User = default!;
-        order.Items = order.Items.Select(x => { x.Product = default!; return x; }).ToList();
-
         token.ThrowIfCancellationRequested();
+        
+        var order = ConvertToStorageModel(entity);
+        order.User = _context.Users.Single(x => x.Id == order.UserId);
+        order.Items = order.Items.Select(x => { x.Product = _context.Products.Single(xx => xx.ItemId == x.ItemId && xx.ProviderId == x.ProviderId); return x; }).ToList();
+
 
         await _context.Orders.AddAsync(order, token)
             .ConfigureAwait(false);
@@ -67,26 +68,41 @@ public sealed class OrdersRepository : IOrderRepository
         ArgumentNullException.ThrowIfNull(entity);
 
         var order = ConvertToStorageModel(entity);
-        order.User = default!;
-        order.Items = order.Items.Select(x => { x.Product = default!; return x; }).ToList();
 
-        _context.Orders.Remove(order);
+        var deleteOrder = _context.Orders.SingleOrDefault(x => x.Id == order.Id);
+
+        if (deleteOrder is null)
+            return;
+
+        _context.Orders.Remove(deleteOrder);
     }
     
     /// <inheritdoc/>
     public Order? GetByKey(ID key) =>
-        _context.Orders 
-            .ToList() //Todo: костыль
-            .Where(x => x.Id == key.Value)
-            .Select(x => ConvertFromStorageModel(x))
-            .SingleOrDefault();
+        _context.Orders
+        .AsNoTrackingWithIdentityResolution()
+        .Include(x => x.User)
+        .Include(x => x.Items)
+        .ThenInclude(x => x.Product)
+        .ThenInclude(x => x.Provider)
+        .Include(x => x.Items)
+        .ThenInclude(x => x.Product)
+        .ThenInclude(x => x.Item)
+        .ThenInclude(x => x.Type)
+        .Include(x => x.Items)
+        .ThenInclude(x => x.Product)
+        .ThenInclude(x => x.Item)
+        .ThenInclude(x => x.Description)
+        .ThenInclude(x => x.Property)
+        .Where(x => x.Id == key.Value)
+        .Select(x => ConvertFromStorageModel(x))
+        .SingleOrDefault();
 
     /// <inheritdoc/>
     public IEnumerable<Order> GetEntities() =>
          _context.Orders
-            .ToList() //Todo: костыль
-            .Select(x => ConvertFromStorageModel(x))
-            .Where(x => x != null)!;
+            .ToList()
+            .Select(x => ConvertFromStorageModel(x));
 
     /// <inheritdoc/>
     public void Save() => _context.SaveChanges();
@@ -96,7 +112,16 @@ public sealed class OrdersRepository : IOrderRepository
     {
         ArgumentNullException.ThrowIfNull(order);
 
-        _context.Orders.Update(ConvertToStorageModel(order));
+        var storageOrder = ConvertToStorageModel(order);
+
+        var newOrder = _context.Orders.SingleOrDefault(x => x.Id == order.Key.Value);
+
+        if (newOrder is null)
+            return;
+
+        newOrder.StateId = storageOrder.StateId;
+
+        _context.Orders.Update(newOrder);
     }
 
     #region Converters

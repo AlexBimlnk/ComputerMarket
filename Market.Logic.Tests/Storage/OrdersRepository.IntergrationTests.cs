@@ -28,6 +28,10 @@ public class OrdersRepositoryIntegrationTests : DBIntegrationTestBase
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
         context.SetupGet(x => x.Orders)
             .Returns(_marketContext.Orders);
+        context.SetupGet(x => x.Products)
+            .Returns(_marketContext.Products);
+        context.SetupGet(x => x.Users)
+            .Returns(_marketContext.Users);
 
         var userType = UserType.Customer;
 
@@ -245,6 +249,142 @@ public class OrdersRepositoryIntegrationTests : DBIntegrationTestBase
         var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
         context.SetupGet(x => x.Orders)
             .Returns(_marketContext.Orders);
+        context.SetupGet(x => x.Users)
+            .Returns(_marketContext.Users);
+        context.SetupGet(x => x.Products)
+            .Returns(_marketContext.Products);
+
+        context.Setup(x => x.SaveChanges())
+            .Callback(() => _marketContext.SaveChanges());
+
+        var userType = UserType.Customer;
+
+        var user = TestHelper.GetOrdinaryUser(type: userType);
+
+        var type = TestHelper.GetOrdinaryItemType();
+
+        var item = TestHelper.GetOrdinaryItem(1, type, "Item name", Array.Empty<ItemProperty>());
+
+        var provider = TestHelper.GetOrdinaryProvider();
+
+        var product = TestHelper.GetOrdinaryProduct(item, provider);
+
+        var date = DateTime.Now;
+
+        await AddUserTypeAsync(userType);
+        await AddUserAsync(user);
+        await AddItemTypeAsync(type);
+        await AddItemAsync(item);
+        await AddProviderAsync(provider);
+        await AddProductAsync(product);
+
+        var order = TestHelper.GetOrdinaryOrder(1, user: user, date, entities: new HashSet<PurchasableEntity>()
+        {
+            new PurchasableEntity(product, 1)
+        }).WithState(OrderState.PaymentWait);
+
+        var repository = new OrdersRepository(
+            context.Object,
+            logger);
+
+        await repository.AddAsync(order);
+        repository.Save();
+        
+        var updatedOrder = order.WithState(OrderState.ProviderAnswerWait);
+
+        // Act
+        var exception = Record.Exception(() =>
+        {
+            repository.UpdateState(updatedOrder);
+            repository.Save();
+        });
+
+        var newOrder = repository.GetByKey(updatedOrder.Key);
+
+        // Assert
+        exception.Should().BeNull();
+        newOrder.Should().BeEquivalentTo(updatedOrder, opt => opt.Excluding(x => x.OrderDate));
+    }
+
+    [Fact(DisplayName = $"The {nameof(OrdersRepository)} can get all orders.")]
+    [Trait("Category", "Integration")]
+    public async Task CanGetEntitiesAsync()
+    {
+        // Arrange
+        var logger = Mock.Of<ILogger<OrdersRepository>>();
+
+        var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
+        context.SetupGet(x => x.Orders)
+            .Returns(_marketContext.Orders);
+        context.SetupGet(x => x.Users)
+            .Returns(_marketContext.Users);
+        context.SetupGet(x => x.Products)
+            .Returns(_marketContext.Products);
+
+        context.Setup(x => x.SaveChanges())
+            .Callback(() => _marketContext.SaveChanges());
+
+        var userType = UserType.Customer;
+
+        var user = TestHelper.GetOrdinaryUser(type: userType);
+
+        var type = TestHelper.GetOrdinaryItemType();
+
+        var item = TestHelper.GetOrdinaryItem(1, type, "Item name", Array.Empty<ItemProperty>());
+
+        var provider = TestHelper.GetOrdinaryProvider();
+
+        var product = TestHelper.GetOrdinaryProduct(item, provider);
+        var date = DateTime.Now;
+
+        await AddUserTypeAsync(userType);
+        await AddUserAsync(user);
+        await AddItemTypeAsync(type);
+        await AddItemAsync(item);
+        await AddProviderAsync(provider);
+        await AddProductAsync(product);
+
+        var order = TestHelper.GetOrdinaryOrder(1, user: user, date, entities: new HashSet<PurchasableEntity>()
+        {
+            new PurchasableEntity(product, 1)
+        }).WithState(OrderState.PaymentWait);
+
+        var repository = new OrdersRepository(
+            context.Object,
+            logger);
+
+        await repository.AddAsync(order);
+        repository.Save();
+
+        var expectedResult = new Order[]
+        {
+            TestHelper.GetOrdinaryOrder(1, user: user, date, entities: new HashSet<PurchasableEntity>()
+            {
+                new PurchasableEntity(product, 1)
+            }).WithState(OrderState.PaymentWait)
+        };
+
+        // Acr
+        var result = repository.GetEntities().ToList();
+
+        // Assert
+        expectedResult.Should().BeEquivalentTo(result, opt => opt.WithStrictOrdering());
+    }
+
+    [Fact(DisplayName = $"The {nameof(OrdersRepository)} can call multiple operations.")]
+    [Trait("Category", "Integration")]
+    public async Task CanCallMultipleMethodsAsync()
+    {
+        // Arrange
+        var logger = Mock.Of<ILogger<OrdersRepository>>();
+
+        var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
+        context.SetupGet(x => x.Orders)
+            .Returns(_marketContext.Orders);
+        context.SetupGet(x => x.Users)
+            .Returns(_marketContext.Users);
+        context.SetupGet(x => x.Products)
+            .Returns(_marketContext.Products);
 
         context.Setup(x => x.SaveChanges())
             .Callback(() => _marketContext.SaveChanges());
@@ -268,31 +408,50 @@ public class OrdersRepositoryIntegrationTests : DBIntegrationTestBase
         await AddProviderAsync(provider);
         await AddProductAsync(product);
 
-        var order = TestHelper.GetOrdinaryOrder(1, user: user, entities: new HashSet<PurchasableEntity>()
+        var order1 = TestHelper.GetOrdinaryOrder(1, user: user, entities: new HashSet<PurchasableEntity>()
         {
             new PurchasableEntity(product, 1)
         }).WithState(OrderState.PaymentWait);
 
-        await AddOrderAsync(order);
+        var order2 = TestHelper.GetOrdinaryOrder(2, user: user, entities: new HashSet<PurchasableEntity>()
+        {
+            new PurchasableEntity(product, 1)
+        }).WithState(OrderState.PaymentWait);
 
         var repository = new OrdersRepository(
             context.Object,
             logger);
 
-        var updatedOrder = order.WithState(OrderState.ProviderAnswerWait);
-
         // Act
-        var exception = Record.Exception(() =>
+        var exception = await Record.ExceptionAsync(async () =>
         {
-            repository.UpdateState(updatedOrder);
+            await repository.AddAsync(order1);
             repository.Save();
-        });
+            _ = repository.GetEntities();
+            _ = repository.GetByKey(order1.Key);
+            _ = repository.GetByKey(order1.Key);
+            repository.UpdateState(order1);
 
-        var newOrder = repository.GetByKey(updatedOrder.Key);
+            repository.Save();
+
+            await repository.AddAsync(order2);
+
+            repository.Save();
+
+            _ = await repository.ContainsAsync(order2);
+            _ = repository.GetEntities();
+            _ = repository.GetByKey(order2.Key);
+            _ = repository.GetByKey(order2.Key);
+
+            repository.Delete(order2);
+
+            repository.Save();
+
+            var result = repository.GetEntities();
+        });
 
         // Assert
         exception.Should().BeNull();
-        newOrder.Should().BeEquivalentTo(updatedOrder);
     }
 
     private async Task AddProviderAsync(Provider provider)
