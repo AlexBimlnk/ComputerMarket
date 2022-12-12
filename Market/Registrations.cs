@@ -10,6 +10,7 @@ using Market.Logic.Models;
 using Market.Logic.Models.WT;
 using Market.Logic.Queries;
 using Market.Logic.Queries.Import;
+using Market.Logic.Reports;
 using Market.Logic.Storage.Repositories;
 using Market.Logic.Transport.Configuration;
 using Market.Logic.Transport.Configurations;
@@ -38,17 +39,18 @@ public static class Registrations
 
     private static IServiceCollection AddLogic(this IServiceCollection services)
         => services
+            .AddScoped<IReportBuilder, ReportBuilder>()
             .AddScoped<IAPIRequestHandler<ImportMarker>, ImportProductsHandler>()
-            .AddScoped<IAPIRequestHandler<WTMarker>, TransactionRequestHandler>()
-            .AddScoped<IUsersRepository, UsersRepository>();
+            .AddScoped<IAPIRequestHandler<WTMarker>, TransactionRequestHandler>();
 
     private static IServiceCollection AddStorage(this IServiceCollection services)
         => services
             .AddScoped<IRepositoryContext, RepositoryContext>()
             .AddScoped<IUsersRepository, UsersRepository>()
             .AddScoped<IKeyableRepository<Provider, ID>, ProvidersRepository>()
-            .AddScoped<IProductsRepository, ProductsRepository>()
-            .AddScoped<IItemsRepository, ProductsRepository>()
+            .AddScoped<ProductsRepository>()
+            .AddScoped<IProductsRepository>(x => x.GetRequiredService<ProductsRepository>())
+            .AddScoped<IItemsRepository>(x => x.GetRequiredService<ProductsRepository>())
             .AddScoped<IOrderRepository, OrdersRepository>();
 
     private static IServiceCollection AddTransport(this IServiceCollection services)
