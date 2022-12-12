@@ -15,24 +15,20 @@ namespace Market.Controllers;
 public class ProductsController : Controller
 {
     private readonly ILogger<ProductsController> _logger;
-    private readonly Catalog _catalog;
+    private readonly ICatalog _catalog;
     
     /// <summary xml:lang="ru">
     /// Создаёт экземпляр класса <see cref="ProductsController"/>.
     /// </summary>
-    /// <param name="itemsRepository" xml:lang="ru">Репозиторий товаров.</param>
-    /// <param name="productsRepository" xml:lang="ru">Репозиторий продуктов.</param>
+    /// <param name="catalog" xml:lang="ru">Каталог товаров.</param>
     /// <param name="logger" xml:lang="ru">Логгер.</param>
     /// <exception cref="ArgumentNullException" xml:lang="ru">Если один из параметров - <see langword="null"/>.</exception>
     public ProductsController(
-        IItemsRepository itemsRepository, 
-        IProductsRepository productsRepository, 
+        ICatalog catalog, 
         ILogger<ProductsController> logger)
     {
-        ArgumentNullException.ThrowIfNull(itemsRepository);
-        ArgumentNullException.ThrowIfNull(productsRepository);
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _catalog = new Catalog(productsRepository, itemsRepository);
+        _catalog = catalog ?? throw new ArgumentNullException(nameof(catalog));
     }
 
     /// <summary xml:lang="ru">
