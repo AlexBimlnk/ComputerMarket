@@ -226,6 +226,7 @@ public sealed class ProductsRepository : IItemsRepository, IProductsRepository
             .Include(x => x.Item)
             .ThenInclude(x => x.Description)
             .ThenInclude(x => x.Property)
+            .ThenInclude(x => x.Group)
             .Include(x => x.Provider)
             .SingleOrDefault(x => x.ProviderId == key.Item1.Value &&
             x.ItemId == key.Item2.Value);
@@ -253,6 +254,7 @@ public sealed class ProductsRepository : IItemsRepository, IProductsRepository
         .Include(x => x.Item)
         .ThenInclude(x => x.Description)
         .ThenInclude(x => x.Property)
+        .ThenInclude(x => x.Group)
         .Include(x => x.Provider)
         .AsEnumerable()
         .Select(x => ConvertFromStorageModel(x));

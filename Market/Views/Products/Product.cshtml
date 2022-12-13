@@ -1,0 +1,32 @@
+﻿@model Market.Logic.Models.Product
+@{
+    ViewData["Title"] =  Model.Item.Name;
+}
+
+<h1>@Model.Item.Name</h1>
+<hr />
+<div class="row">
+    <div class="col-5">
+        <img src="https://c.dns-shop.ru/thumb/st1/fit/wm/0/0/dc66529cf4a637f5283438c49abdaa67/9840f9bd000e456b5d97a36f3eefca09eab7aa1c0d7eae2bdaf11bd5c9c7d3c2.jpg.webp"
+             alt="IMAGE-MAIN-IMAGE" width="500"
+             height="500" />
+    </div>
+    <div class="form-group col-7">
+        <h2>@Model.FinalCost</h2>
+        <h3>@Model.Provider.Name</h3>
+        <button id="searchSubmit" type="submit" class="w-70 btn btn-lg btn-primary">Добавить в корзину</button>
+    </div>
+</div>
+<div class="row">
+    @{
+        foreach (var property in Model.Item.Properties)
+        {
+                        <div class="col-md-3">
+                            <h2><b>@property.Name</b></h2>
+                        </div>
+                        <div class="col-md-9">
+                            <h2>@property.Value</h2>
+                        </div>
+        }
+    }
+    </div>

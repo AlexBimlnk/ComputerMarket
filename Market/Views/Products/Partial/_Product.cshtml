@@ -1,0 +1,15 @@
+﻿@model Market.Logic.Models.Product;
+
+<hr />
+<div class="form-floating row">
+    <div class="col-4">
+        <img src="https://c.dns-shop.ru/thumb/st1/fit/320/250/45ef187f969e27a318c482b52627cf41/9840f9bd000e456b5d97a36f3eefca09eab7aa1c0d7eae2bdaf11bd5c9c7d3c2.jpg"
+          alt="item_image" />
+    </div>
+    <div class="col-6">
+        <h2>@Model.Item.Type.Name @Model.Item.Name</h2> <br />
+        <h5><i>@Model.Provider.Name</i></h5>  <br/>
+        <h3>@Model.FinalCost</h3> <br/>
+        <a href="~/products/product?itemId=@Model.Item.Key.Value&&providerId=@Model.Provider.Key.Value">Подробнее</a>
+    </div>
+</div>

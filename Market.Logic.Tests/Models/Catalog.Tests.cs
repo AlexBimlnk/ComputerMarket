@@ -18,31 +18,15 @@ public class CatalogTests
     {
         // Arrange
         Catalog catalog = null!;
-        var logger = Mock.Of<ILogger<Catalog>>();
         var productRepository = Mock.Of<IProductsRepository>();
         var itemRepository = Mock.Of<IItemsRepository>();
         
 
         // Act
-        var exception = Record.Exception(() => catalog = new Catalog(productRepository, itemRepository, logger));
+        var exception = Record.Exception(() => catalog = new Catalog(productRepository, itemRepository));
 
         // Assert
         exception.Should().BeNull();
-    }
-
-    [Fact(DisplayName = $"The {nameof(Catalog)} can not be created when logger is null.")]
-    [Trait("Category", "Unit")]
-    public void CanNotBeCreatedWithNullLogger()
-    {
-        // Arrange
-        var productRepository = Mock.Of<IProductsRepository>();
-        var itemRepository = Mock.Of<IItemsRepository>();
-
-        // Act
-        var exception = Record.Exception(() => _ = new Catalog(productRepository, itemRepository, logger: null!));
-
-        // Assert
-        exception.Should().BeOfType<ArgumentNullException>();
     }
 
     [Fact(DisplayName = $"The {nameof(Catalog)} can not be created when product repository is null.")]
@@ -50,11 +34,10 @@ public class CatalogTests
     public void CanNotBeCreatedWithNullProductRepository()
     {
         // Arrange
-        var logger = Mock.Of<ILogger<Catalog>>();
         var itemRepository = Mock.Of<IItemsRepository>();
 
         // Act
-        var exception = Record.Exception(() => _ = new Catalog(productRepository: null!, itemRepository, logger));
+        var exception = Record.Exception(() => _ = new Catalog(productRepository: null!, itemRepository));
 
         // Assert
         exception.Should().BeOfType<ArgumentNullException>();
@@ -65,11 +48,10 @@ public class CatalogTests
     public void CanNotBeCreatedWithNullItemRepository()
     {
         // Arrange
-        var logger = Mock.Of<ILogger<Catalog>>();
         var productRepository = Mock.Of<IProductsRepository>();
 
         // Act
-        var exception = Record.Exception(() => _ = new Catalog(productRepository, itemRepository: null!, logger));
+        var exception = Record.Exception(() => _ = new Catalog(productRepository, itemRepository: null!));
 
         // Assert
         exception.Should().BeOfType<ArgumentNullException>();
@@ -80,7 +62,6 @@ public class CatalogTests
     public void CanGetItemTypes()
     {
         // Arrange
-        var logger = Mock.Of<ILogger<Catalog>>();
         var productRepository = Mock.Of<IProductsRepository>();
         var itemRepository = new Mock<IItemsRepository>(MockBehavior.Strict);
 
@@ -96,7 +77,7 @@ public class CatalogTests
             .Returns(itemCollection)
             .Callback(() => itemRepositoryCallback++);
 
-        var catalog = new Catalog(productRepository, itemRepository.Object, logger);
+        var catalog = new Catalog(productRepository, itemRepository.Object);
 
         var expectedResult = itemCollection
             .Select(x => x.Type)
@@ -140,7 +121,7 @@ public class CatalogTests
         var expectedResult1 = products.Where(x => x.Item.Name == searcshString1).ToList();
         var expectedResult2 = Array.Empty<Product>();
 
-        var catalog = new Catalog(productRepository.Object, itemRepository, logger);
+        var catalog = new Catalog(productRepository.Object, itemRepository);
 
         // Act
         var result1 = catalog.GetProducts(catalogFilter1);
@@ -180,7 +161,7 @@ public class CatalogTests
         var catalogFilter = new CatalogFilter(typeId: type2.Id);
         var expectedResult = products.Where(x => x.Item.Type.Id == type2.Id).ToList();
 
-        var catalog = new Catalog(productRepository.Object, itemRepository, logger);
+        var catalog = new Catalog(productRepository.Object, itemRepository);
 
         // Act
         var result = catalog.GetProducts(catalogFilter);
@@ -234,12 +215,54 @@ public class CatalogTests
             TestHelper.GetOrdinaryProduct(item1)
         };
 
-        var catalog = new Catalog(productRepository.Object, itemRepository, logger);
+        var catalog = new Catalog(productRepository.Object, itemRepository);
 
         // Act
         var result = catalog.GetProducts(catalogFilter);
 
         // Arrange
         result.Should().BeEquivalentTo(expectedResult, opt => opt.WithStrictOrdering());
+    }
+
+    [Fact(DisplayName = $"The {nameof(Catalog)} can get product by key.")]
+    [Trait("Category", "Unit")]
+    public void CanGetProductByKey()
+    {
+        // Arrange
+        var logger = Mock.Of<ILogger<Catalog>>();
+        var itemRepository = Mock.Of<IItemsRepository>();
+        var productRepository = new Mock<IProductsRepository>(MockBehavior.Strict);
+
+        var item1 = TestHelper.GetOrdinaryItem(id: 1, name: "Name1");
+        var item2 = TestHelper.GetOrdinaryItem(id: 2, name: "Name2");
+
+        var provider1 = TestHelper.GetOrdinaryProvider(1);
+        var provider2 = TestHelper.GetOrdinaryProvider(2);
+
+        var products = new Product[]
+        {
+            TestHelper.GetOrdinaryProduct(item1, provider1),
+            TestHelper.GetOrdinaryProduct(item2, provider1)
+        };
+
+        var expectedResult1 = TestHelper.GetOrdinaryProduct(item1, provider1);
+        var keyOfExsistingProduct = expectedResult1.Key;
+
+        var keyOfNotExsistingProduct = TestHelper.GetOrdinaryProduct(item2, provider2).Key;
+
+        var repositoryCallback = 0;
+        productRepository.Setup(x => x.GetByKey(It.IsAny<(ID, ID)>()))
+            .Returns<(ID, ID)>(key => products.SingleOrDefault(x => x.Item.Key == key.Item1 && x.Provider.Key == key.Item2))
+            .Callback(() => repositoryCallback++);
+
+        var catalog = new Catalog(productRepository.Object, itemRepository);
+
+        // Act
+        var result1 = catalog.GetProductByKey(keyOfExsistingProduct);
+        var result2 = catalog.GetProductByKey(keyOfNotExsistingProduct);
+
+        // Arrange
+        result1.Should().BeEquivalentTo(expectedResult1);
+        result2.Should().BeNull();
     }
 }

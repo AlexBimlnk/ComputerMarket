@@ -1,0 +1,30 @@
+﻿@model Market.Models.Products.CatalogViewModel;
+
+@{
+    ViewData["Title"] = "Categories";
+}
+
+<form method="post" asp-controller="Products" asp-action="Update">
+    <input asp-for="TypeId" type="hidden" />
+    <div class="row">
+        <div class="col-md-5">
+            <input asp-for="SearchString" class="form-control" />
+            <label asp-for="SearchString" />    
+        </div>
+        <div class="col-md-2">
+            <button id="searchSubmit" type="submit" class="w-70 btn btn-lg">Поиск</button>
+        </div>
+    </div>
+</form>
+<div class="row">
+    <div class="col-md-8">
+        
+        @{
+            foreach(var product in Model.Products)
+            {
+                <partial name="Partial/_Product" model="product" /> 
+            }
+        }
+    </div>
+    <partial name="Partial/_Filter" model="Model" />
+</div>
