@@ -1,0 +1,13 @@
+﻿@model IEnumerable<Market.Logic.Models.PurchasableEntity>
+
+	<h2>Корзина:</h2>
+
+@{
+	foreach(var item in Model)
+	{
+		<p>
+			<a href="~/products/product?itemId=@item.Product.Item.Key.Value&&providerId=@item.Product.Provider.Key.Value">@item.Product.Item.Name</a>
+			@item.Quantity
+		</p>
+	}
+}
