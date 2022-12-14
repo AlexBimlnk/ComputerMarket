@@ -1,0 +1,58 @@
+﻿@model Market.Logic.ComputerBuilder.IComputerBuildResult;
+
+@{
+    ViewData["Title"] = "Builder";
+}
+
+<h1>Builder</h1>
+
+@using (Html.BeginForm("Build", "Builder", FormMethod.Post))
+{
+    <p>
+        <label>Процессоры</label><br />
+        @Html.DropDownList(
+            "processor",
+            new SelectList(ViewBag.Processors),
+            "Выберите процессор",
+            new { @class = "dropdown" })
+
+        <br /><label>Материнские платы</label><br />
+        @Html.DropDownList(
+            "motherboard",
+            new SelectList(ViewBag.MotherBoards),
+            "Выберите материнские платы",
+            new { @class = "dropdown" })
+    </p>
+    <p>
+        <input type="submit" value="Отправить" сlass="w-80 btn btn-lg btn-primary" />
+    </p>
+}
+
+@{
+    if (Model is not null)
+    {
+        if (Model.IsSucces)
+        {
+            @Html.Label("build_result", $"Build result: {Model.IsSucces}", new { style = "color: green;" })
+        }
+        else
+        {
+            @Html.Label("build_result", $"Build result: {Model.IsSucces}", new { style = "color: red;" })
+        }
+        
+        <dl class="row">
+            @foreach (var type in Model.ErrorsByType)
+            {
+                <dt class="col-sm-2">
+                    @Html.DisplayName(type.Key.Name)
+                </dt>
+                foreach (var error in type.Value)
+                {
+                    <dd>
+                        @error
+                    </dd>
+                }
+            }
+        </dl>
+    }
+}

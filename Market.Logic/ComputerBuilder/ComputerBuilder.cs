@@ -92,7 +92,7 @@ public sealed class ComputerBuilder : IComputerBuilder
     {
         public BuildResult(Dictionary<ItemType, List<string>> errors)
         {
-            ErrorsByType = (IReadOnlyDictionary<ItemType, IReadOnlyCollection<string>>)errors;
+            ErrorsByType = errors.ToDictionary(x => x.Key, x => (IReadOnlyCollection<string>)x.Value);
         }
 
         public bool IsSucces => !ErrorsByType.Any();

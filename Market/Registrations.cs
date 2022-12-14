@@ -5,6 +5,7 @@ using General.Transport;
 using Market.Logic;
 using Market.Logic.Commands;
 using Market.Logic.Commands.Import;
+using Market.Logic.ComputerBuilder;
 using Market.Logic.Markers;
 using Market.Logic.Models;
 using Market.Logic.Models.Abstractions;
@@ -43,7 +44,8 @@ public static class Registrations
             .AddScoped<IReportBuilder, ReportBuilder>()
             .AddScoped<IAPIRequestHandler<ImportMarker>, ImportProductsHandler>()
             .AddScoped<IAPIRequestHandler<WTMarker>, TransactionRequestHandler>()
-            .AddScoped<ICatalog, Catalog>();
+            .AddScoped<ICatalog, Catalog>()
+            .AddScoped<IComputerBuilder, ComputerBuilder>();
 
     private static IServiceCollection AddStorage(this IServiceCollection services)
         => services
@@ -53,7 +55,8 @@ public static class Registrations
             .AddScoped<ProductsRepository>()
             .AddScoped<IProductsRepository>(x => x.GetRequiredService<ProductsRepository>())
             .AddScoped<IItemsRepository>(x => x.GetRequiredService<ProductsRepository>())
-            .AddScoped<IOrderRepository, OrdersRepository>();
+            .AddScoped<IOrderRepository, OrdersRepository>()
+            .AddScoped<IComputerBuildRulesRepository, RulesRepository>();
 
     private static IServiceCollection AddTransport(this IServiceCollection services)
         => services
