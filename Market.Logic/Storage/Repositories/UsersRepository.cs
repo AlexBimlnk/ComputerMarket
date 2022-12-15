@@ -127,6 +127,23 @@ public sealed class UsersRepository : IUsersRepository
             var user => user.Password == password.Value
         };
 
+    /// <inheritdoc/>
+    public void Update(User user)
+    {
+        var storageUser = ConvertToStorageModel(user);
+
+        var newStorageUser = _context.Users.SingleOrDefault(x => x.Id == storageUser.Id);
+
+        if (newStorageUser is null)
+            return;
+
+        newStorageUser.Login = storageUser.Login;
+        newStorageUser.UserTypeId = storageUser.UserTypeId;
+        newStorageUser.Password = storageUser.Password;
+
+        _context.Users.Update(newStorageUser);
+    }
+
     #region Converers
 
     private static TUser ConvertToStorageModel(User user) => new()

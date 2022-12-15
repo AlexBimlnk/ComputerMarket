@@ -52,11 +52,16 @@ public sealed class Provider : IEquatable<Provider>, IKeyable<ID>
     /// </summary>
     public PaymentTransactionsInformation PaymentTransactionsInformation { get; private set; }
 
+    /// <summary xml:lang="ru">
+    /// Подтвержден ли провайдер.
+    /// </summary>
+    public bool IsAproved { get; set; } = false;
+
     /// <inheritdoc/>
     public ID Key { get; }
 
     /// <inheritdoc/>
-    public override int GetHashCode() => HashCode.Combine(Key, PaymentTransactionsInformation, Name, Margin);
+    public override int GetHashCode() => HashCode.Combine(Key, PaymentTransactionsInformation, Name, Margin, IsAproved);
 
     /// <inheritdoc/>
     public override bool Equals(object? obj) => obj is Provider provider && Equals(provider);
@@ -66,6 +71,7 @@ public sealed class Provider : IEquatable<Provider>, IKeyable<ID>
         Key.Equals(other?.Key) &&
         Margin.Equals(other?.Margin) &&
         Name.Equals(other?.Name) &&
-        PaymentTransactionsInformation.Equals(other?.PaymentTransactionsInformation);
+        PaymentTransactionsInformation.Equals(other?.PaymentTransactionsInformation) &&
+        IsAproved.Equals(other?.IsAproved);
 
 }

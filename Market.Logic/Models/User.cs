@@ -29,7 +29,7 @@ public class User : IKeyable<ID>
     /// <summary xml:lang = "ru">
     /// Тип пользователя.
     /// </summary>
-    public UserType Type { get; private set; }
+    public UserType Type { get; set; }
 
     /// <inheritdoc/>
     public ID Key { get; }

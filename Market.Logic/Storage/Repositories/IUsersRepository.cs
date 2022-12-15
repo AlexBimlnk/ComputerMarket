@@ -2,6 +2,8 @@
 
 using Market.Logic.Models;
 
+using Newtonsoft.Json.Bson;
+
 namespace Market.Logic.Storage.Repositories;
 
 /// <summary xml:lang = "ru">
@@ -45,4 +47,10 @@ public interface IUsersRepository : IKeyableRepository<User, ID>
     ///  а иначе - <see langword="true"/>.
     /// </returns>
     public bool IsPasswordMatch(ID id, Password password);
+
+    /// <summary>
+    /// Обновляет информацию об пользователе.
+    /// </summary>
+    /// <param name="user">Пользователь</param>
+    public void Update(User user);
 }

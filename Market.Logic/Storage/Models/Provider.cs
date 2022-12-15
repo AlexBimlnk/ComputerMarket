@@ -25,6 +25,11 @@ public class Provider
     /// </summary>
     public string BankAccount { get; set; } = null!;
 
+    /// <summary xml:lang="ru">
+    /// Подтвержден ли провайдер.
+    /// </summary>
+    public bool IsAproved { get; set; } = false;
+
     /// <summary xml:lang = "ru">
     /// Инн поставщика.
     /// </summary>

@@ -96,6 +96,52 @@ public class UsersRepositoryIntegrationTests : DBIntegrationTestBase
         result.Should().Be(expectedResult);
     }
 
+    [Fact(DisplayName = $"The {nameof(UsersRepository)} can update user.")]
+    [Trait("Category", "Integration")]
+    public async Task CanUpdateUserAsync()
+    {
+        // Arrange
+        var logger = Mock.Of<ILogger<UsersRepository>>();
+
+        var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
+        context.SetupGet(x => x.Users)
+            .Returns(_marketContext.Users);
+        context.Setup(x => x.SaveChanges())
+            .Callback(() => _marketContext.SaveChanges());
+
+        var users = new User[]
+        {
+            TestHelper.GetOrdinaryUser(1, TestHelper.GetOrdinaryAuthenticationData("mail1@mail.ru", "login1"), UserType.Customer),
+            TestHelper.GetOrdinaryUser(2, TestHelper.GetOrdinaryAuthenticationData("mail2@mail.ru", "login2"), UserType.Agent)
+        };
+
+        await AddUserTypeAsync(UserType.Customer);
+        await AddUserTypeAsync(UserType.Manager);
+        await AddUserTypeAsync(UserType.Agent);
+
+        users.ToList().ForEach(x => AddUserAsync(x).Wait());
+
+        var repository = new UsersRepository(
+            context.Object,
+            logger);
+
+        var updatedUser = users.First();
+        updatedUser.Type = UserType.Agent;
+
+        // Act
+        var exception = Record.Exception(() =>
+        {
+            repository.Update(updatedUser);
+            repository.Save();
+        });
+
+        var outputUser = repository.GetByKey(updatedUser.Key);
+
+        // Assert
+        exception.Should().BeNull();
+        outputUser.Should().BeEquivalentTo(updatedUser);
+    }
+
     [Fact(DisplayName = $"The {nameof(UsersRepository)} can delete user.")]
     [Trait("Category", "Integration")]
     public async Task CanDeleteUserAsync()
@@ -225,8 +271,10 @@ public class UsersRepositoryIntegrationTests : DBIntegrationTestBase
             _ = repository.GetByEmail(users[0].AuthenticationData.Email);
             _ = repository.GetByEmail(users[0].AuthenticationData.Email);
             _ = repository.GetByKey(users[0].Key);
-            _ = repository.GetByKey(users[0].Key);
+            var user = repository.GetByKey(users[0].Key);
 
+            repository.Update(user);
+            repository.Save();
             await repository.AddAsync(anotherUser);
 
             repository.Save();

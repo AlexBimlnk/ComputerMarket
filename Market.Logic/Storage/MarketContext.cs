@@ -238,6 +238,7 @@ public sealed class MarketContext : DbContext
             entity.HasOne(d => d.Provider)
                 .WithMany(p => p.Products)
                 .HasForeignKey(d => d.ProviderId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("product_provider_id_fkey");
         });
 
@@ -280,6 +281,10 @@ public sealed class MarketContext : DbContext
             entity.Property(e => e.Name)
                 .HasMaxLength(30)
                 .HasColumnName("name");
+
+            entity.Property(e => e.IsAproved)
+                .HasColumnName("is_approved")
+                .HasDefaultValue(false);
         });
 
         modelBuilder.Entity<ProviderAgent>(entity =>
