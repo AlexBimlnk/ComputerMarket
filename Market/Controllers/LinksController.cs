@@ -1,12 +1,11 @@
 ﻿using General.Logic.Executables;
-using General.Storage;
 using General.Transport;
 
-using Market.Logic;
 using Market.Logic.Commands.Import;
 using Market.Logic.Models;
 using Market.Logic.Queries;
 using Market.Logic.Queries.Import;
+using Market.Logic.Storage.Repositories;
 using Market.Logic.Transport.Configurations;
 using Market.Logic.Transport.Senders;
 using Market.Models;
@@ -23,7 +22,7 @@ using IQuerySender = IQuerySender<ImportCommandConfigurationSender, ImportQuery,
 public sealed class LinksController : Controller
 {
     private readonly ILogger<LinksController> _logger;
-    private readonly IKeyableRepository<Provider, ID> _providerRepository;
+    private readonly IProvidersRepository _providerRepository;
     private readonly IQuerySender _querySender;
     private readonly ISender<ImportCommandConfigurationSender, ImportCommand> _importCommandSender;
 
@@ -47,7 +46,7 @@ public sealed class LinksController : Controller
     /// </exception>
     public LinksController(
         ILogger<LinksController> logger,
-        IKeyableRepository<Provider, ID> providerRepository,
+        IProvidersRepository providerRepository,
         IQuerySender querySender,
         ISender<ImportCommandConfigurationSender, ImportCommand> importCommandSender)
     {

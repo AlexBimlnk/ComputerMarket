@@ -7,6 +7,8 @@ namespace Market.Logic.Models;
 /// </summary>
 public sealed class Provider : IEquatable<Provider>, IKeyable<ID>
 {
+    private bool _isAproved = false;
+
     /// <summary xml:lang = "ru">
     /// Создает экземпляр типа <see cref="Provider"/>.
     /// </summary>
@@ -52,11 +54,25 @@ public sealed class Provider : IEquatable<Provider>, IKeyable<ID>
     /// </summary>
     public PaymentTransactionsInformation PaymentTransactionsInformation { get; private set; }
 
+    /// <summary xml:lang="ru">
+    /// Подтвержден ли провайдер.
+    /// </summary>
+    public bool IsAproved
+    {
+        get => _isAproved;
+        set 
+        {
+            if (IsAproved)
+                throw new InvalidOperationException("Cant change aproved provider aprove state");
+            _isAproved = value;
+        }
+    }
+
     /// <inheritdoc/>
     public ID Key { get; }
 
     /// <inheritdoc/>
-    public override int GetHashCode() => HashCode.Combine(Key, PaymentTransactionsInformation, Name, Margin);
+    public override int GetHashCode() => HashCode.Combine(Key, PaymentTransactionsInformation, Name, Margin, IsAproved);
 
     /// <inheritdoc/>
     public override bool Equals(object? obj) => obj is Provider provider && Equals(provider);
@@ -66,6 +82,7 @@ public sealed class Provider : IEquatable<Provider>, IKeyable<ID>
         Key.Equals(other?.Key) &&
         Margin.Equals(other?.Margin) &&
         Name.Equals(other?.Name) &&
-        PaymentTransactionsInformation.Equals(other?.PaymentTransactionsInformation);
+        PaymentTransactionsInformation.Equals(other?.PaymentTransactionsInformation) &&
+        IsAproved.Equals(other?.IsAproved);
 
 }

@@ -19,7 +19,7 @@ public class ImportProductsHandlerTests
         // Arrange
         var logger = Mock.Of<ILogger<ImportProductsHandler>>();
         var itemRepository = Mock.Of<IItemsRepository>(MockBehavior.Strict);
-        var providerRepository = Mock.Of<IKeyableRepository<Provider, ID>>(MockBehavior.Strict);
+        var providerRepository = Mock.Of<IProvidersRepository>(MockBehavior.Strict);
         var productsRepository = Mock.Of<IProductsRepository>(MockBehavior.Strict);
         var deserializer = Mock.Of<IDeserializer<string, IReadOnlyCollection<TransportProduct>>>(MockBehavior.Strict);
 
@@ -41,7 +41,7 @@ public class ImportProductsHandlerTests
     {
         // Arrange
         var itemRepository = Mock.Of<IItemsRepository>(MockBehavior.Strict);
-        var providerRepository = Mock.Of<IKeyableRepository<Provider, ID>>(MockBehavior.Strict);
+        var providerRepository = Mock.Of<IProvidersRepository>(MockBehavior.Strict);
         var productsRepository = Mock.Of<IProductsRepository>(MockBehavior.Strict);
         var deserializer = Mock.Of<IDeserializer<string, IReadOnlyCollection<TransportProduct>>>(MockBehavior.Strict);
 
@@ -64,7 +64,7 @@ public class ImportProductsHandlerTests
         // Arrange
         var logger = Mock.Of<ILogger<ImportProductsHandler>>();
         var itemRepository = Mock.Of<IItemsRepository>(MockBehavior.Strict);
-        var providerRepository = Mock.Of<IKeyableRepository<Provider, ID>>(MockBehavior.Strict);
+        var providerRepository = Mock.Of<IProvidersRepository>(MockBehavior.Strict);
         var productsRepository = Mock.Of<IProductsRepository>(MockBehavior.Strict);
 
         // Act
@@ -85,7 +85,7 @@ public class ImportProductsHandlerTests
     {
         // Arrange
         var logger = Mock.Of<ILogger<ImportProductsHandler>>();
-        var providerRepository = Mock.Of<IKeyableRepository<Provider, ID>>(MockBehavior.Strict);
+        var providerRepository = Mock.Of<IProvidersRepository>(MockBehavior.Strict);
         var productsRepository = Mock.Of<IProductsRepository>(MockBehavior.Strict);
         var deserializer = Mock.Of<IDeserializer<string, IReadOnlyCollection<TransportProduct>>>(MockBehavior.Strict);
 
@@ -130,7 +130,7 @@ public class ImportProductsHandlerTests
         // Arrange
         var logger = Mock.Of<ILogger<ImportProductsHandler>>();
         var itemRepository = Mock.Of<IItemsRepository>(MockBehavior.Strict);
-        var providerRepository = Mock.Of<IKeyableRepository<Provider, ID>>(MockBehavior.Strict);
+        var providerRepository = Mock.Of<IProvidersRepository>(MockBehavior.Strict);
         var deserializer = Mock.Of<IDeserializer<string, IReadOnlyCollection<TransportProduct>>>(MockBehavior.Strict);
 
         // Act
@@ -156,7 +156,7 @@ public class ImportProductsHandlerTests
         var logger = Mock.Of<ILogger<ImportProductsHandler>>();
         var deserializer = new Mock<IDeserializer<string, IReadOnlyCollection<TransportProduct>>>(MockBehavior.Strict);
         var itemRepository = Mock.Of<IItemsRepository>(MockBehavior.Strict);
-        var providerRepository = Mock.Of<IKeyableRepository<Provider, ID>>(MockBehavior.Strict);
+        var providerRepository = Mock.Of<IProvidersRepository>(MockBehavior.Strict);
         var productsRepository = new Mock<IProductsRepository>(MockBehavior.Strict);
 
         var product = TestHelper.GetOrdinaryProduct();
@@ -209,7 +209,7 @@ public class ImportProductsHandlerTests
         var logger = Mock.Of<ILogger<ImportProductsHandler>>();
         var deserializer = Mock.Of<IDeserializer<string, IReadOnlyCollection<TransportProduct>>>(MockBehavior.Strict);
         var itemRepository = Mock.Of<IItemsRepository>(MockBehavior.Strict);
-        var providerRepository = Mock.Of<IKeyableRepository<Provider, ID>>(MockBehavior.Strict);
+        var providerRepository = Mock.Of<IProvidersRepository>(MockBehavior.Strict);
         var productsRepository = Mock.Of<IProductsRepository>(MockBehavior.Strict);
 
         var handler = new ImportProductsHandler(
@@ -235,7 +235,7 @@ public class ImportProductsHandlerTests
         var logger = Mock.Of<ILogger<ImportProductsHandler>>();
         var deserializer = Mock.Of<IDeserializer<string, IReadOnlyCollection<TransportProduct>>>(MockBehavior.Strict);
         var itemRepository = Mock.Of<IItemsRepository>(MockBehavior.Strict);
-        var providerRepository = Mock.Of<IKeyableRepository<Provider, ID>>(MockBehavior.Strict);
+        var providerRepository = Mock.Of<IProvidersRepository>(MockBehavior.Strict);
         var productsRepository = Mock.Of<IProductsRepository>(MockBehavior.Strict);
 
         var request = "some request";

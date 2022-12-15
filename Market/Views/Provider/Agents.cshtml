@@ -1,0 +1,42 @@
+﻿@model IEnumerable<Market.Logic.Models.User>
+
+<a href="~/provider/agents/@ViewBag.ProviderId/add">Add new</a>
+<hr />
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.AuthenticationData.Login)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AuthenticationData.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Type)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AuthenticationData.Login)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AuthenticationData.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Type)
+                </td>
+                <td>
+                    <a href="~/provider/agents/@ViewBag.ProviderId/remove/@item.Key.Value">Удалить</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div>
+    <a asp-action="List">Back to List</a>
+</div>

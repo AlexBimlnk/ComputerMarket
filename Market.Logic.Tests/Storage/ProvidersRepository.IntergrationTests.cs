@@ -56,8 +56,9 @@ public class ProvidersRepositoryIntegrationTests : DBIntegrationTestBase
                 Id = r.GetInt64(0),
                 Name = r.GetString(1),
                 Margin = r.GetDecimal(2),
+                IsAproved = r.GetBoolean(4),
                 BankAccount = r.GetString(3),
-                Inn = r.GetString(4)
+                Inn = r.GetString(5)
             });
 
         // Assert
@@ -134,6 +135,39 @@ public class ProvidersRepositoryIntegrationTests : DBIntegrationTestBase
         afterContains.Should().BeFalse();
     }
 
+    [Fact(DisplayName = $"The {nameof(ProvidersRepository)} can update provider.")]
+    [Trait("Category", "Integration")]
+    public async Task CanUpdateProviderAsync()
+    {
+        // Arrange
+        var logger = Mock.Of<ILogger<ProvidersRepository>>();
+
+        var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
+        context.SetupGet(x => x.Providers)
+            .Returns(_marketContext.Providers);
+        context.Setup(x => x.SaveChanges())
+            .Callback(() => _marketContext.SaveChanges());
+
+        var provider1 = TestHelper.GetOrdinaryProvider(margin: 1.0m, isAproved: false);
+
+        await AddProviderAsync(provider1);
+
+        var repository = new ProvidersRepository(
+            context.Object,
+            logger);
+
+        var updateProvider = TestHelper.GetOrdinaryProvider(margin: 1.5m, isAproved: true);
+
+        // Act
+        repository.Update(updateProvider);
+        repository.Save();
+
+        var result = repository.GetByKey(updateProvider.Key);
+
+        // Assert
+        result.Should().BeEquivalentTo(updateProvider);
+    }
+
     [Fact(DisplayName = $"The {nameof(ProvidersRepository)} can get all providers.")]
     [Trait("Category", "Integration")]
     public async Task CanGetEntitiesAsync()
@@ -201,7 +235,21 @@ public class ProvidersRepositoryIntegrationTests : DBIntegrationTestBase
 
             _ = repository.GetEntities();
             _ = repository.GetByKey(provider2.Key);
-            _ = repository.GetByKey(provider2.Key);
+            var provider = repository.GetByKey(provider2.Key)!;
+
+            provider.IsAproved = true;
+
+            repository.Update(provider);
+            repository.Save();
+
+            _ = repository.GetEntities();
+
+            repository.Delete(provider);
+            repository.Save();
+
+            var prov = repository.GetByKey(provider.Key);
+            _ = repository.GetEntities();
+
         });
 
         // Assert

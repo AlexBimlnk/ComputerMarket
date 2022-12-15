@@ -46,11 +46,19 @@ public static class TestHelper
             inn ?? "1234567890",
             acc ?? "01234012340123401234");
 
-    public static Provider GetOrdinaryProvider(long id = 1, string? name = null, PaymentTransactionsInformation? info = null) => new(
+    public static Provider GetOrdinaryProvider(
+        long id = 1, 
+        string? name = null, 
+        PaymentTransactionsInformation? info = null, 
+        decimal margin = 1.3m,
+        bool isAproved = false) => new(
             new ID(id),
             name ?? "Provider Name",
-            margin: new Margin(1.3m),
-            info ?? GetOrdinaryPaymentTransactionsInformation());
+            margin: new Margin(margin),
+            info ?? GetOrdinaryPaymentTransactionsInformation())
+        {
+            IsAproved = isAproved
+        };
 
     public static TProvider GetStorageProvider(Provider provider) => new()
     {
