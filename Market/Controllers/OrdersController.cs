@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using System.Security.Cryptography.X509Certificates;
 
 using General.Logic.Executables;
 using General.Storage;
@@ -8,8 +9,10 @@ using Market.Logic;
 using Market.Logic.Commands.Import;
 using Market.Logic.Commands.WT;
 using Market.Logic.Models;
+using Market.Logic.Models.WT;
 using Market.Logic.Storage.Repositories;
 using Market.Logic.Transport.Configurations;
+using Market.Models;
 
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,9 +24,9 @@ namespace Market.Controllers;
 public sealed class OrdersController : Controller
 {
     private readonly ILogger<OrdersController> _logger;
-    private readonly IKeyableRepository<Order, ID> _orderRepository;
+    private readonly IOrderRepository _orderRepository;
     private readonly IUsersRepository _userRepository;
-    private readonly ISender<WTCommandConfigurationSender, WTCommand> _wtCommandSender;
+    //private readonly ISender<WTCommandConfigurationSender, WTCommand> _wtCommandSender;
 
     /// <summary xml:lang = "ru">
     /// Создает новый экземпляр типа <see cref="OrdersController"/>.
@@ -45,14 +48,14 @@ public sealed class OrdersController : Controller
     /// </exception>
     public OrdersController(
         ILogger<OrdersController> logger,
-        IKeyableRepository<Order, ID> orderRepository,
-        IUsersRepository usersRepository,
-        ISender<WTCommandConfigurationSender, WTCommand> wtCommandSender)
+        IOrderRepository orderRepository,
+        IUsersRepository usersRepository)
+        //ISender<WTCommandConfigurationSender, WTCommand> wtCommandSender)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _orderRepository = orderRepository ?? throw new ArgumentNullException(nameof(orderRepository));
         _userRepository = usersRepository ?? throw new ArgumentNullException(nameof(usersRepository));
-        _wtCommandSender = wtCommandSender ?? throw new ArgumentNullException(nameof(wtCommandSender));
+        //_wtCommandSender = wtCommandSender ?? throw new ArgumentNullException(nameof(wtCommandSender));
     }
 
     // Get: Orders/List
@@ -97,10 +100,40 @@ public sealed class OrdersController : Controller
 
         // todo: update order state
 
-        await _wtCommandSender.SendAsync(new CancelTransactionRequestCommand(
+        /*await _wtCommandSender.SendAsync(new CancelTransactionRequestCommand(
             new ExecutableID(Guid.NewGuid().ToString()),
-            order.Key));
+            order.Key));*/
 
+        return RedirectToAction("List");
+    }
+
+    [HttpGet]
+    public IActionResult Pay(long id) => View();
+
+    [HttpPost]
+    public async Task<IActionResult> PayAsync(long id, OrderPayModel model)
+    {
+        var order = _orderRepository.GetByKey(new(id));
+
+        if (order is null)
+        {
+            Response.StatusCode = 400;
+            return View();
+        }
+
+        var transactions = new List<Transaction>();
+
+        foreach(var item in order.Items.GroupBy(x => x.Product.Provider))
+        {
+            transactions.Add(new Transaction(
+                model.Account, 
+                item.Key.PaymentTransactionsInformation.BankAccount, 
+                item.Sum(x => x.Product.FinalCost), 
+                item.Sum(x => x.Product.FinalCost) - item.Sum(x => x.Product.ProviderCost)));
+        }
+
+        //await _wtCommandSender.SendAsync(new CreateTransactionRequestCommand(new(Guid.NewGuid().ToString()), order.Key, transactions));
+            
         return RedirectToAction("List");
     }
 }

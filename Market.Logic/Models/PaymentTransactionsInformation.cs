@@ -8,7 +8,7 @@ namespace Market.Logic.Models;
 public record class PaymentTransactionsInformation
 {
     private const string INN_PATTERN = @"^[0-9]{10}$";
-    private const string BANK_ACCOUNT_PATTERN = @"^[0-9]{20}$";
+    public const string BANK_ACCOUNT_PATTERN = @"^[0-9]{20}$";
 
     /// <summary xml:lang = "ru">
     /// Инн поставщика.
