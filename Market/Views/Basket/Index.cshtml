@@ -2,12 +2,14 @@
 
 	<h2>Корзина:</h2>
 
-@{
+<form method="post" asp-controller="Basket" asp-action="CreateOrder">
+	@{
 	foreach(var item in Model)
 	{
-		<p>
-			<a href="~/products/product?itemId=@item.Product.Item.Key.Value&&providerId=@item.Product.Provider.Key.Value">@item.Product.Item.Name</a>
-			@item.Quantity
-		</p>
+		<partial name="Partial/_BasketItem" model="item" />
 	}
 }
+	<div>
+		<button id="createSubmit" type="submit" class="w-70 btn btn-lg">Create</button>
+	</div>
+</form>
