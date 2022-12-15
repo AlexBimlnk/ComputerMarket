@@ -23,6 +23,8 @@ public sealed class ManageProviderViewModel
     /// Маржа провайдера.
     /// </summary>
     [Required(ErrorMessage = "Не указана маржа поставщика.")]
-    [Range(1.0, 1000, ErrorMessage = "Маржа может быть в диапазоне от 1 до 1000.")]
-    public decimal Margin { get; set; }
+    public string Margin { get; set; }
+
+
+    public bool IsAproved { get; set; }
 }

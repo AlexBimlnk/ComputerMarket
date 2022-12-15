@@ -1,4 +1,4 @@
-﻿@model Market.Logic.Models.Provider
+﻿@model Market.Models.ManageProviderViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -10,11 +10,11 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-controller="Providers">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Key" class="control-label"></label>
-                <input asp-for="Key.Value" class="form-control" readonly />
+                <input asp-for="Key" class="form-control" readonly />
                 <span asp-validation-for="Key" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -24,11 +24,22 @@
             </div>
             <div class="form-group">
                 <label asp-for="Margin" class="control-label"></label>
-                <input asp-for="Margin.Value" class="form-control" />
+                <input asp-for="Margin" class="form-control" />
                 <span asp-validation-for="Margin" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" name="Edit" value="Edit"
+                       formaction="@Url.Action("Edit")" formmethod="post" class="btn btn-primary" />
+                @{
+                    if (!Model.IsAproved)
+                    {
+                        <br />
+                        <br />
+                        <input type="submit" name="Aprove" value="Aprove" class="btn btn-primary"
+                           formaction="@Url.Action("Aprove")" formmethod="post" />
+                    }
+                }
             </div>
         </form>
     </div>
