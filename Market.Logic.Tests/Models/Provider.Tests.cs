@@ -63,4 +63,23 @@ public class ProviderTests
         // Assert
         exception.Should().BeOfType<ArgumentException>();
     }
+
+    [Fact(DisplayName = $"The aproved {nameof(Provider)} cannot change aproved state.")]
+    [Trait("Category", "Unit")]
+    public void CanNotAprovedStateAfterAprove()
+    {
+        // Act
+        var provider = new Provider(
+            id: new ID(1),
+            name: "Name",
+            margin: new Margin(1m),
+            paymentTransactionsInformation: null!);
+
+        provider.IsAproved = true;
+
+        var exception = Record.Exception(() => provider.IsAproved = false);
+
+        // Assert
+        exception.Should().BeOfType<InvalidOperationException>();
+    }
 }

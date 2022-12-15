@@ -7,6 +7,8 @@ namespace Market.Logic.Models;
 /// </summary>
 public sealed class Provider : IEquatable<Provider>, IKeyable<ID>
 {
+    private bool _isAproved = false;
+
     /// <summary xml:lang = "ru">
     /// Создает экземпляр типа <see cref="Provider"/>.
     /// </summary>
@@ -55,7 +57,16 @@ public sealed class Provider : IEquatable<Provider>, IKeyable<ID>
     /// <summary xml:lang="ru">
     /// Подтвержден ли провайдер.
     /// </summary>
-    public bool IsAproved { get; set; } = false;
+    public bool IsAproved
+    {
+        get => _isAproved;
+        set 
+        {
+            if (IsAproved)
+                throw new InvalidOperationException("Cant change aproved provider aprove state");
+            _isAproved = value;
+        }
+    }
 
     /// <inheritdoc/>
     public ID Key { get; }
