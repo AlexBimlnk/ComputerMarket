@@ -10,6 +10,8 @@ public class CatalogViewModel
 
     public int? TypeId { get; set; }
 
+    public string? Params { get; set; }
+
     public IEnumerable<Product> Products { get; set; }
 
 

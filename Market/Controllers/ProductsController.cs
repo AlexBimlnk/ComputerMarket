@@ -49,19 +49,31 @@ public class ProductsController : Controller
     /// <param name="typeId" xml:lang="ru">Индетификатор категории товара.</param>
     /// <returns xml:lang="ru"></returns>
     [HttpGet]
-    public IActionResult Catalog(string? searchString = null, int? typeId = null)
+    public IActionResult Catalog(CatalogViewModel model)
     {
-        var filter = new CatalogFilter(searchString, typeId);
+        model.Properties = GetProductsProperties(_catalog.GetProducts(
+            model.TypeId is null
+                ? new CatalogFilter(model.SearchString)
+                : new CatalogFilter(typeId: model.TypeId)));
 
-        var products = _catalog.GetProducts(filter);
+        var selectedValues = GetPropertiesValues(model.Params ?? "false");
+        var filter = new CatalogFilter(model.SearchString, model.TypeId, selectedValues);
+        model.Products = _catalog.GetProducts(filter);
 
-        return View(new CatalogViewModel()
+        if (selectedValues.Any())
         {
-            Products = products,
-            SearchString = filter.SearchString,
-            TypeId = filter.SelectedTypeId,
-            Properties = GetProductsProperties(products)
-        });
+            foreach (var value in filter.PropertiesWithValues)
+            {
+                if (model.Properties.ContainsKey(value.Item1))
+                {
+                    var newValue = new FilterValue(value.Item1, value.Item2);
+                    newValue.Selected = true;
+                    model.Properties[value.Item1].AddValue(newValue);
+                }
+            }
+        } 
+
+        return View(model);
     }
 
     /// <summary xml:lang="ru">
@@ -74,23 +86,9 @@ public class ProductsController : Controller
     {
         var res = Request.Form["Selected"].ToString();
 
-        var filter = new CatalogFilter(model.SearchString, model.TypeId);
-        model.Properties = GetProductsProperties(_catalog.GetProducts(filter));
+        model.Params = res;
 
-        filter = new CatalogFilter(model.SearchString, model.TypeId, GetPropertiesValues(res));
-        model.Products = _catalog.GetProducts(filter);
-
-        foreach (var value in filter.PropertiesWithValues)
-        {
-            if (model.Properties.ContainsKey(value.Item1))
-            {
-                var newValue = new FilterValue(value.Item1, value.Item2);
-                newValue.Selected = true;
-                model.Properties[value.Item1].AddValue(newValue);
-            }
-        }
-
-        return View("Catalog", model);
+        return RedirectToAction("Catalog", model);
     }
 
     /// <summary xml:lang="ru">
