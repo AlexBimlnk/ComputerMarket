@@ -1,7 +1,12 @@
-﻿using Market.Logic;
+﻿using General.Transport;
+
+using Market.Logic;
+using Market.Logic.Commands.Import;
+using Market.Logic.Commands.WT;
 using Market.Logic.Models;
 using Market.Logic.Models.Abstractions;
 using Market.Logic.Storage.Repositories;
+using Market.Logic.Transport.Configurations;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,13 +20,19 @@ public class BasketController : Controller
     private readonly IBasketRepository _basketRepository;
     private readonly IOrderRepository _orderRepository;
     private readonly ICatalog _catalog;
+    private readonly ISender<WTCommandConfigurationSender, WTCommand> _wtCommandSender;
 
-    public BasketController(IBasketRepository basketRepository, IUsersRepository usersRepository, ICatalog catalog, IOrderRepository orderRepository)
+    public BasketController(IBasketRepository basketRepository, 
+        IUsersRepository usersRepository, 
+        ICatalog catalog, 
+        IOrderRepository orderRepository,
+        ISender<WTCommandConfigurationSender, WTCommand> wtCommandSender)
     {
         _basketRepository = basketRepository;
         _usersRepository = usersRepository;
         _orderRepository = orderRepository;
         _catalog= catalog;
+        _wtCommandSender = wtCommandSender;
     }
 
     [HttpGet]
@@ -93,7 +104,7 @@ public class BasketController : Controller
     }
 
     [HttpPost]
-
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> CreateOrderAsync()
     {
         var selectedItems = GetItems(Request.Form["Selected"].ToString());
@@ -102,7 +113,7 @@ public class BasketController : Controller
 
         if (user is null)
         {
-            return RedirectToAction("Logout","Account");
+            return RedirectToAction("Logout", "Account");
         }
 
         var items = _basketRepository.GetAllBasketItems(user);
@@ -111,21 +122,21 @@ public class BasketController : Controller
         {
             return RedirectToAction("Index");
         }
-        
+
         if (selectedItems.Any())
         {
-            items = items.Join(selectedItems, x => (x.Product.Item.Key, x.Product.Provider.Key), y => y, (x,y) => x);
+            items = items.Join(selectedItems, x => (x.Product.Item.Key, x.Product.Provider.Key), y => y, (x, y) => x);
         }
 
-        var order = new Order(default ,user, items.ToHashSet());
+        var order = new Order(default, user, items.ToHashSet());
 
         await _orderRepository.AddAsync(order);
         _orderRepository.Save();
 
-        return RedirectToAction("Index", "Order");
+        return RedirectToAction("List", "Orders");
     }
 
-    public static IReadOnlySet<(ID, ID)> GetItems(string request)
+    private static IReadOnlySet<(ID, ID)> GetItems(string request)
     {
         var result = new HashSet<(ID, ID)>();
 
@@ -145,7 +156,7 @@ public class BasketController : Controller
                 continue;
             }
 
-            result.Add((new (itemId), new(providerId)));
+            result.Add((new(itemId), new(providerId)));
         }
 
         return result;
