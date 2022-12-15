@@ -17,7 +17,7 @@ public class ReportBuilderTests
         // Arrange
         ReportBuilder reportBuilder = null!;
         var orderRepository = Mock.Of<IOrderRepository>(MockBehavior.Strict);
-        var providerRepository = Mock.Of<IKeyableRepository<Provider, ID>>(MockBehavior.Strict);
+        var providerRepository = Mock.Of<IProvidersRepository>(MockBehavior.Strict);
 
         // Act
         var exception = Record.Exception(() => reportBuilder = new ReportBuilder(
@@ -34,7 +34,7 @@ public class ReportBuilderTests
     {
         // Arrange
         var orderRepository = Mock.Of<IOrderRepository>(MockBehavior.Strict);
-        var providerRepository = Mock.Of<IKeyableRepository<Provider, ID>>(MockBehavior.Strict);
+        var providerRepository = Mock.Of<IProvidersRepository>(MockBehavior.Strict);
 
         var reportBuilder = new ReportBuilder(orderRepository, providerRepository);
 
@@ -51,7 +51,7 @@ public class ReportBuilderTests
     {
         // Arrange
         var orderRepository = Mock.Of<IOrderRepository>(MockBehavior.Strict);
-        var providerRepository = Mock.Of<IKeyableRepository<Provider, ID>>(MockBehavior.Strict);
+        var providerRepository = Mock.Of<IProvidersRepository>(MockBehavior.Strict);
 
         var reportBuilder = new ReportBuilder(orderRepository, providerRepository);
 
@@ -69,7 +69,7 @@ public class ReportBuilderTests
     {
         // Arrange
         var orderRepository = Mock.Of<IOrderRepository>(MockBehavior.Strict);
-        var providerRepository = Mock.Of<IKeyableRepository<Provider, ID>>(MockBehavior.Strict);
+        var providerRepository = Mock.Of<IProvidersRepository>(MockBehavior.Strict);
 
         var reportBuilder = new ReportBuilder(orderRepository, providerRepository);
 
@@ -89,7 +89,7 @@ public class ReportBuilderTests
         var provider = TestHelper.GetOrdinaryProvider();
         var providerId = provider.Key;
 
-        var providerRepository = new Mock<IKeyableRepository<Provider, ID>>(MockBehavior.Strict);
+        var providerRepository = new Mock<IProvidersRepository>(MockBehavior.Strict);
         providerRepository.Setup(x => x.GetByKey(providerId))
             .Returns(provider);
 
@@ -172,7 +172,7 @@ public class ReportBuilderTests
     public void CanNotCreateWithoutProviderId()
     {
         // Arrange
-        var providerRepository = Mock.Of<IKeyableRepository<Provider, ID>>(MockBehavior.Strict);
+        var providerRepository = Mock.Of<IProvidersRepository>(MockBehavior.Strict);
         var orderRepository = Mock.Of<IOrderRepository>(MockBehavior.Strict);
 
         var reportBuilder = new ReportBuilder(
@@ -194,7 +194,7 @@ public class ReportBuilderTests
     public void CanNotCreateWithoutStartPeriod()
     {
         // Arrange
-        var providerRepository = Mock.Of<IKeyableRepository<Provider, ID>>(MockBehavior.Strict);
+        var providerRepository = Mock.Of<IProvidersRepository>(MockBehavior.Strict);
         var orderRepository = Mock.Of<IOrderRepository>(MockBehavior.Strict);
 
         var reportBuilder = new ReportBuilder(
@@ -216,7 +216,7 @@ public class ReportBuilderTests
     public void CanNotCreateWithoutEndPeriod()
     {
         // Arrange
-        var providerRepository = Mock.Of<IKeyableRepository<Provider, ID>>(MockBehavior.Strict);
+        var providerRepository = Mock.Of<IProvidersRepository>(MockBehavior.Strict);
         var orderRepository = Mock.Of<IOrderRepository>(MockBehavior.Strict);
 
         var reportBuilder = new ReportBuilder(

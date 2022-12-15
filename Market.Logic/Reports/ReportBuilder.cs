@@ -12,7 +12,7 @@ public sealed class ReportBuilder : IReportBuilder
 {
     private BuilderConfig _config = new();
     private readonly IOrderRepository _orderRepository;
-    private readonly IKeyableRepository<Provider, ID> _providerRepository;
+    private readonly IProvidersRepository _providerRepository;
 
     /// <summary>
     /// Создает новый объект типа <see cref="ReportBuilder"/>.
@@ -24,7 +24,7 @@ public sealed class ReportBuilder : IReportBuilder
     /// </exception>
     public ReportBuilder(
         IOrderRepository orderRepository,
-        IKeyableRepository<Provider, ID> providerRepository)
+        IProvidersRepository providerRepository)
     {
         _orderRepository = orderRepository ?? throw new ArgumentNullException(nameof(orderRepository));
         _providerRepository = providerRepository ?? throw new ArgumentNullException(nameof(providerRepository));

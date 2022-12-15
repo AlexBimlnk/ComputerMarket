@@ -20,7 +20,7 @@ public sealed class ImportProductsHandler : IAPIRequestHandler<ImportMarker>
     private readonly IDeserializer<string, IReadOnlyCollection<TransportProduct>> _deserializer;
     private readonly IProductsRepository _productRepository;
     private readonly IItemsRepository _itemRepository;
-    private readonly IKeyableRepository<Provider, ID> _providerRepository;
+    private readonly IProvidersRepository _providerRepository;
 
     /// <summary xml:lang = "ru">
     /// Создаёт экземлпяр класса <see cref="ImportProductsHandler"/>.
@@ -36,7 +36,7 @@ public sealed class ImportProductsHandler : IAPIRequestHandler<ImportMarker>
     public ImportProductsHandler(
         IDeserializer<string, IReadOnlyCollection<TransportProduct>> deserializer,
         IItemsRepository itemRepository,
-        IKeyableRepository<Provider, ID> providerRepository,
+        IProvidersRepository providerRepository,
         IProductsRepository productRepository,
         ILogger<ImportProductsHandler> logger)
     {

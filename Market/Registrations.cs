@@ -49,7 +49,7 @@ public static class Registrations
         => services
             .AddScoped<IRepositoryContext, RepositoryContext>()
             .AddScoped<IUsersRepository, UsersRepository>()
-            .AddScoped<IKeyableRepository<Provider, ID>, ProvidersRepository>()
+            .AddScoped<IProvidersRepository, ProvidersRepository>()
             .AddScoped<ProductsRepository>()
             .AddScoped<IProductsRepository>(x => x.GetRequiredService<ProductsRepository>())
             .AddScoped<IItemsRepository>(x => x.GetRequiredService<ProductsRepository>())
