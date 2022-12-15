@@ -23,6 +23,16 @@
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="INN" class="control-label"></label>
+                <input asp-for="INN" class="form-control" readonly />
+                <span asp-validation-for="INN" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BankAccount" class="control-label"></label>
+                <input asp-for="BankAccount" class="form-control" readonly />
+                <span asp-validation-for="BankAccount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="Margin" class="control-label"></label>
                 <input asp-for="Margin" class="form-control" />
                 <span asp-validation-for="Margin" class="text-danger"></span>

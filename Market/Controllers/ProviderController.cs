@@ -56,7 +56,7 @@ public class ProviderController : Controller
         await _providerRepository.AddAsync(provider);
         _providerRepository.Save();
 
-        return View("List");
+        return RedirectToAction("List");
     }
 
     /// <summary xml:lang = "ru">
@@ -84,6 +84,8 @@ public class ProviderController : Controller
         {
             Name = provider.Name,
             Key = provider.Key.Value,
+            INN = provider.PaymentTransactionsInformation.INN,
+            BankAccount = provider.PaymentTransactionsInformation.BankAccount,
             Margin = provider.Margin.Value.ToString(CultureInfo.CurrentCulture),
             IsAproved = provider.IsAproved
         });
