@@ -15,11 +15,18 @@ public interface IBasketRepository
     public Task AddToBasketAsync(User user, Product product, CancellationToken token = default);
 
     /// <summary xml:lang="ru">
-    /// Удаление из продукта корзины.
+    /// Уменьшение колличества продуктов в корзине.
     /// </summary>
     /// <param name="user" xml:lang="ru">Пользователь корзины.</param>
-    /// <param name="product" xml:lang="ru">Продукт который будет удален из корзины.</param>
+    /// <param name="product" xml:lang="ru">Продукт.</param>
     public void RemoveFromBasket(User user, Product product);
+
+    /// <summary>
+    ///  Удаляет продукт из корзины пользователя.
+    /// </summary>
+    /// <param name="user">Пользователь.</param>
+    /// <param name="product">Продукт который должен быть удалён.</param>
+    public void DeleteFromBasket(User user, Product product);
 
     /// <summary xml:lang="ru">
     /// Получение коллекции продуктов в корзине.
