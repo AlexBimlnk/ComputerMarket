@@ -235,7 +235,7 @@ public class ProvidersRepositoryIntegrationTests : DBIntegrationTestBase
 
             _ = repository.GetEntities();
             _ = repository.GetByKey(provider2.Key);
-            var provider = repository.GetByKey(provider2.Key);
+            var provider = repository.GetByKey(provider2.Key)!;
 
             provider.IsAproved = true;
 

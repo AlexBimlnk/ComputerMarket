@@ -271,7 +271,7 @@ public class UsersRepositoryIntegrationTests : DBIntegrationTestBase
             _ = repository.GetByEmail(users[0].AuthenticationData.Email);
             _ = repository.GetByEmail(users[0].AuthenticationData.Email);
             _ = repository.GetByKey(users[0].Key);
-            var user = repository.GetByKey(users[0].Key);
+            var user = repository.GetByKey(users[0].Key)!;
 
             repository.Update(user);
             repository.Save();
