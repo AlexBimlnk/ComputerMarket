@@ -2,6 +2,8 @@ using General.Storage;
 using General.Transport;
 
 using Market.Logic.Models;
+using Market.Logic.Storage.Repositories;
+using Market.Logic.Transport.Models;
 
 using Microsoft.Extensions.Logging;
 
@@ -16,12 +18,18 @@ public class ImportProductsHandlerTests
     {
         // Arrange
         var logger = Mock.Of<ILogger<ImportProductsHandler>>();
-        var productsRepository = Mock.Of<IRepository<Product>>(MockBehavior.Strict);
-        var deserializer = Mock.Of<IDeserializer<string, IReadOnlyCollection<Product>>>(MockBehavior.Strict);
+        var itemRepository = Mock.Of<IItemsRepository>(MockBehavior.Strict);
+        var providerRepository = Mock.Of<IProvidersRepository>(MockBehavior.Strict);
+        var productsRepository = Mock.Of<IProductsRepository>(MockBehavior.Strict);
+        var deserializer = Mock.Of<IDeserializer<string, IReadOnlyCollection<TransportProduct>>>(MockBehavior.Strict);
 
         // Act
-        var exception = Record.Exception(() =>
-            _ = new ImportProductsHandler(deserializer, productsRepository, logger));
+        var exception = Record.Exception(() => _ = new ImportProductsHandler(
+            deserializer,
+            itemRepository,
+            providerRepository,
+            productsRepository,
+            logger));
 
         // Assert
         exception.Should().BeNull();
@@ -32,12 +40,18 @@ public class ImportProductsHandlerTests
     public void CanNotBeCreatedWithoutLogger()
     {
         // Arrange
-        var deserializer = Mock.Of<IDeserializer<string, IReadOnlyCollection<Product>>>(MockBehavior.Strict);
-        var productsRepository = Mock.Of<IRepository<Product>>(MockBehavior.Strict);
+        var itemRepository = Mock.Of<IItemsRepository>(MockBehavior.Strict);
+        var providerRepository = Mock.Of<IProvidersRepository>(MockBehavior.Strict);
+        var productsRepository = Mock.Of<IProductsRepository>(MockBehavior.Strict);
+        var deserializer = Mock.Of<IDeserializer<string, IReadOnlyCollection<TransportProduct>>>(MockBehavior.Strict);
 
         // Act
-        var exception = Record.Exception(() =>
-            _ = new ImportProductsHandler(deserializer, productsRepository, logger: null!));
+        var exception = Record.Exception(() => _ = new ImportProductsHandler(
+            deserializer,
+            itemRepository,
+            providerRepository,
+            productsRepository,
+            logger: null!));
 
         // Assert
         exception.Should().NotBeNull().And.BeOfType<ArgumentNullException>();
@@ -48,12 +62,18 @@ public class ImportProductsHandlerTests
     public void CanNotBeCreatedWithoutDeserializer()
     {
         // Arrange
-        var logger = Mock.Of<ILogger<ImportProductsHandler>>(MockBehavior.Strict);
-        var productsRepository = Mock.Of<IRepository<Product>>(MockBehavior.Strict);
+        var logger = Mock.Of<ILogger<ImportProductsHandler>>();
+        var itemRepository = Mock.Of<IItemsRepository>(MockBehavior.Strict);
+        var providerRepository = Mock.Of<IProvidersRepository>(MockBehavior.Strict);
+        var productsRepository = Mock.Of<IProductsRepository>(MockBehavior.Strict);
 
         // Act
-        var exception = Record.Exception(() =>
-            _ = new ImportProductsHandler(deserializer: null!, productsRepository, logger));
+        var exception = Record.Exception(() => _ = new ImportProductsHandler(
+            deserializer: null!,
+            itemRepository,
+            providerRepository,
+            productsRepository,
+            logger));
 
         // Assert
         exception.Should().NotBeNull().And.BeOfType<ArgumentNullException>();
@@ -61,15 +81,65 @@ public class ImportProductsHandlerTests
 
     [Fact(DisplayName = $"The {nameof(ImportProductsHandler)} can't create without repository.")]
     [Trait("Category", "Unit")]
-    public void CanNotBeCreatedWithoutRepository()
+    public void CanNotBeCreatedWithoutItemRepository()
     {
         // Arrange
-        var logger = Mock.Of<ILogger<ImportProductsHandler>>(MockBehavior.Strict);
-        var deserializer = Mock.Of<IDeserializer<string, IReadOnlyCollection<Product>>>(MockBehavior.Strict);
+        var logger = Mock.Of<ILogger<ImportProductsHandler>>();
+        var providerRepository = Mock.Of<IProvidersRepository>(MockBehavior.Strict);
+        var productsRepository = Mock.Of<IProductsRepository>(MockBehavior.Strict);
+        var deserializer = Mock.Of<IDeserializer<string, IReadOnlyCollection<TransportProduct>>>(MockBehavior.Strict);
 
         // Act
-        var exception = Record.Exception(() =>
-            _ = new ImportProductsHandler(deserializer, repositoryProduct: null!, logger));
+        var exception = Record.Exception(() => _ = new ImportProductsHandler(
+            deserializer,
+            itemRepository: null!,
+            providerRepository,
+            productsRepository,
+            logger));
+
+        // Assert
+        exception.Should().NotBeNull().And.BeOfType<ArgumentNullException>();
+    }
+
+    [Fact(DisplayName = $"The {nameof(ImportProductsHandler)} can't create without repository.")]
+    [Trait("Category", "Unit")]
+    public void CanNotBeCreatedWithoutProviderRepository()
+    {
+        // Arrange
+        var logger = Mock.Of<ILogger<ImportProductsHandler>>();
+        var itemRepository = Mock.Of<IItemsRepository>(MockBehavior.Strict);
+        var productsRepository = Mock.Of<IProductsRepository>(MockBehavior.Strict);
+        var deserializer = Mock.Of<IDeserializer<string, IReadOnlyCollection<TransportProduct>>>(MockBehavior.Strict);
+
+        // Act
+        var exception = Record.Exception(() => _ = new ImportProductsHandler(
+            deserializer,
+            itemRepository,
+            providerRepository: null!,
+            productsRepository,
+            logger));
+
+        // Assert
+        exception.Should().NotBeNull().And.BeOfType<ArgumentNullException>();
+    }
+
+    [Fact(DisplayName = $"The {nameof(ImportProductsHandler)} can't create without repository.")]
+    [Trait("Category", "Unit")]
+    public void CanNotBeCreatedWithoutProductRepository()
+    {
+        // Arrange
+        var logger = Mock.Of<ILogger<ImportProductsHandler>>();
+        var itemRepository = Mock.Of<IItemsRepository>(MockBehavior.Strict);
+        var providerRepository = Mock.Of<IProvidersRepository>(MockBehavior.Strict);
+        var deserializer = Mock.Of<IDeserializer<string, IReadOnlyCollection<TransportProduct>>>(MockBehavior.Strict);
+
+        // Act
+        var exception = Record.Exception(() => _ = new ImportProductsHandler(
+            deserializer,
+            itemRepository,
+            providerRepository,
+            productRepository: null!,
+            logger));
 
         // Assert
         exception.Should().NotBeNull().And.BeOfType<ArgumentNullException>();
@@ -78,30 +148,44 @@ public class ImportProductsHandlerTests
     [Theory(DisplayName = $"The {nameof(ImportProductsHandler)} can handle command.")]
     [Trait("Category", "Unit")]
     [MemberData(nameof(DeserializeParameters))]
-    public async Task CanHandleCommandAsync(string request, IReadOnlyCollection<Product> addedProducts)
+    public async Task CanHandleRequestAsync(
+        string request, 
+        IReadOnlyCollection<TransportProduct> addedProducts)
     {
         // Arrange
         var logger = Mock.Of<ILogger<ImportProductsHandler>>();
-        var deserializer = new Mock<IDeserializer<string, IReadOnlyCollection<Product>>>(MockBehavior.Strict);
-        var repository = new Mock<IRepository<Product>>(MockBehavior.Strict);
+        var deserializer = new Mock<IDeserializer<string, IReadOnlyCollection<TransportProduct>>>(MockBehavior.Strict);
+        var itemRepository = Mock.Of<IItemsRepository>(MockBehavior.Strict);
+        var providerRepository = Mock.Of<IProvidersRepository>(MockBehavior.Strict);
+        var productsRepository = new Mock<IProductsRepository>(MockBehavior.Strict);
+
+        var product = TestHelper.GetOrdinaryProduct();
 
         deserializer.Setup(x => x.Deserialize(request))
             .Returns(addedProducts);
 
+        var repositoryGetCallBack = 0;
+        productsRepository.Setup(x => x.GetByKey(
+                It.IsAny<(ID, ID)>()))
+            .Returns(product)
+            .Callback(() => repositoryGetCallBack++);
+
         var repositoryAddCallBack = 0;
-        repository.Setup(x => x.AddAsync(
-                It.Is<Product>(x => addedProducts.Contains(x)),
+        productsRepository.Setup(x => x.AddOrUpdateAsync(
+                product,
                 It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask)
             .Callback(() => repositoryAddCallBack++);
 
         var repositorySaveCallback = 0;
-        repository.Setup(x => x.Save())
+        productsRepository.Setup(x => x.Save())
             .Callback(() => repositorySaveCallback++);
 
         var handler = new ImportProductsHandler(
             deserializer.Object,
-            repository.Object,
+            itemRepository,
+            providerRepository,
+            productsRepository.Object,
             logger);
 
         // Act
@@ -123,11 +207,15 @@ public class ImportProductsHandlerTests
     {
         // Arrange
         var logger = Mock.Of<ILogger<ImportProductsHandler>>();
-        var deserializer = Mock.Of<IDeserializer<string, IReadOnlyCollection<Product>>>(MockBehavior.Strict);
-        var productsRepository = Mock.Of<IRepository<Product>>(MockBehavior.Strict);
+        var deserializer = Mock.Of<IDeserializer<string, IReadOnlyCollection<TransportProduct>>>(MockBehavior.Strict);
+        var itemRepository = Mock.Of<IItemsRepository>(MockBehavior.Strict);
+        var providerRepository = Mock.Of<IProvidersRepository>(MockBehavior.Strict);
+        var productsRepository = Mock.Of<IProductsRepository>(MockBehavior.Strict);
 
         var handler = new ImportProductsHandler(
             deserializer,
+            itemRepository,
+            providerRepository,
             productsRepository,
             logger);
 
@@ -145,14 +233,18 @@ public class ImportProductsHandlerTests
     {
         // Arrange
         var logger = Mock.Of<ILogger<ImportProductsHandler>>();
-        var deserializer = Mock.Of<IDeserializer<string, IReadOnlyCollection<Product>>>(MockBehavior.Strict);
-        var productsRepository = Mock.Of<IRepository<Product>>(MockBehavior.Strict);
+        var deserializer = Mock.Of<IDeserializer<string, IReadOnlyCollection<TransportProduct>>>(MockBehavior.Strict);
+        var itemRepository = Mock.Of<IItemsRepository>(MockBehavior.Strict);
+        var providerRepository = Mock.Of<IProvidersRepository>(MockBehavior.Strict);
+        var productsRepository = Mock.Of<IProductsRepository>(MockBehavior.Strict);
 
         var request = "some request";
         using var cts = new CancellationTokenSource();
 
         var handler = new ImportProductsHandler(
             deserializer,
+            itemRepository,
+            providerRepository,
             productsRepository,
             logger);
 
@@ -165,7 +257,7 @@ public class ImportProductsHandlerTests
         exception.Should().BeOfType<OperationCanceledException>();
     }
 
-    public readonly static TheoryData<string, IReadOnlyCollection<Product>> DeserializeParameters = new()
+    public readonly static TheoryData<string, IReadOnlyCollection<TransportProduct>> DeserializeParameters = new()
     {
         {
             /*lang=json,strict*/
@@ -175,29 +267,27 @@ public class ImportProductsHandlerTests
             ]",
             new []
             {
-                TestHelper.GetOrdinaryProduct(
-                    TestHelper.GetOrdinaryItem(1), 
-                    TestHelper.GetOrdinaryProvider(
-                        2, 
-                        info: TestHelper.GetOrdinaryPaymentTransactionsInformation(
-                            inn: "1111111111", 
-                            acc: "11111111111111111111")),
-                    price: 100m,
-                quantity: 5),
-                TestHelper.GetOrdinaryProduct(
-                    TestHelper.GetOrdinaryItem(2),
-                    TestHelper.GetOrdinaryProvider(
-                        2,
-                        info: TestHelper.GetOrdinaryPaymentTransactionsInformation(
-                            inn: "1111111111",
-                            acc: "11111111111111111111")),
-                    price: 55m,
-                quantity: 3)
+                new TransportProduct
+                {
+                    ExternalID = 1,
+                    InternalID = 1,
+                    ProviderID = 1,
+                    Price = 100.0m,
+                    Quantity = 5
+                },
+                new TransportProduct
+                {
+                    ExternalID = 4,
+                    InternalID = 2,
+                    ProviderID = 2,
+                    Price = 55.0m,
+                    Quantity = 3
+                },
             }
         },
         {
             /*lang=json,strict*/@"[]",
-            Array.Empty<Product>()
+            Array.Empty<TransportProduct>()
         }
     };
 }

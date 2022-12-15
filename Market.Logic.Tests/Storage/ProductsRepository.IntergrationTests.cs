@@ -281,7 +281,7 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
         properties[0] = TestHelper.GetOrdinaryItemProperty(1, "NewPropName", "Value1", group);
         properties[1] = TestHelper.GetOrdinaryItemProperty(2, "PropName1", "NewValue", group);
 
-        var updatedItem = TestHelper.GetOrdinaryItem(1, type, "NewName", properties.Take(2).ToArray());
+        var updatedItem = TestHelper.GetOrdinaryItem(1, type, "NewName", properties.ToArray());
 
         // Act
         var exception = Record.Exception(() =>
@@ -457,7 +457,7 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
         result!.ProviderCost.Should().Be(updatedProduct.ProviderCost);
     }
 
-    [Fact(DisplayName = $"The {nameof(ProductsRepository)} can delete product by entity and by key.")]
+    [Fact(DisplayName = $"The {nameof(ProductsRepository)} can delete product.")]
     [Trait("Category", "Integration")]
     public async Task CanRemoveProductAsync()
     {
@@ -511,6 +511,152 @@ public class ProductsRepositoryIntegrationTests : DBIntegrationTestBase
         exception.Should().BeNull();
         beforeContains1.Should().BeTrue();
         afterContains1.Should().BeFalse();
+    }
+
+    [Fact(DisplayName = $"The {nameof(ProductsRepository)} can get all products and items.")]
+    [Trait("Category", "Integration")]
+    public async Task CanGetEntitiesAsync()
+    {
+        // Arrange
+        var logger = Mock.Of<ILogger<ProductsRepository>>();
+
+        var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
+        context.SetupGet(x => x.Products)
+            .Returns(_marketContext.Products);
+        context.SetupGet(x => x.Items)
+            .Returns(_marketContext.Items);
+        context.Setup(x => x.SaveChanges())
+            .Callback(() => _marketContext.SaveChanges());
+
+        var provider = TestHelper.GetOrdinaryProvider();
+
+        var type = TestHelper.GetOrdinaryItemType();
+
+        var item1 = TestHelper.GetOrdinaryItem(1, type, "Name1", properties: Array.Empty<ItemProperty>());
+
+        var item2 = TestHelper.GetOrdinaryItem(2, type, "Name2", properties: Array.Empty<ItemProperty>());
+
+        await AddProviderAsync(provider);
+
+        await AddItemTypeAsync(type);
+
+        await AddItemAsync(item1);
+        await AddItemAsync(item2);
+
+        await AddProductAsync(TestHelper.GetOrdinaryProduct(item1, provider));
+        await AddProductAsync(TestHelper.GetOrdinaryProduct(item2, provider));
+
+        var repository = new ProductsRepository(
+            context.Object,
+            logger);
+
+        var expectedProducts = new Product[]
+        {
+            TestHelper.GetOrdinaryProduct(item1, provider),
+            TestHelper.GetOrdinaryProduct(item2, provider)
+        };
+
+        var expectedItems = new Item[]
+        {
+            item1,
+            item2
+        };
+
+        var itemsResult = ((IItemsRepository)repository).GetEntities().ToList();
+        var productsResult = repository.GetEntities().ToList();
+
+        // Assert
+        productsResult.Should().BeEquivalentTo(expectedProducts, opt=> opt.WithStrictOrdering());
+        itemsResult.Should().BeEquivalentTo(expectedItems, opt=> opt.WithStrictOrdering());
+    }
+
+    [Fact(DisplayName = $"The {nameof(ProductsRepository)} can call multiple operations.")]
+    [Trait("Category", "Integration")]
+    public async Task CanCallMultipleMethodsAsync()
+    {
+        // Arrange
+        var logger = Mock.Of<ILogger<ProductsRepository>>();
+
+        var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
+        context.SetupGet(x => x.Products)
+            .Returns(_marketContext.Products);
+        context.SetupGet(x => x.Items)
+            .Returns(_marketContext.Items);
+
+        context.SetupGet(x => x.ItemTypes)
+           .Returns(_marketContext.ItemTypes);
+
+        context.SetupGet(x => x.PropertyGroups)
+            .Returns(_marketContext.PropertyGroups);
+
+        context.SetupGet(x => x.ItemProperties)
+            .Returns(_marketContext.ItemProperties);
+        context.Setup(x => x.SaveChanges())
+            .Callback(() => _marketContext.SaveChanges());
+
+        var provider = TestHelper.GetOrdinaryProvider();
+
+        var type = TestHelper.GetOrdinaryItemType();
+
+        var item1 = TestHelper.GetOrdinaryItem(1, type, "Name1", properties: Array.Empty<ItemProperty>());
+
+        var item2 = TestHelper.GetOrdinaryItem(2, type, "Name2", properties: Array.Empty<ItemProperty>());
+
+        await AddProviderAsync(provider);
+
+        await AddItemTypeAsync(type);
+
+        await AddItemAsync(item1);
+        await AddItemAsync(item2);
+
+        await AddProductAsync(TestHelper.GetOrdinaryProduct(item1, provider));
+        await AddProductAsync(TestHelper.GetOrdinaryProduct(item2, provider));
+
+        var repository = new ProductsRepository(
+            context.Object,
+            logger);
+
+        // Act
+        var exception = await Record.ExceptionAsync(async () =>
+        {
+            var item = repository.GetByKey(item1.Key);
+
+            _ = await repository.ContainsAsync(item1);
+
+            repository.Update(item1);
+            repository.Update(item1);
+
+            repository.Save();
+
+            await repository.AddRangeAsync(new Product[]
+            {
+                TestHelper.GetOrdinaryProduct(item1, provider),
+                TestHelper.GetOrdinaryProduct(item2, provider)
+            });
+
+            repository.Save();
+
+            _ = repository.GetEntities();
+
+            var product = repository.GetByKey(TestHelper.GetOrdinaryProduct(item1, provider).Key);
+            await repository.AddOrUpdateAsync(product);
+            await repository.AddOrUpdateAsync(product);
+        
+            repository.Save();
+
+            _ = await repository.ContainsAsync(product);
+
+            var newitem = repository.GetByKey(item1.Key);
+
+            repository.Update(newitem);
+
+            repository.Save();
+
+            _ = ((IItemsRepository)repository).GetEntities();
+        });
+
+        // Assert
+        exception.Should().BeNull();
     }
 
     private async Task AddProviderAsync(Provider provider)

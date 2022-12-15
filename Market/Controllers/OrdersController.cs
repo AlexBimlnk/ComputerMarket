@@ -49,8 +49,8 @@ public sealed class OrdersController : Controller
     public OrdersController(
         ILogger<OrdersController> logger,
         IOrderRepository orderRepository,
-        IUsersRepository usersRepository)
-        //ISender<WTCommandConfigurationSender, WTCommand> wtCommandSender)
+        IUsersRepository usersRepository,
+        ISender<WTCommandConfigurationSender, WTCommand> wtCommandSender)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _orderRepository = orderRepository ?? throw new ArgumentNullException(nameof(orderRepository));
@@ -85,20 +85,21 @@ public sealed class OrdersController : Controller
     /// Возвращает форму с детальным описанием заказа.
     /// </summary>
     /// <returns> <see cref="ActionResult"/>. </returns>
-    public ActionResult Details(ID key) => View(_orderRepository.GetByKey(key));
+    public ActionResult Details(long key) => View(_orderRepository.GetByKey(new(key)));
 
     // GET: Orders/cancel
     /// <summary xml:lang = "ru">
     /// Отменяет заказ.
     /// </summary>
     /// <returns> <see cref="ActionResult"/>. </returns>
-    public async Task<ActionResult> CancelAsync(ID key)
+    public async Task<ActionResult> CancelAsync(long key)
     {
-        var order = _orderRepository.GetByKey(key)!;
+        var order = _orderRepository.GetByKey(new(key))!;
 
         order.State = OrderState.Cancel;
 
-        // todo: update order state
+        _orderRepository.UpdateState(order);
+        _orderRepository.Save();
 
         /*await _wtCommandSender.SendAsync(new CancelTransactionRequestCommand(
             new ExecutableID(Guid.NewGuid().ToString()),

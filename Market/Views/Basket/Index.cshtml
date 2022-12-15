@@ -1,0 +1,22 @@
+﻿@model IEnumerable<Market.Logic.Models.PurchasableEntity>
+
+	<h2>Корзина:</h2>
+
+@if (Model.Any())
+{
+	<form method="post" asp-controller="Basket" asp-action="CreateOrder">
+		@{
+			foreach (var item in Model)
+			{
+					<partial name="Partial/_BasketItem" model="item" />
+			}
+		}
+		<div>
+			<button id="createSubmit" type="submit" class="w-70 btn btn-lg">Create</button>
+		</div>
+	</form>
+}
+else
+{
+	<h3><i>Корзина пуста</i></h3>
+}

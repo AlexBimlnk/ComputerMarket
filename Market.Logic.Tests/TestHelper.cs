@@ -1,4 +1,6 @@
-﻿using Market.Logic.Models;
+﻿using System.ComponentModel.DataAnnotations;
+
+using Market.Logic.Models;
 
 using ItemDescription = Market.Logic.Storage.Models.ItemDescription;
 using TItem = Market.Logic.Storage.Models.Item;
@@ -44,11 +46,19 @@ public static class TestHelper
             inn ?? "1234567890",
             acc ?? "01234012340123401234");
 
-    public static Provider GetOrdinaryProvider(long id = 1, string? name = null, PaymentTransactionsInformation? info = null) => new(
+    public static Provider GetOrdinaryProvider(
+        long id = 1, 
+        string? name = null, 
+        PaymentTransactionsInformation? info = null, 
+        decimal margin = 1.3m,
+        bool isAproved = false) => new(
             new ID(id),
             name ?? "Provider Name",
-            margin: new Margin(1.3m),
-            info ?? GetOrdinaryPaymentTransactionsInformation());
+            margin: new Margin(margin),
+            info ?? GetOrdinaryPaymentTransactionsInformation())
+        {
+            IsAproved = isAproved
+        };
 
     public static TProvider GetStorageProvider(Provider provider) => new()
     {
@@ -72,7 +82,7 @@ public static class TestHelper
 
     public static PropertyGroup GetOrdinaryPropertyGroup() => new(id: new ID(1), "Some property Group");
 
-    public static ItemType GetOrdinaryItemType() => new(id: 1, "Som item type");
+    public static ItemType GetOrdinaryItemType(int id = 1, string name = "Som item type") => new(id, name);
 
     public static ItemProperty GetOrdinaryItemProperty(
         long id = 1, 

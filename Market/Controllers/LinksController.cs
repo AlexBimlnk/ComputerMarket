@@ -5,6 +5,7 @@ using Market.Logic.Commands.Import;
 using Market.Logic.Models;
 using Market.Logic.Queries;
 using Market.Logic.Queries.Import;
+using Market.Logic.Storage.Repositories;
 using Market.Logic.Transport.Configurations;
 using Market.Logic.Transport.Senders;
 using Market.Models;
@@ -21,6 +22,7 @@ using IQuerySender = IQuerySender<ImportCommandConfigurationSender, ImportQuery,
 public sealed class LinksController : Controller
 {
     private readonly ILogger<LinksController> _logger;
+    private readonly IProvidersRepository _providerRepository;
     private readonly IQuerySender _querySender;
     private readonly ISender<ImportCommandConfigurationSender, ImportCommand> _importCommandSender;
 
@@ -29,6 +31,9 @@ public sealed class LinksController : Controller
     /// </summary>
     /// <param name="logger" xml:lang = "ru">
     /// Логгер.
+    /// </param>
+    /// <param name="providerRepository" xml:lang = "ru">
+    /// Репозиторий провайдеров.
     /// </param>
     /// <param name="querySender" xml:lang = "ru">
     /// Отправитель запросов.
@@ -41,10 +46,12 @@ public sealed class LinksController : Controller
     /// </exception>
     public LinksController(
         ILogger<LinksController> logger,
+        IProvidersRepository providerRepository,
         IQuerySender querySender,
         ISender<ImportCommandConfigurationSender, ImportCommand> importCommandSender)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _providerRepository = providerRepository ?? throw new ArgumentNullException(nameof(providerRepository));
         _querySender = querySender ?? throw new ArgumentNullException(nameof(querySender));
         _importCommandSender = importCommandSender ?? throw new ArgumentNullException(nameof(importCommandSender));
     }
@@ -85,19 +92,13 @@ public sealed class LinksController : Controller
     {
         if (ModelState.IsValid)
         {
-            // ToDo: get provider 
-            // var provider = _repo.GetProviderById
-            // Или поменять команду установки, чтобы принимала только id поставщика.
+            var provider = _providerRepository.GetByKey(new(link.ProviderId))!;
 
             await _importCommandSender.SendAsync(new SetLinkCommand(
                 new(Guid.NewGuid().ToString()),
                 new(link.InternalId),
                 new(link.ExternalId),
-                new(
-                    new(link.ProviderId),
-                    "some name",
-                    new(1.5m),
-                    new PaymentTransactionsInformation("0123456789", "01234012340123401234"))));
+                provider));
 
             return RedirectToAction("List");
         }
@@ -134,18 +135,12 @@ public sealed class LinksController : Controller
     {
         if (ModelState.IsValid)
         {
-            // ToDo: get provider 
-            // var provider = _repo.GetProviderById
-            // Или поменять команду установки, чтобы принимала только id поставщика.
+            var provider = _providerRepository.GetByKey(new(link.ProviderId))!;
 
             await _importCommandSender.SendAsync(new DeleteLinkCommand(
                 new(Guid.NewGuid().ToString()),
                 new(link.ExternalId),
-                new(
-                    new(link.ProviderId),
-                    "some name",
-                    new(1.5m),
-                    new PaymentTransactionsInformation("0123456789", "01234012340123401234"))));
+                provider));
 
             return RedirectToAction("List");
         }

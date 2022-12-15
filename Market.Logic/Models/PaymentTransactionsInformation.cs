@@ -7,7 +7,14 @@ namespace Market.Logic.Models;
 /// </summary>
 public record class PaymentTransactionsInformation
 {
-    private const string INN_PATTERN = @"^[0-9]{10}$";
+    /// <summary xml:lang = "ru">
+    /// Паттерн для ИНН.
+    /// </summary>
+    public const string INN_PATTERN = @"^[0-9]{10}$";
+    
+    /// <summary xml:lang = "ru">
+    /// Паттерн для банковского акаунта.
+    /// </summary>
     public const string BANK_ACCOUNT_PATTERN = @"^[0-9]{20}$";
 
     /// <summary xml:lang = "ru">

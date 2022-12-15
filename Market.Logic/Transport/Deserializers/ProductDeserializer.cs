@@ -1,4 +1,5 @@
 ﻿using General.Transport;
+
 using Market.Logic.Transport.Models;
 
 using Newtonsoft.Json;
@@ -6,9 +7,9 @@ using Newtonsoft.Json;
 namespace Market.Logic.Transport.Deserializers;
 
 /// <summary xml:lang = "ru">
-/// Дессериализатор <see cref="Product"/>.
+/// Дессериализатор <see cref="TransportProduct"/>.
 /// </summary>
-public sealed class ProductDeserializer : IDeserializer<string, IReadOnlyCollection<Product>>
+public sealed class ProductDeserializer : IDeserializer<string, IReadOnlyCollection<TransportProduct>>
 {
     private JsonSerializer _serializer = JsonSerializer.CreateDefault();
 
@@ -16,7 +17,7 @@ public sealed class ProductDeserializer : IDeserializer<string, IReadOnlyCollect
     /// <exception cref="ArgumentException" xml:lang = "ru">
     /// Когда <paramref name="source"/> имел неверный формат.
     /// </exception>
-    public IReadOnlyCollection<Product> Deserialize(string source)
+    public IReadOnlyCollection<TransportProduct> Deserialize(string source)
     {
         if (string.IsNullOrWhiteSpace(source))
             throw new ArgumentException(
@@ -25,7 +26,7 @@ public sealed class ProductDeserializer : IDeserializer<string, IReadOnlyCollect
 
         using var reader = new JsonTextReader(new StringReader(source));
 
-        var result = _serializer.Deserialize<IReadOnlyCollection<Product>>(reader)!;
+        var result = _serializer.Deserialize<IReadOnlyCollection<TransportProduct>>(reader)!;
 
         return result;
     }

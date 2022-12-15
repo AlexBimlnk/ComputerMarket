@@ -1,0 +1,117 @@
+﻿@model Market.Logic.Models.Product
+@{
+    ViewData["Title"] =  Model.Item.Name;
+}
+
+@inject Market.Logic.Storage.Repositories.IBasketRepository basketRepository
+@inject Market.Logic.Storage.Repositories.IUsersRepository userRepository
+
+<h1>@Model.Item.Name</h1>
+<hr />
+<div class="row">
+    <div class="col-4">
+        <img src="https://c.dns-shop.ru/thumb/st1/fit/wm/0/0/dc66529cf4a637f5283438c49abdaa67/9840f9bd000e456b5d97a36f3eefca09eab7aa1c0d7eae2bdaf11bd5c9c7d3c2.jpg.webp"
+             alt="IMAGE-MAIN-IMAGE" width="400"
+             height="400" />
+    </div>
+    <div class="form-group col-7">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td>
+                        <h2><b>Цена</b></h2>
+                    </td>
+                    <td>
+                        <h2>@string.Format("{0:C}", Model.ProviderCost)</h2>
+                    </td>
+                </tr>
+                    <tr>
+                        <td>
+                            <h2><b>Поставщик</b></h2>
+                        </td>
+                        <td>
+                            <h2>@Model.Provider.Name</h2>
+                        </td>
+                    </tr>
+            </tbody>
+        </table>
+        <br />
+        <div class="row">
+            @{
+                if (User.Identity!.IsAuthenticated && User.Identity.Name is not null)
+                {
+                    var user = userRepository.GetByEmail(User.Identity.Name);
+
+                    var item = basketRepository.GetAllBasketItems(user!).SingleOrDefault(x => x.Product.Item.Key == Model.Item.Key &&
+                        x.Product.Provider.Key == Model.Provider.Key);
+
+                    if (item is not null)
+                    {
+                        	<div class="col-md-5">
+		                        <div class="row">
+                                    <div class="col-md-6">
+                                        <h3> В корзине:</h3>
+                                    </div>
+			                        <div class="col-md-2">
+				                        <button class="btn btn-light" onclick="location.href='/basket/add?itemId=@Model.Item.Key.Value&&providerId=@Model.Provider.Key.Value'" type="button">
+					                        <h3>+</h3>
+				                        </button>
+			                        </div>
+			                        <div class="col-md-2">
+				                        <h4>@item.Quantity</h4>
+			                        </div>
+			                        <div class="col-md-2">
+				                        <button class="btn btn-light" onclick="location.href='/basket/remove?itemId=@Model.Item.Key.Value&&providerId=@Model.Provider.Key.Value'" type="button">
+					                        <h3>-</h3>
+				                        </button>
+			                        </div>
+		                        </div>
+	                        </div>
+	                        <div>
+		                        <button class="btn btn-dark" onclick="location.href='/basket/delete?itemId=@Model.Item.Key.Value&&providerId=@Model.Provider.Key.Value'" type="button">
+			                        Удалить
+		                        </button>
+	                        </div>
+                    }
+                    else
+                    {
+                        <br />
+                        <div class="col-md-5">
+                            <button class="btn btn-dark" onclick="location.href='/basket/add?itemId=@Model.Item.Key.Value&&providerId=@Model.Provider.Key.Value'" type="button">
+                                 Добавить в корзину
+                            </button>
+                        </div>
+                    }
+                }
+            }
+        </div>
+    </div>
+</div>
+<br />
+<h2><b>Характеристики</b></h2>
+<br />
+
+   <div class="row-cols-md-2">
+        @{
+        foreach (var group in Model.Item.Properties.GroupBy(x => x.Group.Id))
+        {
+            <h3>@group.First().Group.Name</h3>
+            <hr />
+            foreach(var property in group)
+            {
+                <div class="row">
+                <div class="col-md-4">
+                    <h4><u>@property.Name</u></h4>
+                </div>
+                <div class="col-md-2">
+                    <h4>@property.Value</h4>
+                </div>  
+                </div>
+                <br />
+            }
+            <p>
+            <br/>
+            </p>
+        }
+    }
+   </div>

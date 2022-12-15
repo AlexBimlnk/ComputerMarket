@@ -137,8 +137,7 @@ public class BasketRepositoryIntegrationTests : DBIntegrationTestBase
         // Act
         var exception = Record.Exception(() =>
         {
-            repository.RemoveFromBasket(user, product);
-            repository.RemoveFromBasket(user, product);
+            repository.DeleteFromBasket(user, product);
             repository.Save();
         });
 
@@ -147,6 +146,117 @@ public class BasketRepositoryIntegrationTests : DBIntegrationTestBase
         // Assert
         exception.Should().BeNull();
         items.Any().Should().BeFalse();
+    }
+
+    [Fact(DisplayName = $"The {nameof(BasketRepository)} can get all basket items.")]
+    [Trait("Category", "Integration")]
+    public async Task CanGetEntitiesAsync()
+    {
+        // Arrange
+        var logger = Mock.Of<ILogger<BasketRepository>>();
+
+        var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
+        context.SetupGet(x => x.BasketItems)
+            .Returns(_marketContext.BasketItems);
+
+        context.Setup(x => x.SaveChanges())
+            .Callback(() => _marketContext.SaveChanges());
+
+        var userType = UserType.Customer;
+
+        var user = TestHelper.GetOrdinaryUser(type: userType);
+
+        var type = TestHelper.GetOrdinaryItemType();
+
+        var item = TestHelper.GetOrdinaryItem(1, type, "Item name", Array.Empty<ItemProperty>());
+
+        var provider = TestHelper.GetOrdinaryProvider();
+
+        var product = TestHelper.GetOrdinaryProduct(item, provider);
+
+        await AddUserTypeAsync(userType);
+        await AddUserAsync(user);
+        await AddItemTypeAsync(type);
+        await AddItemAsync(item);
+        await AddProviderAsync(provider);
+        await AddProductAsync(product);
+
+        await AddBasketItemAsync(user, product, 2);
+
+        var repository = new BasketRepository(
+            context.Object,
+            logger);
+
+        var expectedResult = new PurchasableEntity[]
+        {
+            new PurchasableEntity(product, 2)
+        };
+        // Acr
+        var result = repository.GetAllBasketItems(user).ToList();
+
+        // Assert
+        expectedResult.Should().BeEquivalentTo(result, opt => opt.WithStrictOrdering());
+    }
+
+    [Fact(DisplayName = $"The {nameof(BasketRepository)} can call multiple operations.")]
+    [Trait("Category", "Integration")]
+    public async Task CanCallMultipleMethodsAsync()
+    {
+        // Arrange
+        var logger = Mock.Of<ILogger<BasketRepository>>();
+
+        var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
+        context.SetupGet(x => x.BasketItems)
+            .Returns(_marketContext.BasketItems);
+
+        context.Setup(x => x.SaveChanges())
+            .Callback(() => _marketContext.SaveChanges());
+
+        var userType = UserType.Customer;
+
+        var user = TestHelper.GetOrdinaryUser(type: userType);
+
+        var type = TestHelper.GetOrdinaryItemType();
+
+        var item = TestHelper.GetOrdinaryItem(1, type, "Item name", Array.Empty<ItemProperty>());
+
+        var provider = TestHelper.GetOrdinaryProvider();
+
+        var product = TestHelper.GetOrdinaryProduct(item, provider);
+
+        await AddUserTypeAsync(userType);
+        await AddUserAsync(user);
+        await AddItemTypeAsync(type);
+        await AddItemAsync(item);
+        await AddProviderAsync(provider);
+        await AddProductAsync(product);
+
+        await AddBasketItemAsync(user, product, 2);
+
+        var repository = new BasketRepository(
+            context.Object,
+            logger);
+
+        // Act
+        var exception = await Record.ExceptionAsync(async () =>
+        {
+            var result = repository.GetAllBasketItems(user);
+            await repository.AddToBasketAsync(user, TestHelper.GetOrdinaryProduct(item, provider));
+            await repository.AddToBasketAsync(user, TestHelper.GetOrdinaryProduct(item, provider));
+            await repository.AddToBasketAsync(user, TestHelper.GetOrdinaryProduct(item, provider));
+
+            repository.Save();
+            result = repository.GetAllBasketItems(user);
+            repository.RemoveFromBasket(user, TestHelper.GetOrdinaryProduct(item, provider));
+            repository.RemoveFromBasket(user, TestHelper.GetOrdinaryProduct(item, provider));
+
+            repository.Save();
+
+            result = repository.GetAllBasketItems(user);
+        });
+
+        // Assert
+        exception.Should().BeNull();
     }
 
     private async Task AddProviderAsync(Provider provider)

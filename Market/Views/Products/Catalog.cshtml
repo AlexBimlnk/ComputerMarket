@@ -1,0 +1,17 @@
+﻿@model Market.Models.Products.CatalogViewModel;
+
+@{
+    ViewData["Title"] = "Categories";
+}
+
+<div class="row">
+    <div class="col-md-8">
+        @{
+            foreach(var product in Model.Products)
+            {
+                <partial name="Partial/_Product" model="product" /> 
+            }
+        }
+    </div>
+    <partial name="Partial/_Filter" model="Model" />
+</div>

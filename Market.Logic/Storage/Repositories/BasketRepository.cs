@@ -60,7 +60,10 @@ public sealed class BasketRepository : IBasketRepository
             return;
         }
 
-        exsistedItem.Quantity++;
+        if (exsistedItem.Quantity < exsistedItem.Product.Quantity)
+        {
+            exsistedItem.Quantity++;
+        }
 
         _context.BasketItems.Update(exsistedItem);
     }
@@ -70,10 +73,12 @@ public sealed class BasketRepository : IBasketRepository
     {
         ArgumentNullException.ThrowIfNull(user);
 
-        return _context.BasketItems
-            .Where(x => x.UserId == user.Key.Value)
+        var list = _context.BasketItems
+            .ToList();
+            
+        return list
             .Select(x => ConvertFromStorageModel(x))
-            .AsEnumerable();
+            .ToList();
     }
 
     /// <inheritdoc/>
@@ -94,9 +99,6 @@ public sealed class BasketRepository : IBasketRepository
 
         if (exsistedItem.Quantity == 1)
         {
-            exsistedItem.User = default!;
-            exsistedItem.Product = default!;
-            _context.BasketItems.Remove(exsistedItem);
             return;
         }
 
@@ -104,6 +106,18 @@ public sealed class BasketRepository : IBasketRepository
 
         _context.BasketItems.Update(exsistedItem);
     }
+
+    /// <inheritdoc/>
+    public void DeleteFromBasket(User user, Product product)
+    {
+        ArgumentNullException.ThrowIfNull(user);
+        ArgumentNullException.ThrowIfNull(product);
+
+        var item = ConvertToStorageModel(product, user);
+
+        _context.BasketItems.Remove(item);
+    }
+
 
     /// <inheritdoc/>
     public void Save() => _context.SaveChanges();

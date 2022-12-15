@@ -1,0 +1,51 @@
+﻿@model IEnumerable<Market.Logic.Models.Provider>
+
+@{
+    ViewData["Title"] = "List";
+}
+
+<h1>Providers</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Margin)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsAproved)
+            </th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Margin.Value)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsAproved)
+            </td>
+            <td>
+                <a href="~/provider/edit/@item.Key.Value">Edit</a>
+            </td>
+            <td>
+                @{
+                    if (@item.IsAproved)
+                    {
+                        <a href = "~/provider/agents/@item.Key.Value">Agents</a>
+                    }
+                }
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

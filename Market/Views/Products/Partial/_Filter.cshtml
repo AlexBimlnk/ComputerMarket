@@ -1,0 +1,35 @@
+﻿@model Market.Models.Products.CatalogViewModel;
+
+<div class="col-md-4">
+    <br />
+        <form method="post" asp-controller="Products" asp-action="Update">
+            <div class="row">
+            <input asp-for="SearchString" class="form-control" />
+            <label asp-for="SearchString" />
+        </div>
+            <div class="row">
+                <input asp-for="TypeId" type="hidden"/>
+                <input asp-for="SearchString" type="hidden"/>
+                
+            </div>
+            <hr />
+            
+        @{
+            foreach(var property in Model.Properties)
+            {
+                <div class="form-floating">
+                    <h4>@property.Value.Property.Name</h4>
+                </div>
+                foreach(var values in property.Value.Values)
+                {
+                    <partial name="Partial/_PropertyValue" model="values" /> 
+                }
+            }
+        }
+            <br />
+            <hr />
+            <div class="form-floating">
+                <button id="searchSubmit" type="submit" class="w-70 btn btn-dark">Поиск</button>
+            </div>
+        </form>
+    </div>

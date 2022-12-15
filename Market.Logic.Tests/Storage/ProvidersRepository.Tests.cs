@@ -52,7 +52,7 @@ public class ProvidersRepositoryTests
         exception.Should().BeOfType<ArgumentNullException>();
     }
 
-    [Fact(DisplayName = $"The {nameof(ProvidersRepository)} can add product.")]
+    [Fact(DisplayName = $"The {nameof(ProvidersRepository)} can add provider.")]
     [Trait("Category", "Unit")]
     public async void CanAddProductAsync()
     {
@@ -94,7 +94,7 @@ public class ProvidersRepositoryTests
         providersCallback.Should().Be(1);
     }
 
-    [Fact(DisplayName = $"The {nameof(ProvidersRepository)} cannot add product when product is null.")]
+    [Fact(DisplayName = $"The {nameof(ProvidersRepository)} cannot add provider when product is null.")]
     [Trait("Category", "Unit")]
     public async void CanNotAddProductWhenProductIsNullAsync()
     {
@@ -114,7 +114,7 @@ public class ProvidersRepositoryTests
         exception.Should().BeOfType<ArgumentNullException>();
     }
 
-    [Fact(DisplayName = $"The {nameof(ProvidersRepository)} can cancel add product.")]
+    [Fact(DisplayName = $"The {nameof(ProvidersRepository)} can cancel add provider.")]
     [Trait("Category", "Unit")]
     public async void CanCancelAddProductAsync()
     {
@@ -139,7 +139,7 @@ public class ProvidersRepositoryTests
         exception.Should().BeOfType<OperationCanceledException>();
     }
 
-    [Fact(DisplayName = $"The {nameof(ProvidersRepository)} cannot contains product when product is null.")]
+    [Fact(DisplayName = $"The {nameof(ProvidersRepository)} cannot contains null provider.")]
     [Trait("Category", "Unit")]
     public async void CanNotContainsWhenProductIsNullAsync()
     {
@@ -159,7 +159,7 @@ public class ProvidersRepositoryTests
         exception.Should().BeOfType<ArgumentNullException>();
     }
 
-    [Fact(DisplayName = $"The {nameof(ProvidersRepository)} can cancel contains product.")]
+    [Fact(DisplayName = $"The {nameof(ProvidersRepository)} can cancel contains provider.")]
     [Trait("Category", "Unit")]
     public async void CanCancelContainsAsync()
     {
@@ -184,46 +184,7 @@ public class ProvidersRepositoryTests
         exception.Should().BeOfType<OperationCanceledException>();
     }
 
-    [Fact(DisplayName = $"The {nameof(ProvidersRepository)} can delete product.")]
-    [Trait("Category", "Unit")]
-    public void CanDeleteProduct()
-    {
-        // Arrange
-        var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
-        var logger = Mock.Of<ILogger<ProvidersRepository>>();
-
-        var containsProvider = TestHelper.GetOrdinaryProvider();
-
-        var storageProvider = TestHelper.GetStorageProvider(containsProvider);
-
-        var providers = new Mock<DbSet<TProvider>>(MockBehavior.Loose);
-
-        context.Setup(x => x.Providers)
-            .Returns(providers.Object);
-
-        var providersRepository = new ProvidersRepository(
-            context.Object,
-            logger);
-
-        // Act
-        var exception = Record.Exception(() =>
-            providersRepository.Delete(containsProvider));
-
-        // Assert
-        exception.Should().BeNull();
-
-        providers.Verify(x =>
-            x.Remove(
-                It.Is<TProvider>(p =>
-                    p.Id == storageProvider.Id &&
-                    p.Name == storageProvider.Name &&
-                    p.Margin == storageProvider.Margin&&
-                    p.Inn == storageProvider.Inn &&
-                    p.BankAccount == storageProvider.BankAccount)),
-            Times.Once);
-    }
-
-    [Fact(DisplayName = $"The {nameof(ProvidersRepository)} cannot delete product when product is null.")]
+    [Fact(DisplayName = $"The {nameof(ProvidersRepository)} cannot delete null provider.")]
     [Trait("Category", "Unit")]
     public void CanNotDeleteWhenProductIsNull()
     {
@@ -243,7 +204,7 @@ public class ProvidersRepositoryTests
         exception.Should().BeOfType<ArgumentNullException>();
     }
 
-    [Fact(DisplayName = $"The {nameof(ProvidersRepository)} can get product by key.")]
+    [Fact(DisplayName = $"The {nameof(ProvidersRepository)} can get provider by key.")]
     [Trait("Category", "Unit")]
     public void CanGetByKey()
     {

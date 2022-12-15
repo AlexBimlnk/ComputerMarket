@@ -125,7 +125,7 @@ public sealed class MarketContext : DbContext
             entity.HasOne(i => i.Item)
                 .WithMany(d => d.Description)
                 .HasForeignKey(d => d.ItemId)
-                .OnDelete(DeleteBehavior.ClientCascade)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("item_description_item_id_fkey");
 
             entity.HasOne(d => d.Property)
@@ -238,6 +238,7 @@ public sealed class MarketContext : DbContext
             entity.HasOne(d => d.Provider)
                 .WithMany(p => p.Products)
                 .HasForeignKey(d => d.ProviderId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("product_provider_id_fkey");
         });
 
@@ -280,6 +281,10 @@ public sealed class MarketContext : DbContext
             entity.Property(e => e.Name)
                 .HasMaxLength(30)
                 .HasColumnName("name");
+
+            entity.Property(e => e.IsAproved)
+                .HasColumnName("is_approved")
+                .HasDefaultValue(false);
         });
 
         modelBuilder.Entity<ProviderAgent>(entity =>
@@ -401,7 +406,7 @@ public sealed class MarketContext : DbContext
 
             entity.HasOne(d => d.Product)
                 .WithMany()
-                .HasForeignKey(d => new{ d.ItemId, d.ProviderId })
+                .HasForeignKey(d => new{ d.ProviderId, d.ItemId })
                 .HasConstraintName("order_fill_item_id_fkey");
         });
 
@@ -422,7 +427,7 @@ public sealed class MarketContext : DbContext
 
             entity.HasOne(d => d.Product)
                 .WithMany()
-                .HasForeignKey(d => new { d.ItemId, d.ProviderId })
+                .HasForeignKey(d => new { d.ProviderId, d.ItemId})
                 .HasConstraintName("basket_items_product_id_fkey");
 
             entity.HasOne(d => d.User)

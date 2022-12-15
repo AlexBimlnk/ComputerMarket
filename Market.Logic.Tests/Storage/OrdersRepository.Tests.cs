@@ -146,44 +146,6 @@ public class OrdersRepositoryTests
         exception.Should().BeOfType<OperationCanceledException>();
     }
 
-    [Fact(DisplayName = $"The {nameof(OrdersRepository)} can delete order.")]
-    [Trait("Category", "Unit")]
-    public void CanDeleteOrder()
-    {
-        // Arrange
-        var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
-        var logger = Mock.Of<ILogger<OrdersRepository>>();
-
-        var containsOrder = TestHelper.GetOrdinaryOrder();
-
-        var storageOrder = TestHelper.GetStorageOrder(containsOrder);
-
-        var orders = new Mock<DbSet<TOrder>>(MockBehavior.Loose);
-
-        context.Setup(x => x.Orders)
-            .Returns(orders.Object);
-
-        var ordersRepository = new OrdersRepository(
-            context.Object,
-            logger);
-
-        // Act
-        var exception = Record.Exception(() =>
-            ordersRepository.Delete(containsOrder));
-
-        // Assert
-        exception.Should().BeNull();
-
-        orders.Verify(x =>
-            x.Remove(
-                It.Is<TOrder>(p =>
-                    p.Id == storageOrder.Id &&
-                    p.Date == storageOrder.Date &&
-                    p.StateId == storageOrder.StateId &&
-                    p.UserId == storageOrder.UserId)),
-            Times.Once);
-    }
-
     [Fact(DisplayName = $"The {nameof(OrdersRepository)} cannot delete null order.")]
     [Trait("Category", "Unit")]
     public void CanNotDeleteWhenNullOrder()
@@ -328,48 +290,6 @@ public class OrdersRepositoryTests
         context.Verify(x =>
             x.SaveChanges(),
             Times.Once);
-    }
-
-    [Fact(DisplayName = $"The {nameof(OrdersRepository)} can update order.")]
-    [Trait("Category", "Unit")]
-    public void CanUpdateOrder()
-    {
-        // Arrange
-        var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
-        var logger = Mock.Of<ILogger<OrdersRepository>>();
-
-        var inputOrder = TestHelper.GetOrdinaryOrder().WithState(OrderState.ProviderAnswerWait);
-
-        var newStorageOrder = TestHelper.GetStorageOrder(inputOrder.WithState(OrderState.ProviderAnswerWait));
-
-        var orders = new Mock<DbSet<TOrder>>(MockBehavior.Strict);
-
-        var ordersCallback = 0;
-
-        orders.Setup(x => x
-            .Update(
-                It.Is<TOrder>(p =>
-                    p.Id == newStorageOrder.Id &&
-                    p.Date == newStorageOrder.Date &&
-                    p.StateId == newStorageOrder.StateId &&
-                    p.UserId == newStorageOrder.UserId)))
-            .Callback(() => ordersCallback++)
-            .Returns(new ValueTask<EntityEntry<TOrder>>().Result);
-
-        context.Setup(x => x.Orders)
-            .Returns(orders.Object);
-
-        var orderRepository = new OrdersRepository(
-            context.Object,
-            logger);
-
-        // Act
-        var exception = Record.Exception(() =>
-            orderRepository.UpdateState(inputOrder));
-
-        // Assert
-        exception.Should().BeNull();
-        ordersCallback.Should().Be(1);
     }
 }
 
