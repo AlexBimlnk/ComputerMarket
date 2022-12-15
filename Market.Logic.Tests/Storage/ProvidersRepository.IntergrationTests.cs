@@ -56,8 +56,9 @@ public class ProvidersRepositoryIntegrationTests : DBIntegrationTestBase
                 Id = r.GetInt64(0),
                 Name = r.GetString(1),
                 Margin = r.GetDecimal(2),
+                IsAproved = r.GetBoolean(4),
                 BankAccount = r.GetString(3),
-                Inn = r.GetString(4)
+                Inn = r.GetString(5)
             });
 
         // Assert

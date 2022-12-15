@@ -184,45 +184,6 @@ public class ProvidersRepositoryTests
         exception.Should().BeOfType<OperationCanceledException>();
     }
 
-    [Fact(DisplayName = $"The {nameof(ProvidersRepository)} can delete provider.")]
-    [Trait("Category", "Unit")]
-    public void CanDeleteProduct()
-    {
-        // Arrange
-        var context = new Mock<IRepositoryContext>(MockBehavior.Strict);
-        var logger = Mock.Of<ILogger<ProvidersRepository>>();
-
-        var containsProvider = TestHelper.GetOrdinaryProvider();
-
-        var storageProvider = TestHelper.GetStorageProvider(containsProvider);
-
-        var providers = new Mock<DbSet<TProvider>>(MockBehavior.Loose);
-
-        context.Setup(x => x.Providers)
-            .Returns(providers.Object);
-
-        var providersRepository = new ProvidersRepository(
-            context.Object,
-            logger);
-
-        // Act
-        var exception = Record.Exception(() =>
-            providersRepository.Delete(containsProvider));
-
-        // Assert
-        exception.Should().BeNull();
-
-        providers.Verify(x =>
-            x.Remove(
-                It.Is<TProvider>(p =>
-                    p.Id == storageProvider.Id &&
-                    p.Name == storageProvider.Name &&
-                    p.Margin == storageProvider.Margin&&
-                    p.Inn == storageProvider.Inn &&
-                    p.BankAccount == storageProvider.BankAccount)),
-            Times.Once);
-    }
-
     [Fact(DisplayName = $"The {nameof(ProvidersRepository)} cannot delete null provider.")]
     [Trait("Category", "Unit")]
     public void CanNotDeleteWhenProductIsNull()
