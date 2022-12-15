@@ -49,6 +49,18 @@ public class BuilderController : Controller
             .Select(x => x.Item.Name);
     }
 
+    private void CreateBestOffer(
+        IEnumerable<Product> processors,
+        IEnumerable<Product> motherBoards)
+    {
+        var bestOffer = new List<Product>()
+        {
+            processors.MinBy(x => x.FinalCost)!,
+            motherBoards.MinBy(x => x.FinalCost)!,
+        };
+
+        ViewBag.BestOffer = bestOffer;
+    }
 
     /// <summary xml:lang = "ru">
     /// Возвращает форму билдера.
@@ -83,6 +95,9 @@ public class BuilderController : Controller
         _computerBuilder.AddOrReplace(possibleMotherBoards.First()!.Item);
 
         var result = _computerBuilder.Build();
+
+        if (result.IsSucces)
+            CreateBestOffer(possibleProcessors, possibleMotherBoards);
 
         return View("Index", result);
     }
