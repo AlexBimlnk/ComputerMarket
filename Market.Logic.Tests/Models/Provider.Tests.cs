@@ -73,7 +73,7 @@ public class ProviderTests
             id: new ID(1),
             name: "Name",
             margin: new Margin(1m),
-            paymentTransactionsInformation: null!);
+            TestHelper.GetOrdinaryPaymentTransactionsInformation());
 
         provider.IsAproved = true;
 
