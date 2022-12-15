@@ -1,12 +1,19 @@
 ﻿@model Market.Models.Products.CatalogViewModel;
 
 <div class="col-md-4">
+    <br />
         <form method="post" asp-controller="Products" asp-action="Update">
-            <div class="form-floating">
+            <div class="row">
+            <input asp-for="SearchString" class="form-control" />
+            <label asp-for="SearchString" />
+        </div>
+            <div class="row">
                 <input asp-for="TypeId" type="hidden"/>
                 <input asp-for="SearchString" type="hidden"/>
                 
             </div>
+            <hr />
+            
         @{
             foreach(var property in Model.Properties)
             {
@@ -22,7 +29,7 @@
             <br />
             <hr />
             <div class="form-floating">
-                <button id="updateSubmit" type="submit" class="w-80 btn btn-lg btn-primary">Update</button>
+                <button id="searchSubmit" type="submit" class="w-70 btn btn-dark">Поиск</button>
             </div>
         </form>
     </div>

@@ -94,6 +94,7 @@ public sealed class OrdersRepository : IOrderRepository
         .ThenInclude(x => x.Item)
         .ThenInclude(x => x.Description)
         .ThenInclude(x => x.Property)
+        .ThenInclude(x => x.Group)
         .Where(x => x.Id == key.Value)
         .Select(x => ConvertFromStorageModel(x))
         .SingleOrDefault();

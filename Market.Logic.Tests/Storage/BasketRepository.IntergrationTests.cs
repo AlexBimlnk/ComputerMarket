@@ -137,8 +137,7 @@ public class BasketRepositoryIntegrationTests : DBIntegrationTestBase
         // Act
         var exception = Record.Exception(() =>
         {
-            repository.RemoveFromBasket(user, product);
-            repository.RemoveFromBasket(user, product);
+            repository.DeleteFromBasket(user, product);
             repository.Save();
         });
 

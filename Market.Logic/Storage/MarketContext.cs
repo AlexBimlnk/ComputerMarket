@@ -401,7 +401,7 @@ public sealed class MarketContext : DbContext
 
             entity.HasOne(d => d.Product)
                 .WithMany()
-                .HasForeignKey(d => new{ d.ItemId, d.ProviderId })
+                .HasForeignKey(d => new{ d.ProviderId, d.ItemId })
                 .HasConstraintName("order_fill_item_id_fkey");
         });
 
@@ -422,7 +422,7 @@ public sealed class MarketContext : DbContext
 
             entity.HasOne(d => d.Product)
                 .WithMany()
-                .HasForeignKey(d => new { d.ItemId, d.ProviderId })
+                .HasForeignKey(d => new { d.ProviderId, d.ItemId})
                 .HasConstraintName("basket_items_product_id_fkey");
 
             entity.HasOne(d => d.User)

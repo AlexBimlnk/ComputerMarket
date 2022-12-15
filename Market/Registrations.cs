@@ -56,6 +56,7 @@ public static class Registrations
             .AddScoped<IProductsRepository>(x => x.GetRequiredService<ProductsRepository>())
             .AddScoped<IItemsRepository>(x => x.GetRequiredService<ProductsRepository>())
             .AddScoped<IOrderRepository, OrdersRepository>()
+            .AddScoped<IBasketRepository, BasketRepository>()
             .AddScoped<IComputerBuildRulesRepository, RulesRepository>();
 
     private static IServiceCollection AddTransport(this IServiceCollection services)

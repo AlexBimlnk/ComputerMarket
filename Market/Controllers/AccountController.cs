@@ -44,7 +44,7 @@ public class AccountController : Controller
     /// </summary>
     /// <returns xml:lang = "ru">Представление с формой для входа в систему.</returns>
     [HttpGet]
-    public IActionResult Login() => View();
+    public IActionResult Login(string returnUrl) => View();
 
     /// <summary xml:lang = "ru">
     /// Запрос на вход в систему.
@@ -67,6 +67,7 @@ public class AccountController : Controller
             }
             ModelState.AddModelError(string.Empty, "Некорректные логин и(или) пароль");
         }
+        
         return View(model);
     }
 
