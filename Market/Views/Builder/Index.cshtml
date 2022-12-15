@@ -1,0 +1,101 @@
+﻿@model Market.Logic.ComputerBuilder.IComputerBuildResult;
+
+@{
+    ViewData["Title"] = "Builder";
+}
+
+<h1>Builder</h1>
+
+@using (Html.BeginForm("Build", "Builder", FormMethod.Post))
+{
+    <p>
+        <label>Процессоры</label><br />
+        @Html.DropDownList(
+            "processor",
+            new SelectList(ViewBag.Processors),
+            "Выберите процессор",
+            new { @class = "dropdown" })
+
+        <br /><label>Материнские платы</label><br />
+        @Html.DropDownList(
+            "motherboard",
+            new SelectList(ViewBag.MotherBoards),
+            "Выберите материнскую плату",
+            new { @class = "dropdown" })
+    </p>
+    <p>
+        <input type="submit" value="Отправить" сlass="w-80 btn btn-lg btn-primary" />
+    </p>
+}
+
+@{
+    if (Model is not null)
+    {
+        @Html.Label(
+                "build_result",
+                $"Build result: {Model.IsSucces}",
+                new { style = Model.IsSucces ? "color: green;" : "color: red;" })
+
+        if (Model.IsSucces)
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayName("Name")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Provider")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Price")
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var product in (IEnumerable<Market.Logic.Models.Product>)ViewBag.BestOffer)
+                    {
+                        <tr>
+                            <td>
+                                @Html.Label(product.Item.Name)
+                            </td>
+                            <td>
+                                @Html.Label(product.Provider.Name)
+                            </td>
+                            <td>
+                                @Html.Label(product.FinalCost.ToString())
+                            </td>
+                            <td>
+                                @Html.ActionLink("Страница товара", "product", "products",
+                                new
+                                {
+                                    ItemId = product.Item.Key.Value,
+                                    ProviderId = product.Provider.Key.Value
+                                })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+
+        else
+        {
+            <dl class="row">
+                @foreach (var type in Model.ErrorsByType)
+                {
+                    <dt class="col-sm-2">
+                        @Html.DisplayName(type.Key.Name)
+                    </dt>
+                    foreach (var error in type.Value)
+                    {
+                        <dd>
+                            @error
+                        </dd>
+                    }
+                }
+            </dl>
+        }
+    }
+}

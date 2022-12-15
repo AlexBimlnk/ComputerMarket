@@ -1,8 +1,5 @@
 ﻿using General.Models;
 
-using Market.Logic.Storage.Models;
-using Microsoft.Extensions.Logging;
-
 namespace Market.Logic.Models;
 
 /// <summary xml:lang = "ru">
@@ -43,7 +40,7 @@ public sealed record class ItemProperty : IKeyable<ID>
     /// <summary xml:lang = "ru">
     /// Значения свойства.
     /// </summary>
-    public string? Value 
+    public string? Value
     {
         get => _value;
         set
