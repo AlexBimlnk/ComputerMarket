@@ -29,7 +29,8 @@
                     @string.Format("{0:C}", item.GetSumCost())
                 </td>
                 <td>
-                    @Html.ActionLink("Details", "Details",new { Id = item.Key.Value })
+                    @Html.ActionLink("Details", "Details",new { Id = item.Key.Value }) |
+                    @Html.ActionLink("Ready", "Ready",new { Id = item.Key.Value })
                 </td>
             </tr>
         }

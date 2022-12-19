@@ -80,6 +80,7 @@ public sealed class MarketContext : DbContext
     /// </summary>
     public DbSet<BasketItem> BasketItems { get; set; } = default!;
 
+    public DbSet<ProviderAprove> ProviderAproves { get; set; } = default!;
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
 
@@ -434,6 +435,30 @@ public sealed class MarketContext : DbContext
                 .WithMany()
                 .HasForeignKey(d => d.UserId)
                 .HasConstraintName("basket_items_user_id_fkey");
+        });
+
+        modelBuilder.Entity<ProviderAprove>(entity =>
+        {
+            entity.HasKey(e => new { e.ProviderId, e.OrderId })
+                .HasName("provider_order_approve_pkey");
+
+            entity.ToTable("provider_order_approve");
+
+            entity.Property(e => e.ProviderId).HasColumnName("provider_id");
+
+            entity.Property(e => e.OrderId).HasColumnName("order_id");
+
+            entity.HasOne(d => d.Order)
+                .WithMany()
+                .HasForeignKey(d => d.OrderId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("provider_order_approve_item_id_fkey");
+
+            entity.HasOne(d => d.Provider)
+                .WithMany()
+                .HasForeignKey(d => d.ProviderId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("provider_order_approve_provider_id_fkey");
         });
     }
 }

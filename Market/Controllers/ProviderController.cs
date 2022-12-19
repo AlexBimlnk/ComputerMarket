@@ -313,12 +313,7 @@ public class ProviderController : Controller
             return BadRequest();
         }
 
-        var orders = _orderRepositoty
-            .GetEntities();
-
-        orders = orders.Where(x => x.Items
-                .Any(x => x.Product.Provider.Key == agent.Provider.Key))
-            .Where(x => x.State == OrderState.ProviderAnswerWait);
+        var orders = _orderRepositoty.GetAproveOrdersOnProvider(agent.Provider);
 
         return View(orders);
     }
@@ -326,20 +321,15 @@ public class ProviderController : Controller
     [HttpGet("provider/orders/details/{id}")]
     public IActionResult Details(long id)
     {
-        var order = _orderRepositoty.GetByKey(new(id));
-
         var user = GetCurrentUser();
 
         var agent = _providerRepository.GetAgent(user!)!;
 
+        var order = _orderRepositoty.GetAproveOrdersOnProvider(agent.Provider).SingleOrDefault(x => x.Key.Value == id);
+
         if (order is null)
         {
             return NotFound();
-        }
-
-        if (!order.Items.Any(x => x.Product.Provider.Key == agent.Provider.Key))
-        {
-            return BadRequest();
         }
 
         return View(order.Items.Where(x => x.Product.Provider.Key == agent.Provider.Key));
@@ -348,21 +338,19 @@ public class ProviderController : Controller
     [HttpGet]
     public IActionResult Ready(long id)
     {
-        var order = _orderRepositoty.GetByKey(new(id));
-
         var user = GetCurrentUser();
 
         var agent = _providerRepository.GetAgent(user!)!;
+
+        var order = _orderRepositoty.GetAproveOrdersOnProvider(agent.Provider).SingleOrDefault(x => x.Key.Value == id);
 
         if (order is null)
         {
             return NotFound();
         }
 
-        if (!order.Items.Any(x => x.Product.Provider.Key == agent.Provider.Key))
-        {
-            return BadRequest();
-        }
+        _orderRepositoty.ProviderArpove(order, agent.Provider);
+        _orderRepositoty.Save();
 
         return RedirectToAction("Orders");
     }

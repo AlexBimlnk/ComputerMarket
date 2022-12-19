@@ -56,6 +56,8 @@ public sealed class RepositoryContext : IRepositoryContext
     /// <inheritdoc/>
     public DbSet<BasketItem> BasketItems => _marketContext.BasketItems;
 
+    public DbSet<ProviderAprove> ProviderAproves => _marketContext.ProviderAproves;
+
     /// <inheritdoc/>
     public void SaveChanges()
     {

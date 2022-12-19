@@ -14,4 +14,8 @@ public interface IOrderRepository : IKeyableRepository<Order, ID>
     /// </summary>
     /// <param name="order" xml:lang="ru">Заказ с новым состоянием.</param>
     public void UpdateState(Order order);
+
+    public void ProviderArpove(Order order, Provider provider);
+
+    public IEnumerable<Order> GetAproveOrdersOnProvider(Provider provider);
 }
