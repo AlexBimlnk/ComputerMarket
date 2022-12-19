@@ -181,6 +181,17 @@ public sealed class ProvidersRepository : IProvidersRepository
         _context.Users.Update(currentUser);
     }
 
+    /// <inheritdoc/>
+    public ProviderAgent GetAgent(User user)
+    {
+        var curUser = _context.Users.SingleOrDefault(x => x.Id == user.Key.Value);
+
+        if (curUser is null || curUser.ProvidersAgent is null)
+            return null!;
+
+        return new ProviderAgent(ConvertFromStorageModel(curUser, _logger)!, ConvertFromStorageModel(curUser.ProvidersAgent.Provider));
+    }
+
     #region Converters
 
     private static TProvider ConvertToStorageModel(Provider provider) => new()

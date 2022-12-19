@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Net.WebSockets;
 
 using Market.Logic;
 using Market.Logic.Models;
@@ -16,6 +17,7 @@ public class ProviderController : Controller
 {
     private readonly IProvidersRepository _providerRepository;
     private readonly IUsersRepository _usersRepository;
+    private readonly IOrderRepository _orderRepositoty;
     private readonly ILogger<ProviderController> _logger;
     
     /// <summary>
@@ -26,10 +28,12 @@ public class ProviderController : Controller
     /// <param name="logger">Логгер.</param>
     public ProviderController(IProvidersRepository providerRepository,
         IUsersRepository usersRepository,
+        IOrderRepository orderRepository,
         ILogger<ProviderController> logger)
     {
         _providerRepository = providerRepository;
         _usersRepository = usersRepository;
+        _orderRepositoty = orderRepository;
         _logger = logger;
     }
 
@@ -295,4 +299,73 @@ public class ProviderController : Controller
 
         return RedirectToAction("Agents", new { ProviderId = providerId });
     }
+
+    [HttpGet]
+    public IActionResult Orders()
+    {
+        var user = GetCurrentUser();
+
+        var agent = _providerRepository.GetAgent(user!);
+
+        if (agent is null)
+        {
+            Response.StatusCode = 400;
+            return BadRequest();
+        }
+
+        var orders = _orderRepositoty
+            .GetEntities();
+
+        orders = orders.Where(x => x.Items
+                .Any(x => x.Product.Provider.Key == agent.Provider.Key))
+            .Where(x => x.State == OrderState.ProviderAnswerWait);
+
+        return View(orders);
+    }
+
+    [HttpGet("provider/orders/details/{id}")]
+    public IActionResult Details(long id)
+    {
+        var order = _orderRepositoty.GetByKey(new(id));
+
+        var user = GetCurrentUser();
+
+        var agent = _providerRepository.GetAgent(user!)!;
+
+        if (order is null)
+        {
+            return NotFound();
+        }
+
+        if (!order.Items.Any(x => x.Product.Provider.Key == agent.Provider.Key))
+        {
+            return BadRequest();
+        }
+
+        return View(order.Items.Where(x => x.Product.Provider.Key == agent.Provider.Key));
+    }
+
+    [HttpGet]
+    public IActionResult Ready(long id)
+    {
+        var order = _orderRepositoty.GetByKey(new(id));
+
+        var user = GetCurrentUser();
+
+        var agent = _providerRepository.GetAgent(user!)!;
+
+        if (order is null)
+        {
+            return NotFound();
+        }
+
+        if (!order.Items.Any(x => x.Product.Provider.Key == agent.Provider.Key))
+        {
+            return BadRequest();
+        }
+
+        return RedirectToAction("Orders");
+    }
+
+    private User? GetCurrentUser() => _usersRepository.GetByEmail(User.Identity!.Name!);
 }

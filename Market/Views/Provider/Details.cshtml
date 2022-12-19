@@ -1,0 +1,46 @@
+﻿@model IEnumerable<Market.Logic.Models.PurchasableEntity>
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Order</h4>
+    <hr />
+    <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.First().Product)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.First().Product.FinalCost)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.First().Quantity)
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                            <tr>
+                                <td>
+                            @Html.DisplayFor(modelItem => item.Product.Item.Name)
+                                </td>
+                                <td>
+                        @string.Format("{0:C}", item.Product.FinalCost);
+                                </td>
+                                <td>
+                            @Html.DisplayFor(modelItem => item.Quantity)
+                                </td>
+                            </tr>
+                }
+            </tbody>
+        </table>
+</div>
+<div>
+    <a asp-action="Orders">Back to List</a>
+</div>
