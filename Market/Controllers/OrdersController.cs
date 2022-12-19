@@ -16,6 +16,8 @@ using Market.Models;
 
 using Microsoft.AspNetCore.Mvc;
 
+using NuGet.Protocol;
+
 namespace Market.Controllers;
 
 /// <summary xml:lang = "ru">
@@ -26,7 +28,7 @@ public sealed class OrdersController : Controller
     private readonly ILogger<OrdersController> _logger;
     private readonly IOrderRepository _orderRepository;
     private readonly IUsersRepository _userRepository;
-    //private readonly ISender<WTCommandConfigurationSender, WTCommand> _wtCommandSender;
+    private readonly ISender<WTCommandConfigurationSender, WTCommand> _wtCommandSender;
 
     /// <summary xml:lang = "ru">
     /// Создает новый экземпляр типа <see cref="OrdersController"/>.
@@ -55,7 +57,7 @@ public sealed class OrdersController : Controller
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _orderRepository = orderRepository ?? throw new ArgumentNullException(nameof(orderRepository));
         _userRepository = usersRepository ?? throw new ArgumentNullException(nameof(usersRepository));
-        //_wtCommandSender = wtCommandSender ?? throw new ArgumentNullException(nameof(wtCommandSender));
+        _wtCommandSender = wtCommandSender ?? throw new ArgumentNullException(nameof(wtCommandSender));
     }
 
     // Get: Orders/List
@@ -101,20 +103,20 @@ public sealed class OrdersController : Controller
         _orderRepository.UpdateState(order);
         _orderRepository.Save();
 
-        /*await _wtCommandSender.SendAsync(new CancelTransactionRequestCommand(
+        await _wtCommandSender.SendAsync(new CancelTransactionRequestCommand(
             new ExecutableID(Guid.NewGuid().ToString()),
-            order.Key));*/
+            order.Key));
 
         return RedirectToAction("List");
     }
 
-    [HttpGet]
-    public IActionResult Pay(long id) => View();
+    [HttpGet("orders/pay/{orderId}")]
+    public IActionResult Pay([FromRoute] long orderId) => View();
 
-    [HttpPost]
-    public async Task<IActionResult> PayAsync(long id, OrderPayModel model)
+    [HttpPost(("orders/pay/{orderId}"))]
+    public async Task<IActionResult> PayAsync([FromRoute] long orderId, OrderPayModel model)
     {
-        var order = _orderRepository.GetByKey(new(id));
+        var order = _orderRepository.GetByKey(new(orderId));
 
         if (order is null)
         {
@@ -133,8 +135,57 @@ public sealed class OrdersController : Controller
                 item.Sum(x => x.Product.FinalCost) - item.Sum(x => x.Product.ProviderCost)));
         }
 
-        //await _wtCommandSender.SendAsync(new CreateTransactionRequestCommand(new(Guid.NewGuid().ToString()), order.Key, transactions));
+        await _wtCommandSender.SendAsync(new CreateTransactionRequestCommand(new(Guid.NewGuid().ToString()), order.Key, transactions));
             
         return RedirectToAction("List");
     }
+
+    [HttpGet]
+    public IActionResult Aprove()
+    {
+        var ordersWithWaitStatus = _orderRepository.GetEntities()
+            .Where(x => x.State is OrderState.ProductDeliveryWait or OrderState.Ready);
+
+        return View(ordersWithWaitStatus);
+    }
+
+    [HttpGet]
+    public IActionResult Ready(long id)
+    {
+        var order = _orderRepository.GetByKey(new(id));
+
+        if (order is null || order.State is not OrderState.ProductDeliveryWait)
+        {
+            Response.StatusCode = 400;
+            return View();
+        }
+
+        order.State = OrderState.Ready;
+
+        _orderRepository.UpdateState(order);
+        _orderRepository.Save();
+
+        return RedirectToAction("Aprove");
+    }
+
+    [HttpGet]
+    public IActionResult Receive(long id)
+    {
+        var order = _orderRepository.GetByKey(new(id));
+
+        if (order is null || order.State is not OrderState.Ready)
+        {
+            Response.StatusCode = 400;
+            return View();
+        }
+
+        order.State = OrderState.Received;
+
+        _orderRepository.UpdateState(order);
+        _orderRepository.Save();
+
+        return RedirectToAction("Aprove");
+    }
+
+    
 }

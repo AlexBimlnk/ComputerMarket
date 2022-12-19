@@ -35,7 +35,8 @@
             </td>
             <td>
                 @Html.ActionLink("Details", "Details", new { Key = item.Key.Value }) |
-                @Html.ActionLink("Cancel", "Cancel", new { Key = item.Key.Value })
+                @Html.ActionLink("Cancel", "Cancel", new { Key = item.Key.Value }) | 
+                @Html.ActionLink("Pay", "Pay", new { OrderId = item.Key.Value }) 
             </td>
         </tr>
 }
