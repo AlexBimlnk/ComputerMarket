@@ -1,4 +1,6 @@
 BEGIN;
+UPDATE db_version SET version = 14 WHERE TRUE;
+
 ALTER TABLE item_type
 DROP COLUMN IF EXISTS url_image;
 
