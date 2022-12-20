@@ -61,5 +61,11 @@ public sealed class Catalog : ICatalog
     }
 
     /// <inheritdoc/>
-    public Product? GetProductByKey((ID, ID) key) => _productRepository.GetByKey(key); 
+    public Product? GetProductByKey((ID, ID) key) => _productRepository.GetByKey(key);
+    
+    /// <inheritdoc/>
+    public IEnumerable<Product> GetProducts() => _productRepository.GetEntities();
+
+    /// <inheritdoc/>
+    public IEnumerable<Item> GetItems() => _itemRepository.GetEntities();
 }

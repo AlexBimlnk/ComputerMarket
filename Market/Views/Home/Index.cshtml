@@ -9,13 +9,14 @@
 <br />
 <form method="post" asp-controller="Products" asp-action="Update">
     <div class="row">
-        <div class="col-md-8 text-md-center">
+        <div class="col-md-1"></div>
+        <div class="col-md-7 text-md-center">
             <input asp-for="SearchString" class="form-control" />
             <label asp-for="SearchString" />
         </div>
         
-        <div class="col-md-1 text-md-center">
-            <button id="searchSubmit" type="submit" class="w-70 btn btn-dark">Поиск</button>
+        <div class="col-md-2 text-md-center">
+            <button id="searchSubmit" type="submit" class="btn btn-dark">Поиск</button>
         </div>
     </div>
 </form>
