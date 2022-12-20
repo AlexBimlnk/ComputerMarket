@@ -32,4 +32,11 @@ public interface IProvidersRepository : IKeyableRepository<Provider, ID>
     /// </summary>
     /// <param name="agent"></param>
     public void RemoveAgent(ProviderAgent agent);
+
+    /// <summary>
+    /// Возвращает текущего представителя которым является пользователь.
+    /// </summary>
+    /// <param name="user">Пользователь по которому ищется агент.</param>
+    /// <returns>Агент от пользователя.</returns>
+    public ProviderAgent GetAgent(User user);
 }

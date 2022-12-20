@@ -1,4 +1,6 @@
 ﻿using System.Collections.Immutable;
+using System.Globalization;
+using System.Runtime.CompilerServices;
 
 using Market.Logic.Models;
 using Market.Logic.Storage.Repositories;
@@ -487,7 +489,6 @@ public class OrdersRepositoryIntegrationTests : DBIntegrationTestBase
     {
         var fromQuery = "item_type (id, name)";
         var valuesQuery = $"({type.Id}, '{type.Name}')";
-
         await AddAsync(fromQuery, valuesQuery);
     }
 

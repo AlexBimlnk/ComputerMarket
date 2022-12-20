@@ -133,5 +133,6 @@ public class ToMarketProxyTransactionRequestTests
 
         // Assert
         request.VerifySet(x => x.CurrentState = TransactionRequestState.Held, Times.Once());
+        request.VerifySet(x => x.CurrentState = TransactionRequestState.Finished, Times.Never());
     }
 }

@@ -80,6 +80,11 @@ public sealed class MarketContext : DbContext
     /// </summary>
     public DbSet<BasketItem> BasketItems { get; set; } = default!;
 
+    /// <summary xml:lang="ru">
+    /// Продукты в заказе.
+    /// </summary>
+    public DbSet<OrderItem> OrdersItems { get; set; } = default!;
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
 
@@ -403,6 +408,8 @@ public sealed class MarketContext : DbContext
             entity.Property(e => e.Quantity).HasColumnName("quantity");
 
             entity.Property(e => e.PaidPrice).HasColumnName("paid_price");
+
+            entity.Property(e => e.ApprovedByProvider).HasColumnName("is_approved");
 
             entity.HasOne(d => d.Order)
                 .WithMany(d => d.Items)

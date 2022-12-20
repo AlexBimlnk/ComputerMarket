@@ -37,7 +37,9 @@ public static class Registrations
     private static IServiceCollection AddConfigurations(this IServiceCollection services, IConfiguration configuration)
         => services
             .Configure<ImportCommandConfigurationSender>(configuration.GetSection(nameof(ImportCommandConfigurationSender)))
-            .AddSingleton<IValidateOptions<ImportCommandConfigurationSender>, SenderConfigurationValidator<ImportCommandConfigurationSender>>();
+            .Configure<WTCommandConfigurationSender>(configuration.GetSection(nameof(WTCommandConfigurationSender)))
+            .AddSingleton<IValidateOptions<ImportCommandConfigurationSender>, SenderConfigurationValidator<ImportCommandConfigurationSender>>()
+            .AddSingleton<IValidateOptions<WTCommandConfigurationSender>, SenderConfigurationValidator<WTCommandConfigurationSender>>();
 
     private static IServiceCollection AddLogic(this IServiceCollection services)
         => services

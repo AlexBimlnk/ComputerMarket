@@ -57,6 +57,9 @@ public sealed class RepositoryContext : IRepositoryContext
     public DbSet<BasketItem> BasketItems => _marketContext.BasketItems;
 
     /// <inheritdoc/>
+    public DbSet<OrderItem> OrdersItems => _marketContext.OrdersItems;
+
+    /// <inheritdoc/>
     public void SaveChanges()
     {
         _logger.LogDebug("Save changes");

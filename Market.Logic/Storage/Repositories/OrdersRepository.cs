@@ -125,6 +125,37 @@ public sealed class OrdersRepository : IOrderRepository
         _context.Orders.Update(newOrder);
     }
 
+    /// <inheritdoc/>
+    public IEnumerable<Order> GetProviderOrders(Provider provider)
+    {
+        ArgumentNullException.ThrowIfNull(provider);
+
+        return _context.Orders
+            .ToList()
+            .Where(x => x.Items.Any(x => x.ProviderId == provider.Key.Value))
+            .Select(x => ConvertFromStorageModel(x));
+    }
+
+    /// <inheritdoc/>
+    public void ProviderArpove(Order order, Provider provider, bool value)
+    {
+        ArgumentNullException.ThrowIfNull(order);
+        ArgumentNullException.ThrowIfNull(provider);
+
+        var approveItems = _context.OrdersItems
+            .Where(x => 
+                order.Key.Value == x.OrderId && 
+                provider.Key.Value == x.ProviderId)
+            .ToList();
+
+        foreach(var item in approveItems)
+        {
+            item.ApprovedByProvider = value;
+
+            _context.OrdersItems.Update(item);
+        }
+    }
+
     #region Converters
 
     private static TOrder ConvertToStorageModel(Order order)

@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using System.Security.Cryptography.X509Certificates;
 
 using General.Logic.Executables;
 using General.Storage;
@@ -8,8 +9,10 @@ using Market.Logic;
 using Market.Logic.Commands.Import;
 using Market.Logic.Commands.WT;
 using Market.Logic.Models;
+using Market.Logic.Models.WT;
 using Market.Logic.Storage.Repositories;
 using Market.Logic.Transport.Configurations;
+using Market.Models;
 
 using Microsoft.AspNetCore.Mvc;
 
@@ -82,7 +85,20 @@ public sealed class OrdersController : Controller
     /// Возвращает форму с детальным описанием заказа.
     /// </summary>
     /// <returns> <see cref="ActionResult"/>. </returns>
-    public ActionResult Details(long key) => View(_orderRepository.GetByKey(new(key)));
+    public ActionResult Details(long key)
+    {
+        var order = _orderRepository.GetByKey(new(key));
+
+        var user = GetCurrentUser();
+
+        if (user is null)
+            return BadRequest();
+
+        if (order is null || order.Creator.Key != user.Key)
+            return NotFound();
+
+        return View(order);
+    }
 
     // GET: Orders/cancel
     /// <summary xml:lang = "ru">
@@ -92,6 +108,14 @@ public sealed class OrdersController : Controller
     public async Task<ActionResult> CancelAsync(long key)
     {
         var order = _orderRepository.GetByKey(new(key))!;
+
+        var user = GetCurrentUser();
+
+        if (user is null)
+            return BadRequest();
+
+        if (order is null || order.Creator.Key != user.Key)
+            return NotFound();
 
         order.State = OrderState.Cancel;
 
@@ -104,4 +128,108 @@ public sealed class OrdersController : Controller
 
         return RedirectToAction("List");
     }
+
+    /// <summary>
+    /// Возвращает форму на оплату заказа.
+    /// </summary>
+    /// <param name="orderId">Идентификатор заказа.</param>
+    /// <returns></returns>
+    [HttpGet("orders/pay/{orderId}")]
+    public IActionResult Pay([FromRoute] long orderId) => View();
+
+    /// <summary>
+    /// Запрос на оплату заказа.
+    /// </summary>
+    /// <param name="orderId">Идентифкатор заказа.</param>
+    /// <param name="model">Платежные данные.</param>
+    /// <returns></returns>
+    [HttpPost(("orders/pay/{orderId}"))]
+    public async Task<IActionResult> PayAsync([FromRoute] long orderId, OrderPayModel model)
+    {
+        var order = _orderRepository.GetByKey(new(orderId));
+
+        var user = GetCurrentUser();
+
+        if (user is null)
+            return BadRequest();
+
+        if (order is null || order.Creator.Key != user.Key)
+            return NotFound();
+
+        var transactions = new List<Transaction>();
+
+        foreach(var item in order.Items.GroupBy(x => x.Product.Provider))
+        {
+            transactions.Add(new Transaction(
+                model.Account, 
+                item.Key.PaymentTransactionsInformation.BankAccount, 
+                item.Sum(x => x.Product.FinalCost), 
+                item.Sum(x => x.Product.FinalCost) - item.Sum(x => x.Product.ProviderCost)));
+        }
+
+        await _wtCommandSender.SendAsync(new CreateTransactionRequestCommand(new(Guid.NewGuid().ToString()), order.Key, transactions));
+            
+        return RedirectToAction("List");
+    }
+
+    /// <summary>
+    /// Запрос на заказов требующих обработки.
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet]
+    public IActionResult Aprove()
+    {
+        var ordersWithWaitStatus = _orderRepository.GetEntities()
+            .Where(x => x.State is OrderState.ProductDeliveryWait or OrderState.Ready);
+
+        return View(ordersWithWaitStatus);
+    }
+
+    /// <summary>
+    /// Запрос на получение заказа.
+    /// </summary>
+    /// <param name="id">Идентификатор заказа.</param>
+    /// <returns></returns>
+    [HttpGet]
+    public IActionResult Ready(long id)
+    {
+        var order = _orderRepository.GetByKey(new(id));
+
+        if (order is null || order.State is not OrderState.ProductDeliveryWait)
+        {
+            return NotFound();
+        }
+
+        order.State = OrderState.Ready;
+
+        _orderRepository.UpdateState(order);
+        _orderRepository.Save();
+
+        return RedirectToAction("Aprove");
+    }
+
+    /// <summary>
+    /// Запрос на получение заказа.
+    /// </summary>
+    /// <param name="id">Идентифкатор заказа.</param>
+    /// <returns></returns>
+    [HttpGet]
+    public IActionResult Receive(long id)
+    {
+        var order = _orderRepository.GetByKey(new(id));
+
+        if (order is null || order.State is not OrderState.Ready)
+        {
+            return NotFound();
+        }
+
+        order.State = OrderState.Received;
+
+        _orderRepository.UpdateState(order);
+        _orderRepository.Save();
+
+        return RedirectToAction("Aprove");
+    }
+
+    private User? GetCurrentUser() => _userRepository.GetByEmail(User.Identity!.Name!);
 }

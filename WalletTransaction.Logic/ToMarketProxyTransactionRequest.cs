@@ -51,7 +51,8 @@ public class ToMarketProxyTransactionRequest : ITransactionsRequest
         {
             if (value is TransactionRequestState.Finished)
                 _wrappedRequest.CurrentState = TransactionRequestState.Held;
-            _wrappedRequest.CurrentState = value;
+            else
+                _wrappedRequest.CurrentState = value;
         }
     }
 
