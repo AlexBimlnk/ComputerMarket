@@ -19,13 +19,14 @@ public class ProviderController : Controller
     private readonly IUsersRepository _usersRepository;
     private readonly IOrderRepository _orderRepositoty;
     private readonly ILogger<ProviderController> _logger;
-    
+
     /// <summary>
     /// Создаёт экземпляр класса <see cref="ProviderController"/>.
     /// </summary>
     /// <param name="providerRepository">Репозиторий провайдеров.</param>
     /// <param name="usersRepository">Репозиторий пользователей.</param>
     /// <param name="logger">Логгер.</param>
+    /// <param name="orderRepository">Репозиторий заказов.</param>
     public ProviderController(IProvidersRepository providerRepository,
         IUsersRepository usersRepository,
         IOrderRepository orderRepository,
@@ -300,6 +301,10 @@ public class ProviderController : Controller
         return RedirectToAction("Agents", new { ProviderId = providerId });
     }
 
+    /// <summary>
+    /// Запрос на список заказов на поставщика, чьим представителем является пользователь.
+    /// </summary>
+    /// <returns>Представление со списком заказов.</returns>
     [HttpGet]
     public IActionResult Orders()
     {
@@ -312,12 +317,19 @@ public class ProviderController : Controller
             Response.StatusCode = 400;
             return BadRequest();
         }
+        
+        ViewBag.ProviderKey = agent.Provider.Key.Value;
 
-        var orders = _orderRepositoty.GetAproveOrdersOnProvider(agent.Provider);
+        var orders = _orderRepositoty.GetProviderOrders(agent.Provider);
 
         return View(orders);
     }
 
+    /// <summary>
+    /// Детали по заказу.
+    /// </summary>
+    /// <param name="id">Идентификатор заказа</param>
+    /// <returns>Представление с информацией по заказу.</returns>
     [HttpGet("provider/orders/details/{id}")]
     public IActionResult Details(long id)
     {
@@ -325,7 +337,7 @@ public class ProviderController : Controller
 
         var agent = _providerRepository.GetAgent(user!)!;
 
-        var order = _orderRepositoty.GetAproveOrdersOnProvider(agent.Provider).SingleOrDefault(x => x.Key.Value == id);
+        var order = _orderRepositoty.GetProviderOrders(agent.Provider).SingleOrDefault(x => x.Key.Value == id);
 
         if (order is null)
         {
@@ -335,6 +347,11 @@ public class ProviderController : Controller
         return View(order.Items.Where(x => x.Product.Provider.Key == agent.Provider.Key));
     }
 
+    /// <summary>
+    /// Запрос на подтверждение заказа от поставщика.
+    /// </summary>
+    /// <param name="id">Идентификатор заказа.</param>
+    /// <returns></returns>
     [HttpGet]
     public IActionResult Ready(long id)
     {
@@ -342,7 +359,7 @@ public class ProviderController : Controller
 
         var agent = _providerRepository.GetAgent(user!)!;
 
-        var order = _orderRepositoty.GetAproveOrdersOnProvider(agent.Provider).SingleOrDefault(x => x.Key.Value == id);
+        var order = _orderRepositoty.GetProviderOrders(agent.Provider).SingleOrDefault(x => x.Key.Value == id);
 
         if (order is null)
         {
@@ -350,6 +367,31 @@ public class ProviderController : Controller
         }
 
         _orderRepositoty.ProviderArpove(order, agent.Provider, true);
+        _orderRepositoty.Save();
+
+        return RedirectToAction("Orders");
+    }
+
+    /// <summary>
+    /// Запрос на отмену заказа от поставщика.
+    /// </summary>
+    /// <param name="id">Идентифкатор заказа.</param>
+    /// <returns></returns>
+    [HttpGet]
+    public IActionResult Decline(long id)
+    {
+        var user = GetCurrentUser();
+
+        var agent = _providerRepository.GetAgent(user!)!;
+
+        var order = _orderRepositoty.GetProviderOrders(agent.Provider).SingleOrDefault(x => x.Key.Value == id);
+
+        if (order is null)
+        {
+            return NotFound();
+        }
+
+        _orderRepositoty.ProviderArpove(order, agent.Provider, false);
         _orderRepositoty.Save();
 
         return RedirectToAction("Orders");

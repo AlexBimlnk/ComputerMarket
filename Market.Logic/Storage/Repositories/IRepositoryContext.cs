@@ -59,6 +59,11 @@ public interface IRepositoryContext
     /// </summary>
     public DbSet<BasketItem> BasketItems { get; }
 
+    /// <summary xml:lang="ru">
+    /// Продукты в заказе.
+    /// </summary>
+    public DbSet<OrderItem> OrdersItems { get; }
+
     /// <summary xml:lang = "ru">
     /// Сохраняет текущие изменения.
     /// </summary>

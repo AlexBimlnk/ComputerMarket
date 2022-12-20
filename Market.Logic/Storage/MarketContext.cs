@@ -80,6 +80,11 @@ public sealed class MarketContext : DbContext
     /// </summary>
     public DbSet<BasketItem> BasketItems { get; set; } = default!;
 
+    /// <summary xml:lang="ru">
+    /// Продукты в заказе.
+    /// </summary>
+    public DbSet<OrderItem> OrdersItems { get; set; } = default!;
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
 

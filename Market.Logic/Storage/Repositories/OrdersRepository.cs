@@ -126,12 +126,11 @@ public sealed class OrdersRepository : IOrderRepository
     }
 
     /// <inheritdoc/>
-    public IEnumerable<Order> GetAproveOrdersOnProvider(Provider provider)
+    public IEnumerable<Order> GetProviderOrders(Provider provider)
     {
         ArgumentNullException.ThrowIfNull(provider);
 
         return _context.Orders
-            .Where(x => x.StateId == (int)OrderState.ProviderAnswerWait)
             .ToList()
             .Where(x => x.Items.Any(x => x.ProviderId == provider.Key.Value))
             .Select(x => ConvertFromStorageModel(x));
@@ -143,17 +142,14 @@ public sealed class OrdersRepository : IOrderRepository
         ArgumentNullException.ThrowIfNull(order);
         ArgumentNullException.ThrowIfNull(provider);
 
-        var aproveOrder = _context.Orders.SingleOrDefault(x => order.Key.Value == x.Id);
-        
-        if (aproveOrder is null || !aproveOrder.Items.Any(x => x.ProviderId == provider.Key.Value))
-            return;
+        var approveItems = _context.OrdersItems.Where(x => order.Key.Value == x.OrderId && provider.Key.Value == x.ProviderId).ToList();
 
-        foreach(var item in aproveOrder.Items.Where(x => x.ProviderId == provider.Key.Value))
+        foreach(var item in approveItems)
         {
             item.ApprovedByProvider = value;
-        }
 
-        _context.Orders.Update(aproveOrder);
+            _context.OrdersItems.Update(item);
+        }
     }
 
     #region Converters
