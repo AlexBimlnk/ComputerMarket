@@ -4,19 +4,22 @@
     ViewData["Title"] = "List";
 }
 
-<h1>Orders</h1>
+<h1>Заказы:</h1>
 
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Key)
+                Номер
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.State)
+                Состояние
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.OrderDate)
+                Дата
+            </th>
+            <th>
+                 Итог
             </th>
             <th></th>
         </tr>
@@ -34,9 +37,17 @@
                 @Html.DisplayFor(modelItem => item.OrderDate)
             </td>
             <td>
-                @Html.ActionLink("Details", "Details", new { Key = item.Key.Value }) |
-                @Html.ActionLink("Cancel", "Cancel", new { Key = item.Key.Value }) | 
-                @Html.ActionLink("Pay", "Pay", new { OrderId = item.Key.Value }) 
+                @string.Format("{0:C}", item.GetSumCost())
+            </td>
+            <td>
+                @Html.ActionLink("Подробнее", "Details", new { Key = item.Key.Value }) |
+                @Html.ActionLink("Отмена", "Cancel", new { Key = item.Key.Value }) |
+                    @{
+                        if (item.State == Market.Logic.Models.OrderState.PaymentWait)
+                        {
+                            @Html.ActionLink("Оплатить", "Pay", new { OrderId = item.Key.Value })
+                        }
+                    }
             </td>
         </tr>
 }

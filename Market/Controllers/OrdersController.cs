@@ -87,7 +87,20 @@ public sealed class OrdersController : Controller
     /// Возвращает форму с детальным описанием заказа.
     /// </summary>
     /// <returns> <see cref="ActionResult"/>. </returns>
-    public ActionResult Details(long key) => View(_orderRepository.GetByKey(new(key)));
+    public ActionResult Details(long key)
+    {
+        var order = _orderRepository.GetByKey(new(key));
+
+        var user = GetCurrentUser();
+
+        if (user is null)
+            return BadRequest();
+
+        if (order is null || order.Creator.Key != user.Key)
+            return NotFound();
+
+        return View(order);
+    }
 
     // GET: Orders/cancel
     /// <summary xml:lang = "ru">
@@ -97,6 +110,14 @@ public sealed class OrdersController : Controller
     public async Task<ActionResult> CancelAsync(long key)
     {
         var order = _orderRepository.GetByKey(new(key))!;
+
+        var user = GetCurrentUser();
+
+        if (user is null)
+            return BadRequest();
+
+        if (order is null || order.Creator.Key != user.Key)
+            return NotFound();
 
         order.State = OrderState.Cancel;
 
@@ -118,11 +139,13 @@ public sealed class OrdersController : Controller
     {
         var order = _orderRepository.GetByKey(new(orderId));
 
-        if (order is null)
-        {
-            Response.StatusCode = 400;
-            return View();
-        }
+        var user = GetCurrentUser();
+
+        if (user is null)
+            return BadRequest();
+
+        if (order is null || order.Creator.Key != user.Key)
+            return NotFound();
 
         var transactions = new List<Transaction>();
 
@@ -156,8 +179,7 @@ public sealed class OrdersController : Controller
 
         if (order is null || order.State is not OrderState.ProductDeliveryWait)
         {
-            Response.StatusCode = 400;
-            return View();
+            return NotFound();
         }
 
         order.State = OrderState.Ready;
@@ -175,8 +197,7 @@ public sealed class OrdersController : Controller
 
         if (order is null || order.State is not OrderState.Ready)
         {
-            Response.StatusCode = 400;
-            return View();
+            return NotFound();
         }
 
         order.State = OrderState.Received;
@@ -187,5 +208,5 @@ public sealed class OrdersController : Controller
         return RedirectToAction("Aprove");
     }
 
-    
+    private User? GetCurrentUser() => _usersRepository.GetByEmail(User.Identity!.Name!);
 }

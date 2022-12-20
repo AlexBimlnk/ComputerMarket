@@ -1,7 +1,11 @@
 ﻿@model IEnumerable<Market.Logic.Models.PurchasableEntity>
 
-	<h2>Корзина:</h2>
+@{
+	ViewData["Title"] = "Корзина";
+}
 
+<h2>Корзина:</h2>
+<br />
 @if (Model.Any())
 {
 	<form method="post" asp-controller="Basket" asp-action="CreateOrder">
@@ -12,7 +16,7 @@
 			}
 		}
 		<div>
-			<button id="createSubmit" type="submit" class="w-70 btn btn-lg">Create</button>
+			<button id="createSubmit" type="submit" class="w-70 btn btn-dark">Создать заказ</button>
 		</div>
 	</form>
 }
