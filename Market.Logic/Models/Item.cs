@@ -22,7 +22,7 @@ public sealed class Item : IEquatable<Item>, IKeyable<ID>, IURLImage
     /// <exception cref="ArgumentException" xml:lang = "ru">
     ///  Если <paramref name="name"/> - состоит из пробелов, явялется пустой строкой или <see langword="null"/>.
     /// </exception>
-    public Item(ID id, ItemType type, string name, IReadOnlyCollection<ItemProperty> properties, string? uRL)
+    public Item(ID id, ItemType type, string name, IReadOnlyCollection<ItemProperty> properties, string? url = null)
     {
         Type = type ?? throw new ArgumentNullException(nameof(type));
 
@@ -32,7 +32,7 @@ public sealed class Item : IEquatable<Item>, IKeyable<ID>, IURLImage
         Name = name;
         Properties = properties ?? throw new ArgumentNullException(nameof(type));
         Key = id;
-        URL = uRL;
+        URL = url;
     }
 
     /// <summary xml:lang = "ru">
