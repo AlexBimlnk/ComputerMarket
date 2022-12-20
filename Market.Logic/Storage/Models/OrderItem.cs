@@ -11,6 +11,8 @@ public class OrderItem
 
     public decimal PaidPrice { get; set; }
 
+    public bool? ApprovedByProvider { get; set; } 
+
     public virtual Order Order { get; set; } = default!;
 
     public virtual Product Product { get; set; } = default!;

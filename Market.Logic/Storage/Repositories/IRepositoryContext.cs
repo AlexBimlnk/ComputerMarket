@@ -59,11 +59,6 @@ public interface IRepositoryContext
     /// </summary>
     public DbSet<BasketItem> BasketItems { get; }
 
-    /// <summary>
-    /// Подтверждения заказов от провайдеров
-    /// </summary>
-    public DbSet<ProviderAprove> ProviderAproves { get; }
-
     /// <summary xml:lang = "ru">
     /// Сохраняет текущие изменения.
     /// </summary>

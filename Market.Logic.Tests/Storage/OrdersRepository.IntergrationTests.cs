@@ -387,9 +387,7 @@ public class OrdersRepositoryIntegrationTests : DBIntegrationTestBase
             .Returns(_marketContext.Users);
         context.SetupGet(x => x.Products)
             .Returns(_marketContext.Products);
-        context.SetupGet(x => x.ProviderAproves)
-            .Returns(_marketContext.ProviderAproves);
-
+        
         context.Setup(x => x.SaveChanges())
             .Callback(() => _marketContext.SaveChanges());
 
@@ -428,7 +426,7 @@ public class OrdersRepositoryIntegrationTests : DBIntegrationTestBase
         var expectedResult = order.WithState(OrderState.ProductDeliveryWait);
 
         // Acr
-        repository.ProviderArpove(order, provider);
+        repository.ProviderArpove(order, provider, true);
         repository.Save();
         var result = repository.GetByKey(order.Key);
 
@@ -450,9 +448,7 @@ public class OrdersRepositoryIntegrationTests : DBIntegrationTestBase
             .Returns(_marketContext.Users);
         context.SetupGet(x => x.Products)
             .Returns(_marketContext.Products);
-        context.SetupGet(x => x.ProviderAproves)
-            .Returns(_marketContext.ProviderAproves);
-
+        
         context.Setup(x => x.SaveChanges())
             .Callback(() => _marketContext.SaveChanges());
 

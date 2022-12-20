@@ -16,8 +16,6 @@ using Market.Models;
 
 using Microsoft.AspNetCore.Mvc;
 
-using NuGet.Protocol;
-
 namespace Market.Controllers;
 
 /// <summary xml:lang = "ru">
@@ -208,5 +206,5 @@ public sealed class OrdersController : Controller
         return RedirectToAction("Aprove");
     }
 
-    private User? GetCurrentUser() => _usersRepository.GetByEmail(User.Identity!.Name!);
+    private User? GetCurrentUser() => _userRepository.GetByEmail(User.Identity!.Name!);
 }

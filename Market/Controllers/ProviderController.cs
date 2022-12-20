@@ -349,7 +349,7 @@ public class ProviderController : Controller
             return NotFound();
         }
 
-        _orderRepositoty.ProviderArpove(order, agent.Provider);
+        _orderRepositoty.ProviderArpove(order, agent.Provider, true);
         _orderRepositoty.Save();
 
         return RedirectToAction("Orders");

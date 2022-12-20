@@ -130,30 +130,31 @@ public sealed class OrdersRepository : IOrderRepository
     {
         ArgumentNullException.ThrowIfNull(provider);
 
-        return _context.ProviderAproves
-            .Where(x => x.ProviderId == provider.Key.Value)
+        return _context.Orders
+            .Where(x => x.StateId == (int)OrderState.ProviderAnswerWait)
             .ToList()
-            .Where(x => x.Order.StateId == (int)OrderState.ProviderAnswerWait)
-            .Select(x => ConvertFromStorageModel(x.Order));
+            .Where(x => x.Items.Any(x => x.ProviderId == provider.Key.Value))
+            .Select(x => ConvertFromStorageModel(x));
     }
 
     /// <inheritdoc/>
-    public void ProviderArpove(Order order, Provider provider)
+    public void ProviderArpove(Order order, Provider provider, bool value)
     {
         ArgumentNullException.ThrowIfNull(order);
         ArgumentNullException.ThrowIfNull(provider);
 
-        var aprove = _context.ProviderAproves
-            .SingleOrDefault(
-                x => x.ProviderId == provider.Key.Value && 
-                x.OrderId == order.Key.Value);
-
-        if (aprove is null)
+        var aproveOrder = _context.Orders.SingleOrDefault(x => order.Key.Value == x.Id);
+        
+        if (aproveOrder is null || !aproveOrder.Items.Any(x => x.ProviderId == provider.Key.Value))
             return;
 
-        _context.ProviderAproves.Remove(aprove);
-    }
+        foreach(var item in aproveOrder.Items.Where(x => x.ProviderId == provider.Key.Value))
+        {
+            item.ApprovedByProvider = value;
+        }
 
+        _context.Orders.Update(aproveOrder);
+    }
 
     #region Converters
 
