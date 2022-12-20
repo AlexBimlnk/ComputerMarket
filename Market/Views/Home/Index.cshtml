@@ -1,6 +1,82 @@
-﻿@{
-    ViewData["Title"] = "Home";
-}
-<h1>@ViewData["Title"]</h1>
+﻿@model Market.Models.HomeIndexViewModel;
 
-<p>Hello world.</p>
+@{
+    ViewData["Title"] = "Главная";
+}
+
+<h1>@ViewData["Title"]</h1>
+<hr />
+<br />
+<form method="post" asp-controller="Products" asp-action="Update">
+    <div class="row">
+        <div class="col-md-8 text-md-center">
+            <input asp-for="SearchString" class="form-control" />
+            <label asp-for="SearchString" />
+        </div>
+        
+        <div class="col-md-1 text-md-center">
+            <button id="searchSubmit" type="submit" class="w-70 btn btn-dark">Поиск</button>
+        </div>
+    </div>
+</form>
+<br />
+<div class="row">
+    @{
+        foreach (var item in Model.Types)
+        {
+            <div class="col-md-3">
+                <a href="~/products/catalog?typeId=@item.Id" class="nav-link text-dark">
+                    <img src="@(item.URL ?? "link")" alt="@item.Name" />
+                    <h2>@item.Name</h2>
+                </a>
+            </div>
+        }
+    }
+</div>
+<hr />
+<br />
+@if (User.Identity!.IsAuthenticated)
+{   
+    
+    if (Model.LoginUserType == Market.Logic.Models.UserType.Manager)
+        {
+            <div class="row">
+            <h2><u>Упарвление:</u></h2>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-2">
+                    <a class="link-info text-md-center text-primary" asp-area="" asp-controller="Links" asp-action="List"><h3>Связи</h3></a>
+                </div>
+                <div class="col-md-2">
+                <a class="link-info text-md-center text-primary" asp-area="" asp-controller="Provider" asp-action="List"><h3>Поставщики</h3></a>
+                </div>
+                <div class="col-md-2">
+                <a class="link-info text-md-center text-primary" asp-area="" asp-controller="Orders" asp-action="Aprove"><h3>Заказы</h3></a>
+                </div>
+            <div class="col-md-2">
+                <a class="link-info text-md-center text-primary" asp-area="" asp-controller="Report" asp-action="Create"><h3>Отчёты</h3></a>
+            </div>
+            <div class="col-md-2">
+                <a class="link-info text-md-center text-primary" asp-area="" asp-controller="Products" asp-action="Items"><h3>Товары</h3></a>
+            </div>
+        </div>
+    } else if (Model.LoginUserType == Market.Logic.Models.UserType.Agent)
+    {
+        <div class="row">
+            <h2><u>Упарвление:</u></h2>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-3">
+                <a class="link-info text-md-center text-primary" asp-area="" asp-controller="Report" asp-action="Create"><h3>Отчёты</h3></a>
+            </div>
+            <div class="col-md-3">
+                <a class="link-info text-md-center text-primary" asp-area="" asp-controller="Provider" asp-action="Products"><h3>Продукты</h3></a>
+            </div>
+            <div class="col-md-3">
+                <a class="link-info text-md-center text-primary" asp-area="" asp-controller="Provider" asp-action="Orders"><h3>Заказы</h3></a>
+            </div>
+        </div>
+    }
+}
