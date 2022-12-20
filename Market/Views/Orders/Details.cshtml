@@ -32,7 +32,7 @@
                             @Html.DisplayFor(modelItem => item.Product.Item.Name)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Product.FinalCost)
+                            @string.Format("{0:C}", item.Product.FinalCost)
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.Quantity)

@@ -124,8 +124,6 @@ public class AccountController : Controller
     /// <returns xml:lang = "ru">
     /// <see cref="Task"/>.
     /// </returns>
-    [HttpGet]
-    [Authorize]
     public async Task<IActionResult> LogoutAsync()
     {
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);

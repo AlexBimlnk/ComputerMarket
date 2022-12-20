@@ -4,9 +4,9 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h1>@ViewData["Title"]</h1>
 
-<h4>Report from data</h4>
+<h4>Report from date</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -17,16 +17,19 @@
                 <input asp-for="ProviderId" class="form-control" />
                 <span asp-validation-for="ProviderId" class="text-danger"></span>
             </div>
+             <br />
             <div class="form-group">
                 <label asp-for="StartPeriod" class="control-label"></label>
                 <input asp-for="StartPeriod" class="form-control" />
                 <span asp-validation-for="StartPeriod" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="EndPeriod" class="control-label"></label>
                 <input asp-for="EndPeriod" class="form-control" />
                 <span asp-validation-for="EndPeriod" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

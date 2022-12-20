@@ -42,13 +42,13 @@
                 <thead>
                     <tr>
                         <th>
-                            @Html.DisplayName("Name")
+                            Название
                         </th>
                         <th>
-                            @Html.DisplayName("Provider")
+                            Поставщик
                         </th>
                         <th>
-                            @Html.DisplayName("Price")
+                            Цена
                         </th>
                         <th></th>
                     </tr>
@@ -64,10 +64,10 @@
                                 @Html.Label(product.Provider.Name)
                             </td>
                             <td>
-                                @Html.Label(product.FinalCost.ToString())
+                                @string.Format("{0:C}", product.FinalCost)
                             </td>
                             <td>
-                                @Html.ActionLink("Страница товара", "product", "products",
+                                @Html.ActionLink("Перейти на страницу продукта", "Product", "Products",
                                 new
                                 {
                                     ItemId = product.Item.Key.Value,

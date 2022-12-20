@@ -1,36 +1,41 @@
 ﻿@model Market.Models.ProviderRegisterViewModel
 
-<h1>@ViewData["Title"]</h1>
+@{
+    ViewData["Title"] = "Регистрация поставщика";
+}
 
+<h1>@ViewData["Title"]</h1>
+<hr />
 <div class="row">
     <div class="col-md-4">
         <section>
             <form method="post" asp-controller="Provider" asp-action="Register">
-                <h2>Войти в учетную запись.</h2>
-                <hr />
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-floating">
                     <input asp-for="Name" class="form-control" autocomplete="username" aria-required="true" />
                     <label asp-for="Name" class="form-label"></label>
                     <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
+                <br />
                 <div class="form-floating">
                     <input asp-for="BankAccount" class="form-control" />
                     <label asp-for="BankAccount" class="form-label"></label>
                     <span asp-validation-for="BankAccount" class="text-danger"></span>
                 </div>
+                <br />
                 <div class="form-floating">
                     <input asp-for="INN" class="form-control" autocomplete="username" aria-required="true" />
                     <label asp-for="INN" class="form-label"></label>
                     <span asp-validation-for="INN" class="text-danger"></span>
                 </div>
+                <br />
                 <div>
-                    <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+                    <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Регистрация</button>
                 </div>
             </form>
         </section>
     </div>
-
+</div>
     @section Scripts {
         @{
             await Html.RenderPartialAsync("_ValidationScriptsPartial");

@@ -1,5 +1,11 @@
 ﻿@model IEnumerable<Market.Logic.Models.User>
 
+@{
+    ViewData["Title"] = "Agents";
+}
+
+<h1>@ViewData["Title"]</h1>
+
 <a href="~/provider/agents/@ViewBag.ProviderId/add">Add new</a>
 <hr />
 <table class="table">
