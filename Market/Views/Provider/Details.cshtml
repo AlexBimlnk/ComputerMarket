@@ -16,7 +16,7 @@
                         @Html.DisplayNameFor(model => model.First().Product)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.First().Product.FinalCost)
+                        @Html.DisplayNameFor(model => model.First().Product.ProviderCost)
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => model.First().Quantity)
@@ -31,7 +31,7 @@
                             @Html.DisplayFor(modelItem => item.Product.Item.Name)
                                 </td>
                                 <td>
-                        @string.Format("{0:C}", item.Product.FinalCost);
+                        @string.Format("{0:C}", item.Product.ProviderCost)
                                 </td>
                                 <td>
                             @Html.DisplayFor(modelItem => item.Quantity)

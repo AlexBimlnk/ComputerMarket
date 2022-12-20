@@ -4,35 +4,84 @@
     ViewData["Title"] = "List";
 }
 
-<h1>Orders</h1>
+<h1>Ожидают подтверждения</h1>
 
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.OrderDate)
+                Дата
             </th>
             <th>
-                Sum Cost
+                Сумма заказа
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var item in Model.Where(x => 
+            x.State == Market.Logic.Models.OrderState.ProviderAnswerWait))
         {
             <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.OrderDate)
                 </td>
                 <td>
-                    @string.Format("{0:C}", item.GetSumCost())
+                    @string.Format("{0:C}", item.Items
+                            .Where(x => x.Product.Provider.Key.Value == ViewBag.ProviderKey)
+                            .Sum(x => x.Quantity * x.Product.ProviderCost))
                 </td>
                 <td>
-                    @Html.ActionLink("Details", "Details",new { Id = item.Key.Value }) |
-                    @Html.ActionLink("Ready", "Ready",new { Id = item.Key.Value })
+                    @Html.ActionLink("Подробнее", "Details",new { Id = item.Key.Value }) |
+                    @Html.ActionLink("Подтвердить", "Ready",new { Id = item.Key.Value }) | 
+                    @Html.ActionLink("Отмена", "Decline",new { Id = item.Key.Value })
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+<h1>Активные заказы</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                 Дата
+            </th>
+            <th>
+                Состояние
+            </th>
+            <th>
+                Сумма заказа
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Where(x => 
+            x.State == Market.Logic.Models.OrderState.ProductDeliveryWait ||
+            x.State == Market.Logic.Models.OrderState.Ready))
+        {
+                <tr>
+                    <td>
+                    @Html.DisplayFor(modelItem => item.OrderDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.State)
+                    </td>
+                    <td>
+                        @string.Format("{0:C}", item.Items
+                            .Where(x => x.Product.Provider.Key.Value == ViewBag.ProviderKey)
+                            .Sum(x => x.Quantity * x.Product.ProviderCost))
+                    </td>
+                    <td>
+                    @Html.ActionLink("Подробнее", "Details",new { Id = item.Key.Value })
+                    </td>
+                </tr>
+        }
+    </tbody>
+</table>
+
+
+
