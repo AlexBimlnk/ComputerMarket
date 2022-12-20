@@ -2,6 +2,7 @@
 using Market.Logic.Reports;
 using Market.Models;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Market.Controllers;
@@ -9,6 +10,7 @@ namespace Market.Controllers;
 /// <summary xml:lang = "ru">
 /// Контроллер для создания отчетов.
 /// </summary>
+[Authorize]
 public sealed class ReportController : Controller
 {
     private readonly ILogger<ReportController> _logger;
@@ -39,6 +41,7 @@ public sealed class ReportController : Controller
     /// Возвращает форму для представления отчета.
     /// </summary>
     /// <returns> <see cref="ActionResult"/>. </returns>
+    [Authorize(Policy = "OnlyForManager")]
     public ActionResult Details(Report report) => View(report);
 
     // GET: report/create
@@ -46,6 +49,7 @@ public sealed class ReportController : Controller
     /// Возвращает форму для создания отчетов.
     /// </summary>
     /// <returns> <see cref="ActionResult"/>. </returns>
+    [Authorize(Policy = "OnlyForManager")]
     public ActionResult Create() => View();
 
     // POST: report/create
@@ -58,6 +62,7 @@ public sealed class ReportController : Controller
     /// <returns> <see cref="Task{TResult}"/>. </returns>
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = "OnlyForManager")]
     public ActionResult Create(ReportViewModel reportViewModel)
     {
         if (ModelState.IsValid)

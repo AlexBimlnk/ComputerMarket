@@ -6,6 +6,7 @@ using Market.Logic.Models;
 using Market.Logic.Storage.Repositories;
 using Market.Models;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Market.Controllers;
@@ -13,6 +14,7 @@ namespace Market.Controllers;
 /// <summary>
 /// Контроллер для управления провайдерами.
 /// </summary>
+[Authorize]
 public class ProviderController : Controller
 {
     private readonly IProvidersRepository _providerRepository;
@@ -43,6 +45,7 @@ public class ProviderController : Controller
     /// </summary>
     /// <returns><see cref="IActionResult"/></returns>
     [HttpGet]
+    [AllowAnonymous]
     public IActionResult Register() => View();
 
     /// <summary>
@@ -54,9 +57,10 @@ public class ProviderController : Controller
     /// <returns><see cref="Task{TResult}"/></returns>
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [AllowAnonymous]
     public async Task<IActionResult> RegisterAsync(ProviderRegisterViewModel model)
     {
-        var provider = new Provider(default(ID), model.Name, new Margin(1.0m), new PaymentTransactionsInformation(model.INN, model.BankAccount));
+        var provider = new Provider(default, model.Name, new Margin(1.0m), new PaymentTransactionsInformation(model.INN, model.BankAccount));
 
         await _providerRepository.AddAsync(provider);
         _providerRepository.Save();
@@ -68,6 +72,8 @@ public class ProviderController : Controller
     /// Возвращает список провайдеров.
     /// </summary>
     /// <returns> <see cref="Task{TResult}"/>. </returns>
+    [HttpGet]
+    [Authorize(Policy = "OnlyForManager")]
     public IActionResult ListAsync() => View(_providerRepository.GetEntities());
 
     /// <summary xml:lang = "ru">
@@ -75,6 +81,7 @@ public class ProviderController : Controller
     /// </summary>
     /// <returns> <see cref="ActionResult"/>. </returns>
     [HttpGet]
+    [Authorize(Policy = "OnlyForManager")]
     public ActionResult Edit(long id)
     {
         var provider = _providerRepository.GetByKey(new(id));
@@ -82,7 +89,7 @@ public class ProviderController : Controller
         if (provider is null)
         {
             Response.StatusCode = 404;
-            return View();
+            return NotFound();
         }
 
         return View(new ManageProviderViewModel()
@@ -105,6 +112,7 @@ public class ProviderController : Controller
     /// <returns> <see cref="Task{TResult}"/>. </returns>
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = "OnlyForManager")]
     public IActionResult Edit(ManageProviderViewModel provider)
     {
         if (!ModelState.IsValid)
@@ -117,7 +125,7 @@ public class ProviderController : Controller
         if (domainProvider is null)
         {
             Response.StatusCode = 400;
-            return View();
+            return BadRequest();
         }
 
         if (!decimal.TryParse(provider.Margin, out var margin))
@@ -149,6 +157,7 @@ public class ProviderController : Controller
     /// <returns> <see cref="Task{TResult}"/>. </returns>
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = "OnlyForManager")]
     public IActionResult Aprove(ManageProviderViewModel provider)
     {
         var domainProvider = _providerRepository.GetByKey(new(provider.Key));
@@ -156,7 +165,7 @@ public class ProviderController : Controller
         if (domainProvider is null)
         {
             Response.StatusCode = 400;
-            return View();
+            return BadRequest();
         }
 
         if (!decimal.TryParse(provider.Margin, out var margin))
@@ -188,6 +197,7 @@ public class ProviderController : Controller
     /// <param name="providerId">Идентификатор провайдера.</param>
     /// <returns><see cref="IActionResult"/></returns>
     [HttpGet("provider/agents/{providerId}")]
+    [Authorize(Policy = "OnlyForManager")]
     public IActionResult Agents([FromRoute] long providerId)
     {
         var provider = _providerRepository.GetByKey(new(providerId));
@@ -195,7 +205,7 @@ public class ProviderController : Controller
         if (provider is null || !provider.IsAproved)
         {
             Response.StatusCode = 400;
-            return View(Array.Empty<User>());
+            return BadRequest();
         }
 
         ViewBag.ProviderId = providerId;
@@ -211,6 +221,7 @@ public class ProviderController : Controller
     /// <param name="model">Информация о представителе.</param>
     /// <returns><see cref="IActionResult"/></returns>
     [HttpPost("provider/agents/{providerId}/add")]
+    [Authorize(Policy = "OnlyForManager")]
     public IActionResult AddAgent([FromRoute] long providerId, NewAgentViewModel model)
     {
         if (!ModelState.IsValid)
@@ -224,7 +235,7 @@ public class ProviderController : Controller
         if (provider is null || !provider.IsAproved)
         {
             Response.StatusCode = 400;
-            return View();
+            return BadRequest();
         }
 
         if (user is null)
@@ -258,6 +269,7 @@ public class ProviderController : Controller
     /// <param name="providerId">Индетификтор провайдера</param>
     /// <returns></returns>
     [HttpGet("provider/agents/{providerId}/add")]
+    [Authorize(Policy = "OnlyForManager")]
     public IActionResult AddAgent([FromRoute] long providerId)
     {
         var provider = _providerRepository.GetByKey(new(providerId));
@@ -265,7 +277,7 @@ public class ProviderController : Controller
         if (provider is null || !provider.IsAproved)
         {
             Response.StatusCode = 400;
-            return View();
+            return BadRequest();
         }
         return View();
     }
@@ -277,6 +289,7 @@ public class ProviderController : Controller
     /// <param name="userId">Индетификатор пользователя.</param>
     /// <returns></returns>
     [HttpGet("provider/agents/{providerId}/remove/{userId}")]
+    [Authorize(Policy = "OnlyForManager")]
     public IActionResult RemoveAgent([FromRoute] long providerId, [FromRoute] long userId)
     {
         var user = _usersRepository.GetByKey(new(userId));
@@ -285,7 +298,7 @@ public class ProviderController : Controller
         if (user is null || provider is null || !provider.IsAproved)
         {
             Response.StatusCode = 400;
-            return View();
+            return BadRequest();
         }
 
         var agent = new ProviderAgent(user, provider);
@@ -306,6 +319,7 @@ public class ProviderController : Controller
     /// </summary>
     /// <returns>Представление со списком заказов.</returns>
     [HttpGet]
+    [Authorize(Policy = "OnlyForAgents")]
     public IActionResult Orders()
     {
         var user = GetCurrentUser();
@@ -331,6 +345,7 @@ public class ProviderController : Controller
     /// <param name="id">Идентификатор заказа</param>
     /// <returns>Представление с информацией по заказу.</returns>
     [HttpGet("provider/orders/details/{id}")]
+    [Authorize(Policy = "OnlyForAgents")]
     public IActionResult Details(long id)
     {
         var user = GetCurrentUser();
@@ -341,6 +356,7 @@ public class ProviderController : Controller
 
         if (order is null)
         {
+            Response.StatusCode = 404;
             return NotFound();
         }
 
@@ -353,6 +369,7 @@ public class ProviderController : Controller
     /// <param name="id">Идентификатор заказа.</param>
     /// <returns></returns>
     [HttpGet]
+    [Authorize(Policy = "OnlyForAgents")]
     public IActionResult Ready(long id)
     {
         var user = GetCurrentUser();
@@ -363,6 +380,7 @@ public class ProviderController : Controller
 
         if (order is null)
         {
+            Response.StatusCode = 404;
             return NotFound();
         }
 
@@ -378,6 +396,7 @@ public class ProviderController : Controller
     /// <param name="id">Идентифкатор заказа.</param>
     /// <returns></returns>
     [HttpGet]
+    [Authorize(Policy = "OnlyForAgents")]
     public IActionResult Decline(long id)
     {
         var user = GetCurrentUser();
@@ -388,6 +407,7 @@ public class ProviderController : Controller
 
         if (order is null)
         {
+            Response.StatusCode = 404;
             return NotFound();
         }
 
@@ -397,5 +417,11 @@ public class ProviderController : Controller
         return RedirectToAction("Orders");
     }
 
-    private User? GetCurrentUser() => _usersRepository.GetByEmail(User.Identity!.Name!);
+    private User? GetCurrentUser()
+    {
+        if (User.Identity is null || User.Identity.Name is null)
+            return null;
+
+        return _usersRepository.GetByEmail(User.Identity.Name);
+    }
 }

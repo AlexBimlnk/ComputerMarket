@@ -2,6 +2,7 @@
 using Market.Logic.Models;
 using Market.Logic.Models.Abstractions;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Market.Controllers;
@@ -9,6 +10,7 @@ namespace Market.Controllers;
 /// <summary xml:lang = "ru">
 /// Контроллер для сборки компьютера.
 /// </summary>
+[AllowAnonymous]
 public class BuilderController : Controller
 {
     private const int PROCESSOR_TYPE_ID = 1;
@@ -66,6 +68,7 @@ public class BuilderController : Controller
     /// Возвращает форму билдера.
     /// </summary>
     /// <returns> <see cref="IActionResult"/>. </returns>
+    [HttpGet]
     public IActionResult Index()
     {
         PrepareView();

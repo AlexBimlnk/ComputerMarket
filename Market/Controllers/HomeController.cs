@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Market.Controllers;
+
+[AllowAnonymous]
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
@@ -19,10 +21,9 @@ public class HomeController : Controller
     }
 
     [HttpGet]
-    [AllowAnonymous]
     public IActionResult Index() => View();
 
-    [Authorize]
+    [HttpGet]
     public IActionResult Privacy() => View();
 
     [Authorize(Policy = "OnlyForAgents")]
