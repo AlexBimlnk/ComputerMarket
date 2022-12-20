@@ -40,7 +40,7 @@ public sealed class Catalog : ICatalog
 
         if (filter.SearchString is not null)
         {
-            products = products.Where(x => x.Item.Name.Contains(filter.SearchString));
+            products = products.Where(x => x.Item.Name.Contains(filter.SearchString, StringComparison.CurrentCultureIgnoreCase));
         }
 
         if (filter.SelectedTypeId is not null)
