@@ -99,6 +99,9 @@ public sealed class MarketContext : DbContext
             entity.Property(e => e.TypeId)
                 .HasColumnName("type_id");
 
+            entity.Property(e => e.Url)
+                .HasColumnName("url_image");
+
             entity.HasOne(d => d.Type)
                 .WithMany(p => p.Items)
                 .HasForeignKey(d => d.TypeId)
@@ -189,6 +192,9 @@ public sealed class MarketContext : DbContext
                 .HasName("item_type_pkey");
 
             entity.Property(e => e.Id).HasColumnName("id");
+
+            entity.Property(e => e.Url)
+                .HasColumnName("url_image");
 
             entity.Property(e => e.Name)
                 .HasMaxLength(40)

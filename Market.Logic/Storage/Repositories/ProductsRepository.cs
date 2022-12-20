@@ -288,11 +288,12 @@ public sealed class ProductsRepository : IItemsRepository, IProductsRepository
 
     private static Item ConvertFromStorageModel(TItem item) => new(
         new ID(item.Id),
-        new ItemType(item.TypeId, item.Type.Name),
+        new ItemType(item.TypeId, item.Type.Name, item.Type.Url),
         item.Name,
         item.Description
             .Select(x => ConvertFromStorageModel(x))
-            .ToArray());
+            .ToArray(), 
+        item.Url);
 
     private static ItemDescription ConvertToStorageModel(ItemProperty property)
     {

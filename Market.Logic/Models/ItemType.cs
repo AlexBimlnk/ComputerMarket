@@ -1,9 +1,11 @@
-﻿namespace Market.Logic.Models;
+﻿using Market.Logic.Models.Abstractions;
+
+namespace Market.Logic.Models;
 
 /// <summary xml:lang = "ru">
 ///  Тип товара.
 /// </summary>
-public sealed record class ItemType
+public sealed record class ItemType : IURLImage
 {
     /// <summary>
     /// Создаёт экземпляр типа <see cref="ItemType"/>.
@@ -12,7 +14,7 @@ public sealed record class ItemType
     /// <exception cref="ArgumentException">
     /// Если <paramref name="name"/> - пустое или <see langword="null"/> или содержит только пробелы.
     /// </exception>
-    public ItemType(int id, string name)
+    public ItemType(int id, string name, string? urlImage = null)
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new ArgumentException($"Name of {nameof(name)} can't be empty or null or contains only white spaces");
@@ -22,6 +24,8 @@ public sealed record class ItemType
             throw new ArgumentOutOfRangeException("");
 
         Id = id;
+
+        URL = urlImage;
     }
 
     /// <summary xml:lang = "ru">
@@ -33,4 +37,7 @@ public sealed record class ItemType
     /// Индетификатор типа продукта.
     /// </summary>
     public int Id { get; }
+
+    /// <inheritdoc/>
+    public string? URL { get; }
 }

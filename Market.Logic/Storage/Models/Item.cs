@@ -20,6 +20,11 @@ public class Item
     /// </summary>
     public int TypeId { get; set; }
 
+    /// <summary>
+    /// Ссылка на изображение.
+    /// </summary>
+    public string? Url { get; set; } = null!;
+
     /// <summary xml:lang = "ru">
     /// Тип товара.
     /// </summary>

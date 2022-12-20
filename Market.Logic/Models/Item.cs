@@ -1,11 +1,13 @@
 ﻿using General.Models;
 
+using Market.Logic.Models.Abstractions;
+
 namespace Market.Logic.Models;
 
 /// <summary xml:lang = "ru">
 /// Представляет описание товара.
 /// </summary>
-public sealed class Item : IEquatable<Item>, IKeyable<ID>
+public sealed class Item : IEquatable<Item>, IKeyable<ID>, IURLImage
 {
     /// <summary xml:lang = "ru">
     /// Создает экземпляр типа <see cref="Item"/>.
@@ -20,7 +22,7 @@ public sealed class Item : IEquatable<Item>, IKeyable<ID>
     /// <exception cref="ArgumentException" xml:lang = "ru">
     ///  Если <paramref name="name"/> - состоит из пробелов, явялется пустой строкой или <see langword="null"/>.
     /// </exception>
-    public Item(ID id, ItemType type, string name, IReadOnlyCollection<ItemProperty> properties)
+    public Item(ID id, ItemType type, string name, IReadOnlyCollection<ItemProperty> properties, string? url = null)
     {
         Type = type ?? throw new ArgumentNullException(nameof(type));
 
@@ -30,6 +32,7 @@ public sealed class Item : IEquatable<Item>, IKeyable<ID>
         Name = name;
         Properties = properties ?? throw new ArgumentNullException(nameof(type));
         Key = id;
+        URL = url;
     }
 
     /// <summary xml:lang = "ru">
@@ -49,6 +52,8 @@ public sealed class Item : IEquatable<Item>, IKeyable<ID>
 
     /// <inheritdoc/>
     public ID Key { get; }
+
+    public string? URL { get; }
 
     /// <inheritdoc/>
     public override int GetHashCode() => HashCode.Combine(Key, Type, Name);
