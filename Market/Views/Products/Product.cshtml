@@ -10,7 +10,7 @@
 <hr />
 <div class="row">
     <div class="col-4">
-        <img src="https://c.dns-shop.ru/thumb/st1/fit/wm/0/0/dc66529cf4a637f5283438c49abdaa67/9840f9bd000e456b5d97a36f3eefca09eab7aa1c0d7eae2bdaf11bd5c9c7d3c2.jpg.webp"
+        <img src="@(Model.Item.URL ?? "link")"
              alt="IMAGE-MAIN-IMAGE" width="400"
              height="400" />
     </div>
@@ -22,7 +22,7 @@
                         <h2><b>Цена</b></h2>
                     </td>
                     <td>
-                        <h2>@string.Format("{0:C}", Model.ProviderCost)</h2>
+                        <h2>@string.Format("{0:C}", Model.FinalCost)</h2>
                     </td>
                 </tr>
                     <tr>

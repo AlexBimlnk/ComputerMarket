@@ -15,6 +15,8 @@ public class ItemType
     /// </summary>
     public string Name { get; set; } = null!;
 
+    public string? Url { get; set; } = null!;
+
     /// <summary xml:lang = "ru">
     /// Товары относящиеся к данному типу.
     /// </summary>

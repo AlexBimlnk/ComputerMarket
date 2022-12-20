@@ -2,7 +2,7 @@
 
 <div class="col-md-3">
 	<a href="~/products/catalog?typeId=@Model.Id">
-		<img src="https://c.dns-shop.ru/thumb/st1/fit/220/150/9f2382f80196fe69081442ae4995c60d/b70d20da48dfebda15c88f04044237bfa6234fe05d539ff68a61395785620202.jpg" alt="@Model.Name" />
+		<img src="@(Model.URL ?? "link")" alt="@Model.Name" />
 		<h2>@Model.Name</h2>
 	</a>
 </div>
