@@ -244,9 +244,9 @@ public class ProviderController : Controller
             return View();
         }
 
-        if (user.Type == UserType.Agent)
+        if (user.Type != UserType.Customer)
         {
-            ModelState.AddModelError("Email", "User with this email is already agent");
+            ModelState.AddModelError("Email", "Incorrect user");
             return View();
         }
 
@@ -331,8 +331,7 @@ public class ProviderController : Controller
             Response.StatusCode = 400;
             return BadRequest();
         }
-        
-        ViewBag.ProviderKey = agent.Provider.Key.Value;
+        ViewData["ProviderKey"] = agent.Provider.Key.Value;
 
         var orders = _orderRepositoty.GetProviderOrders(agent.Provider);
 

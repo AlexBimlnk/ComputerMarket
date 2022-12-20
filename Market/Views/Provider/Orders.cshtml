@@ -28,7 +28,7 @@
                 </td>
                 <td>
                     @string.Format("{0:C}", item.Items
-                            .Where(x => x.Product.Provider.Key.Value == ViewBag.ProviderKey)
+                .Where(x => x.Product.Provider.Key.Value == (long)ViewData["ProviderKey"])
                             .Sum(x => x.Quantity * x.Product.ProviderCost))
                 </td>
                 <td>
@@ -72,7 +72,7 @@
                     </td>
                     <td>
                         @string.Format("{0:C}", item.Items
-                            .Where(x => x.Product.Provider.Key.Value == ViewBag.ProviderKey)
+                .Where(x => x.Product.Provider.Key.Value == (long)ViewData["ProviderKey"])
                             .Sum(x => x.Quantity * x.Product.ProviderCost))
                     </td>
                     <td>
