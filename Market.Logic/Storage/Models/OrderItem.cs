@@ -10,7 +10,7 @@ public class OrderItem
     public int Quantity { get; set; }
 
     public decimal PaidPrice { get; set; }
-
+    
     public bool? ApprovedByProvider { get; set; } 
 
     public virtual Order Order { get; set; } = default!;

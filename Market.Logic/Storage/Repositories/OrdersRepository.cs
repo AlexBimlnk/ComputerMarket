@@ -142,7 +142,11 @@ public sealed class OrdersRepository : IOrderRepository
         ArgumentNullException.ThrowIfNull(order);
         ArgumentNullException.ThrowIfNull(provider);
 
-        var approveItems = _context.OrdersItems.Where(x => order.Key.Value == x.OrderId && provider.Key.Value == x.ProviderId).ToList();
+        var approveItems = _context.OrdersItems
+            .Where(x => 
+                order.Key.Value == x.OrderId && 
+                provider.Key.Value == x.ProviderId)
+            .ToList();
 
         foreach(var item in approveItems)
         {
