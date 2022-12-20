@@ -112,7 +112,7 @@ public class ProductsController : Controller
         return View(product);
     }
 
-    public static IReadOnlyDictionary<ID, IFilterProperty> GetProductsProperties(IEnumerable<Product> products)
+    private static IReadOnlyDictionary<ID, IFilterProperty> GetProductsProperties(IEnumerable<Product> products)
     {
         var result = new Dictionary<ID, IFilterProperty>();
 
@@ -136,7 +136,7 @@ public class ProductsController : Controller
         return result;
     }
 
-    public static IReadOnlySet<(ID, string)> GetPropertiesValues(string request)
+    private static IReadOnlySet<(ID, string)> GetPropertiesValues(string request)
     {
         var result = new HashSet<(ID, string)>();
 

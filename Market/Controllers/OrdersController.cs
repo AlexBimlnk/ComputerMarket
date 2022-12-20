@@ -129,9 +129,20 @@ public sealed class OrdersController : Controller
         return RedirectToAction("List");
     }
 
+    /// <summary>
+    /// Возвращает форму на оплату заказа.
+    /// </summary>
+    /// <param name="orderId">Идентификатор заказа.</param>
+    /// <returns></returns>
     [HttpGet("orders/pay/{orderId}")]
     public IActionResult Pay([FromRoute] long orderId) => View();
 
+    /// <summary>
+    /// Запрос на оплату заказа.
+    /// </summary>
+    /// <param name="orderId">Идентифкатор заказа.</param>
+    /// <param name="model">Платежные данные.</param>
+    /// <returns></returns>
     [HttpPost(("orders/pay/{orderId}"))]
     public async Task<IActionResult> PayAsync([FromRoute] long orderId, OrderPayModel model)
     {
@@ -161,6 +172,10 @@ public sealed class OrdersController : Controller
         return RedirectToAction("List");
     }
 
+    /// <summary>
+    /// Запрос на заказов требующих обработки.
+    /// </summary>
+    /// <returns></returns>
     [HttpGet]
     public IActionResult Aprove()
     {
@@ -170,6 +185,11 @@ public sealed class OrdersController : Controller
         return View(ordersWithWaitStatus);
     }
 
+    /// <summary>
+    /// Запрос на получение заказа.
+    /// </summary>
+    /// <param name="id">Идентификатор заказа.</param>
+    /// <returns></returns>
     [HttpGet]
     public IActionResult Ready(long id)
     {
@@ -188,6 +208,11 @@ public sealed class OrdersController : Controller
         return RedirectToAction("Aprove");
     }
 
+    /// <summary>
+    /// Запрос на получение заказа.
+    /// </summary>
+    /// <param name="id">Идентифкатор заказа.</param>
+    /// <returns></returns>
     [HttpGet]
     public IActionResult Receive(long id)
     {
