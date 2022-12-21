@@ -48,13 +48,11 @@ public sealed class Catalog : ICatalog
             products = products.Where(x => x.Item.Type.Id == filter.SelectedTypeId);
         }
 
-        if (filter.PropertiesWithValues.Any())
+        foreach(var filterValue in filter.PropertiesWithValues)
         {
             products = products
             .Where(x => x.Item.Properties.Where(prop =>
-                prop.Value is not null &&
-                filter.PropertiesWithValues.Contains((prop.Key, prop.Value)))
-            .Any());
+                prop.Value is not null && prop.Key == filterValue.Item1 && prop.Value == filterValue.Item2).Any());
         }
 
         return products;
