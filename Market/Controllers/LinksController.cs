@@ -10,6 +10,7 @@ using Market.Logic.Transport.Configurations;
 using Market.Logic.Transport.Senders;
 using Market.Models;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Market.Controllers;
@@ -19,6 +20,7 @@ using IQuerySender = IQuerySender<ImportCommandConfigurationSender, ImportQuery,
 /// <summary xml:lang = "ru">
 /// Контроллер для управления связями между внутренними и внешними продуктами поставщиков.
 /// </summary>
+[Authorize(Policy = "OnlyForManager")]
 public sealed class LinksController : Controller
 {
     private readonly ILogger<LinksController> _logger;
@@ -61,6 +63,7 @@ public sealed class LinksController : Controller
     /// Возвращает список связей.
     /// </summary>
     /// <returns> <see cref="Task{TResult}"/>. </returns>
+    [HttpGet]
     public async Task<IActionResult> ListAsync()
     {
         var result = await _querySender.SendAsync(
@@ -76,6 +79,7 @@ public sealed class LinksController : Controller
     /// Возвращает форму для создания связей.
     /// </summary>
     /// <returns> <see cref="ActionResult"/>. </returns>
+    [HttpGet]
     public ActionResult Create() => View();
 
     // POST: Links/Create
@@ -111,6 +115,7 @@ public sealed class LinksController : Controller
     /// Возвращает форму для удаления связей.
     /// </summary>
     /// <returns> <see cref="ActionResult"/>. </returns>
+    [HttpGet]
     public ActionResult Delete(LinkViewModel link)
     {
         if (ModelState.IsValid)

@@ -40,7 +40,7 @@ public sealed class Catalog : ICatalog
 
         if (filter.SearchString is not null)
         {
-            products = products.Where(x => x.Item.Name.Contains(filter.SearchString));
+            products = products.Where(x => x.Item.Name.Contains(filter.SearchString, StringComparison.CurrentCultureIgnoreCase));
         }
 
         if (filter.SelectedTypeId is not null)
@@ -61,5 +61,11 @@ public sealed class Catalog : ICatalog
     }
 
     /// <inheritdoc/>
-    public Product? GetProductByKey((ID, ID) key) => _productRepository.GetByKey(key); 
+    public Product? GetProductByKey((ID, ID) key) => _productRepository.GetByKey(key);
+    
+    /// <inheritdoc/>
+    public IEnumerable<Product> GetProducts() => _productRepository.GetEntities();
+
+    /// <inheritdoc/>
+    public IEnumerable<Item> GetItems() => _itemRepository.GetEntities();
 }

@@ -6,6 +6,7 @@ using Market.Models.Account;
 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Market.Controllers;
@@ -13,6 +14,7 @@ namespace Market.Controllers;
 /// <summary xml:lang = "ru">
 /// Контроллер для управления учётными записями пользователей.
 /// </summary>
+[AllowAnonymous]
 public class AccountController : Controller
 {
     private readonly ILogger<AccountController> _logger;

@@ -36,13 +36,15 @@ public class BasketController : Controller
     }
 
     [HttpGet]
-    [Authorize]
     public IActionResult Index()
     {
-        var user = _usersRepository.GetByEmail(User.Identity.Name);
+        var user = GetCurrentUser();
 
         if (user is null)
-            return View(Array.Empty<PurchasableEntity>());
+        {
+            Response.StatusCode = 400;
+            return BadRequest();
+        }
 
         var items = _basketRepository.GetAllBasketItems(user).OrderBy(x => x.Product.Item.Key.Value);
 
@@ -50,12 +52,11 @@ public class BasketController : Controller
     }
 
     [HttpGet]
-    [Authorize]
     public IActionResult Add(long providerId, long itemId)
     {
         var product = _catalog.GetProductByKey((new(providerId), new(itemId)));
 
-        var user = _usersRepository.GetByEmail(User.Identity!.Name!);
+        var user = GetCurrentUser();
 
         if (product is not null && user is not null)
         {
@@ -68,12 +69,11 @@ public class BasketController : Controller
     }
 
     [HttpGet]
-    [Authorize]
     public IActionResult Delete(long providerId, long itemId)
     {
         var product = _catalog.GetProductByKey((new(providerId), new(itemId)));
 
-        var user = _usersRepository.GetByEmail(User.Identity!.Name!);
+        var user = GetCurrentUser();
 
         if (product is not null && user is not null)
         {
@@ -86,12 +86,11 @@ public class BasketController : Controller
     }
 
     [HttpGet]
-    [Authorize]
     public IActionResult Remove(long providerId, long itemId)
     {
         var product = _catalog.GetProductByKey((new(providerId), new(itemId)));
 
-        var user = _usersRepository.GetByEmail(User.Identity!.Name!);
+        var user = GetCurrentUser();
 
         if (product is not null && user is not null)
         {
@@ -109,7 +108,7 @@ public class BasketController : Controller
     {
         var selectedItems = GetItems(Request.Form["Selected"].ToString());
 
-        var user = _usersRepository.GetByEmail(User.Identity!.Name!);
+        var user = GetCurrentUser();
 
         if (user is null)
         {
@@ -160,5 +159,13 @@ public class BasketController : Controller
         }
 
         return result;
+    }
+
+    private User? GetCurrentUser()
+    {
+        if (User.Identity is null || User.Identity.Name is null)
+            return null;
+
+        return _usersRepository.GetByEmail(User.Identity.Name);
     }
 }

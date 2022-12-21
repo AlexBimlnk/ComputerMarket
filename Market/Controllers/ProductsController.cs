@@ -5,6 +5,7 @@ using Market.Logic.Storage;
 using Market.Logic.Storage.Repositories;
 using Market.Models.Products;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Market.Controllers;
@@ -12,6 +13,7 @@ namespace Market.Controllers;
 /// <summary xml:lang="ru">
 /// Контроллер для поучения информации об товарах.
 /// </summary>
+[AllowAnonymous]
 public class ProductsController : Controller
 {
     private readonly ILogger<ProductsController> _logger;
@@ -135,7 +137,7 @@ public class ProductsController : Controller
 
         return result;
     }
-
+    
     private static IReadOnlySet<(ID, string)> GetPropertiesValues(string request)
     {
         var result = new HashSet<(ID, string)>();

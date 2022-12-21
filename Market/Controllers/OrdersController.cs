@@ -14,6 +14,7 @@ using Market.Logic.Storage.Repositories;
 using Market.Logic.Transport.Configurations;
 using Market.Models;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Market.Controllers;
@@ -21,6 +22,7 @@ namespace Market.Controllers;
 /// <summary xml:lang = "ru">
 /// Контроллер для управления связями между внутренними и внешними продуктами поставщиков.
 /// </summary>
+[Authorize]
 public sealed class OrdersController : Controller
 {
     private readonly ILogger<OrdersController> _logger;
@@ -63,14 +65,16 @@ public sealed class OrdersController : Controller
     /// Возвращает список заказов.
     /// </summary>
     /// <returns> <see cref="Task{TResult}"/>. </returns>
+    [HttpGet]
     public IActionResult List()
     {
-        var userEmail = HttpContext.User.Claims
-            .Where(x => x.Type == ClaimsIdentity.DefaultNameClaimType)
-            .Single()
-            .Value;
+        var user = GetCurrentUser();
 
-        var user = _userRepository.GetByEmail(userEmail)!;
+        if (user is null)
+        {
+            Response.StatusCode = 400;
+            return BadRequest();
+        }
 
         var orders = _orderRepository.GetEntities()
             .Where(x => x.Creator.Key == user.Key)
@@ -85,6 +89,7 @@ public sealed class OrdersController : Controller
     /// Возвращает форму с детальным описанием заказа.
     /// </summary>
     /// <returns> <see cref="ActionResult"/>. </returns>
+    [HttpGet]
     public ActionResult Details(long key)
     {
         var order = _orderRepository.GetByKey(new(key));
@@ -92,10 +97,16 @@ public sealed class OrdersController : Controller
         var user = GetCurrentUser();
 
         if (user is null)
+        {
+            Response.StatusCode = 400;
             return BadRequest();
+        }
 
         if (order is null || order.Creator.Key != user.Key)
+        {
+            Response.StatusCode = 404;
             return NotFound();
+        }
 
         return View(order);
     }
@@ -105,6 +116,7 @@ public sealed class OrdersController : Controller
     /// Отменяет заказ.
     /// </summary>
     /// <returns> <see cref="ActionResult"/>. </returns>
+    [HttpGet]
     public async Task<ActionResult> CancelAsync(long key)
     {
         var order = _orderRepository.GetByKey(new(key))!;
@@ -112,10 +124,16 @@ public sealed class OrdersController : Controller
         var user = GetCurrentUser();
 
         if (user is null)
+        {
+            Response.StatusCode = 400;
             return BadRequest();
+        }
 
         if (order is null || order.Creator.Key != user.Key)
+        {
+            Response.StatusCode = 404;
             return NotFound();
+        }
 
         order.State = OrderState.Cancel;
 
@@ -144,6 +162,7 @@ public sealed class OrdersController : Controller
     /// <param name="model">Платежные данные.</param>
     /// <returns></returns>
     [HttpPost(("orders/pay/{orderId}"))]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> PayAsync([FromRoute] long orderId, OrderPayModel model)
     {
         var order = _orderRepository.GetByKey(new(orderId));
@@ -151,10 +170,16 @@ public sealed class OrdersController : Controller
         var user = GetCurrentUser();
 
         if (user is null)
+        {
+            Response.StatusCode = 400;
             return BadRequest();
+        }
 
         if (order is null || order.Creator.Key != user.Key)
+        {
+            Response.StatusCode = 404;
             return NotFound();
+        }
 
         var transactions = new List<Transaction>();
 
@@ -177,6 +202,7 @@ public sealed class OrdersController : Controller
     /// </summary>
     /// <returns></returns>
     [HttpGet]
+    [Authorize(Policy = "OnlyForManager")]
     public IActionResult Aprove()
     {
         var ordersWithWaitStatus = _orderRepository.GetEntities()
@@ -191,12 +217,14 @@ public sealed class OrdersController : Controller
     /// <param name="id">Идентификатор заказа.</param>
     /// <returns></returns>
     [HttpGet]
+    [Authorize(Policy = "OnlyForManager")]
     public IActionResult Ready(long id)
     {
         var order = _orderRepository.GetByKey(new(id));
 
         if (order is null || order.State is not OrderState.ProductDeliveryWait)
         {
+            Response.StatusCode = 404;
             return NotFound();
         }
 
@@ -214,12 +242,14 @@ public sealed class OrdersController : Controller
     /// <param name="id">Идентифкатор заказа.</param>
     /// <returns></returns>
     [HttpGet]
+    [Authorize(Policy = "OnlyForManager")]
     public IActionResult Receive(long id)
     {
         var order = _orderRepository.GetByKey(new(id));
 
         if (order is null || order.State is not OrderState.Ready)
         {
+            Response.StatusCode = 404;
             return NotFound();
         }
 
@@ -231,5 +261,11 @@ public sealed class OrdersController : Controller
         return RedirectToAction("Aprove");
     }
 
-    private User? GetCurrentUser() => _userRepository.GetByEmail(User.Identity!.Name!);
+    private User? GetCurrentUser()
+    {
+        if (User.Identity is null || User.Identity.Name is null)
+            return null;
+
+        return _userRepository.GetByEmail(User.Identity.Name);
+    }
 }

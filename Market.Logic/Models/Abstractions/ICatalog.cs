@@ -19,6 +19,18 @@ public interface ICatalog
     public IEnumerable<Product> GetProducts(ICatalogFilter filter);
 
     /// <summary xml:lang="ru">
+    /// Получение продуктов.
+    /// </summary>
+    /// <returns>Коллекция всех продутов.</returns>
+    public IEnumerable<Product> GetProducts();
+
+    /// <summary xml:lang="ru">
+    /// Получение товаров.
+    /// </summary>
+    /// <returns>Коллекция всех товарво.</returns>
+    public IEnumerable<Item> GetItems();
+
+    /// <summary xml:lang="ru">
     /// Получение продука по его ключу.
     /// </summary>
     /// <param name="key" xml:lang="ru">Ключ продкта.</param>

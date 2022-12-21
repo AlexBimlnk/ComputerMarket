@@ -20,7 +20,8 @@
     </thead>
     <tbody>
         @foreach (var item in Model.Where(x => 
-            x.State == Market.Logic.Models.OrderState.ProviderAnswerWait))
+            x.State == Market.Logic.Models.OrderState.ProviderAnswerWait)
+        .Where(x => x.Items.Any(x => x.Product.Provider.Key.Value == (long)ViewData["ProviderKey"] && x.IsApproved is null)))
         {
             <tr>
                 <td>
@@ -28,7 +29,7 @@
                 </td>
                 <td>
                     @string.Format("{0:C}", item.Items
-                            .Where(x => x.Product.Provider.Key.Value == ViewBag.ProviderKey)
+                .Where(x => x.Product.Provider.Key.Value == (long)ViewData["ProviderKey"])
                             .Sum(x => x.Quantity * x.Product.ProviderCost))
                 </td>
                 <td>
@@ -60,8 +61,10 @@
     </thead>
     <tbody>
         @foreach (var item in Model.Where(x => 
+            x.State == Market.Logic.Models.OrderState.ProviderAnswerWait ||
             x.State == Market.Logic.Models.OrderState.ProductDeliveryWait ||
-            x.State == Market.Logic.Models.OrderState.Ready))
+            x.State == Market.Logic.Models.OrderState.Ready)
+        .Where(x => x.Items.Any(x => x.Product.Provider.Key.Value == (long)ViewData["ProviderKey"] && x.IsApproved is not null && (bool)x.IsApproved)))
         {
                 <tr>
                     <td>
@@ -72,7 +75,7 @@
                     </td>
                     <td>
                         @string.Format("{0:C}", item.Items
-                            .Where(x => x.Product.Provider.Key.Value == ViewBag.ProviderKey)
+                .Where(x => x.Product.Provider.Key.Value == (long)ViewData["ProviderKey"])
                             .Sum(x => x.Quantity * x.Product.ProviderCost))
                     </td>
                     <td>

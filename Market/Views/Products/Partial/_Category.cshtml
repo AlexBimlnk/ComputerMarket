@@ -1,7 +1,7 @@
 ﻿@model Market.Logic.Models.ItemType
 
 <div class="col-md-3">
-	<a href="~/products/catalog?typeId=@Model.Id">
+	<a href="~/products/catalog?typeId=@Model.Id" class="nav-link text-dark">
 		<img src="@(Model.URL ?? "link")" alt="@Model.Name" />
 		<h2>@Model.Name</h2>
 	</a>

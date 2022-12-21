@@ -367,7 +367,8 @@ public sealed class ProductsRepository : IItemsRepository, IProductsRepository
         Name = provider.Name,
         Margin = provider.Margin.Value,
         Inn = provider.PaymentTransactionsInformation.INN,
-        BankAccount = provider.PaymentTransactionsInformation.BankAccount
+        BankAccount = provider.PaymentTransactionsInformation.BankAccount,
+        IsAproved = provider.IsAproved
     };
 
     private static Provider ConvertFromStorageModel(TProvider provider) =>
@@ -375,7 +376,10 @@ public sealed class ProductsRepository : IItemsRepository, IProductsRepository
            new ID(provider.Id),
            provider.Name,
            new Margin(provider.Margin),
-           new PaymentTransactionsInformation(provider.Inn, provider.BankAccount));
+           new PaymentTransactionsInformation(provider.Inn, provider.BankAccount))
+       { 
+            IsAproved = provider.IsAproved
+       };
 
     #endregion
 }

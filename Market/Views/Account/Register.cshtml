@@ -1,35 +1,42 @@
 ﻿@model Market.Models.Account.RegisterViewModel
 
-<h1>@ViewData["Title"]</h1>
+@{
+    ViewData["Title"] = "Регистрация";
+}
+
+<h1>Создание нового аккаунта</h1>
+<hr />
 
 <div class="row">
     <div class="col-md-4">
         <form method="post" asp-controller="Account" asp-action="Register">
-            <h2>Создание нового аккаунта.</h2>
-            <hr />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-floating">
                 <input asp-for="Login" class="form-control" autocomplete="username" aria-required="true" />
                 <label asp-for="Login"></label>
                 <span asp-validation-for="Login" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-floating">
                 <input asp-for="Email" class="form-control" autocomplete="username" aria-required="true" />
                 <label asp-for="Email"></label>
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-floating">
                 <input asp-for="Password" class="form-control" autocomplete="new-password" aria-required="true" />
                 <label asp-for="Password"></label>
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-floating">
                 <input asp-for="ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" />
                 <label asp-for="ConfirmPassword"></label>
                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>
+            <br />
             <div>
-                <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+                <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Регистрация</button>
             </div>
             <div>
                 <p>
@@ -39,3 +46,8 @@
         </form>
     </div>
 </div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

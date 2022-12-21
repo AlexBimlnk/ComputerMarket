@@ -2,6 +2,7 @@
 using Market.Logic.Models;
 using Market.Logic.Models.Abstractions;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Market.Controllers;
@@ -9,6 +10,7 @@ namespace Market.Controllers;
 /// <summary xml:lang = "ru">
 /// Контроллер для сборки компьютера.
 /// </summary>
+[AllowAnonymous]
 public class BuilderController : Controller
 {
     private const int PROCESSOR_TYPE_ID = 1;
@@ -43,10 +45,10 @@ public class BuilderController : Controller
 
     private void PrepareView()
     {
-        ViewBag.Processors = _catalog.GetProducts(new CatalogFilter(null, PROCESSOR_TYPE_ID))
-            .Select(x => x.Item.Name);
-        ViewBag.MotherBoards = _catalog.GetProducts(new CatalogFilter(null, MOTHER_TYPE_ID))
-            .Select(x => x.Item.Name);
+        ViewBag.Processors = _catalog.GetItems().Where(x => x.Type.Id == PROCESSOR_TYPE_ID)
+            .Select(x => x.Name);
+        ViewBag.MotherBoards = _catalog.GetItems().Where(x => x.Type.Id == MOTHER_TYPE_ID)
+            .Select(x => x.Name);
     }
 
     private void CreateBestOffer(
@@ -66,6 +68,7 @@ public class BuilderController : Controller
     /// Возвращает форму билдера.
     /// </summary>
     /// <returns> <see cref="IActionResult"/>. </returns>
+    [HttpGet]
     public IActionResult Index()
     {
         PrepareView();

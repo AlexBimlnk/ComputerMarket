@@ -184,7 +184,8 @@ public sealed class OrdersRepository : IOrderRepository
         ItemId = item.Product.Item.Key.Value,
         Quantity = item.Quantity,
         PaidPrice = item.Product.FinalCost,
-        Product = ConvertToStorageModel(item.Product)
+        Product = ConvertToStorageModel(item.Product),
+        ApprovedByProvider = item.IsApproved
     };
 
     private static Order ConvertFromStorageModel(TOrder order)
@@ -209,7 +210,10 @@ public sealed class OrdersRepository : IOrderRepository
     private static PurchasableEntity ConvertFromStorageModel(TOrderItem item) =>
         new PurchasableEntity(
             ConvertFromStorageModel(item.Product),
-            item.Quantity);
+            item.Quantity)
+        { 
+            IsApproved = item.ApprovedByProvider
+        };
 
     private static TItem ConvertToStorageModel(Item item)
     {
@@ -316,7 +320,8 @@ public sealed class OrdersRepository : IOrderRepository
         Name = provider.Name,
         Margin = provider.Margin.Value,
         Inn = provider.PaymentTransactionsInformation.INN,
-        BankAccount = provider.PaymentTransactionsInformation.BankAccount
+        BankAccount = provider.PaymentTransactionsInformation.BankAccount,
+        IsAproved = provider.IsAproved
     };
 
     private static Provider ConvertFromStorageModel(TProvider provider) =>
@@ -324,7 +329,10 @@ public sealed class OrdersRepository : IOrderRepository
            new ID(provider.Id),
            provider.Name,
            new Margin(provider.Margin),
-           new PaymentTransactionsInformation(provider.Inn, provider.BankAccount));
+           new PaymentTransactionsInformation(provider.Inn, provider.BankAccount))
+       {
+           IsAproved = provider.IsAproved
+       };
 
     private static TUser ConvertToStorageModel(User user) => new()
     {
