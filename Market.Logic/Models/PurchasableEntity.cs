@@ -5,6 +5,8 @@
 /// </summary>
 public sealed class PurchasableEntity : IEquatable<PurchasableEntity>
 {
+    private bool? _isApproved = null;
+
     /// <summary xml:lang = "ru">
     /// Создает экземпляр типа <see cref="PurchasableEntity"/>.
     /// </summary>
@@ -40,6 +42,17 @@ public sealed class PurchasableEntity : IEquatable<PurchasableEntity>
     /// Выбран ли продукт.
     /// </summary>
     public bool Selected { get; set; } = true;
+
+    public bool? IsApproved 
+    {
+        get => _isApproved;
+        set
+        {
+            if (_isApproved is not null)
+                throw new InvalidOperationException("Can't change entity aprove state after set");
+            _isApproved = value;
+        }
+    }
 
     /// <summary xml:lang = "ru">
     /// Увеличивает количество продуктов на один до доступного количества продуктов.

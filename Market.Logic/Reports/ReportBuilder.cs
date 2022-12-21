@@ -37,11 +37,11 @@ public sealed class ReportBuilder : IReportBuilder
             .Where(x =>
                 DateOnly.FromDateTime(x.OrderDate) >= _config.StartPeriod &&
                 DateOnly.FromDateTime(x.OrderDate) <= _config.EndPeriod)
-            .Where(x => x.Items.Any(item => item.Product.Provider == provider));
+            .Where(x => x.Items.Any(item => item.Product.Provider.Equals(provider)));
 
         var soldProducts = possibleOrders
             .SelectMany(x => x.Items)
-            .Where(x => x.Product.Provider == provider);
+            .Where(x => x.Product.Provider.Equals(provider));
 
         var productsMap = new Dictionary<Product, long>();
         foreach (var i in soldProducts)

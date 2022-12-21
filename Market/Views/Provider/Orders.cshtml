@@ -20,7 +20,8 @@
     </thead>
     <tbody>
         @foreach (var item in Model.Where(x => 
-            x.State == Market.Logic.Models.OrderState.ProviderAnswerWait))
+            x.State == Market.Logic.Models.OrderState.ProviderAnswerWait)
+        .Where(x => x.Items.Any(x => x.Product.Provider.Key.Value == (long)ViewData["ProviderKey"] && x.IsApproved is null)))
         {
             <tr>
                 <td>
@@ -60,8 +61,10 @@
     </thead>
     <tbody>
         @foreach (var item in Model.Where(x => 
+            x.State == Market.Logic.Models.OrderState.ProviderAnswerWait ||
             x.State == Market.Logic.Models.OrderState.ProductDeliveryWait ||
-            x.State == Market.Logic.Models.OrderState.Ready))
+            x.State == Market.Logic.Models.OrderState.Ready)
+        .Where(x => x.Items.Any(x => x.Product.Provider.Key.Value == (long)ViewData["ProviderKey"] && x.IsApproved is not null && (bool)x.IsApproved)))
         {
                 <tr>
                     <td>

@@ -42,6 +42,7 @@ public sealed class ReportController : Controller
     /// </summary>
     /// <returns> <see cref="ActionResult"/>. </returns>
     [Authorize(Policy = "OnlyForManager")]
+    [HttpGet]
     public ActionResult Details(Report report) => View(report);
 
     // GET: report/create
@@ -50,6 +51,7 @@ public sealed class ReportController : Controller
     /// </summary>
     /// <returns> <see cref="ActionResult"/>. </returns>
     [Authorize(Policy = "OnlyForManager")]
+    [HttpGet]
     public ActionResult Create() => View();
 
     // POST: report/create
@@ -73,7 +75,7 @@ public sealed class ReportController : Controller
 
             var report = _reportBuilder.CreateReport();
 
-            return RedirectToAction("Details", report);
+            return View("Details", report);
         }
 
         return View();
