@@ -1,9 +1,7 @@
-using General.Storage;
 using General.Transport;
 
 using Market.Logic.Models;
 using Market.Logic.Storage.Repositories;
-using Market.Logic.Transport.Models;
 
 using Microsoft.Extensions.Logging;
 
@@ -149,7 +147,7 @@ public class ImportProductsHandlerTests
     [Trait("Category", "Unit")]
     [MemberData(nameof(DeserializeParameters))]
     public async Task CanHandleRequestAsync(
-        string request, 
+        string request,
         IReadOnlyCollection<UpdateByProduct> addedProducts)
     {
         // Arrange
