@@ -21,7 +21,7 @@ public class ImportProductsHandlerTests
         var itemRepository = Mock.Of<IItemsRepository>(MockBehavior.Strict);
         var providerRepository = Mock.Of<IProvidersRepository>(MockBehavior.Strict);
         var productsRepository = Mock.Of<IProductsRepository>(MockBehavior.Strict);
-        var deserializer = Mock.Of<IDeserializer<string, IReadOnlyCollection<TransportProduct>>>(MockBehavior.Strict);
+        var deserializer = Mock.Of<IDeserializer<string, IReadOnlyCollection<UpdateByProduct>>>(MockBehavior.Strict);
 
         // Act
         var exception = Record.Exception(() => _ = new ImportProductsHandler(
@@ -43,7 +43,7 @@ public class ImportProductsHandlerTests
         var itemRepository = Mock.Of<IItemsRepository>(MockBehavior.Strict);
         var providerRepository = Mock.Of<IProvidersRepository>(MockBehavior.Strict);
         var productsRepository = Mock.Of<IProductsRepository>(MockBehavior.Strict);
-        var deserializer = Mock.Of<IDeserializer<string, IReadOnlyCollection<TransportProduct>>>(MockBehavior.Strict);
+        var deserializer = Mock.Of<IDeserializer<string, IReadOnlyCollection<UpdateByProduct>>>(MockBehavior.Strict);
 
         // Act
         var exception = Record.Exception(() => _ = new ImportProductsHandler(
@@ -87,7 +87,7 @@ public class ImportProductsHandlerTests
         var logger = Mock.Of<ILogger<ImportProductsHandler>>();
         var providerRepository = Mock.Of<IProvidersRepository>(MockBehavior.Strict);
         var productsRepository = Mock.Of<IProductsRepository>(MockBehavior.Strict);
-        var deserializer = Mock.Of<IDeserializer<string, IReadOnlyCollection<TransportProduct>>>(MockBehavior.Strict);
+        var deserializer = Mock.Of<IDeserializer<string, IReadOnlyCollection<UpdateByProduct>>>(MockBehavior.Strict);
 
         // Act
         var exception = Record.Exception(() => _ = new ImportProductsHandler(
@@ -109,7 +109,7 @@ public class ImportProductsHandlerTests
         var logger = Mock.Of<ILogger<ImportProductsHandler>>();
         var itemRepository = Mock.Of<IItemsRepository>(MockBehavior.Strict);
         var productsRepository = Mock.Of<IProductsRepository>(MockBehavior.Strict);
-        var deserializer = Mock.Of<IDeserializer<string, IReadOnlyCollection<TransportProduct>>>(MockBehavior.Strict);
+        var deserializer = Mock.Of<IDeserializer<string, IReadOnlyCollection<UpdateByProduct>>>(MockBehavior.Strict);
 
         // Act
         var exception = Record.Exception(() => _ = new ImportProductsHandler(
@@ -131,7 +131,7 @@ public class ImportProductsHandlerTests
         var logger = Mock.Of<ILogger<ImportProductsHandler>>();
         var itemRepository = Mock.Of<IItemsRepository>(MockBehavior.Strict);
         var providerRepository = Mock.Of<IProvidersRepository>(MockBehavior.Strict);
-        var deserializer = Mock.Of<IDeserializer<string, IReadOnlyCollection<TransportProduct>>>(MockBehavior.Strict);
+        var deserializer = Mock.Of<IDeserializer<string, IReadOnlyCollection<UpdateByProduct>>>(MockBehavior.Strict);
 
         // Act
         var exception = Record.Exception(() => _ = new ImportProductsHandler(
@@ -150,11 +150,11 @@ public class ImportProductsHandlerTests
     [MemberData(nameof(DeserializeParameters))]
     public async Task CanHandleRequestAsync(
         string request, 
-        IReadOnlyCollection<TransportProduct> addedProducts)
+        IReadOnlyCollection<UpdateByProduct> addedProducts)
     {
         // Arrange
         var logger = Mock.Of<ILogger<ImportProductsHandler>>();
-        var deserializer = new Mock<IDeserializer<string, IReadOnlyCollection<TransportProduct>>>(MockBehavior.Strict);
+        var deserializer = new Mock<IDeserializer<string, IReadOnlyCollection<UpdateByProduct>>>(MockBehavior.Strict);
         var itemRepository = Mock.Of<IItemsRepository>(MockBehavior.Strict);
         var providerRepository = Mock.Of<IProvidersRepository>(MockBehavior.Strict);
         var productsRepository = new Mock<IProductsRepository>(MockBehavior.Strict);
@@ -207,7 +207,7 @@ public class ImportProductsHandlerTests
     {
         // Arrange
         var logger = Mock.Of<ILogger<ImportProductsHandler>>();
-        var deserializer = Mock.Of<IDeserializer<string, IReadOnlyCollection<TransportProduct>>>(MockBehavior.Strict);
+        var deserializer = Mock.Of<IDeserializer<string, IReadOnlyCollection<UpdateByProduct>>>(MockBehavior.Strict);
         var itemRepository = Mock.Of<IItemsRepository>(MockBehavior.Strict);
         var providerRepository = Mock.Of<IProvidersRepository>(MockBehavior.Strict);
         var productsRepository = Mock.Of<IProductsRepository>(MockBehavior.Strict);
@@ -233,7 +233,7 @@ public class ImportProductsHandlerTests
     {
         // Arrange
         var logger = Mock.Of<ILogger<ImportProductsHandler>>();
-        var deserializer = Mock.Of<IDeserializer<string, IReadOnlyCollection<TransportProduct>>>(MockBehavior.Strict);
+        var deserializer = Mock.Of<IDeserializer<string, IReadOnlyCollection<UpdateByProduct>>>(MockBehavior.Strict);
         var itemRepository = Mock.Of<IItemsRepository>(MockBehavior.Strict);
         var providerRepository = Mock.Of<IProvidersRepository>(MockBehavior.Strict);
         var productsRepository = Mock.Of<IProductsRepository>(MockBehavior.Strict);
@@ -257,7 +257,7 @@ public class ImportProductsHandlerTests
         exception.Should().BeOfType<OperationCanceledException>();
     }
 
-    public readonly static TheoryData<string, IReadOnlyCollection<TransportProduct>> DeserializeParameters = new()
+    public readonly static TheoryData<string, IReadOnlyCollection<UpdateByProduct>> DeserializeParameters = new()
     {
         {
             /*lang=json,strict*/
@@ -267,27 +267,25 @@ public class ImportProductsHandlerTests
             ]",
             new []
             {
-                new TransportProduct
-                {
-                    ExternalID = 1,
-                    InternalID = 1,
-                    ProviderID = 1,
-                    Price = 100.0m,
-                    Quantity = 5
-                },
-                new TransportProduct
-                {
-                    ExternalID = 4,
-                    InternalID = 2,
-                    ProviderID = 2,
-                    Price = 55.0m,
-                    Quantity = 3
-                },
+                new UpdateByProduct(
+                    externalID: new(1),
+                    internalID: new(1),
+                    providerID: new(1),
+                    new Price(100.0m),
+                    quantity: 5
+                ),
+                new UpdateByProduct(
+                    externalID: new(4),
+                    internalID: new(2),
+                    providerID: new(2),
+                    new Price(55.0m),
+                    quantity: 3
+                )
             }
         },
         {
             /*lang=json,strict*/@"[]",
-            Array.Empty<TransportProduct>()
+            Array.Empty<UpdateByProduct>()
         }
     };
 }
