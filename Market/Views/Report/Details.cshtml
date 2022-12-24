@@ -7,9 +7,15 @@
 <h1>@ViewData["Title"]</h1>
 
 <div>
-    <h4>Report</h4>
+    <h4>Отчет</h4>
     <hr />
-    <dl class="row">
+    @if (ViewBag.ErrorMessage is not null)
+    {
+        @Html.Label("error",(string)ViewBag.ErrorMessage, new { style = "color: red;" })
+    }
+    else
+    {
+        <dl class="row">
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Provider)
         </dt>
@@ -32,7 +38,11 @@
             @Html.DisplayNameFor(model => model.TotalProfit)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TotalProfit)
+            @Html.DisplayFor(model => string.Format("{0:C}", model.TotalProfit))
         </dd>
     </dl>
+    }
+    <p>
+        <a asp-action="Create">Back to Create</a>
+    </p>
 </div>
