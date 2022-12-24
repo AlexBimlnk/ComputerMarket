@@ -17,7 +17,7 @@ namespace Market.Logic;
 public sealed class ImportProductsHandler : IAPIRequestHandler<ImportMarker>
 {
     private readonly ILogger<ImportProductsHandler> _logger;
-    private readonly IDeserializer<string, IReadOnlyCollection<TransportProduct>> _deserializer;
+    private readonly IDeserializer<string, IReadOnlyCollection<UpdateByProduct>> _deserializer;
     private readonly IProductsRepository _productRepository;
     private readonly IItemsRepository _itemRepository;
     private readonly IProvidersRepository _providerRepository;
@@ -34,7 +34,7 @@ public sealed class ImportProductsHandler : IAPIRequestHandler<ImportMarker>
     /// Если один из параметров - <see langword="null"/>.
     /// </exception>
     public ImportProductsHandler(
-        IDeserializer<string, IReadOnlyCollection<TransportProduct>> deserializer,
+        IDeserializer<string, IReadOnlyCollection<UpdateByProduct>> deserializer,
         IItemsRepository itemRepository,
         IProvidersRepository providerRepository,
         IProductsRepository productRepository,
@@ -57,36 +57,36 @@ public sealed class ImportProductsHandler : IAPIRequestHandler<ImportMarker>
 
         _logger.LogInformation("Processing new request");
 
-        var products = _deserializer.Deserialize(request);
+        var updatesByProducts = _deserializer.Deserialize(request);
 
         _logger.LogDebug("Deserialize {Sourse} to Products comlete", request);
 
-        foreach (var product in products)
+        foreach (var updateByProduct in updatesByProducts)
         {
             var domainProduct = _productRepository.GetByKey((
-                new(product.InternalID),
-                new(product.ProviderID)));
+                updateByProduct.ExternalID,
+                updateByProduct.ProviderID));
 
             Product addOrUpdateProduct;
 
             if (domainProduct is null)
             {
-                var item = _itemRepository.GetByKey(new(product.InternalID))!;
-                var provider = _providerRepository.GetByKey(new(product.ProviderID))!;
+                var item = _itemRepository.GetByKey(updateByProduct.InternalID)!;
+                var provider = _providerRepository.GetByKey(updateByProduct.ProviderID)!;
 
                 addOrUpdateProduct = new Product(
                     item,
                     provider,
-                    new Price(product.Price),
-                    product.Quantity);
+                    updateByProduct.Price,
+                    updateByProduct.Quantity);
             }
             else
             {
                 addOrUpdateProduct = new Product(
                     domainProduct.Item,
                     domainProduct.Provider,
-                    new Price(product.Price),
-                    product.Quantity);
+                    updateByProduct.Price,
+                    updateByProduct.Quantity);
             }
 
             await _productRepository.AddOrUpdateAsync(addOrUpdateProduct);
