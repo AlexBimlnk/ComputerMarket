@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿using Market.Logic.Models;
 using Market.Logic.Transport.Deserializers;
 using Market.Logic.Transport.Models;
-
-using Newtonsoft.Json;
 
 namespace Market.Logic.Tests.Transport.Deserializers;
 
@@ -28,7 +21,7 @@ public class ProductDeserializerTests
     [Theory(DisplayName = $"The {nameof(ProductDeserializer)} can deserialize.")]
     [Trait("Category", "Unit")]
     [MemberData(nameof(DeserializeParameters))]
-    public void CanDeserialize(string rawSource, ICollection<TransportProduct> expectedResult)
+    public void CanDeserialize(string rawSource, ICollection<UpdateByProduct> expectedResult)
     {
         // Arrange
         var deserializer = new ProductDeserializer();
@@ -59,7 +52,7 @@ public class ProductDeserializerTests
         exception.Should().BeOfType<ArgumentException>();
     }
 
-    public readonly static TheoryData<string, IReadOnlyCollection<TransportProduct>> DeserializeParameters = new()
+    public readonly static TheoryData<string, IReadOnlyCollection<UpdateByProduct>> DeserializeParameters = new()
     {
         {
             /*lang=json,strict*/
@@ -69,13 +62,25 @@ public class ProductDeserializerTests
             ]",
             new []
             {
-                new TransportProduct() {ExternalID = 1, InternalID = 1, ProviderID = 1, Price = 100m, Quantity = 5 },
-                new TransportProduct() {ExternalID = 1, InternalID = 4, ProviderID = 2, Price = 55m, Quantity = 3 }
+                new UpdateByProduct(
+                    externalID: new(1),
+                    internalID: new(1),
+                    providerID: new(1),
+                    new Price(100.0m),
+                    quantity: 5
+                ),
+                new UpdateByProduct(
+                    externalID: new(1),
+                    internalID: new(4),
+                    providerID: new(2),
+                    new Price(55.0m),
+                    quantity: 3
+                )
             }
         },
         {
             /*lang=json,strict*/@"[]",
-            Array.Empty<TransportProduct>()
+            Array.Empty<UpdateByProduct>()
         }
     };
 }

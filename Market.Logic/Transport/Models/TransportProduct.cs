@@ -20,7 +20,7 @@ public sealed class TransportProduct
     public long InternalID { get; set; }
 
     /// <summary xml:lang = "ru">
-    /// Название поставщика.
+    /// Идентификатор поставщика.
     /// </summary>
     [JsonProperty("provider_id", Required = Required.Always)]
     public long ProviderID { get; set; }
@@ -32,7 +32,7 @@ public sealed class TransportProduct
     public decimal Price { get; set; }
 
     /// <summary xml:lang = "ru">
-    /// Колличество продукта.
+    /// Количество продукта.
     /// </summary>
     [JsonProperty("quantity", Required = Required.Always)]
     public int Quantity { get; set; }

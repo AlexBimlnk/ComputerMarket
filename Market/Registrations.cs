@@ -65,7 +65,7 @@ public static class Registrations
         => services
             .AddSingleton<IDeserializer<string, TransactionRequestResult>, TransactionResultDeserializer>()
 
-            .AddSingleton<IDeserializer<string, IReadOnlyCollection<TransportProduct>>, ProductDeserializer>()
+            .AddSingleton<IDeserializer<string, IReadOnlyCollection<UpdateByProduct>>, ProductDeserializer>()
             .AddSingleton<IDeserializer<string, CommandResult>, CommandResultDeserializer>()
             .AddSingleton<IDeserializer<string, QueryResult<IReadOnlyCollection<Link>>>, ImportQueryResultDeserializer>()
 
