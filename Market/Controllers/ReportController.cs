@@ -73,9 +73,16 @@ public sealed class ReportController : Controller
             _reportBuilder.SetStartPeriod(DateOnly.FromDateTime(reportViewModel.StartPeriod));
             _reportBuilder.SetEndPeriod(DateOnly.FromDateTime(reportViewModel.EndPeriod));
 
-            var report = _reportBuilder.CreateReport();
-
-            return View("Details", report);
+            try
+            {
+                var report = _reportBuilder.CreateReport();
+                return View("Details", report);
+            }
+            catch (InvalidOperationException)
+            {
+                ViewBag.ErrorMessage = "За данный период невозможно построить отчет.";
+                return View("Details");
+            }            
         }
 
         return View();
