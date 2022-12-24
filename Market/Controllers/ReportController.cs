@@ -10,7 +10,7 @@ namespace Market.Controllers;
 /// <summary xml:lang = "ru">
 /// Контроллер для создания отчетов.
 /// </summary>
-//[Authorize]
+[Authorize]
 public sealed class ReportController : Controller
 {
     private readonly ILogger<ReportController> _logger;
@@ -41,7 +41,7 @@ public sealed class ReportController : Controller
     /// Возвращает форму для представления отчета.
     /// </summary>
     /// <returns> <see cref="ActionResult"/>. </returns>
-    //[Authorize(Policy = "OnlyForManager")]
+    [Authorize(Policy = "OnlyForManager")]
     [HttpGet]
     public ActionResult Details(Report report) => View(report);
 
@@ -50,7 +50,7 @@ public sealed class ReportController : Controller
     /// Возвращает форму для создания отчетов.
     /// </summary>
     /// <returns> <see cref="ActionResult"/>. </returns>
-   // [Authorize(Policy = "OnlyForManager")]
+    [Authorize(Policy = "OnlyForManager")]
     [HttpGet]
     public ActionResult Create() => View();
 
@@ -64,7 +64,7 @@ public sealed class ReportController : Controller
     /// <returns> <see cref="Task{TResult}"/>. </returns>
     [HttpPost]
     [ValidateAntiForgeryToken]
-    //[Authorize(Policy = "OnlyForManager")]
+    [Authorize(Policy = "OnlyForManager")]
     public ActionResult Create(ReportViewModel reportViewModel)
     {
         if (ModelState.IsValid)
