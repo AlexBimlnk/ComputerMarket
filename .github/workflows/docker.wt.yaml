@@ -2,7 +2,7 @@ name: Docker WalletTransaction
 
 on:
   push:
-    branches: [ "master", "feature/#189-setup-deployment-on-server" ]
+    branches: [ "master" ]
   # workflow_run:
   #   workflows: [.NET]
   #   types:
