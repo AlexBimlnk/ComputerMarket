@@ -2,12 +2,9 @@ name: Docker Market
 
 on:
   workflow_run:
-    workflows: [.NET]
+    workflows: ['.NET']
     types:
       - completed
-    branches:
-      - 'master'
-      - 'feature/#189-setup-deployment-on-server'
 
 env:
   # Use docker.io for Docker Hub if empty
