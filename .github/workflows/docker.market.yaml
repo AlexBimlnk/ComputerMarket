@@ -30,7 +30,7 @@ jobs:
             - 'Market.Logic/**'
   build:
     needs: paths-filter
-    if: ${{ needs.changes.outputs.Market == 'true' }}
+    if: needs.changes.outputs.Market == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: read
