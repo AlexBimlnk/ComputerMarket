@@ -18,19 +18,19 @@ jobs:
   paths-filter:
     runs-on: ubuntu-latest
     outputs:
-      Market: ${{ needs.changes.outputs.Market }}
+      output1: ${{ steps.filter.outputs.workflows }}
     steps:
     - uses: actions/checkout@v2
     - uses: dorny/paths-filter@v2
       id: filter
       with:
         filters: |
-          Market:
+          workflows:
             - 'Market/**'
             - 'Market.Logic/**'
   build:
     needs: paths-filter
-    if: needs.changes.outputs.Market == 'true'
+    if: needs.paths-filter.outputs.output1 == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: read
