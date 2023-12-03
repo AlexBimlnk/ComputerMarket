@@ -10,9 +10,10 @@ on:
 env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: docker.io
+  DOCKER_IMAGE_SUB_NAME: market
   # github.repository as <account>/<repo> ${{ github.repository }}
-  IMAGE_NAME: semyonmashina/computermarket.market
-  PROJECT_FOLDER: Market
+  IMAGE_NAME: semyonmashina/computermarket.${{ env.DOCKER_IMAGE_SUB_NAME }}
+  PROJECT_NAME: Market
 
 jobs:
   paths-filter:
@@ -26,8 +27,8 @@ jobs:
       with:
         filters: |
           project_dir:
-            - '${{ env.PROJECT_FOLDER }}/**'
-            - '${{ env.PROJECT_FOLDER }}.Logic/**'
+            - '${{ env.PROJECT_NAME }}/**'
+            - '${{ env.PROJECT_NAME }}.Logic/**'
   build:
     needs: paths-filter
     if: needs.paths-filter.outputs.project_dir == 'true'
@@ -78,7 +79,7 @@ jobs:
         uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
         with:
           context: .
-          file: docker/Dockerfile.Market
+          file: docker/Dockerfile.{{ env.PROJECT_NAME }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
