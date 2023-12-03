@@ -1,3 +1,4 @@
+\c market
 BEGIN;
 
 DROP TABLE IF EXISTS item_description;

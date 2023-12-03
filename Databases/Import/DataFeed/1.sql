@@ -1,3 +1,4 @@
+\c import
 BEGIN;
 
 INSERT INTO providers(id, provider_name)

@@ -1,3 +1,4 @@
+\c market
 INSERT INTO property_group(id, name)
     VALUES 
         (1,'Общие'),

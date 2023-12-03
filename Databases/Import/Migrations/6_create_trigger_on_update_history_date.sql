@@ -1,3 +1,4 @@
+\c import
 BEGIN;
 
 CREATE OR REPLACE FUNCTION update_history_date()

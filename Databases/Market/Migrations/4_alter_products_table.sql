@@ -1,3 +1,4 @@
+\c market
 BEGIN;
 
 ALTER TABLE product

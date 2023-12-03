@@ -1,3 +1,4 @@
+\c import
 BEGIN;
 
 DROP TABLE IF EXISTS db_version;

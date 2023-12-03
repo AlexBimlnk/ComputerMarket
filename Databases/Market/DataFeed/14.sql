@@ -1,3 +1,4 @@
+\c market
 insert into providers (id, name, margin, bank_account, inn, is_approved)
 values  (1, 'Horns and hooves', 1.5000, '12345123451234512344', '1234512344', true),
         (2, 'Ivanov', 1.8500, '12345123451234512345', '1234512345', true);

@@ -1,3 +1,4 @@
+\c import
 BEGIN;
 
 ALTER TABLE histories

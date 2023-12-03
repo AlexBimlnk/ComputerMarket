@@ -1,3 +1,4 @@
+\c import
 INSERT INTO providers(provider_name)
 VALUES ('Ivanov');
 

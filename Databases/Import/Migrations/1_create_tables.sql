@@ -1,3 +1,4 @@
+\c import
 BEGIN;
 
 CREATE TABLE providers

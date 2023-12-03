@@ -1,3 +1,4 @@
+\c market
 BEGIN;
 
 CREATE OR REPLACE FUNCTION update_provider_product_price()

@@ -1,3 +1,4 @@
+\c market
 BEGIN;
 
 UPDATE db_version SET version = 9 WHERE TRUE;
