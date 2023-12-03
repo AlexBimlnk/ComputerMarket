@@ -43,15 +43,37 @@ services:
       - habrdb-data:/var/lib/postgresql/data
     networks:
       - postgres
-  app:
-   container_name: app_container
-   image: wi1sp/porphum_web:master
+
+  market-app:
+   container_name: market-app
+   image: semyonmashina/computermarket:master
    ports:
      - 5000:80
    depends_on:
      - postgres
    networks:
       - postgres
+  
+  import-app:
+   container_name: import-app
+   image: semyonmashina/computermarket.import:master
+   ports:
+     - 5010:80
+   depends_on:
+     - postgres
+   networks:
+      - postgres
+  
+  wallet-transaction-app:
+   container_name: wallet-transaction-app
+   image: semyonmashina/computermarket.wallettransaction:master
+   ports:
+     - 5020:80
+   depends_on:
+     - postgres
+   networks:
+      - postgres
+
   pgadmin:
     container_name: pgadmin_container
     image: dpage/pgadmin4:7.2
