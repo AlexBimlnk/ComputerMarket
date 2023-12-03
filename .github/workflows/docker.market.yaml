@@ -2,7 +2,7 @@ name: Docker Market
 
 on:
   workflow_run:
-    workflows: ['.NET']
+    workflows: [Docker Import]
     types:
       - completed
 
