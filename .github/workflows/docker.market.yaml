@@ -18,7 +18,7 @@ jobs:
   paths-filter:
     runs-on: ubuntu-latest
     outputs:
-      Market: ${{ steps.filter.outputs.Market }}
+      Market: ${{ needs.changes.outputs.Market }}
     steps:
     - uses: actions/checkout@v2
     - uses: dorny/paths-filter@v2
