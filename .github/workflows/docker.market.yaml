@@ -36,7 +36,7 @@ jobs:
       packages: write
       id-token: write
     needs: paths-filter
-    if: needs.paths-filter.outputs.Market == 'true'
+    if: needs.paths-filter.outputs.Marke == 'true'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
