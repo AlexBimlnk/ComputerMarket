@@ -46,7 +46,7 @@ services:
 
   market-app:
    container_name: market-app
-   image: semyonmashina/computermarket:master
+   image: semyonmashina/computermarket.market:master
    ports:
      - 5000:80
    depends_on:
