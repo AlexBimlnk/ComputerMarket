@@ -1,5 +1,5 @@
 version: "3.9"
-name: computer_market_server_app
+name: computer-market-server-app
 services:
   postgres:
     container_name: postgres_container
