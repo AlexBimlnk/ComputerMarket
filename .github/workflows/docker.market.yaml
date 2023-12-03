@@ -15,10 +15,11 @@ env:
   PROJECT_NAME: Market
 
 jobs:
-  paths-filter:
+  changes-filter:
     runs-on: ubuntu-latest
     outputs:
       project_dir: ${{ steps.filter.outputs.project_dir }}
+      dependencies_dir: ${{ steps.filter.outputs.dependencies_dir }}
     steps:
     - uses: actions/checkout@v2
     - uses: dorny/paths-filter@v2
@@ -28,9 +29,12 @@ jobs:
           project_dir:
             - '${{ env.PROJECT_NAME }}/**'
             - '${{ env.PROJECT_NAME }}.Logic/**'
+          dependencies_dir:
+            - 'General/**'
+
   build:
-    needs: paths-filter
-    if: needs.paths-filter.outputs.project_dir == 'true'
+    needs: changes-filter
+    if: needs.changes-filter.outputs.project_dir == 'true' && needs.changes-filter.outputs.dependencies_dir == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: read
