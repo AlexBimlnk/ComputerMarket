@@ -10,9 +10,8 @@ on:
 env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: docker.io
-  DOCKER_IMAGE_SUB_NAME: market
   # github.repository as <account>/<repo> ${{ github.repository }}
-  IMAGE_NAME: semyonmashina/computermarket.${{ env.DOCKER_IMAGE_SUB_NAME }}
+  IMAGE_NAME: semyonmashina/computermarket.market
   PROJECT_NAME: Market
 
 jobs:
