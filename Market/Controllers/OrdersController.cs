@@ -1,271 +1,271 @@
-﻿using System.Security.Claims;
-using System.Security.Cryptography.X509Certificates;
+﻿    using System.Security.Claims;
+    using System.Security.Cryptography.X509Certificates;
 
-using General.Logic.Executables;
-using General.Storage;
-using General.Transport;
+    using General.Logic.Executables;
+    using General.Storage;
+    using General.Transport;
 
-using Market.Logic;
-using Market.Logic.Commands.Import;
-using Market.Logic.Commands.WT;
-using Market.Logic.Models;
-using Market.Logic.Models.WT;
-using Market.Logic.Storage.Repositories;
-using Market.Logic.Transport.Configurations;
-using Market.Models;
+    using Market.Logic;
+    using Market.Logic.Commands.Import;
+    using Market.Logic.Commands.WT;
+    using Market.Logic.Models;
+    using Market.Logic.Models.WT;
+    using Market.Logic.Storage.Repositories;
+    using Market.Logic.Transport.Configurations;
+    using Market.Models;
 
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
 
-namespace Market.Controllers;
-
-/// <summary xml:lang = "ru">
-/// Контроллер для управления связями между внутренними и внешними продуктами поставщиков.
-/// </summary>
-[Authorize]
-public sealed class OrdersController : Controller
-{
-    private readonly ILogger<OrdersController> _logger;
-    private readonly IOrderRepository _orderRepository;
-    private readonly IUsersRepository _userRepository;
-    private readonly ISender<WTCommandConfigurationSender, WTCommand> _wtCommandSender;
+    namespace Market.Controllers;
 
     /// <summary xml:lang = "ru">
-    /// Создает новый экземпляр типа <see cref="OrdersController"/>.
+    /// Контроллер для управления связями между внутренними и внешними продуктами поставщиков.
     /// </summary>
-    /// <param name="logger" xml:lang = "ru">
-    /// Логгер.
-    /// </param>
-    /// <param name="orderRepository" xml:lang = "ru">
-    /// Хранилище заказов.
-    /// </param>
-    /// <param name="usersRepository" xml:lang = "ru">
-    /// Хранилище пользователей.
-    /// </param>
-    /// <param name="wtCommandSender" xml:lang = "ru">
-    /// Отправитель команд.
-    /// </param>
-    /// <exception cref="ArgumentNullException" xml:lang = "ru">
-    /// Если любой из входных параметров оказался <see langword="null"/>.
-    /// </exception>
-    public OrdersController(
-        ILogger<OrdersController> logger,
-        IOrderRepository orderRepository,
-        IUsersRepository usersRepository,
-        ISender<WTCommandConfigurationSender, WTCommand> wtCommandSender)
+    [Authorize]
+    public sealed class OrdersController : Controller
     {
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _orderRepository = orderRepository ?? throw new ArgumentNullException(nameof(orderRepository));
-        _userRepository = usersRepository ?? throw new ArgumentNullException(nameof(usersRepository));
-        _wtCommandSender = wtCommandSender ?? throw new ArgumentNullException(nameof(wtCommandSender));
-    }
+        private readonly ILogger<OrdersController> _logger;
+        private readonly IOrderRepository _orderRepository;
+        private readonly IUsersRepository _userRepository;
+        private readonly ISender<WTCommandConfigurationSender, WTCommand> _wtCommandSender;
 
-    // Get: Orders/List
-    /// <summary xml:lang = "ru">
-    /// Возвращает список заказов.
-    /// </summary>
-    /// <returns> <see cref="Task{TResult}"/>. </returns>
-    [HttpGet]
-    public IActionResult List()
-    {
-        var user = GetCurrentUser();
-
-        if (user is null)
+        /// <summary xml:lang = "ru">
+        /// Создает новый экземпляр типа <see cref="OrdersController"/>.
+        /// </summary>
+        /// <param name="logger" xml:lang = "ru">
+        /// Логгер.
+        /// </param>
+        /// <param name="orderRepository" xml:lang = "ru">
+        /// Хранилище заказов.
+        /// </param>
+        /// <param name="usersRepository" xml:lang = "ru">
+        /// Хранилище пользователей.
+        /// </param>
+        /// <param name="wtCommandSender" xml:lang = "ru">
+        /// Отправитель команд.
+        /// </param>
+        /// <exception cref="ArgumentNullException" xml:lang = "ru">
+        /// Если любой из входных параметров оказался <see langword="null"/>.
+        /// </exception>
+        public OrdersController(
+            ILogger<OrdersController> logger,
+            IOrderRepository orderRepository,
+            IUsersRepository usersRepository,
+            ISender<WTCommandConfigurationSender, WTCommand> wtCommandSender)
         {
-            Response.StatusCode = 400;
-            return BadRequest();
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _orderRepository = orderRepository ?? throw new ArgumentNullException(nameof(orderRepository));
+            _userRepository = usersRepository ?? throw new ArgumentNullException(nameof(usersRepository));
+            _wtCommandSender = wtCommandSender ?? throw new ArgumentNullException(nameof(wtCommandSender));
         }
 
-        var orders = _orderRepository.GetEntities()
-            .Where(x => x.Creator.Key == user.Key)
-            .OrderBy(x => x.OrderDate)
-            .ToList();
-
-        return View(orders);
-    }
-
-    // GET: Orders/details
-    /// <summary xml:lang = "ru">
-    /// Возвращает форму с детальным описанием заказа.
-    /// </summary>
-    /// <returns> <see cref="ActionResult"/>. </returns>
-    [HttpGet]
-    public ActionResult Details(long key)
-    {
-        var order = _orderRepository.GetByKey(new(key));
-
-        var user = GetCurrentUser();
-
-        if (user is null)
+        // Get: Orders/List
+        /// <summary xml:lang = "ru">
+        /// Возвращает список заказов.
+        /// </summary>
+        /// <returns> <see cref="Task{TResult}"/>. </returns>
+        [HttpGet]
+        public IActionResult List()
         {
-            Response.StatusCode = 400;
-            return BadRequest();
+            var user = GetCurrentUser();
+
+            if (user is null)
+            {
+                Response.StatusCode = 400;
+                return BadRequest();
+            }
+
+            var orders = _orderRepository.GetEntities()
+                .Where(x => x.Creator.Key == user.Key)
+                .OrderBy(x => x.OrderDate)
+                .ToList();
+
+            return View(orders);
         }
 
-        if (order is null || order.Creator.Key != user.Key)
+        // GET: Orders/details
+        /// <summary xml:lang = "ru">
+        /// Возвращает форму с детальным описанием заказа.
+        /// </summary>
+        /// <returns> <see cref="ActionResult"/>. </returns>
+        [HttpGet]
+        public ActionResult Details(long key)
         {
-            Response.StatusCode = 404;
-            return NotFound();
+            var order = _orderRepository.GetByKey(new(key));
+
+            var user = GetCurrentUser();
+
+            if (user is null)
+            {
+                Response.StatusCode = 400;
+                return BadRequest();
+            }
+
+            if (order is null || order.Creator.Key != user.Key)
+            {
+                Response.StatusCode = 404;
+                return NotFound();
+            }
+
+            return View(order);
         }
 
-        return View(order);
-    }
-
-    // GET: Orders/cancel
-    /// <summary xml:lang = "ru">
-    /// Отменяет заказ.
-    /// </summary>
-    /// <returns> <see cref="ActionResult"/>. </returns>
-    [HttpGet]
-    public async Task<ActionResult> CancelAsync(long key)
-    {
-        var order = _orderRepository.GetByKey(new(key))!;
-
-        var user = GetCurrentUser();
-
-        if (user is null)
+        // GET: Orders/cancel
+        /// <summary xml:lang = "ru">
+        /// Отменяет заказ.
+        /// </summary>
+        /// <returns> <see cref="ActionResult"/>. </returns>
+        [HttpGet]
+        public async Task<ActionResult> CancelAsync(long key)
         {
-            Response.StatusCode = 400;
-            return BadRequest();
+            var order = _orderRepository.GetByKey(new(key))!;
+
+            var user = GetCurrentUser();
+
+            if (user is null)
+            {
+                Response.StatusCode = 400;
+                return BadRequest();
+            }
+
+            if (order is null || order.Creator.Key != user.Key)
+            {
+                Response.StatusCode = 404;
+                return NotFound();
+            }
+
+            order.State = OrderState.Cancel;
+
+            _orderRepository.UpdateState(order);
+            _orderRepository.Save();
+
+            await _wtCommandSender.SendAsync(new CancelTransactionRequestCommand(
+                new ExecutableID(Guid.NewGuid().ToString()),
+                order.Key));
+
+            return RedirectToAction("List");
         }
 
-        if (order is null || order.Creator.Key != user.Key)
+        /// <summary>
+        /// Возвращает форму на оплату заказа.
+        /// </summary>
+        /// <param name="orderId">Идентификатор заказа.</param>
+        /// <returns></returns>
+        [HttpGet("orders/pay/{orderId}")]
+        public IActionResult Pay([FromRoute] long orderId) => View();
+
+        /// <summary>
+        /// Запрос на оплату заказа.
+        /// </summary>
+        /// <param name="orderId">Идентифкатор заказа.</param>
+        /// <param name="model">Платежные данные.</param>
+        /// <returns></returns>
+        [HttpPost(("orders/pay/{orderId}"))]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> PayAsync([FromRoute] long orderId, OrderPayModel model)
         {
-            Response.StatusCode = 404;
-            return NotFound();
-        }
+            var order = _orderRepository.GetByKey(new(orderId));
 
-        order.State = OrderState.Cancel;
+            var user = GetCurrentUser();
 
-        _orderRepository.UpdateState(order);
-        _orderRepository.Save();
+            if (user is null)
+            {
+                Response.StatusCode = 400;
+                return BadRequest();
+            }
 
-        await _wtCommandSender.SendAsync(new CancelTransactionRequestCommand(
-            new ExecutableID(Guid.NewGuid().ToString()),
-            order.Key));
+            if (order is null || order.Creator.Key != user.Key)
+            {
+                Response.StatusCode = 404;
+                return NotFound();
+            }
 
-        return RedirectToAction("List");
-    }
+            var transactions = new List<Transaction>();
 
-    /// <summary>
-    /// Возвращает форму на оплату заказа.
-    /// </summary>
-    /// <param name="orderId">Идентификатор заказа.</param>
-    /// <returns></returns>
-    [HttpGet("orders/pay/{orderId}")]
-    public IActionResult Pay([FromRoute] long orderId) => View();
+            foreach(var item in order.Items.GroupBy(x => x.Product.Provider))
+            {
+                transactions.Add(new Transaction(
+                    model.Account, 
+                    item.Key.PaymentTransactionsInformation.BankAccount, 
+                    item.Sum(x => x.Product.FinalCost), 
+                    item.Sum(x => x.Product.FinalCost) - item.Sum(x => x.Product.ProviderCost)));
+            }
 
-    /// <summary>
-    /// Запрос на оплату заказа.
-    /// </summary>
-    /// <param name="orderId">Идентифкатор заказа.</param>
-    /// <param name="model">Платежные данные.</param>
-    /// <returns></returns>
-    [HttpPost(("orders/pay/{orderId}"))]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> PayAsync([FromRoute] long orderId, OrderPayModel model)
-    {
-        var order = _orderRepository.GetByKey(new(orderId));
-
-        var user = GetCurrentUser();
-
-        if (user is null)
-        {
-            Response.StatusCode = 400;
-            return BadRequest();
-        }
-
-        if (order is null || order.Creator.Key != user.Key)
-        {
-            Response.StatusCode = 404;
-            return NotFound();
-        }
-
-        var transactions = new List<Transaction>();
-
-        foreach(var item in order.Items.GroupBy(x => x.Product.Provider))
-        {
-            transactions.Add(new Transaction(
-                model.Account, 
-                item.Key.PaymentTransactionsInformation.BankAccount, 
-                item.Sum(x => x.Product.FinalCost), 
-                item.Sum(x => x.Product.FinalCost) - item.Sum(x => x.Product.ProviderCost)));
-        }
-
-        await _wtCommandSender.SendAsync(new CreateTransactionRequestCommand(new(Guid.NewGuid().ToString()), order.Key, transactions));
+            await _wtCommandSender.SendAsync(new CreateTransactionRequestCommand(new(Guid.NewGuid().ToString()), order.Key, transactions));
             
-        return RedirectToAction("List");
-    }
-
-    /// <summary>
-    /// Запрос на заказов требующих обработки.
-    /// </summary>
-    /// <returns></returns>
-    [HttpGet]
-    [Authorize(Policy = "OnlyForManager")]
-    public IActionResult Aprove()
-    {
-        var ordersWithWaitStatus = _orderRepository.GetEntities()
-            .Where(x => x.State is OrderState.ProductDeliveryWait or OrderState.Ready);
-
-        return View(ordersWithWaitStatus);
-    }
-
-    /// <summary>
-    /// Запрос на получение заказа.
-    /// </summary>
-    /// <param name="id">Идентификатор заказа.</param>
-    /// <returns></returns>
-    [HttpGet]
-    [Authorize(Policy = "OnlyForManager")]
-    public IActionResult Ready(long id)
-    {
-        var order = _orderRepository.GetByKey(new(id));
-
-        if (order is null || order.State is not OrderState.ProductDeliveryWait)
-        {
-            Response.StatusCode = 404;
-            return NotFound();
+            return RedirectToAction("List");
         }
 
-        order.State = OrderState.Ready;
-
-        _orderRepository.UpdateState(order);
-        _orderRepository.Save();
-
-        return RedirectToAction("Aprove");
-    }
-
-    /// <summary>
-    /// Запрос на получение заказа.
-    /// </summary>
-    /// <param name="id">Идентифкатор заказа.</param>
-    /// <returns></returns>
-    [HttpGet]
-    [Authorize(Policy = "OnlyForManager")]
-    public IActionResult Receive(long id)
-    {
-        var order = _orderRepository.GetByKey(new(id));
-
-        if (order is null || order.State is not OrderState.Ready)
+        /// <summary>
+        /// Запрос на заказов требующих обработки.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Authorize(Policy = "OnlyForManager")]
+        public IActionResult Aprove()
         {
-            Response.StatusCode = 404;
-            return NotFound();
+            var ordersWithWaitStatus = _orderRepository.GetEntities()
+                .Where(x => x.State is OrderState.ProductDeliveryWait or OrderState.Ready);
+
+            return View(ordersWithWaitStatus);
         }
 
-        order.State = OrderState.Received;
+        /// <summary>
+        /// Запрос на получение заказа.
+        /// </summary>
+        /// <param name="id">Идентификатор заказа.</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Authorize(Policy = "OnlyForManager")]
+        public IActionResult Ready(long id)
+        {
+            var order = _orderRepository.GetByKey(new(id));
 
-        _orderRepository.UpdateState(order);
-        _orderRepository.Save();
+            if (order is null || order.State is not OrderState.ProductDeliveryWait)
+            {
+                Response.StatusCode = 404;
+                return NotFound();
+            }
 
-        return RedirectToAction("Aprove");
+            order.State = OrderState.Ready;
+
+            _orderRepository.UpdateState(order);
+            _orderRepository.Save();
+
+            return RedirectToAction("Aprove");
+        }
+
+        /// <summary>
+        /// Запрос на получение заказа.
+        /// </summary>
+        /// <param name="id">Идентифкатор заказа.</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Authorize(Policy = "OnlyForManager")]
+        public IActionResult Receive(long id)
+        {
+            var order = _orderRepository.GetByKey(new(id));
+
+            if (order is null || order.State is not OrderState.Ready)
+            {
+                Response.StatusCode = 404;
+                return NotFound();
+            }
+
+            order.State = OrderState.Received;
+
+            _orderRepository.UpdateState(order);
+            _orderRepository.Save();
+
+            return RedirectToAction("Aprove");
+        }
+
+        private User? GetCurrentUser()
+        {
+            if (User.Identity is null || User.Identity.Name is null)
+                return null;
+
+            return _userRepository.GetByEmail(User.Identity.Name);
+        }
     }
-
-    private User? GetCurrentUser()
-    {
-        if (User.Identity is null || User.Identity.Name is null)
-            return null;
-
-        return _userRepository.GetByEmail(User.Identity.Name);
-    }
-}
