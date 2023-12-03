@@ -11,7 +11,7 @@ env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: docker.io
   # github.repository as <account>/<repo> ${{ github.repository }}
-  IMAGE_NAME: computermarket.market
+  IMAGE_NAME: semyonmashina/computermarket.market
 
 jobs:
   build:
