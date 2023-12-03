@@ -25,9 +25,9 @@ jobs:
       id: filter
       with:
         filters: |
-          ${{ env.PROJECT_FOLDER }}:
-            - '${{ env.PROJECT_FOLDER }}/**'
-            - '${{ env.PROJECT_FOLDER }}.Logic/**'
+          Market:
+            - 'Market/**'
+            - 'Market.Logic/**'
   build:
 
     runs-on: ubuntu-latest
@@ -36,7 +36,7 @@ jobs:
       packages: write
       id-token: write
     needs: paths-filter
-    if: needs.paths-filter.outputs.${{ env.PROJECT_FOLDER }} == 'true'
+    if: needs.paths-filter.outputs.Market == 'true'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
