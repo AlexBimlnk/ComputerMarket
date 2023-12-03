@@ -25,9 +25,9 @@ jobs:
       id: filter
       with:
         filters: |
-          Market:
-            - 'Market/**'
-            - 'Market.Logic/**'
+          Marke:
+            - 'Marke/**'
+            - 'Marke.Logic/**'
   build:
 
     runs-on: ubuntu-latest
