@@ -3,6 +3,10 @@ name: Docker Import
 on:
   push:
     branches: [ "master", "feature/#189-setup-deployment-on-server" ]
+  workflow_run:
+    workflows: [.NET]
+    types:
+      - completed
 
 
 env:
