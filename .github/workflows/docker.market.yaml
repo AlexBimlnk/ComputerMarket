@@ -18,7 +18,7 @@ jobs:
   paths-filter:
     runs-on: ubuntu-latest
     outputs:
-      output1: ${{ steps.filter.outputs.workflows }}
+      Market: ${{ steps.filter.outputs.Market }}
     steps:
     - uses: actions/checkout@v2
     - uses: dorny/paths-filter@v2
@@ -29,14 +29,14 @@ jobs:
             - 'Market/**'
             - 'Market.Logic/**'
   build:
-
+    needs: paths-filter
+    if: ${{ needs.changes.outputs.Market == 'true' }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
       id-token: write
-    needs: paths-filter
-    if: ${{ needs.changes.outputs.Market == 'true' }}
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
