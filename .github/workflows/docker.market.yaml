@@ -25,9 +25,9 @@ jobs:
       id: filter
       with:
         filters: |
-          Marke:
-            - 'Marke/**'
-            - 'Marke.Logic/**'
+          Market:
+            - 'Market/**'
+            - 'Market.Logic/**'
   build:
 
     runs-on: ubuntu-latest
@@ -36,7 +36,7 @@ jobs:
       packages: write
       id-token: write
     needs: paths-filter
-    if: needs.paths-filter.outputs.Marke == 'true'
+    if: needs.paths-filter.outputs.output1 == 'true'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
