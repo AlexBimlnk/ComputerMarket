@@ -12,8 +12,22 @@ env:
   REGISTRY: docker.io
   # github.repository as <account>/<repo> ${{ github.repository }}
   IMAGE_NAME: semyonmashina/computermarket.market
+  PROJECT_FOLDER: Market
 
 jobs:
+  paths-filter:
+    runs-on: ubuntu-latest
+    outputs:
+      output1: ${{ steps.filter.outputs.workflows }}
+    steps:
+    - uses: actions/checkout@v2
+    - uses: dorny/paths-filter@v2
+      id: filter
+      with:
+        filters: |
+          ${{ env.PROJECT_FOLDER }}:
+            - '${{ env.PROJECT_FOLDER }}/**'
+            - '${{ env.PROJECT_FOLDER }}.Logic/**'
   build:
 
     runs-on: ubuntu-latest
@@ -21,7 +35,8 @@ jobs:
       contents: read
       packages: write
       id-token: write
-
+    needs: paths-filter
+    if: needs.paths-filter.outputs.${{ env.PROJECT_FOLDER }} == 'true'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
