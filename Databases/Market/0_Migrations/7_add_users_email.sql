@@ -1,0 +1,7 @@
+\c market
+BEGIN;
+
+ALTER TABLE users
+ADD COLUMN Email VARCHAR(256) NOT NULL;;
+
+COMMIT;

@@ -1,0 +1,10 @@
+\c import
+BEGIN;
+
+ALTER TABLE links
+ALTER COLUMN internal_id TYPE BIGINT;
+
+ALTER TABLE links
+ALTER COLUMN external_id TYPE BIGINT;
+
+COMMIT;
