@@ -104,4 +104,29 @@ public class BuilderController : Controller
 
         return View("Index", result);
     }
+
+    [HttpPost("api/build")]
+    public IComputerBuildResult ApiBuild()
+    {
+        PrepareView();
+
+        var cpuName = Request.Form["processor"].ToString();
+        var motherBoardName = Request.Form["motherBoard"].ToString();
+
+        var possibleProcessors = _catalog.GetProducts(new CatalogFilter())
+            .Where(x => x.Item.Type.Id == PROCESSOR_TYPE_ID && x.Item.Name == cpuName);
+
+        var possibleMotherBoards = _catalog.GetProducts(new CatalogFilter())
+            .Where(x => x.Item.Type.Id == MOTHER_TYPE_ID && x.Item.Name == motherBoardName);
+
+        _computerBuilder.AddOrReplace(possibleProcessors.First()!.Item);
+        _computerBuilder.AddOrReplace(possibleMotherBoards.First()!.Item);
+
+        var result = _computerBuilder.Build();
+
+        if (result.IsSucces)
+            CreateBestOffer(possibleProcessors, possibleMotherBoards);
+
+        return result;
+    }
 }

@@ -51,6 +51,22 @@ public class BasketController : Controller
         return View(items);
     }
 
+    [HttpGet("api/index")]
+    public IEnumerable<PurchasableEntity> ApiIndex()
+    {
+        var user = GetCurrentUser();
+
+        if (user is null)
+        {
+            Response.StatusCode = 400;
+            return null!;
+        }
+
+        var items = _basketRepository.GetAllBasketItems(user).OrderBy(x => x.Product.Item.Key.Value);
+
+        return items;
+    }
+
     [HttpGet]
     public IActionResult Add(long providerId, long itemId)
     {
@@ -105,6 +121,38 @@ public class BasketController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> CreateOrderAsync()
+    {
+        var selectedItems = GetItems(Request.Form["Selected"].ToString());
+
+        var user = GetCurrentUser();
+
+        if (user is null)
+        {
+            return RedirectToAction("Logout", "Account");
+        }
+
+        var items = _basketRepository.GetAllBasketItems(user);
+
+        if (!items.Any())
+        {
+            return RedirectToAction("Index");
+        }
+
+        if (selectedItems.Any())
+        {
+            items = items.Join(selectedItems, x => (x.Product.Item.Key, x.Product.Provider.Key), y => y, (x, y) => x);
+        }
+
+        var order = new Order(default, user, items.ToHashSet());
+
+        await _orderRepository.AddAsync(order);
+        _orderRepository.Save();
+
+        return RedirectToAction("List", "Orders");
+    }
+
+    [HttpPost("api/create_order")]
+    public async Task<IActionResult> ApiCreateOrderAsync()
     {
         var selectedItems = GetItems(Request.Form["Selected"].ToString());
 

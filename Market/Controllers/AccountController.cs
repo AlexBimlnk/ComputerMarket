@@ -73,6 +73,20 @@ public class AccountController : Controller
         return View(model);
     }
 
+    [HttpPost("api/login")]
+    public async Task<IActionResult> ApiLoginAsync([FromBody] LoginViewModel model)
+    {
+        if (_usersRepository.IsCanAuthenticate(
+            new AuthenticationData(model.Email, new Password(model.Password)), out var user))
+        {
+            await AuthenticateAsync(user);
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        return Ok();
+    }
+
     /// <summary xml:lang = "ru">
     /// Запрос на регистрацию в системе.
     /// </summary>
