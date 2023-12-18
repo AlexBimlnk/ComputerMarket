@@ -87,4 +87,15 @@ public sealed class ReportController : Controller
 
         return View();
     }
+
+    [HttpPost("report/api/create")]
+    [Authorize(Policy = "OnlyForManager")]
+    public Report ApiCreate([FromBody] ReportViewModel reportViewModel)
+    {
+        _reportBuilder.SetProviderId(new ID(reportViewModel.ProviderId));
+        _reportBuilder.SetStartPeriod(DateOnly.FromDateTime(reportViewModel.StartPeriod));
+        _reportBuilder.SetEndPeriod(DateOnly.FromDateTime(reportViewModel.EndPeriod));
+
+        return _reportBuilder.CreateReport();
+    }
 }
