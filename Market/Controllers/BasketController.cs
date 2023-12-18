@@ -51,7 +51,7 @@ public class BasketController : Controller
         return View(items);
     }
 
-    [HttpGet("api/index")]
+    [HttpGet("basket/api/index")]
     public IEnumerable<PurchasableEntity> ApiIndex()
     {
         var user = GetCurrentUser();
@@ -151,7 +151,7 @@ public class BasketController : Controller
         return RedirectToAction("List", "Orders");
     }
 
-    [HttpPost("api/create_order")]
+    [HttpPost("basket/api/create_order")]
     public async Task<IActionResult> ApiCreateOrderAsync()
     {
         var selectedItems = GetItems(Request.Form["Selected"].ToString());

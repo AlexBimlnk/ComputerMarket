@@ -48,6 +48,23 @@ public class HomeController : Controller
         return View(viewModel);
     }
 
+    [HttpGet("home/api/index")]
+    public HomeIndexViewModel ApiIndex()
+    {
+        var user = GetCurrentUser();
+
+        var viewModel = new HomeIndexViewModel();
+
+        if (user is not null)
+        {
+            viewModel.LoginUserType = user.Type;
+        }
+
+        viewModel.Types = _catalog.GetItemTypes().Take(4);
+
+        return viewModel;
+    }
+
     [HttpGet]
     public IActionResult Privacy() => View();
 

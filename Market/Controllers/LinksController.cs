@@ -74,6 +74,17 @@ public sealed class LinksController : Controller
         return View(links);
     }
 
+    [HttpGet("links/api/list")]
+    public async Task<IReadOnlyCollection<Link>> ApiListAsync()
+    {
+        var result = await _querySender.SendAsync(
+            new GetLinksQuery(new ExecutableID(Guid.NewGuid().ToString())));
+
+        var links = result.Result;
+
+        return links!;
+    }
+
     // GET: Links/Create
     /// <summary xml:lang = "ru">
     /// Возвращает форму для создания связей.
@@ -108,6 +119,20 @@ public sealed class LinksController : Controller
         }
 
         return View();
+    }
+
+    [HttpPost("links/api/create")]
+    public async Task<ActionResult> ApiCreateAsync([FromBody] LinkViewModel link)
+    {
+        var provider = _providerRepository.GetByKey(new(link.ProviderId))!;
+
+        await _importCommandSender.SendAsync(new SetLinkCommand(
+            new(Guid.NewGuid().ToString()),
+            new(link.InternalId),
+            new(link.ExternalId),
+            provider));
+
+        return Ok();
     }
 
     // GET: Links/Delete
@@ -151,5 +176,18 @@ public sealed class LinksController : Controller
         }
 
         return View();
+    }
+
+    [HttpPost("links/api/delete")]
+    public async Task<ActionResult> ApiDeleteAsync([FromBody] LinkViewModel link)
+    {
+        var provider = _providerRepository.GetByKey(new(link.ProviderId))!;
+
+        await _importCommandSender.SendAsync(new DeleteLinkCommand(
+            new(Guid.NewGuid().ToString()),
+            new(link.ExternalId),
+            provider));
+
+        return Ok();
     }
 }

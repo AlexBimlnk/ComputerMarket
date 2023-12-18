@@ -44,6 +44,13 @@ public class ProductsController : Controller
         return View(types);
     }
 
+    [HttpGet("products/api/categories")]
+    public IEnumerable<ItemType> ApiCategories()
+    {
+        var types = _catalog.GetItemTypes();
+        return types;
+    }
+
     /// <summary xml:lang="ru">
     /// Возвращает страницу с каталогом товаров с заданными параметрами.
     /// </summary>
@@ -78,6 +85,34 @@ public class ProductsController : Controller
         return View(model);
     }
 
+    [HttpGet("products/api/catalog")]
+    public CatalogViewModel ApiCatalog([FromBody] CatalogViewModel model)
+    {
+        model.Properties = GetProductsProperties(_catalog.GetProducts(
+            model.TypeId is null
+                ? new CatalogFilter(model.SearchString)
+                : new CatalogFilter(typeId: model.TypeId)));
+
+        var selectedValues = GetPropertiesValues(model.Params ?? "false");
+        var filter = new CatalogFilter(model.SearchString, model.TypeId, selectedValues);
+        model.Products = _catalog.GetProducts(filter);
+
+        if (selectedValues.Any())
+        {
+            foreach (var value in filter.PropertiesWithValues)
+            {
+                if (model.Properties.ContainsKey(value.Item1))
+                {
+                    var newValue = new FilterValue(value.Item1, value.Item2);
+                    newValue.Selected = true;
+                    model.Properties[value.Item1].AddValue(newValue);
+                }
+            }
+        }
+
+        return model;
+    }
+
     /// <summary xml:lang="ru">
     /// Обновляет страницу с каталогом товаров.
     /// </summary>
@@ -91,6 +126,16 @@ public class ProductsController : Controller
         model.Params = res;
 
         return RedirectToAction("Catalog", model);
+    }
+
+    [HttpPost("products/api/update")] // не знаю что это, но вот так по идее достать можно будет
+    public CatalogViewModel ApiUpdate([FromForm] CatalogViewModel model)
+    {
+        var res = Request.Form["Selected"].ToString();
+
+        model.Params = res;
+
+        return ApiCatalog(model);
     }
 
     /// <summary xml:lang="ru">
@@ -112,6 +157,21 @@ public class ProductsController : Controller
         }
 
         return View(product);
+    }
+
+    [HttpGet("products/api/product")]
+    public Product ApiProduct(long itemId, long providerId)
+    {
+
+        var product = _catalog.GetProductByKey((new ID(providerId), new ID(itemId)));
+
+        if (product is null)
+        {
+            Response.StatusCode = 404;
+            return product;
+        }
+
+        return product;
     }
 
     private static IReadOnlyDictionary<ID, IFilterProperty> GetProductsProperties(IEnumerable<Product> products)

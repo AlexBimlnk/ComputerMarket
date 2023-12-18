@@ -73,7 +73,7 @@ public class AccountController : Controller
         return View(model);
     }
 
-    [HttpPost("api/login")]
+    [HttpPost("account/api/login")]
     public async Task<IActionResult> ApiLoginAsync([FromBody] LoginViewModel model)
     {
         if (_usersRepository.IsCanAuthenticate(
@@ -118,6 +118,25 @@ public class AccountController : Controller
         return View(model);
     }
 
+    [HttpPost("account/api/register")]
+    public async Task<IActionResult> ApiRegisterAsync([FromBody] RegisterViewModel model)
+    {
+        var data = new AuthenticationData(model.Email, new Password(model.Password), model.Login);
+        if (!_usersRepository.IsCanAuthenticate(data, out var user))
+        {
+            user = new User(default, data, UserType.Customer);
+
+            await _usersRepository.AddAsync(user);
+            _usersRepository.Save();
+
+            await AuthenticateAsync(user);
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        return Ok();
+    }
+
     private async Task AuthenticateAsync(User user)
     {
         var role = user.Type.ToString();
@@ -138,6 +157,7 @@ public class AccountController : Controller
     /// <returns xml:lang = "ru">
     /// <see cref="Task"/>.
     /// </returns>
+    [HttpPost("account/api/logout")]
     public async Task<IActionResult> LogoutAsync()
     {
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);

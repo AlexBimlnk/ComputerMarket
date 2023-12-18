@@ -105,7 +105,7 @@ public class BuilderController : Controller
         return View("Index", result);
     }
 
-    [HttpPost("api/build")]
+    [HttpPost("builder/api/build")]
     public IComputerBuildResult ApiBuild()
     {
         PrepareView();
