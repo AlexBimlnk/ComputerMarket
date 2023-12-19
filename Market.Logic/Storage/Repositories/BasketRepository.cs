@@ -75,7 +75,7 @@ public sealed class BasketRepository : IBasketRepository
 
         var list = _context.BasketItems
             .Where(x => x.UserId == user.Key.Value)
-            .ToList()
+            .ToList();
             
         return list
             .Select(x => ConvertFromStorageModel(x))
