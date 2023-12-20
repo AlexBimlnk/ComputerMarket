@@ -74,6 +74,7 @@ public sealed class BasketRepository : IBasketRepository
         ArgumentNullException.ThrowIfNull(user);
 
         var list = _context.BasketItems
+            .Where(x => x.UserId == user.Key.Value)
             .ToList();
             
         return list
