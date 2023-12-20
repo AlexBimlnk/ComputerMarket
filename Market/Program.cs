@@ -38,7 +38,7 @@ builder.Services.AddMarketServices(builder.Configuration);
 
 var app = builder.Build();
 
-if (!app.Environment.IsDevelopment())
+if (!app.Environment.IsDevelopment() && false)
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();

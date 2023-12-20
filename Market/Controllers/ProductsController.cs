@@ -85,7 +85,7 @@ public class ProductsController : Controller
         return View(model);
     }
 
-    [HttpGet("products/api/catalog")]
+    [HttpPost("products/api/catalog")]
     public CatalogViewModel ApiCatalog([FromBody] CatalogViewModel model)
     {
         model.Properties = GetProductsProperties(_catalog.GetProducts(
