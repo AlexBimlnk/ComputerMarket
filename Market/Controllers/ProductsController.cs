@@ -95,7 +95,7 @@ public class ProductsController : Controller
 
         var selectedValues = GetPropertiesValues(model.Params ?? "false");
         var filter = new CatalogFilter(model.SearchString, model.TypeId, selectedValues);
-        model.Products = _catalog.GetProducts(filter).Take(3);
+        model.Products = _catalog.GetProducts(filter).Take(5);
 
         if (selectedValues.Any())
         {
