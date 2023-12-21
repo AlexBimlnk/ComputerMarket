@@ -85,7 +85,7 @@ public class ProductsController : Controller
         return View(model);
     }
 
-    [HttpPost("products/api/catalog")]
+    [HttpGet("products/api/catalog")]
     public CatalogViewModel ApiCatalog(
         [FromQuery] int typeId,
         [FromQuery] string searchString,
