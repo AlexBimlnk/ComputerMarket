@@ -86,8 +86,18 @@ public class ProductsController : Controller
     }
 
     [HttpPost("products/api/catalog")]
-    public CatalogViewModel ApiCatalog([FromBody] CatalogViewModel model)
+    public CatalogViewModel ApiCatalog(
+        [FromQuery] int typeId,
+        [FromQuery] string searchString,
+        [FromQuery] string selected)
     {
+        var model = new CatalogViewModel()
+        {
+            TypeId = typeId,
+            SearchString = searchString,
+            Params = selected
+        };
+
         model.Properties = GetProductsProperties(_catalog.GetProducts(
             model.TypeId is null
                 ? new CatalogFilter(model.SearchString)
@@ -126,16 +136,6 @@ public class ProductsController : Controller
         model.Params = res;
 
         return RedirectToAction("Catalog", model);
-    }
-
-    [HttpPost("products/api/update")] // не знаю что это, но вот так по идее достать можно будет
-    public CatalogViewModel ApiUpdate([FromForm] CatalogViewModel model)
-    {
-        var res = Request.Form["Selected"].ToString();
-
-        model.Params = res;
-
-        return ApiCatalog(model);
     }
 
     /// <summary xml:lang="ru">
