@@ -8,15 +8,15 @@ public enum UserType
     /// <summary xml:lang = "ru">
     /// Обычный пользователь системы.
     /// </summary>
-    Customer = 1,
+    Customer = 0,
 
     /// <summary xml:lang = "ru">
     /// Представитель.
     /// </summary>
-    Agent = 2,
+    Agent = 1,
 
     /// <summary xml:lang = "ru">
     /// Менеджер.
     /// </summary>
-    Manager = 3
+    Manager = 2
 }
