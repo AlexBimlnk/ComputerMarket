@@ -74,17 +74,17 @@ public class AccountController : Controller
     }
 
     [HttpPost("account/api/login")]
-    public async Task<IActionResult> ApiLoginAsync([FromBody] LoginViewModel model)
+    public async Task<User> ApiLoginAsync([FromBody] LoginViewModel model)
     {
         if (_usersRepository.IsCanAuthenticate(
             new AuthenticationData(model.Email, new Password(model.Password)), out var user))
         {
             await AuthenticateAsync(user);
 
-            return RedirectToAction("Index", "Home");
+            return user;
         }
 
-        return Ok();
+        throw new InvalidOperationException();
     }
 
     /// <summary xml:lang = "ru">
@@ -119,7 +119,7 @@ public class AccountController : Controller
     }
 
     [HttpPost("account/api/register")]
-    public async Task<IActionResult> ApiRegisterAsync([FromBody] RegisterViewModel model)
+    public async Task<User> ApiRegisterAsync([FromBody] RegisterViewModel model)
     {
         var data = new AuthenticationData(model.Email, new Password(model.Password), model.Login);
         if (!_usersRepository.IsCanAuthenticate(data, out var user))
@@ -131,10 +131,10 @@ public class AccountController : Controller
 
             await AuthenticateAsync(user);
 
-            return RedirectToAction("Index", "Home");
+            return user;
         }
 
-        return Ok();
+        throw new InvalidOperationException();
     }
 
     private async Task AuthenticateAsync(User user)
