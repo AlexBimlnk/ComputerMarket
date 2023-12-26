@@ -2,7 +2,7 @@ name: Docker Import
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master", "stage" ]
   # workflow_run:
   #   workflows: [.NET]
   #   types:
