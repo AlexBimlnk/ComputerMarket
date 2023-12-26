@@ -28,4 +28,3 @@ public interface IAPIRequestHandler<TMarker>
     /// </exception>
     public Task HandleAsync(string request, CancellationToken token = default);
 }
-
