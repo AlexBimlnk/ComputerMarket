@@ -159,7 +159,7 @@ public sealed class OrdersController : Controller
     /// Отменяет заказ.
     /// </summary>
     /// <returns> <see cref="ActionResult"/>. </returns>
-    [HttpGet]
+    [HttpGet("orders/cancel/{key}")]
     public async Task<ActionResult> CancelAsync([FromRoute] long key)
     {
         var order = _orderRepository.GetByKey(new(key))!;
